@@ -1,25 +1,28 @@
-package tw.com.walkablecity
+package tw.com.walkablecity.home
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import tw.com.walkablecity.R
 import tw.com.walkablecity.databinding.FragmentHomeBinding
+import tw.com.walkablecity.ext.getVMFactory
 
 class HomeFragment : Fragment() {
 
-    private lateinit var mMap: GoogleMap
+
     private lateinit var mapFragment: SupportMapFragment
+
+    val viewModel by viewModels<HomeViewModel>{getVMFactory()}
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -27,7 +30,9 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val binding: FragmentHomeBinding = DataBindingUtil
-            .inflate(inflater, R.layout.fragment_home, container, false)
+            .inflate(inflater,
+                R.layout.fragment_home, container, false)
+        binding.lifecycleOwner = this
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
 

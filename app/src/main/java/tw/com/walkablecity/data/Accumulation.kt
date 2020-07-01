@@ -5,9 +5,9 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class Accumulation (
-    val day: Float,
-    val week: Float,
-    val month: Float,
-    val year: Float,
+    val daily: Float,
+    val weekly: Float,
+    val monthly: Float,
+    val yearly: Float,
     val total: Float
 ): Parcelable

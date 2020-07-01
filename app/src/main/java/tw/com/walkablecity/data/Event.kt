@@ -14,5 +14,6 @@ data class Event (
     val invited: List<String>,
     val member: List<String>,
     val startDate: Timestamp,
-    val endDate: Timestamp
+    val endDate: Timestamp,
+    val status: EventStatus
 ): Parcelable

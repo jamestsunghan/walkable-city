@@ -2,17 +2,22 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/home"
+        android:icon="@drawable/footprints"
         android:title="@string/home_title"/>
     <item
         android:id="@+id/ranking"
+        android:icon="@drawable/ic_big_office_building"
         android:title="@string/ranking_title"/>
     <item
         android:id="@+id/favorite"
+        android:icon="@drawable/favorite"
         android:title="@string/favorite_title"/>
     <item
         android:id="@+id/event"
+        android:icon="@drawable/community"
         android:title="@string/event_title"/>
     <item
         android:id="@+id/profile"
+        android:icon="@drawable/account_circle_24px"
         android:title="@string/profile_title"/>
 </menu>

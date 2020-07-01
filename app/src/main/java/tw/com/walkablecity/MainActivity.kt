@@ -2,25 +2,81 @@ package tw.com.walkablecity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
+import androidx.activity.viewModels
+import androidx.databinding.DataBindingUtil
+import androidx.navigation.findNavController
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import tw.com.walkablecity.databinding.ActivityMainBinding
+import tw.com.walkablecity.ext.getVMFactory
 
 class MainActivity : AppCompatActivity() {
 
+    private lateinit var binding: ActivityMainBinding
 
+    val viewModel by viewModels<MainViewModel>{getVMFactory()}
+
+
+    private val onNavItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener {item ->
+        when(item.itemId){
+            R.id.home ->{
+                findNavController(R.id.nav_host_fragment).navigate(NavigationDirections.actionGlobalHomeFragment())
+                return@OnNavigationItemSelectedListener true
+            }
+            R.id.ranking ->{
+                findNavController(R.id.nav_host_fragment).navigate(NavigationDirections.actionGlobalRankingFragment())
+                return@OnNavigationItemSelectedListener true
+            }
+            R.id.favorite ->{
+                findNavController(R.id.nav_host_fragment).navigate(NavigationDirections.actionGlobalFavoriteFragment())
+                return@OnNavigationItemSelectedListener true
+            }
+            R.id.event ->{
+                findNavController(R.id.nav_host_fragment).navigate(NavigationDirections.actionGlobalEventFragment())
+                return@OnNavigationItemSelectedListener true
+            }
+            R.id.profile ->{
+                findNavController(R.id.nav_host_fragment).navigate(NavigationDirections.actionGlobalProfileFragment())
+                return@OnNavigationItemSelectedListener true
+            }
+        }
+        false
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+        binding.lifecycleOwner = this
+
+        binding.viewModel = viewModel
 
 
-
+        setupNavController()
+        setupBottomNav()
     }
 
+    private fun setupBottomNav(){
+        binding.bottomNav.setOnNavigationItemSelectedListener(onNavItemSelectedListener)
+    }
 
+    private fun setupNavController(){
+
+        findNavController(R.id.nav_host_fragment)
+            .addOnDestinationChangedListener { controller, destination, arguments ->
+            viewModel.currentFragment.value = when(controller.currentDestination?.id){
+                R.id.homeFragment -> CurrentFragmentType.HOME
+                R.id.rankingFragment -> CurrentFragmentType.RANKING
+                R.id.favoriteFragment -> CurrentFragmentType.FAVORITE
+                R.id.eventFragment -> CurrentFragmentType.EVENT
+                R.id.profileFragment -> CurrentFragmentType.PROFILE
+
+
+                else -> viewModel.currentFragment.value
+            }
+
+
+
+        }
+
+    }
 
 }

@@ -7,7 +7,83 @@
 
     <fragment
         android:id="@+id/homeFragment"
-        android:name="tw.com.walkablecity.HomeFragment"
+        android:name="tw.com.walkablecity.home.HomeFragment"
         android:label="fragment_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_homeFragment_to_searchFragment"
+            app:destination="@id/searchFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/favoriteFragment"
+        android:name="tw.com.walkablecity.favorite.FavoriteFragment"
+        android:label="FavoriteFragment"
+        tools:layout="@layout/fragment_favorite"/>
+
+
+    <fragment
+        android:id="@+id/rankingFragment"
+        android:name="tw.com.walkablecity.ranking.RankingFragment"
+        android:label="RankingFragment"
+        tools:layout="@layout/fragment_ranking"/>
+
+    <fragment
+        android:id="@+id/eventFragment"
+        android:name="tw.com.walkablecity.event.EventFragment"
+        android:label="EventFragment"
+        tools:layout="@layout/fragment_event"/>
+
+
+
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="tw.com.walkablecity.profile.ProfileFragment"
+        android:label="ProfileFragment"
+        tools:layout="@layout/fragment_profile"/>
+
+    <fragment
+        android:id="@+id/badgeFragment"
+        android:name="tw.com.walkablecity.profile.badge.BadgeFragment"
+        android:label="BadgeFragment"
+        tools:layout="@layout/fragment_badge"/>
+
+    <fragment
+        android:id="@+id/loadRouteFragment"
+        android:name="tw.com.walkablecity.loadroute.LoadRouteFragment"
+        android:label="LoadRouteFragment"
+        tools:layout="@layout/fragment_load_route"/>
+    <dialog
+        android:id="@+id/searchFragment"
+        android:name="tw.com.walkablecity.search.SearchFragment"
+        android:label="SearchFragment"
+        tools:layout="@layout/fragment_search"/>
+
+    <action
+        android:id="@+id/action_global_rankingFragment"
+        app:destination="@id/rankingFragment"
+        app:popUpTo="@id/navigation"
+        app:popUpToInclusive="true" />
+
+    <action
+        android:id="@+id/action_global_profileFragment"
+        app:destination="@id/profileFragment"
+        app:popUpTo="@id/navigation"
+        app:popUpToInclusive="true" />
+    <action
+        android:id="@+id/action_global_favoriteFragment"
+        app:destination="@id/favoriteFragment"
+        app:popUpTo="@id/navigation"
+        app:popUpToInclusive="true" />
+    <action
+        android:id="@+id/action_global_homeFragment"
+        app:destination="@id/homeFragment"
+        app:popUpTo="@id/navigation"
+        app:popUpToInclusive="true" />
+    <action
+        android:id="@+id/action_global_eventFragment"
+        app:destination="@id/eventFragment"
+        app:popUpTo="@id/navigation"
+        app:popUpToInclusive="true" />
+
 </navigation>
