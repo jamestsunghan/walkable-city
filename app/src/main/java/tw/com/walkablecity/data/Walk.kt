@@ -1,4 +1,13 @@
 package tw.com.walkablecity.data
 
-class Walk {
-}
+import android.os.Parcelable
+import com.google.firebase.Timestamp
+import kotlinx.android.parcel.Parcelize
+
+@Parcelize
+data class Walk (
+    val distance: Float,
+    val startTime: Timestamp,
+    val endTime: Timestamp,
+    val routeId: String
+): Parcelable

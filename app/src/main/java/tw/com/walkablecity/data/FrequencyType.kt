@@ -1,4 +1,8 @@
 package tw.com.walkablecity.data
 
-class FrequencyType {
+enum class FrequencyType(value: String) {
+    DAY("day"),
+    WEEK("week"),
+    MONTH("month"),
+    YEAR("year")
 }

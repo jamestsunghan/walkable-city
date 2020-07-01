@@ -1,4 +1,10 @@
 <resources>
     <string name="app_name">Walkable City</string>
     <string name="title_activity_maps">Map</string>
+    <string name="home_title">搜尋路線</string>
+    <string name="ranking_title">排名</string>
+    <string name="favorite_title">收藏</string>
+    <string name="event_title">活動</string>
+    <string name="profile_title">個人</string>
+    <string name="load_route">載入路線</string>
 </resources>
