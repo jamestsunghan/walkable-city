@@ -22,8 +22,7 @@
         <argument
             android:name="routeKey"
             app:argType="tw.com.walkablecity.data.Route"
-            app:nullable="true"
-            android:defaultValue="@null" />
+            app:nullable="true" />
     </fragment>
 
     <fragment

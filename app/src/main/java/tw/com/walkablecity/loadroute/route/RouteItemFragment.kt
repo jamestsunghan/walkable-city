@@ -1,18 +1,22 @@
 package tw.com.walkablecity.loadroute.route
 
-import androidx.lifecycle.ViewModelProviders
+
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
+import tw.com.walkablecity.NavigationDirections
 
 import tw.com.walkablecity.R
 import tw.com.walkablecity.databinding.FragmentRouteItemBinding
 import tw.com.walkablecity.ext.getVMFactory
+import tw.com.walkablecity.loadroute.LoadRouteFragmentDirections
 import tw.com.walkablecity.loadroute.LoadRouteType
 
 class RouteItemFragment(private val loadRouteType: LoadRouteType) : Fragment() {
@@ -29,14 +33,27 @@ class RouteItemFragment(private val loadRouteType: LoadRouteType) : Fragment() {
 
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
-        binding.recyclerRouteItem.adapter = RouteItemAdapter()
+
+        val adapter = RouteItemAdapter(viewModel)
+        binding.recyclerRouteItem.adapter = adapter
+
+        viewModel.filter.observe(viewLifecycleOwner, Observer {
+            it?.let{
+                Log.d("JJ","route sorting ${it.text}")
+                adapter.notifyDataSetChanged()
+            }
+        })
+
+        viewModel.selectRoute.observe(viewLifecycleOwner, Observer {
+            it?.let{
+
+                findNavController().navigate(LoadRouteFragmentDirections.actionGlobalHomeFragment(it))
+                viewModel.navigationComplete()
+            }
+        })
+
         return binding.root
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-
-        // TODO: Use the ViewModel
-    }
 
 }

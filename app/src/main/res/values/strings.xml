@@ -27,5 +27,15 @@
 
     <string name="select_route">選擇路線</string>
 
+    <string name="filter_coverage">蔭</string>
+    <string name="filter_vibe">逛</string>
+    <string name="filter_tranquility">靜</string>
+    <string name="filter_rest">歇</string>
+    <string name="filter_snack">饞</string>
+    <string name="filter_scenery">景</string>
+    <string name="minute">分鐘</string>
+    <string name="filter_time_title">步行時間</string>
+    <string name="route_km">公里</string>
+
 
 </resources>

@@ -4,10 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
-        <variable
-            name="route"
-            type="tw.com.walkablecity.data.Route" />
+        <variable name="route" type="tw.com.walkablecity.data.Route" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -42,6 +39,42 @@
             app:layout_constraintStart_toEndOf="@+id/map_view"
             app:layout_constraintTop_toTopOf="@+id/map_view"
             tools:text="第一條路" />
+
+        <TextView
+            android:id="@+id/route_km"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:fontFamily="@font/noto_sans"
+            android:text="@{String.valueOf(route.length) + @string/route_km}"
+            android:letterSpacing="0.15"
+            android:textColor="@color/primaryDarkColor"
+            android:textSize="14sp"
+            app:layout_constraintStart_toEndOf="@+id/map_view"
+            app:layout_constraintTop_toBottomOf="@+id/route_title"
+            tools:text="1.23公里" />
+
+        <TextView
+            android:id="@+id/route_minute"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:fontFamily="@font/noto_sans"
+            android:text="@{String.valueOf(route.minutes) + @string/minute}"
+            android:letterSpacing="0.15"
+            android:textColor="@color/primaryDarkColor"
+            android:textSize="14sp"
+            app:layout_constraintStart_toEndOf="@+id/map_view"
+            app:layout_constraintTop_toBottomOf="@+id/route_km"
+            tools:text="28分" />
+
+        <Spinner
+            android:id="@+id/character_spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:spinnerMode="dropdown"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/map_view"/>
 
         <TextView
             android:id="@+id/select_route"

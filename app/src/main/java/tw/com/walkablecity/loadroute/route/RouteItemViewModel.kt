@@ -4,6 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import tw.com.walkablecity.data.Route
+import tw.com.walkablecity.data.RouteRating
+import tw.com.walkablecity.data.RouteSorting
 import tw.com.walkablecity.data.source.WalkableRepository
 
 class RouteItemViewModel( private val walkableRepository: WalkableRepository) : ViewModel() {
@@ -12,7 +14,18 @@ class RouteItemViewModel( private val walkableRepository: WalkableRepository) : 
     val routeList: LiveData<List<Route>>
         get() = _routeList
 
+    val filter = MutableLiveData<RouteSorting>()
+
+    val selectRoute = MutableLiveData<Route>()
+
+
     init{
-        _routeList.value = listOf(Route(title="第一條路"))
+        _routeList.value = listOf(Route(title="第一條路", length = 1.23F, minutes = 28F
+        ,ratingAvr = RouteRating(3.5F,4F,4.5F,2.5F,4F,3F)))
     }
+
+    fun navigationComplete(){
+        selectRoute.value = null
+    }
+
 }

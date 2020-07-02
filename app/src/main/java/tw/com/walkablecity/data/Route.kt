@@ -12,6 +12,8 @@ data class Route(
     val description: String? = null,
     val ratingAvr: RouteRating? = null,
     val mapImage: String? = null,
+    val length: Float = 0f,
+    val minutes: Float = 0f,
     val comments: List<Comment> = listOf(),
     val photopoints: List<PhotoPoint> = listOf(),
     val ratings: List<RouteRating> = listOf(),

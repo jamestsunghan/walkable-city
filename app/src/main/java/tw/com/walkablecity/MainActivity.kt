@@ -22,7 +22,7 @@ class MainActivity : AppCompatActivity() {
         when(item.itemId){
             R.id.home ->{
                 findNavController(R.id.nav_host_fragment).navigate(NavigationDirections.actionGlobalHomeFragment(
-
+                    null
                 ))
                 return@OnNavigationItemSelectedListener true
             }

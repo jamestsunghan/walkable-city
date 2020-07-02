@@ -25,7 +25,13 @@ class HomeFragment : Fragment() {
 
     private lateinit var mapFragment: SupportMapFragment
 
-    val viewModel: HomeViewModel by viewModels{getVMFactory(HomeFragmentArgs.fromBundle(requireArguments()).routeKey)}
+    val route = if(arguments == null){
+        null
+    }else{
+        HomeFragmentArgs.fromBundle(requireArguments()).routeKey
+    }
+
+    val viewModel: HomeViewModel by viewModels{getVMFactory(route)}
 
     override fun onCreateView(
         inflater: LayoutInflater,
