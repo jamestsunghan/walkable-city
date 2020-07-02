@@ -7,14 +7,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 
 import tw.com.walkablecity.R
 import tw.com.walkablecity.databinding.FragmentEventBinding
+import tw.com.walkablecity.ext.getVMFactory
 
 class EventFragment : Fragment() {
 
-    private lateinit var viewModel: EventViewModel
+
+    private val viewModel: EventViewModel by viewModels{getVMFactory()}
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -24,7 +26,7 @@ class EventFragment : Fragment() {
             .inflate(inflater, R.layout.fragment_event, container, false)
         binding.lifecycleOwner = this
 
-        viewModel = ViewModelProvider(this).get(EventViewModel::class.java)
+        binding.viewModel = viewModel
 
         return binding.root
     }

@@ -6,18 +6,18 @@
         android:title="@string/home_title"/>
     <item
         android:id="@+id/ranking"
-        android:icon="@drawable/ic_big_office_building"
+        android:icon="@drawable/map_ranking_24px"
         android:title="@string/ranking_title"/>
     <item
         android:id="@+id/favorite"
-        android:icon="@drawable/favorite"
+        android:icon="@drawable/map_fav_24"
         android:title="@string/favorite_title"/>
     <item
         android:id="@+id/event"
-        android:icon="@drawable/community"
+        android:icon="@drawable/map_event_24px"
         android:title="@string/event_title"/>
     <item
         android:id="@+id/profile"
-        android:icon="@drawable/account_circle_24px"
+        android:icon="@drawable/map_user"
         android:title="@string/profile_title"/>
 </menu>

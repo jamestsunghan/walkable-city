@@ -7,6 +7,8 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -14,6 +16,7 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import tw.com.walkablecity.R
+import tw.com.walkablecity.data.Walker
 import tw.com.walkablecity.databinding.FragmentHomeBinding
 import tw.com.walkablecity.ext.getVMFactory
 
@@ -22,7 +25,7 @@ class HomeFragment : Fragment() {
 
     private lateinit var mapFragment: SupportMapFragment
 
-    val viewModel by viewModels<HomeViewModel>{getVMFactory()}
+    val viewModel: HomeViewModel by viewModels{getVMFactory(HomeFragmentArgs.fromBundle(requireArguments()).routeKey)}
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -33,6 +36,22 @@ class HomeFragment : Fragment() {
             .inflate(inflater,
                 R.layout.fragment_home, container, false)
         binding.lifecycleOwner = this
+
+        binding.viewModel = viewModel
+
+        viewModel.navigateToRating.observe(viewLifecycleOwner, Observer {
+            if(it){
+                findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToRatingFragment())
+                viewModel.navigateToRatingComplete()
+            }
+        })
+
+        viewModel.navigateToLoad.observe(viewLifecycleOwner, Observer{
+            if(it){
+                findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToLoadRouteFragment())
+                viewModel.navigateToLoadComplete()
+            }
+        })
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
 

@@ -1,6 +1,6 @@
 package tw.com.walkablecity.search
 
-import androidx.lifecycle.ViewModelProviders
+
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -8,15 +8,16 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 
 import tw.com.walkablecity.R
 import tw.com.walkablecity.databinding.FragmentSearchBinding
+import tw.com.walkablecity.ext.getVMFactory
 
 class SearchFragment : DialogFragment() {
 
 
-    private lateinit var viewModel: SearchViewModel
+    private val viewModel: SearchViewModel by viewModels{getVMFactory()}
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -26,7 +27,6 @@ class SearchFragment : DialogFragment() {
             .inflate(inflater, R.layout.fragment_search, container, false)
         binding.lifecycleOwner = this
 
-        viewModel = ViewModelProvider(this).get(SearchViewModel::class.java)
         binding.viewModel = viewModel
 
         return binding.root

@@ -13,6 +13,17 @@
         <action
             android:id="@+id/action_homeFragment_to_searchFragment"
             app:destination="@id/searchFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_loadRouteFragment"
+            app:destination="@id/loadRouteFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_ratingFragment"
+            app:destination="@id/ratingFragment" />
+        <argument
+            android:name="routeKey"
+            app:argType="tw.com.walkablecity.data.Route"
+            app:nullable="true"
+            android:defaultValue="@null" />
     </fragment>
 
     <fragment
@@ -32,7 +43,11 @@
         android:id="@+id/eventFragment"
         android:name="tw.com.walkablecity.event.EventFragment"
         android:label="EventFragment"
-        tools:layout="@layout/fragment_event"/>
+        tools:layout="@layout/fragment_event">
+        <action
+            android:id="@+id/action_eventFragment_to_hostFragment"
+            app:destination="@id/hostFragment" />
+    </fragment>
 
 
 
@@ -40,7 +55,20 @@
         android:id="@+id/profileFragment"
         android:name="tw.com.walkablecity.profile.ProfileFragment"
         android:label="ProfileFragment"
-        tools:layout="@layout/fragment_profile"/>
+        tools:layout="@layout/fragment_profile">
+        <action
+            android:id="@+id/action_profileFragment_to_badgeFragment"
+            app:destination="@id/badgeFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_bestWalkersFragment"
+            app:destination="@id/bestWalkersFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_exploreFragment"
+            app:destination="@id/exploreFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/badgeFragment"
@@ -85,5 +113,40 @@
         app:destination="@id/eventFragment"
         app:popUpTo="@id/navigation"
         app:popUpToInclusive="true" />
+    <fragment
+        android:id="@+id/ratingFragment"
+        android:name="tw.com.walkablecity.rating.RatingFragment"
+        android:label="RatingFragment"
+        tools:layout="@layout/fragment_rating"/>
+    <fragment
+        android:id="@+id/detailFragment"
+        android:name="tw.com.walkablecity.detail.DetailFragment"
+        android:label="DetailFragment"
+        tools:layout="@layout/fragment_detail"
+        />
+    <action android:id="@+id/action_global_detailFragment" app:destination="@id/detailFragment" />
+    <fragment
+        android:id="@+id/bestWalkersFragment"
+        android:name="tw.com.walkablecity.profile.bestwalker.BestWalkersFragment"
+        android:label="BestWalkersFragment"
+        tools:layout="@layout/fragment_best_walkers"/>
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="tw.com.walkablecity.profile.settings.SettingsFragment"
+        android:label="SettingsFragment"
+        tools:layout="@layout/fragment_settings"/>
+    <fragment
+        android:id="@+id/addFriendFragment"
+        android:name="tw.com.walkablecity.addfriend.AddFriendFragment"
+        android:label="AddFriendFragment"
+        tools:layout="@layout/fragment_add_friend"/>
+    <fragment
+        android:id="@+id/exploreFragment"
+        android:name="tw.com.walkablecity.profile.explore.ExploreFragment"
+        android:label="ExploreFragment" />
+    <fragment
+        android:id="@+id/hostFragment"
+        android:name="tw.com.walkablecity.host.HostFragment"
+        android:label="HostFragment" />
 
 </navigation>

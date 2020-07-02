@@ -6,8 +6,10 @@ import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.findNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import tw.com.walkablecity.data.Walker
 import tw.com.walkablecity.databinding.ActivityMainBinding
 import tw.com.walkablecity.ext.getVMFactory
+import tw.com.walkablecity.home.WalkerStatus
 
 class MainActivity : AppCompatActivity() {
 
@@ -19,7 +21,9 @@ class MainActivity : AppCompatActivity() {
     private val onNavItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener {item ->
         when(item.itemId){
             R.id.home ->{
-                findNavController(R.id.nav_host_fragment).navigate(NavigationDirections.actionGlobalHomeFragment())
+                findNavController(R.id.nav_host_fragment).navigate(NavigationDirections.actionGlobalHomeFragment(
+
+                ))
                 return@OnNavigationItemSelectedListener true
             }
             R.id.ranking ->{
@@ -68,6 +72,16 @@ class MainActivity : AppCompatActivity() {
                 R.id.favoriteFragment -> CurrentFragmentType.FAVORITE
                 R.id.eventFragment -> CurrentFragmentType.EVENT
                 R.id.profileFragment -> CurrentFragmentType.PROFILE
+
+                R.id.loadRouteFragment -> CurrentFragmentType.LOAD_ROUTE
+                R.id.ratingFragment -> CurrentFragmentType.RATING
+
+                R.id.detailFragment -> CurrentFragmentType.DETAIL
+
+                R.id.badgeFragment -> CurrentFragmentType.BADGE
+                R.id.bestWalkersFragment -> CurrentFragmentType.BEST_WALKERS
+                R.id.exploreFragment -> CurrentFragmentType.EXPLORE
+                R.id.settingsFragment -> CurrentFragmentType.SETTINGS
 
 
                 else -> viewModel.currentFragment.value

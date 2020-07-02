@@ -1,7 +1,8 @@
 package tw.com.walkablecity.favorite
 
 import androidx.lifecycle.ViewModel
+import tw.com.walkablecity.data.source.WalkableRepository
 
-class FavoriteViewModel : ViewModel() {
+class FavoriteViewModel(val walkableRepository: WalkableRepository) : ViewModel() {
     // TODO: Implement the ViewModel
 }

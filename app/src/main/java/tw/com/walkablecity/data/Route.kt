@@ -7,14 +7,14 @@ import kotlinx.android.parcel.RawValue
 
 @Parcelize
 data class Route(
-    val id: Long,
-    val title: String,
-    val description: String,
-    val ratingAvr: RouteRating,
-    val mapImage: String,
-    val comments: List<Comment>,
-    val photoPoints: List<PhotoPoint>,
-    val ratings: List<RouteRating>,
-    val wayPoints: @RawValue List<GeoPoint>
+    val id: Long = 0L,
+    val title: String? = null,
+    val description: String? = null,
+    val ratingAvr: RouteRating? = null,
+    val mapImage: String? = null,
+    val comments: List<Comment> = listOf(),
+    val photopoints: List<PhotoPoint> = listOf(),
+    val ratings: List<RouteRating> = listOf(),
+    val waypoints: @RawValue List<GeoPoint> = listOf()
 
     ): Parcelable

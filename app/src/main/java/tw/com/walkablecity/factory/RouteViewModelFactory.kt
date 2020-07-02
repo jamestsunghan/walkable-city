@@ -5,16 +5,18 @@ import androidx.lifecycle.ViewModelProvider
 import tw.com.walkablecity.data.Route
 import tw.com.walkablecity.data.User
 import tw.com.walkablecity.data.source.WalkableRepository
+import tw.com.walkablecity.home.HomeViewModel
 
 @Suppress("UNCHECKED_CAST")
-class RouteViewModelFactory(private val walkableRepository: WalkableRepository, private val route: Route)
+class RouteViewModelFactory(private val walkableRepository: WalkableRepository, val route: Route?)
     : ViewModelProvider.Factory{
 
     override fun <T : ViewModel?> create(modelClass: Class<T>) =
         with(modelClass){
             when{
-//                isAssignableFrom(MainViewModel::class.java) ->
-//                    MainViewModel(walkableRepository)
+                isAssignableFrom(HomeViewModel::class.java) ->
+                    HomeViewModel(walkableRepository, route)
+
 
                 else ->
                     throw IllegalArgumentException("Unknown ViewModel Class ${modelClass.name}")

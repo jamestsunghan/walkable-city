@@ -6,15 +6,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 
 import tw.com.walkablecity.R
 import tw.com.walkablecity.databinding.FragmentProfileBinding
+import tw.com.walkablecity.ext.getVMFactory
 
 class ProfileFragment : Fragment() {
 
 
-    private lateinit var viewModel: ProfileViewModel
+    private val viewModel: ProfileViewModel by viewModels{getVMFactory()}
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -24,7 +25,7 @@ class ProfileFragment : Fragment() {
             .inflate(inflater, R.layout.fragment_profile, container, false)
         binding.lifecycleOwner = this
 
-        viewModel = ViewModelProvider(this).get(ProfileViewModel::class.java)
+        binding.viewModel = viewModel
 
 
 

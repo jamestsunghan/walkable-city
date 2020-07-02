@@ -7,15 +7,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 
 import tw.com.walkablecity.R
 import tw.com.walkablecity.databinding.FragmentFavoriteBinding
+import tw.com.walkablecity.ext.getVMFactory
 
 class FavoriteFragment : Fragment() {
 
 
-    private lateinit var viewModel: FavoriteViewModel
+    private val viewModel: FavoriteViewModel by viewModels{getVMFactory()}
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -25,7 +26,7 @@ class FavoriteFragment : Fragment() {
             .inflate(inflater, R.layout.fragment_favorite, container, false)
         binding.lifecycleOwner = this
 
-        viewModel = ViewModelProvider(this).get(FavoriteViewModel::class.java)
+        binding.viewModel = viewModel
 
 
         return binding.root
