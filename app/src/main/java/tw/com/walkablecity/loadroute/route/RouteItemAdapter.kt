@@ -9,9 +9,11 @@ import androidx.recyclerview.widget.RecyclerView
 import tw.com.walkablecity.R
 import tw.com.walkablecity.Util
 import tw.com.walkablecity.data.Route
+import tw.com.walkablecity.data.RouteRating
 import tw.com.walkablecity.data.RouteSorting
 import tw.com.walkablecity.databinding.ItemRouteFilterBinding
 import tw.com.walkablecity.databinding.ItemRouteLinearBinding
+import tw.com.walkablecity.ext.toSortList
 
 class RouteItemAdapter(private val viewModel: RouteItemViewModel): ListAdapter<RouteItem, RecyclerView.ViewHolder>(DiffCallback) {
 
@@ -19,45 +21,18 @@ class RouteItemAdapter(private val viewModel: RouteItemViewModel): ListAdapter<R
 
     class FilterViewHolder(private val binding: ItemRouteFilterBinding): RecyclerView.ViewHolder(binding.root){
         fun bind(viewModel: RouteItemViewModel){
+
             binding.viewModel =viewModel
 
-            binding.filterCoverage.setOnClickListener {
-                viewModel.filter.value = RouteSorting.COVERAGE
-
-            }
-            binding.filterRest.setOnClickListener {
-                viewModel.filter.value = RouteSorting.REST
-            }
-            binding.filterScenery.setOnClickListener {
-                viewModel.filter.value = RouteSorting.SCENERY
-            }
-            binding.filterSnack.setOnClickListener {
-                viewModel.filter.value = RouteSorting.SNACK
-            }
-            binding.filterTranquility.setOnClickListener {
-                viewModel.filter.value = RouteSorting.TRANQUILITY
-            }
-            binding.filterVibe.setOnClickListener {
-                viewModel.filter.value = RouteSorting.VIBE
-            }
             binding.executePendingBindings()
         }
     }
 
     class RouteViewHolder(private val binding: ItemRouteLinearBinding): RecyclerView.ViewHolder(binding.root){
         fun bind(route: Route, viewModel: RouteItemViewModel){
-            val filterList = listOf(
-                Pair(Util.getString(R.string.filter_coverage),route.ratingAvr?.coverage),
-                Pair(Util.getString(R.string.filter_tranquility),route.ratingAvr?.tranquility),
-                Pair(Util.getString(R.string.filter_scenery),route.ratingAvr?.scenery),
-                Pair(Util.getString(R.string.filter_rest),route.ratingAvr?.rest),
-                Pair(Util.getString(R.string.filter_snack),route.ratingAvr?.snack),
-                Pair(Util.getString(R.string.filter_vibe),route.ratingAvr?.vibe))
-            val sortList = filterList.sortedBy { it.second }.reversed().map{
-                "${it.first} | ${it.second}"
-            }
-            Log.d("JJ","sortList ${sortList} size ${sortList.size}")
-            binding.characterSpinner.adapter = CharacterSpinnerAdapter(sortList)
+
+            Log.d("JJ","sortList ${route.ratingAvr.toSortList()} ratingAvr ${route.ratingAvr}")
+            binding.characterSpinner.adapter = CharacterSpinnerAdapter(route.ratingAvr.toSortList())
             binding.route = route
             binding.selectRoute.setOnClickListener {
                 viewModel.selectRoute.value = route
@@ -105,16 +80,3 @@ class RouteItemAdapter(private val viewModel: RouteItemViewModel): ListAdapter<R
     }
 }
 
-sealed class RouteItem{
-    abstract val id: Long
-
-    object Filter: RouteItem(){
-        override val id: Long
-            get() = Long.MIN_VALUE
-    }
-
-    data class LoadRoute(val route: Route): RouteItem(){
-        override val id: Long
-            get() = route.id
-    }
-}

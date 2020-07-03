@@ -59,6 +59,13 @@ class HomeFragment : Fragment() {
             }
         })
 
+        viewModel.navigateToSearch.observe(viewLifecycleOwner, Observer {
+            if(it){
+                findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToSearchFragment())
+                viewModel.navigateToSearchComplete()
+            }
+        })
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
 
         /**

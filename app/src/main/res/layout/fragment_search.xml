@@ -1,20 +1,214 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <variable name="viewModel" type="tw.com.walkablecity.search.SearchViewModel" />
+
+        <variable
+            name="viewModel"
+            type="tw.com.walkablecity.search.SearchViewModel" />
+
+        <import type="tw.com.walkablecity.data.RouteSorting" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/search_filter_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         tools:context=".search.SearchFragment">
 
-        <TextView
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/edit_search_route"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="Hello" />
+            android:layout_height="wrap_content"
+            android:background="@color/primaryLightColor"
+            app:endIconDrawable="@drawable/map_search_24px"
+            app:endIconMode="custom"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:startIconDrawable="@drawable/ic_footprint">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:background="@color/primaryLightColor"
+                android:fontFamily="@font/noto_sans"
+                android:hint="@string/search_destination"
+                android:letterSpacing="0.15" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <TextView
+            android:id="@+id/select_time_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:background="@color/primaryLightColor"
+            android:fontFamily="@font/noto_sans"
+            android:letterSpacing="0.15"
+            android:minWidth="36dp"
+            android:minHeight="36dp"
+            android:text="@string/filter_time_title"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="@+id/search_coverage"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/search_coverage" />
+
+
+        <TextView
+            android:id="@+id/search_scenery"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:background="@{viewModel.filter == RouteSorting.SCENERY ? @drawable/bg_filter_button_clicked : @drawable/bg_filter_button_unclicked}"
+            android:fontFamily="@font/noto_sans"
+            android:gravity="center"
+            android:minWidth="36dp"
+            android:minHeight="36dp"
+            android:onClick="@{() -> viewModel.sortBy(RouteSorting.SCENERY)}"
+            android:text="@string/filter_scenery"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/edit_search_route"
+            tools:background="@drawable/bg_filter_button_unclicked" />
+
+        <TextView
+            android:id="@+id/search_tranquility"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:background="@{viewModel.filter == RouteSorting.TRANQUILITY ? @drawable/bg_filter_button_clicked : @drawable/bg_filter_button_unclicked}"
+            android:fontFamily="@font/noto_sans"
+            android:gravity="center"
+            android:minWidth="36dp"
+            android:minHeight="36dp"
+            android:onClick="@{() -> viewModel.sortBy(RouteSorting.TRANQUILITY)}"
+            android:text="@string/filter_tranquility"
+            app:layout_constraintEnd_toStartOf="@+id/search_scenery"
+            app:layout_constraintTop_toBottomOf="@+id/edit_search_route"
+            tools:background="@drawable/bg_filter_button_unclicked" />
+
+        <TextView
+            android:id="@+id/search_coverage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:background="@{viewModel.filter == RouteSorting.COVERAGE ? @drawable/bg_filter_button_clicked : @drawable/bg_filter_button_unclicked}"
+            android:fontFamily="@font/noto_sans"
+            android:gravity="center"
+            android:minWidth="36dp"
+            android:minHeight="36dp"
+            android:onClick="@{() -> viewModel.sortBy(RouteSorting.COVERAGE)}"
+            android:text="@string/filter_coverage"
+            app:layout_constraintEnd_toStartOf="@+id/search_tranquility"
+            app:layout_constraintTop_toBottomOf="@+id/edit_search_route"
+            tools:background="@drawable/bg_filter_button_unclicked" />
+
+        <TextView
+            android:id="@+id/search_vibe"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
+            android:background="@{viewModel.filter == RouteSorting.VIBE ? @drawable/bg_filter_button_clicked : @drawable/bg_filter_button_unclicked}"
+            android:fontFamily="@font/noto_sans"
+            android:gravity="center"
+            android:minWidth="36dp"
+            android:minHeight="36dp"
+            android:onClick="@{() -> viewModel.sortBy(RouteSorting.VIBE)}"
+            android:text="@string/filter_vibe"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/search_scenery"
+            tools:background="@drawable/bg_filter_button_unclicked" />
+
+        <TextView
+            android:id="@+id/search_snack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:background="@{viewModel.filter == RouteSorting.SNACK ? @drawable/bg_filter_button_clicked : @drawable/bg_filter_button_unclicked}"
+            android:fontFamily="@font/noto_sans"
+            android:gravity="center"
+            android:minWidth="36dp"
+            android:minHeight="36dp"
+            android:onClick="@{() -> viewModel.sortBy(RouteSorting.SNACK)}"
+            android:text="@string/filter_snack"
+            app:layout_constraintEnd_toStartOf="@+id/search_vibe"
+            app:layout_constraintTop_toBottomOf="@+id/search_tranquility"
+            tools:background="@drawable/bg_filter_button_clicked" />
+
+        <TextView
+            android:id="@+id/search_rest"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:background="@{viewModel.filter == RouteSorting.REST ? @drawable/bg_filter_button_clicked : @drawable/bg_filter_button_unclicked}"
+            android:fontFamily="@font/noto_sans"
+            android:gravity="center"
+            android:minWidth="36dp"
+            android:minHeight="36dp"
+            android:onClick="@{() -> viewModel.sortBy(RouteSorting.REST)}"
+            android:text="@string/filter_rest"
+            app:layout_constraintEnd_toStartOf="@+id/search_snack"
+            app:layout_constraintTop_toBottomOf="@+id/search_coverage"
+            tools:background="@drawable/bg_filter_button_unclicked" />
+
+        <TextView
+            android:id="@+id/minute"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:fontFamily="@font/noto_sans"
+            android:gravity="center"
+            android:minWidth="24dp"
+            android:minHeight="24dp"
+            android:text="@string/minute"
+            app:layout_constraintBottom_toBottomOf="@+id/search_rest"
+            app:layout_constraintEnd_toStartOf="@id/search_rest"
+            app:layout_constraintTop_toTopOf="@id/search_rest" />
+
+        <com.google.android.material.slider.RangeSlider
+            android:id="@+id/timer_slider"
+            style="?attr/sliderStyle"
+            android:layout_width="135dp"
+            android:layout_height="wrap_content"
+            android:stepSize="5"
+            android:valueFrom="5"
+            android:valueTo="30"
+            app:layout_constraintBottom_toBottomOf="@+id/search_rest"
+            app:layout_constraintEnd_toStartOf="@id/minute"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/search_rest"
+            app:values="@{viewModel.range}" />
+
+        <TextView
+            android:id="@+id/send_filter"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:background="@drawable/bg_filter_button_clicked"
+            android:fontFamily="@font/noto_sans"
+            android:gravity="center"
+            android:onClick="@{() -> viewModel.searchRoute()}"
+            android:letterSpacing="0.15"
+            android:minWidth="36dp"
+            android:minHeight="36dp"
+            android:text="@string/send_filter"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/search_snack" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

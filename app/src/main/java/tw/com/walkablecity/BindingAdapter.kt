@@ -5,6 +5,7 @@ import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import androidx.databinding.InverseBindingAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.slider.RangeSlider
 import tw.com.walkablecity.data.Route
 import tw.com.walkablecity.data.RouteSorting
 import tw.com.walkablecity.home.WalkerStatus
@@ -47,24 +48,6 @@ fun addFilterAndSubmitList(view: RecyclerView, list: List<Route>?){
 
 }
 
-//@BindingAdapter("filter")
-//fun setFilterButton(textView: TextView, sorting: RouteSorting){
-//
-//}
-
-//@InverseBindingAdapter(attribute = "filter")
-//fun setLiveDataFilter(textView: TextView, sorting: RouteSorting): RouteSorting{
-//
-//    return when(textView.id){
-//        R.id.filter_coverage -> RouteSorting.COVERAGE
-//        R.id.filter_rest -> RouteSorting.REST
-//        R.id.filter_scenery -> RouteSorting.SCENERY
-//        R.id.filter_snack -> RouteSorting.SNACK
-//        R.id.filter_tranquility -> RouteSorting.TRANQUILITY
-//        R.id.filter_vibe -> RouteSorting.VIBE
-//        else ->sorting
-//    }
-//}
 
 
 

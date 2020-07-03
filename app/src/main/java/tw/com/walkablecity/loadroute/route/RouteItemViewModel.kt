@@ -14,7 +14,8 @@ class RouteItemViewModel( private val walkableRepository: WalkableRepository) : 
     val routeList: LiveData<List<Route>>
         get() = _routeList
 
-    val filter = MutableLiveData<RouteSorting>()
+    private val _filter = MutableLiveData<RouteSorting>()
+    val filter :LiveData<RouteSorting> get() = _filter
 
     val selectRoute = MutableLiveData<Route>()
 
@@ -26,6 +27,11 @@ class RouteItemViewModel( private val walkableRepository: WalkableRepository) : 
 
     fun navigationComplete(){
         selectRoute.value = null
+        _filter.value = null
+    }
+
+    fun filterSort(route: RouteSorting){
+        _filter.value = route
     }
 
 }
