@@ -9,5 +9,6 @@ data class Walk (
     val distance: Float,
     val startTime: Timestamp,
     val endTime: Timestamp,
+    val duration: Long,
     val routeId: String
 ): Parcelable

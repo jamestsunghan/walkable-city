@@ -10,6 +10,7 @@ enum class CurrentFragmentType(val title: String) {
     EVENT(getString(R.string.event_title)),
     FAVORITE(getString(R.string.favorite_title)),
     PROFILE(getString(R.string.profile_title)),
+    SEARCH(""),
 
     DETAIL(getString(R.string.detail_title)),
 

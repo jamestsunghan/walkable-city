@@ -8,6 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 
 import tw.com.walkablecity.R
 import tw.com.walkablecity.databinding.FragmentRatingBinding
@@ -26,6 +28,15 @@ class RatingFragment : Fragment() {
         binding.lifecycleOwner = this
 
         binding.viewModel = viewModel
+
+        viewModel.routeRating.observe(viewLifecycleOwner, Observer {
+            it?.let{
+                findNavController().navigate(RatingFragmentDirections.actionGlobalHomeFragment(null))
+                viewModel.sendComplete()
+            }
+        })
+
+
 
         return binding.root
     }

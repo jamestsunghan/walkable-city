@@ -42,5 +42,14 @@
     <string name="no_direction_yet">還沒有選擇目的地歐</string>
     <string name="no_filter_yet">還沒有選擇路線類型歐</string>
 
+    <string name="walker_timer">散步時間</string>
+    <string name="walker_distance">散步旅程</string>
+    <string name="approximate_time">約%.1f分</string>
+    <string name="zero_time">00:00</string>
+    <string name="zero_distance">0.00</string>
+    <string name="approximate_length">約%.1f公里</string>
+
+    <string name="finish_rating">完成評價</string>
+
 
 </resources>

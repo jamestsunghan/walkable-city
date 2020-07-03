@@ -1,6 +1,7 @@
 package tw.com.walkablecity.home
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,13 +26,10 @@ class HomeFragment : Fragment() {
 
     private lateinit var mapFragment: SupportMapFragment
 
-    val route = if(arguments == null){
-        null
-    }else{
-        HomeFragmentArgs.fromBundle(requireArguments()).routeKey
-    }
 
-    val viewModel: HomeViewModel by viewModels{getVMFactory(route)}
+
+
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -42,6 +40,14 @@ class HomeFragment : Fragment() {
             .inflate(inflater,
                 R.layout.fragment_home, container, false)
         binding.lifecycleOwner = this
+
+        val route = if((arguments as Bundle).containsKey("routeKey")){
+            HomeFragmentArgs.fromBundle(arguments as Bundle).routeKey
+        }else{
+            null
+        }
+
+        val viewModel: HomeViewModel by viewModels{getVMFactory(route)}
 
         binding.viewModel = viewModel
 
@@ -63,6 +69,12 @@ class HomeFragment : Fragment() {
             if(it){
                 findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToSearchFragment())
                 viewModel.navigateToSearchComplete()
+            }
+        })
+
+        viewModel.route.observe(viewLifecycleOwner, Observer {
+            it?.let{
+                Log.d("JJ", " route update $it")
             }
         })
 
