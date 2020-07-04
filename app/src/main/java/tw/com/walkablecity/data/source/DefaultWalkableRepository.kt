@@ -7,4 +7,12 @@ class DefaultWalkableRepository(private val remote: WalkableDataSource): Walkabl
     override suspend fun getAllRoute(): Result<List<Route>> {
         return remote.getAllRoute()
     }
+
+    override suspend fun getUserFavoriteRoutes(userId: Int): Result<List<Route>> {
+        return remote.getUserFavoriteRoutes(userId)
+    }
+
+    override suspend fun getUserRoutes(userId: Int): Result<List<Route>> {
+        return remote.getUserRoutes(userId)
+    }
 }

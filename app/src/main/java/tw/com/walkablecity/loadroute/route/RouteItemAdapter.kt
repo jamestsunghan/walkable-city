@@ -22,8 +22,10 @@ class RouteItemAdapter(private val viewModel: RouteItemViewModel): ListAdapter<R
     class FilterViewHolder(private val binding: ItemRouteFilterBinding): RecyclerView.ViewHolder(binding.root){
         fun bind(viewModel: RouteItemViewModel){
 
-            binding.viewModel =viewModel
-
+            binding.viewModel = viewModel
+            binding.timeSlider.addOnChangeListener { slider, value, fromUser ->
+                viewModel.setTimeFilter(slider.values)
+            }
             binding.executePendingBindings()
         }
     }

@@ -5,10 +5,10 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class RouteRating (
-    val coverage: Float,
-    val rest: Float,
-    val scenery: Float,
-    val snack: Float,
-    val tranquility: Float,
-    val vibe: Float
+    val coverage: Float = 0f,
+    val rest: Float = 0f,
+    val scenery: Float= 0f,
+    val snack: Float= 0f,
+    val tranquility: Float= 0f,
+    val vibe: Float= 0f
 ): Parcelable

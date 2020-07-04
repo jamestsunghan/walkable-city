@@ -203,3 +203,4 @@ fun hexagonByRating(view: View, list: List<Int>) {
 
 
 //mock data area
+const val userId = 10043

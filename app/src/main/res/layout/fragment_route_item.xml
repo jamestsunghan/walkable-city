@@ -1,10 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <variable name="viewModel" type="tw.com.walkablecity.loadroute.route.RouteItemViewModel" />
+
+        <variable
+            name="viewModel"
+            type="tw.com.walkablecity.loadroute.route.RouteItemViewModel" />
+
+        <import type="android.view.View" />
+
+        <import type="tw.com.walkablecity.data.LoadStatus" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -16,9 +23,35 @@
             android:id="@+id/recycler_route_item"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             android:orientation="vertical"
-            app:routeItem="@{viewModel.routeList}"/>
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:routeItem="@{viewModel.routeList}" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/noto_sans"
+            android:letterSpacing="0.15"
+            android:visibility="@{viewModel.status == LoadStatus.LOADING || viewModel.routeList == null ? View.GONE : (viewModel.routeList.size() == 0 ? View.VISIBLE : View.GONE)}"
+            android:text="@{viewModel.routeAllList.size() == 0 ? viewModel.loadRouteType.emptyRoute : @string/no_route_fit}"
+            android:textColor="@color/primaryColor"
+            android:textSize="24sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="@string/no_route_yet" />
+
+        <ProgressBar
+            android:id="@+id/progress_payment_checkout"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:theme="@style/ProgressTheme"
+            android:visibility="@{viewModel.status == LoadStatus.LOADING ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -51,5 +51,11 @@
 
     <string name="finish_rating">完成評價</string>
 
+    <string name="not_here">you are not suppose to be here</string>
+    <string name="no_route_yet">目前無行跡路線</string>
+    <string name="no_favs_route_yet">目前無收藏路線</string>
+    <string name="no_route_nearby">附近無推薦路線</string>
+    <string name="no_route_fit">無適合的推薦路線</string>
+
 
 </resources>

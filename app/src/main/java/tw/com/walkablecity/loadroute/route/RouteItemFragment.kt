@@ -22,7 +22,7 @@ import tw.com.walkablecity.loadroute.LoadRouteType
 class RouteItemFragment(private val loadRouteType: LoadRouteType) : Fragment() {
 
 
-    private val viewModel: RouteItemViewModel by viewModels{getVMFactory()}
+    private val viewModel: RouteItemViewModel by viewModels{getVMFactory(loadRouteType)}
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -40,7 +40,7 @@ class RouteItemFragment(private val loadRouteType: LoadRouteType) : Fragment() {
         viewModel.filter.observe(viewLifecycleOwner, Observer {
             it?.let{
                 Log.d("JJ","route sorting ${it.text}")
-                adapter.notifyDataSetChanged()
+                viewModel.routeSorting(it, adapter)
             }
         })
 
@@ -49,6 +49,12 @@ class RouteItemFragment(private val loadRouteType: LoadRouteType) : Fragment() {
 
                 findNavController().navigate(LoadRouteFragmentDirections.actionGlobalHomeFragment(it))
                 viewModel.navigationComplete()
+            }
+        })
+
+        viewModel.routeTime.observe(viewLifecycleOwner, Observer {
+            it?.let{
+                viewModel.timeFilter(it)
             }
         })
 
