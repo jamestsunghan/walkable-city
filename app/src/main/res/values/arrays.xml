@@ -4,4 +4,9 @@
         <item>10</item>
         <item>30</item>
     </array>
+
+    <array name="initial_creator_slider_values">
+        <item>1</item>
+        <item>100</item>
+    </array>
 </resources>

@@ -8,6 +8,7 @@ import tw.com.walkablecity.data.Walk
 import tw.com.walkablecity.data.Walker
 import tw.com.walkablecity.factory.*
 import tw.com.walkablecity.loadroute.LoadRouteType
+import tw.com.walkablecity.rating.RatingType
 
 fun Fragment.getVMFactory(): ViewModelFactory{
     val repo = (requireContext().applicationContext as WalkableApp).repo
@@ -24,9 +25,9 @@ fun Fragment.getVMFactory(route: Route?): RouteViewModelFactory {
     return RouteViewModelFactory(repo, route)
 }
 
-fun Fragment.getVMFactory(route: Route?, walk: Walk): RatingViewModelFactory {
+fun Fragment.getVMFactory(route: Route?, walk: Walk, type: RatingType?): RatingViewModelFactory {
     val repo = (requireContext().applicationContext as WalkableApp).repo
-    return RatingViewModelFactory(repo, route, walk)
+    return RatingViewModelFactory(repo, route, walk, type)
 }
 
 fun Fragment.getVMFactory(loadRouteType: LoadRouteType): LoadRouteViewModelFactory {

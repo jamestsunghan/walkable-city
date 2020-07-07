@@ -12,8 +12,10 @@ import android.widget.TextView
 import androidx.core.graphics.toPointF
 import androidx.databinding.BindingAdapter
 import androidx.databinding.InverseBindingAdapter
+import androidx.databinding.InverseBindingListener
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.slider.RangeSlider
+import com.google.android.material.slider.Slider
 import tw.com.walkablecity.Util.getString
 import tw.com.walkablecity.Util.lessThenTenPadStart
 import tw.com.walkablecity.data.GoogleRoute
@@ -123,6 +125,28 @@ fun walkerDistance(textView: TextView, status: WalkerStatus, mapRoute: GoogleRou
 
     }
 }
+
+
+@BindingAdapter("value")
+fun convertInt2Float(slider: Slider, input: Int){
+    slider.value = input.toFloat()
+}
+
+@InverseBindingAdapter(attribute = "value")
+fun convertFloat2Int(slider: Slider):Int{
+    return slider.value.toInt()
+}
+
+@BindingAdapter("valueAttrChanged")
+fun setSliderListeners(slider: Slider, attrChange: InverseBindingListener){
+    slider.addOnChangeListener { _, _, _ ->
+        attrChange.onChange()
+    }
+}
+
+
+
+
 
 @BindingAdapter("hexagon")
 fun bgHexagonByColorCode(view: View, colorId: Int) {

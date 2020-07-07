@@ -19,4 +19,12 @@
         <item name="colorAccent">@color/black</item>
     </style>
 
+    <style name="SecondSlider" parent="@style/Widget.MaterialComponents.Slider">
+        <item name="labelStyle">@style/SecondTooltip</item>
+    </style>
+
+    <style name="SecondTooltip" parent="Widget.MaterialComponents.Tooltip">
+        <item name="backgroundTint">@color/secondaryColor</item>
+    </style>
+
 </resources>

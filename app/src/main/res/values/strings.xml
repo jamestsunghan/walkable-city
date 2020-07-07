@@ -69,5 +69,31 @@
     <string name="cancel">不同意</string>
     <string name="permission_required_toast">要同意才能夠讓散步的體驗更好歐</string>
 
+    <string name="rating_route_title">參考路線</string>
+    <string name="rating_walk_route_title">行跡</string>
+
+    <string name="no_rating_for_walk">不打算創建新路線</string>
+    <string name="no_load_route">本次無載入路線</string>
+
+    <string name="timer">時間</string>
+    <string name="distance">旅程</string>
+
+    <string name="create_route_interval">創建區段</string>
+    <string name="create_route_title">主題</string>
+    <string name="create_route_description">描述</string>
+    <string name="share_photo">分享照片</string>
+    <string name="rating">街道分數</string>
+    <string name="rating_coverage">遮蔭：%d</string>
+    <string name="rating_rest">歇腳：%d</string>
+    <string name="rating_snack">好吃：%d</string>
+    <string name="rating_vibe">好逛：%d</string>
+    <string name="rating_tranquility">靜謐：%d</string>
+    <string name="rating_scenery">景色：%d</string>
+    <string name="comment">評論</string>
+
+    <string name="input_title">輸入主題</string>
+    <string name="input_description">輸入描述</string>
+
+
 
 </resources>

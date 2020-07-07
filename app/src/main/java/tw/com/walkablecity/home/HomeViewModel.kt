@@ -211,7 +211,7 @@ class HomeViewModel(val walkableRepository: WalkableRepository, val argument: Ro
             duration = walkerTimer.value as Long,
             startTime = startTime.value as Timestamp,
             endTime = endTime.value as Timestamp,
-            routeId = route.value?.id as Long,
+            routeId = route.value?.id,
             waypoints = trackPoints.value as List<LatLng>)
         navigateToRating(walk)
     }

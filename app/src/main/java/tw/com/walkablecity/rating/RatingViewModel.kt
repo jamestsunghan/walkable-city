@@ -8,22 +8,10 @@ import tw.com.walkablecity.data.Route
 import tw.com.walkablecity.data.Walk
 import tw.com.walkablecity.data.source.WalkableRepository
 
-class RatingViewModel(val walkableRepository: WalkableRepository, val selectedRoute: Route?, val walk: Walk) : ViewModel() {
-    val colorId = R.color.primaryColor
-
-    val duration = MutableLiveData<Float>().apply{
-        value = walk.duration.toFloat() / 60
-    }
-
-    private val _routeRating = MutableLiveData<Route>()
-    val routeRating: LiveData<Route>
-        get() = _routeRating
-
-    fun sendRouteRating(){
-        _routeRating.value = Route()
-    }
+class RatingViewModel(val repo: WalkableRepository, val route: Route?, val walk: Walk, val type: RatingType?) : ViewModel() {
+    val navigateToSearch = MutableLiveData<Int>(0)
 
     fun sendComplete(){
-        _routeRating.value = null
+        navigateToSearch.value = 0
     }
 }
