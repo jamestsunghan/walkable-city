@@ -94,6 +94,9 @@
     <string name="input_title">輸入主題</string>
     <string name="input_description">輸入描述</string>
 
+    <string name="no_route_selected">您這次並未選擇載入路線</string>
+    <string name="no_more_to_comment">您已評論完了歐</string>
+
 
 
 </resources>

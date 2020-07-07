@@ -8,6 +8,7 @@ import tw.com.walkablecity.R
 import tw.com.walkablecity.Util
 import tw.com.walkablecity.Util.getString
 import tw.com.walkablecity.data.LatLngResult
+import tw.com.walkablecity.data.Route
 import tw.com.walkablecity.data.RouteRating
 import tw.com.walkablecity.data.RouteSorting
 
@@ -96,4 +97,37 @@ fun LatLngResult.toQuery(): String{
 
 fun LatLng.toQuery(): String{
     return "${this.latitude},${this.longitude}"
+}
+
+fun RouteRating.toHashMapInt(): HashMap<String, Int>{
+    return hashMapOf(
+        "coverage" to this.coverage.toInt(),
+        "vibe" to this.vibe.toInt(),
+        "snack" to this.snack.toInt(),
+        "scenery" to this.scenery.toInt(),
+        "rest" to this.rest.toInt(),
+        "tranquility" to this.tranquility.toInt()
+    )
+}
+
+fun RouteRating.toHashMap(): HashMap<String, Float>{
+    return hashMapOf(
+        "coverage" to this.coverage,
+        "vibe" to this.vibe,
+        "snack" to this.snack,
+        "scenery" to this.scenery,
+        "rest" to this.rest,
+        "tranquility" to this.tranquility
+    )
+}
+
+fun RouteRating.addToAverage(rating: RouteRating, route: Route): RouteRating{
+    return RouteRating(
+        coverage = (this.coverage.times(route.walkers.size).plus(rating.coverage)).div(route.walkers.size + 1),
+        rest = (this.rest.times(route.walkers.size).plus(rating.rest)).div(route.walkers.size + 1),
+        snack = (this.snack.times(route.walkers.size).plus(rating.snack)).div(route.walkers.size + 1),
+        scenery = (this.scenery.times(route.walkers.size).plus(rating.scenery)).div(route.walkers.size + 1),
+        tranquility = (this.tranquility.times(route.walkers.size).plus(rating.tranquility)).div(route.walkers.size + 1),
+        vibe = (this.vibe.times(route.walkers.size).plus(rating.vibe)).div(route.walkers.size + 1)
+    )
 }

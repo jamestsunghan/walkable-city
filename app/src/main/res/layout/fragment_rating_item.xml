@@ -22,6 +22,8 @@
             android:id="@+id/rating_scroll"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:layout_marginBottom="16dp"
+            android:visibility="@{viewModel.sendRating == true ? View.GONE : View.VISIBLE}"
             app:layout_constraintBottom_toTopOf="@+id/send_rating"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
@@ -460,6 +462,33 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/rating_vibe" />
 
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/edit_route_comment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginBottom="8dp"
+                    android:background="@color/primaryLightColor"
+                    app:endIconDrawable="@drawable/ic_footprint"
+                    app:endIconMode="custom"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/route_comment_title">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:background="@color/primaryLightColor"
+                        android:fontFamily="@font/noto_sans"
+                        android:hint="@string/input_title"
+                        android:letterSpacing="0.15" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
 
                 <!--                <View-->
                 <!--                    android:id="@+id/hexagon_bg"-->
@@ -494,10 +523,31 @@
             android:textColor="@color/primaryDarkColor"
             android:textSize="18sp"
             android:textStyle="bold"
-            android:visibility="@{viewModel.routeRating == null ? View.VISIBLE : View.GONE}"
+            android:visibility="@{viewModel.sendRating == true ? View.GONE : View.VISIBLE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/no_more_route"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:fontFamily="@font/noto_sans"
+            android:gravity="center"
+            android:letterSpacing="0.15"
+            android:paddingStart="8dp"
+            android:paddingTop="4dp"
+            android:paddingEnd="8dp"
+            android:paddingBottom="4dp"
+            android:text="@{viewModel.selectedRoute == null ? @string/no_route_selected : @string/no_more_to_comment}"
+            android:textSize="16sp"
+            android:visibility="@{viewModel.sendRating == true ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
