@@ -6,6 +6,7 @@ import tw.com.walkablecity.data.Route
 import tw.com.walkablecity.data.User
 import tw.com.walkablecity.data.source.WalkableRepository
 import tw.com.walkablecity.home.HomeViewModel
+import tw.com.walkablecity.rating.RatingViewModel
 
 @Suppress("UNCHECKED_CAST")
 class RouteViewModelFactory(private val walkableRepository: WalkableRepository, val route: Route?)
@@ -16,7 +17,6 @@ class RouteViewModelFactory(private val walkableRepository: WalkableRepository, 
             when{
                 isAssignableFrom(HomeViewModel::class.java) ->
                     HomeViewModel(walkableRepository, route)
-
 
                 else ->
                     throw IllegalArgumentException("Unknown ViewModel Class ${modelClass.name}")

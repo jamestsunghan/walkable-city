@@ -46,9 +46,6 @@ class ViewModelFactory( private val walkableRepository: WalkableRepository)
                 isAssignableFrom(SearchViewModel::class.java) ->
                     SearchViewModel(walkableRepository)
 
-                isAssignableFrom(RatingViewModel::class.java) ->
-                    RatingViewModel(walkableRepository)
-
                 isAssignableFrom(AddFriendViewModel::class.java) ->
                     AddFriendViewModel(walkableRepository)
 

@@ -48,6 +48,10 @@ class RouteItemViewModel( private val walkableRepository: WalkableRepository, va
     private val viewModelJob = Job()
     private val coroutineScope = CoroutineScope(Dispatchers.Main + viewModelJob)
 
+    override fun onCleared() {
+        super.onCleared()
+        viewModelJob.cancel()
+    }
 
     init{
 
@@ -71,7 +75,16 @@ class RouteItemViewModel( private val walkableRepository: WalkableRepository, va
             val result = when(type){
                 LoadRouteType.FAVORITE -> walkableRepository.getUserFavoriteRoutes(userId)
                 LoadRouteType.MINE -> walkableRepository.getUserRoutes(userId)
-                LoadRouteType.NEARBY -> walkableRepository.getAllRoute()
+                LoadRouteType.NEARBY -> {
+
+                    val routesNearby = when(val result = walkableRepository.getUserCurrentLocation()){
+                        is Result.Success ->walkableRepository.getRoutesNearby(result.data)
+                        is Result.Fail -> null
+                        is Result.Error -> null
+                        else -> null
+                    }
+                    routesNearby
+                }
             }
             when(result){
                 is Result.Success ->{

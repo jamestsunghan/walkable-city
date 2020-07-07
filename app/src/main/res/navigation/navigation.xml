@@ -116,7 +116,15 @@
         android:id="@+id/ratingFragment"
         android:name="tw.com.walkablecity.rating.RatingFragment"
         android:label="RatingFragment"
-        tools:layout="@layout/fragment_rating"/>
+        tools:layout="@layout/fragment_rating">
+        <argument
+            android:name="selectedRoute"
+            app:argType="tw.com.walkablecity.data.Route"
+            app:nullable="true" />
+        <argument
+            android:name="walkKey"
+            app:argType="tw.com.walkablecity.data.Walk" />
+    </fragment>
     <fragment
         android:id="@+id/detailFragment"
         android:name="tw.com.walkablecity.detail.DetailFragment"

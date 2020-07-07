@@ -33,8 +33,8 @@ class RouteItemAdapter(private val viewModel: RouteItemViewModel): ListAdapter<R
     class RouteViewHolder(private val binding: ItemRouteLinearBinding): RecyclerView.ViewHolder(binding.root){
         fun bind(route: Route, viewModel: RouteItemViewModel){
 
-            Log.d("JJ","sortList ${route.ratingAvr.toSortList()} ratingAvr ${route.ratingAvr}")
-            binding.characterSpinner.adapter = CharacterSpinnerAdapter(route.ratingAvr.toSortList())
+            Log.d("JJ","sortList ${route.ratingAvr.toSortList(viewModel.filter.value)} ratingAvr ${route.ratingAvr}")
+            binding.characterSpinner.adapter = CharacterSpinnerAdapter(route.ratingAvr.toSortList(viewModel.filter.value))
             binding.route = route
             binding.selectRoute.setOnClickListener {
                 viewModel.selectRoute.value = route

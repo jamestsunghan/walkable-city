@@ -17,7 +17,9 @@ import tw.com.walkablecity.ext.getVMFactory
 
 class RatingFragment : Fragment() {
 
-    private val viewModel: RatingViewModel by viewModels{getVMFactory()}
+    private val viewModel: RatingViewModel by viewModels{getVMFactory(
+        RatingFragmentArgs.fromBundle(requireArguments()).selectedRoute,
+        RatingFragmentArgs.fromBundle(requireArguments()).walkKey)}
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

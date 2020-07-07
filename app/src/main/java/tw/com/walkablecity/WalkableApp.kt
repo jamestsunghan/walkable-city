@@ -1,6 +1,10 @@
 package tw.com.walkablecity
 
+import android.Manifest
 import android.app.Application
+import android.content.pm.PackageManager
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.google.firebase.FirebaseApp
 import tw.com.walkablecity.data.source.DefaultWalkableRepository
 import tw.com.walkablecity.data.source.WalkableRemoteDataSource
@@ -21,4 +25,6 @@ class WalkableApp: Application(){
         FirebaseApp.initializeApp(this)
         repo = DefaultWalkableRepository(WalkableRemoteDataSource)
     }
+
+
 }

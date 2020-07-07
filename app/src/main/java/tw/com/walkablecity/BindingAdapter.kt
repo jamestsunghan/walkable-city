@@ -16,12 +16,16 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.slider.RangeSlider
 import tw.com.walkablecity.Util.getString
 import tw.com.walkablecity.Util.lessThenTenPadStart
+import tw.com.walkablecity.data.GoogleRoute
 import tw.com.walkablecity.data.Route
 import tw.com.walkablecity.data.RouteSorting
 import tw.com.walkablecity.home.WalkerStatus
 import tw.com.walkablecity.loadroute.route.RouteItem
 import tw.com.walkablecity.loadroute.route.RouteItemAdapter
+import java.math.BigDecimal
+import java.text.DecimalFormat
 import java.text.SimpleDateFormat
+import kotlin.math.roundToInt
 import kotlin.math.sqrt
 
 
@@ -61,18 +65,23 @@ fun addFilterAndSubmitList(view: RecyclerView, list: List<Route>?){
 }
 
 @BindingAdapter("status", "route", "time")
-fun walkerTimer(textView: TextView, status: WalkerStatus, route: Route?, time: Long){
+fun walkerTimer(textView: TextView, status: WalkerStatus, mapRoute: GoogleRoute?, time: Long){
     val minutes = time / 60
     val seconds = time % 60
     val timeText = StringBuilder().append(lessThenTenPadStart(minutes))
         .append(":").append(lessThenTenPadStart(seconds)).toString()
     when(status){
         WalkerStatus.PREPARE -> {
-            if(route == null){
+
+            if(mapRoute == null){
                 textView.text = getString(R.string.zero_time)
                 textView.setTextSize(TypedValue.COMPLEX_UNIT_SP,32F)
             }else{
-                textView.text = String.format(getString(R.string.approximate_time), route.minutes)
+                var durationTotal = 0F
+                for(item in mapRoute.legs){
+                    durationTotal += item.duration?.value?.toFloat() ?: 0F
+                }
+                textView.text = String.format(getString(R.string.approximate_time), durationTotal / 60)
                 textView.setTextSize(TypedValue.COMPLEX_UNIT_SP,24F)
             }
         }
@@ -92,19 +101,23 @@ fun walkerTimer(textView: TextView, status: WalkerStatus, route: Route?, time: L
 }
 
 @BindingAdapter("status", "route","distance")
-fun walkerDistance(textView: TextView, status: WalkerStatus, route: Route?, distance: Float){
+fun walkerDistance(textView: TextView, status: WalkerStatus, mapRoute: GoogleRoute?, distance: Float){
     when(status){
         WalkerStatus.PREPARE -> {
-            if(route == null){
+            if(mapRoute == null){
                 textView.text = getString(R.string.zero_distance)
                 textView.setTextSize(TypedValue.COMPLEX_UNIT_SP,32F)
             }else{
-                textView.text = String.format(getString(R.string.approximate_length), route.length)
+                var distanceTotal = 0F
+                for(item in mapRoute.legs){
+                    distanceTotal += item.distance?.value?.toFloat() ?: 0F
+                }
+                textView.text = String.format(getString(R.string.approximate_length), distanceTotal / 1000)
                 textView.setTextSize(TypedValue.COMPLEX_UNIT_SP,24F)
             }
         }
         else -> {
-            textView.text = distance.toString()
+            textView.text = String.format(getString(R.string.recording_length),distance)
             textView.setTextSize(TypedValue.COMPLEX_UNIT_SP,32F)
         }
 
