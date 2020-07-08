@@ -24,6 +24,7 @@ import tw.com.walkablecity.WalkableApp
 import tw.com.walkablecity.data.*
 import tw.com.walkablecity.data.source.WalkableRepository
 import tw.com.walkablecity.ext.toDistance
+import java.text.SimpleDateFormat
 
 class HomeViewModel(val walkableRepository: WalkableRepository, val argument: Route?): ViewModel(){
 
@@ -102,8 +103,14 @@ class HomeViewModel(val walkableRepository: WalkableRepository, val argument: Ro
     private val viewModelJob = Job()
     private val coroutineScope = CoroutineScope(Dispatchers.Main + viewModelJob)
 
+    override fun onCleared() {
+        super.onCleared()
+        viewModelJob.cancel()
+    }
 
     init{
+        val date = SimpleDateFormat("yyyyMMddHHmmss").format(now().seconds.times(1000)).toLong()
+        Log.d("JJ","date $date")
 
         _walkerStatus.value = WalkerStatus.PREPARE
         clientCurrentLocation()

@@ -1,10 +1,7 @@
 package tw.com.walkablecity.data.source
 
 import com.google.android.gms.maps.model.LatLng
-import tw.com.walkablecity.data.DirectionResult
-import tw.com.walkablecity.data.Result
-import tw.com.walkablecity.data.Route
-import tw.com.walkablecity.data.RouteRating
+import tw.com.walkablecity.data.*
 
 class DefaultWalkableRepository(private val remote: WalkableDataSource): WalkableRepository {
     override suspend fun getAllRoute(): Result<List<Route>> {
@@ -39,4 +36,7 @@ class DefaultWalkableRepository(private val remote: WalkableDataSource): Walkabl
         return remote.updateRouteRating(rating, route, userId)
     }
 
+    override suspend fun createRouteByUser(route: Route): Result<Boolean> {
+        return remote.createRouteByUser(route)
+    }
 }

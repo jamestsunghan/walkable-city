@@ -9,10 +9,7 @@ import tw.com.walkablecity.R
 import tw.com.walkablecity.Util.getString
 import tw.com.walkablecity.Util.isInternetConnected
 import tw.com.walkablecity.WalkableApp
-import tw.com.walkablecity.data.DirectionResult
-import tw.com.walkablecity.data.Result
-import tw.com.walkablecity.data.Route
-import tw.com.walkablecity.data.RouteRating
+import tw.com.walkablecity.data.*
 import tw.com.walkablecity.ext.*
 import tw.com.walkablecity.home.WalkerStatus
 import tw.com.walkablecity.network.WalkableApi
@@ -26,6 +23,7 @@ object WalkableRemoteDataSource: WalkableDataSource{
     private const val FOLLOWERS = "followers"
     private const val RATINGAVR = "ratingAvr"
     private const val WALKERS = "walkers"
+    private const val COMMENTS = "comments"
     private const val EVENT = "event"
     private const val USER = "user"
     private const val RATINGS = "ratings"
@@ -184,13 +182,14 @@ object WalkableRemoteDataSource: WalkableDataSource{
             if(route.walkers.contains(userId))route.walkers
             else route.walkers.plus(userId)
         val ratingAvrNew = route.ratingAvr?.addToAverage(rating, route) as RouteRating
-        var oneComplete = 0
+        Log.d("JJ_fire","ratingAvr new $ratingAvrNew")
+        var missionToComplete = 2
 
         db.collection(ROUTE).document(route.id.toString()).apply{
             update(RATINGAVR, ratingAvrNew.toHashMap(), WALKERS, walkersNew).addOnCompleteListener { task ->
                 if(task.isSuccessful){
-                    oneComplete += 1
-                    if(oneComplete ==2) continuation.resume(Result.Success(true))
+                    missionToComplete -= 1
+                    if(missionToComplete == 0) continuation.resume(Result.Success(true))
                 }else{
                     task.exception?.let{
                         Log.d("JJ_fire","[${this::class.simpleName}] Error getting documents. ${it.message}")
@@ -201,8 +200,8 @@ object WalkableRemoteDataSource: WalkableDataSource{
             }
             collection(RATINGS).add(ratingToUpdate).addOnCompleteListener {task->
                 if(task.isSuccessful){
-                    oneComplete += 1
-                    if(oneComplete ==2) continuation.resume(Result.Success(true))
+                    missionToComplete -= 1
+                    if(missionToComplete == 0) continuation.resume(Result.Success(true))
                 }else{
                     task.exception?.let{
                         Log.d("JJ_fire","[${this::class.simpleName}] Error getting documents. ${it.message}")
@@ -212,5 +211,56 @@ object WalkableRemoteDataSource: WalkableDataSource{
                 }
             }
         }
+    }
+
+    override suspend fun createRouteByUser(route: Route): Result<Boolean> = suspendCoroutine {continuation ->
+        var missionToComplete = 3
+        db.collection(ROUTE).apply{
+
+            document(route.id.toString()).set(route.toHashMap()).addOnCompleteListener {
+                    task ->
+                if(task.isSuccessful){
+                    missionToComplete -= 1
+                    if(missionToComplete ==0) continuation.resume(Result.Success(true))
+                }else{
+                    task.exception?.let{
+                        Log.d("JJ_fire","[${this::class.simpleName}] Error getting documents. ${it.message}")
+                        continuation.resume(Result.Error(it))
+                    }
+                    continuation.resume(Result.Fail(WalkableApp.instance.getString(R.string.not_here)))
+                }
+            }
+
+            document(route.id.toString()).collection(RATINGS)
+                .add(requireNotNull(route.ratingAvr?.toHashMapInt())).addOnCompleteListener {task ->
+                if(task.isSuccessful){
+                    missionToComplete -= 1
+                    if(missionToComplete ==0) continuation.resume(Result.Success(true))
+                }else{
+                    task.exception?.let{
+                        Log.d("JJ_fire","[${this::class.simpleName}] Error getting documents. ${it.message}")
+                        continuation.resume(Result.Error(it))
+                    }
+                    continuation.resume(Result.Fail(WalkableApp.instance.getString(R.string.not_here)))
+                }
+            }
+
+            document(route.id.toString()).collection(COMMENTS)
+                .add(requireNotNull(route.comments[0].toHashMap())).addOnCompleteListener {task ->
+                    if(task.isSuccessful){
+                        missionToComplete -= 1
+                        if(missionToComplete ==0) continuation.resume(Result.Success(true))
+                    }else{
+                        task.exception?.let{
+                            Log.d("JJ_fire","[${this::class.simpleName}] Error getting documents. ${it.message}")
+                            continuation.resume(Result.Error(it))
+                        }
+                        continuation.resume(Result.Fail(WalkableApp.instance.getString(R.string.not_here)))
+                    }
+                }
+
+
+        }
+
     }
 }

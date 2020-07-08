@@ -3,14 +3,12 @@ package tw.com.walkablecity.ext
 import android.location.Location
 import android.util.Log
 import com.google.android.gms.maps.model.LatLng
+import com.google.firebase.Timestamp.now
 import com.google.firebase.firestore.GeoPoint
 import tw.com.walkablecity.R
 import tw.com.walkablecity.Util
 import tw.com.walkablecity.Util.getString
-import tw.com.walkablecity.data.LatLngResult
-import tw.com.walkablecity.data.Route
-import tw.com.walkablecity.data.RouteRating
-import tw.com.walkablecity.data.RouteSorting
+import tw.com.walkablecity.data.*
 
 fun RouteRating?.toSortList(filter: RouteSorting?): List<String>{
     return if(this == null){
@@ -63,6 +61,10 @@ fun LatLng.toLocation(): Location{
         latitude = this@toLocation.latitude
         longitude = this@toLocation.longitude
     }
+}
+
+fun LatLng.toGeoPoint():GeoPoint{
+    return GeoPoint(latitude,longitude)
 }
 
 fun GeoPoint.toLocation(): Location{
@@ -122,12 +124,50 @@ fun RouteRating.toHashMap(): HashMap<String, Float>{
 }
 
 fun RouteRating.addToAverage(rating: RouteRating, route: Route): RouteRating{
+
     return RouteRating(
-        coverage = (this.coverage.times(route.walkers.size).plus(rating.coverage)).div(route.walkers.size + 1),
-        rest = (this.rest.times(route.walkers.size).plus(rating.rest)).div(route.walkers.size + 1),
-        snack = (this.snack.times(route.walkers.size).plus(rating.snack)).div(route.walkers.size + 1),
-        scenery = (this.scenery.times(route.walkers.size).plus(rating.scenery)).div(route.walkers.size + 1),
-        tranquility = (this.tranquility.times(route.walkers.size).plus(rating.tranquility)).div(route.walkers.size + 1),
-        vibe = (this.vibe.times(route.walkers.size).plus(rating.vibe)).div(route.walkers.size + 1)
+        coverage = this.coverage.toNewAverage(rating, route),
+        rest = this.rest.toNewAverage(rating, route),
+        snack = this.snack.toNewAverage(rating, route),
+        scenery = this.scenery.toNewAverage(rating, route),
+        tranquility = this.tranquility.toNewAverage(rating, route),
+        vibe = this.vibe.toNewAverage(rating, route)
+    )
+}
+
+fun Route.toHashMap(): HashMap<String,Any?>{
+    return hashMapOf(
+        "description" to this.description,
+        "followers" to this.followers,
+        "id" to this.id,
+        "length" to this.length,
+        "map_image" to this.mapImage,
+        "minutes" to this.minutes,
+        "ratingAvr" to this.ratingAvr?.toHashMap(),
+        "title" to this.title,
+        "walkers" to this.walkers,
+        "waypoints" to this.waypoints
+    )
+}
+
+fun Float.toNewAverage(rating: RouteRating, route: Route): Float{
+    return this.times(route.walkers.size).plus(rating.coverage).div(route.walkers.size + 1)
+}
+
+fun Comment.toHashMap(): HashMap<String, Any>{
+    return hashMapOf(
+        "content" to this.content,
+        "create_time" to this.createTime,
+        "recommend" to this.recommend,
+        "user_id" to this.userId
+    )
+}
+
+fun String.toComment(recommend: Int, userId: Int): Comment{
+    return Comment(
+        content = this,
+        createTime = now(),
+        recommend = recommend,
+        userId = userId
     )
 }

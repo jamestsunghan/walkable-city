@@ -6,7 +6,7 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class Comment (
-    val userId: Long,
+    val userId: Int,
     val recommend: Int,
     val content: String,
     val createTime: Timestamp
