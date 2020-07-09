@@ -46,6 +46,14 @@
                     app:layout_constraintTop_toTopOf="parent"
                     app:srcCompat="@drawable/placeholder" />
 
+                <FrameLayout
+                    android:id="@+id/map"
+                    android:layout_width="match_parent"
+                    android:layout_height="250dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"/>
+
                 <View
                     android:id="@+id/walk_divider"
                     android:layout_width="1dp"
@@ -520,7 +528,6 @@
             android:fontFamily="@font/noto_sans"
             android:gravity="center"
             android:letterSpacing="0.15"
-            android:onClick="@{() -> viewModel.sendRouteRating()}"
             android:paddingStart="8dp"
             android:paddingTop="4dp"
             android:paddingEnd="8dp"

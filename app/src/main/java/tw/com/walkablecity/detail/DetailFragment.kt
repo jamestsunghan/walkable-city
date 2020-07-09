@@ -8,6 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 
 import tw.com.walkablecity.R
 import tw.com.walkablecity.databinding.FragmentDetailBinding
@@ -15,7 +17,7 @@ import tw.com.walkablecity.ext.getVMFactory
 
 class DetailFragment : Fragment() {
 
-    private val viewModel: DetailViewModel by viewModels{getVMFactory()}
+    private val viewModel: DetailViewModel by viewModels{getVMFactory(DetailFragmentArgs.fromBundle(requireArguments()).routeKey)}
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -26,6 +28,17 @@ class DetailFragment : Fragment() {
         binding.lifecycleOwner = this
 
         binding.viewModel = viewModel
+
+        binding.route = viewModel.route
+
+        binding.recyclerComment.adapter = CommentAdapter()
+
+        viewModel.navigatingToRanking.observe(viewLifecycleOwner, Observer {
+            if(it){
+                findNavController().navigateUp()
+                viewModel.navigationComplete()
+            }
+        })
 
         return binding.root
     }

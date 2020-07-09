@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
+import com.google.android.material.tabs.TabLayout
 
 import tw.com.walkablecity.R
 import tw.com.walkablecity.databinding.FragmentEventBinding
@@ -25,6 +26,11 @@ class EventFragment : Fragment() {
         val binding: FragmentEventBinding = DataBindingUtil
             .inflate(inflater, R.layout.fragment_event, container, false)
         binding.lifecycleOwner = this
+
+        binding.viewpagerEvent.let{ pager->
+            pager.adapter = EventAdapter(childFragmentManager)
+            pager.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(binding.tabsEvent))
+        }
 
         binding.viewModel = viewModel
 

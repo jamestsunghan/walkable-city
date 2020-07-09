@@ -71,6 +71,9 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics-ktx'
     implementation platform('com.google.firebase:firebase-bom:25.4.1')
 
+    implementation "com.google.firebase:firebase-storage-ktx:19.1.1"
+    implementation 'com.firebaseui:firebase-ui-storage:6.2.0'
+
     //Firestore
     implementation 'com.google.firebase:firebase-firestore-ktx'
 
@@ -99,5 +102,8 @@ dependencies {
     //mapsUtil
     implementation 'com.google.maps.android:android-maps-utils:2.0.1'
     implementation 'com.google.maps.android:maps-utils-ktx:1.8.0'
+
+    // Paging
+    implementation "androidx.paging:paging-runtime-ktx:$version_paging"
 
 }

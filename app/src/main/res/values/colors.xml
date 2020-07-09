@@ -14,4 +14,8 @@
     <color name="black">#000000</color>
 
     <color name="blue_2e5c6e">#2e5c6e</color>
+
+    <color name="bg_comment">#55d7ccc8</color>
+
+    <color name="hexagon_fill">#99629749</color>
 </resources>

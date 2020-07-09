@@ -9,12 +9,17 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.google.android.gms.maps.model.LatLng
+import com.google.firebase.firestore.GeoPoint
 import tw.com.walkablecity.ext.toLocation
+import tw.com.walkablecity.ext.toQuery
 import tw.com.walkablecity.permission.RationaleDialog
+import java.lang.StringBuilder
 import kotlin.math.pow
 import kotlin.math.sqrt
 
 object Util {
+
+    private const val MAP_BASE_URL = "https://maps.googleapis.com/maps/api/staticmap?"
 
     fun isInternetConnected(): Boolean {
         val cm = WalkableApp.instance
@@ -65,5 +70,9 @@ object Util {
             }
         }
         return false
+    }
+
+    fun constructUrl(center: GeoPoint, zoom: Int, path: List<GeoPoint>): String{
+        return StringBuilder().append(MAP_BASE_URL).append("center=${center.toQuery()}").toString()
     }
 }

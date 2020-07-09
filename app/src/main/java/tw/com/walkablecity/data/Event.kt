@@ -11,8 +11,8 @@ data class Event (
     val type: EventType,
     val target: EventTarget,
     val host: String,
-    val invited: List<String>,
-    val member: List<String>,
+    val invited: List<Int>,
+    val member: List<Int>,
     val startDate: Timestamp,
     val endDate: Timestamp,
     val status: EventStatus

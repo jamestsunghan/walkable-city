@@ -14,6 +14,7 @@ import tw.com.walkablecity.BuildConfig
 import tw.com.walkablecity.R
 import tw.com.walkablecity.Util
 import tw.com.walkablecity.data.DirectionResult
+import tw.com.walkablecity.data.MapImageResult
 
 
 private const val BASE_URL = "https://maps.googleapis.com/maps/api/"
@@ -44,6 +45,15 @@ interface GoogleApiServices{
         @Query("waypoints")waypoints: String,
         @Query("key")key: String = Util.getString(R.string.google_api_key)
     ): DirectionResult
+
+    @GET("staticmap")
+    suspend fun getImage(
+        @Query("center")center: String,
+        @Query("zoom")zoom: String,
+        @Query("key")key: String = Util.getString(R.string.google_api_key),
+        @Query("path")path: String,
+        @Query("size")size: String = "400x400"
+    ): MapImageResult
 }
 
 object WalkableApi{

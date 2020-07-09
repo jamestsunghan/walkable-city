@@ -1,8 +1,11 @@
 package tw.com.walkablecity.rating.item
 
+import android.graphics.Bitmap
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -14,6 +17,7 @@ import tw.com.walkablecity.data.*
 import tw.com.walkablecity.data.source.WalkableRepository
 import tw.com.walkablecity.ext.toComment
 import tw.com.walkablecity.ext.toGeoPoint
+import tw.com.walkablecity.ext.toRouteId
 import tw.com.walkablecity.rating.RatingType
 import tw.com.walkablecity.userId
 import java.text.SimpleDateFormat
@@ -29,6 +33,11 @@ class RatingItemViewModel(val walkableRepository: WalkableRepository, val select
     private val _sendRating = MutableLiveData<Boolean>(false)
     val sendRating: LiveData<Boolean>
         get() = _sendRating
+
+    private val _imageUrl = MutableLiveData<String>()
+    val imageUrl: LiveData<String>
+        get() = _imageUrl
+
 
     val ratingCoverage = MutableLiveData<Int>().apply{
         value = selectedRoute?.ratingAvr?.coverage?.toInt() ?: 4
@@ -78,6 +87,9 @@ class RatingItemViewModel(val walkableRepository: WalkableRepository, val select
 
         }
 
+//        if(selectedRoute!= null){
+//            getImage(selectedRoute)
+//        }
     }
 
     fun sendRouteRating(){
@@ -97,7 +109,9 @@ class RatingItemViewModel(val walkableRepository: WalkableRepository, val select
                     makeShortToast(R.string.not_complete_yet)
                 }else{
                     createRoute(requireNotNull(routeTitle.value)
-                        , requireNotNull(routeDescription.value), walk,ratingUpdate, userId, requireNotNull(routeCommentContent.value))
+                        , requireNotNull(routeDescription.value)
+                        , requireNotNull(imageUrl.value)
+                        , walk,ratingUpdate, userId, requireNotNull(routeCommentContent.value))
                 }
             }
             else ->{}
@@ -136,8 +150,39 @@ class RatingItemViewModel(val walkableRepository: WalkableRepository, val select
 
     }
 
-    private fun createRoute(title: String, description: String, walk: Walk, rating: RouteRating, userId: Int, commentContent: String){
-        val date = SimpleDateFormat("yyyyMMddHHmmss").format(walk.startTime.seconds.times(1000)).toLong()
+    fun getImageUrl(walk: Walk, userId: Int, bitmap: Bitmap){
+
+        coroutineScope.launch {
+
+            _status.value = LoadStatus.LOADING
+            _imageUrl.value = when(val result = walkableRepository.getRouteMapImageUrl(walk.toRouteId(userId), bitmap)){
+                is Result.Success ->{
+                    _error.value = null
+                    _status.value = LoadStatus.DONE
+                    result.data
+                }
+                is Result.Fail ->{
+                    _error.value = result.error
+                    _status.value = LoadStatus.ERROR
+                    null
+                }
+                is Result.Error ->{
+                    _error.value = result.exception.toString()
+                    _status.value = LoadStatus.ERROR
+                    null
+                }
+                else ->{
+                    _error.value = getString(R.string.not_here)
+                    _status.value = LoadStatus.ERROR
+                    null
+                }
+            }
+        }
+
+    }
+
+    private fun createRoute(title: String, description: String, imageUrl: String, walk: Walk, rating: RouteRating, userId: Int, commentContent: String){
+
         val waypoints = walk.waypoints.filterIndexed { index, latLng ->
             when {
                 walk.waypoints.size<=10 -> index == index
@@ -149,15 +194,15 @@ class RatingItemViewModel(val walkableRepository: WalkableRepository, val select
             }
         }
         val route = Route(
-            id = date.times(100) + userId,
+            id = walk.toRouteId(userId),
             title = title,
+            mapImage = imageUrl,
             description = description,
             length = walk.distance,
             minutes = walk.duration.toFloat().div(60),
             ratingAvr = rating,
             waypoints = waypoints.map{ it.toGeoPoint()},
             walkers = listOf(userId),
-            mapImage = "http://thisisanimage.com",
             comments = listOf(commentContent.toComment(4,userId))
         )
         coroutineScope.launch {
@@ -188,6 +233,39 @@ class RatingItemViewModel(val walkableRepository: WalkableRepository, val select
         }
 
     }
+
+    fun getImage(route: Route){
+        coroutineScope.launch {
+            _status.value = LoadStatus.LOADING
+            when(val result = walkableRepository.getRouteMapImage(route.waypoints[0],14,route.waypoints)){
+                is Result.Success ->{
+                    _error.value = null
+                    _status.value = LoadStatus.DONE
+                    Log.d("JJ","result success ${result.data}")
+                }
+                is Result.Fail ->{
+                    _error.value = result.error
+                    _status.value = LoadStatus.ERROR
+                    Log.d("JJ","result fail ${result.error}")
+
+                }
+                is Result.Error ->{
+                    _error.value = result.exception.toString()
+                    _status.value = LoadStatus.ERROR
+                    Log.d("JJ","result error ${result.exception}")
+
+                }
+                else ->{
+                    _error.value = getString(R.string.not_here)
+                    _status.value = LoadStatus.ERROR
+
+                }
+            }
+
+        }
+
+    }
+
 
 
 }

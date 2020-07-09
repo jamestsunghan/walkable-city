@@ -9,6 +9,7 @@ import tw.com.walkablecity.R
 import tw.com.walkablecity.Util
 import tw.com.walkablecity.Util.getString
 import tw.com.walkablecity.data.*
+import java.text.SimpleDateFormat
 
 fun RouteRating?.toSortList(filter: RouteSorting?): List<String>{
     return if(this == null){
@@ -101,6 +102,10 @@ fun LatLng.toQuery(): String{
     return "${this.latitude},${this.longitude}"
 }
 
+fun GeoPoint.toQuery(): String{
+    return "${this.latitude},${this.longitude}"
+}
+
 fun RouteRating.toHashMapInt(): HashMap<String, Int>{
     return hashMapOf(
         "coverage" to this.coverage.toInt(),
@@ -141,7 +146,7 @@ fun Route.toHashMap(): HashMap<String,Any?>{
         "followers" to this.followers,
         "id" to this.id,
         "length" to this.length,
-        "map_image" to this.mapImage,
+        "mapImage" to this.mapImage,
         "minutes" to this.minutes,
         "ratingAvr" to this.ratingAvr?.toHashMap(),
         "title" to this.title,
@@ -154,12 +159,12 @@ fun Float.toNewAverage(rating: RouteRating, route: Route): Float{
     return this.times(route.walkers.size).plus(rating.coverage).div(route.walkers.size + 1)
 }
 
-fun Comment.toHashMap(): HashMap<String, Any>{
+fun Comment.toHashMap(): HashMap<String, Any?>{
     return hashMapOf(
         "content" to this.content,
-        "create_time" to this.createTime,
+        "createTime" to this.createTime,
         "recommend" to this.recommend,
-        "user_id" to this.userId
+        "userId" to this.userId
     )
 }
 
@@ -170,4 +175,9 @@ fun String.toComment(recommend: Int, userId: Int): Comment{
         recommend = recommend,
         userId = userId
     )
+}
+
+fun Walk.toRouteId(userId: Int): Long{
+    val date = SimpleDateFormat("yyyyMMddHHmmss").format(this.startTime.seconds.times(1000)).toLong()
+    return date.times(100) + userId
 }

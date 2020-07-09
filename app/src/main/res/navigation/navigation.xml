@@ -130,7 +130,11 @@
         android:name="tw.com.walkablecity.detail.DetailFragment"
         android:label="DetailFragment"
         tools:layout="@layout/fragment_detail"
-        />
+        >
+        <argument
+            android:name="routeKey"
+            app:argType="tw.com.walkablecity.data.Route" />
+    </fragment>
     <action android:id="@+id/action_global_detailFragment" app:destination="@id/detailFragment" />
     <fragment
         android:id="@+id/bestWalkersFragment"

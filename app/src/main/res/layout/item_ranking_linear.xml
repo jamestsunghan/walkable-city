@@ -87,7 +87,7 @@
             android:background="@drawable/bg_walker_ongoing"
             android:fontFamily="@font/noto_sans"
             android:letterSpacing="0.15"
-            android:text="@string/select_route"
+            android:text="@string/see_detail"
             android:textColor="@color/primaryDarkColor"
             android:textSize="14sp"
             app:layout_constraintBottom_toBottomOf="@+id/map_view"

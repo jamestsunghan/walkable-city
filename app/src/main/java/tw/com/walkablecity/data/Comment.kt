@@ -6,8 +6,8 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class Comment (
-    val userId: Int,
-    val recommend: Int,
-    val content: String,
-    val createTime: Timestamp
+    val userId: Int? = null,
+    val recommend: Int? = null,
+    val content: String? = null,
+    val createTime: Timestamp? = null
 ): Parcelable

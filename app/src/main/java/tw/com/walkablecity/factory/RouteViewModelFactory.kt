@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import tw.com.walkablecity.data.Route
 import tw.com.walkablecity.data.User
 import tw.com.walkablecity.data.source.WalkableRepository
+import tw.com.walkablecity.detail.DetailViewModel
 import tw.com.walkablecity.home.HomeViewModel
 import tw.com.walkablecity.rating.RatingViewModel
 
@@ -17,6 +18,9 @@ class RouteViewModelFactory(private val walkableRepository: WalkableRepository, 
             when{
                 isAssignableFrom(HomeViewModel::class.java) ->
                     HomeViewModel(walkableRepository, route)
+
+                isAssignableFrom(DetailViewModel::class.java) ->
+                    DetailViewModel(walkableRepository, requireNotNull(route))
 
                 else ->
                     throw IllegalArgumentException("Unknown ViewModel Class ${modelClass.name}")

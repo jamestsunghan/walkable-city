@@ -100,6 +100,28 @@
 
     <string name="not_complete_yet">路線項目尚未填寫完成</string>
 
+    <string name="see_detail">詳細資訊</string>
+
+    <string name="no_favorite_route">目前尚無收藏路線</string>
+
+    <string name="back_to_route_list">回路線列表</string>
+
+    <string name="detail_coverage">遮蔭|%.1f</string>
+    <string name="detail_rest">歇腳|%.1f</string>
+    <string name="detail_snack">好吃|%.1f</string>
+    <string name="detail_vibe">好逛|%.1f</string>
+    <string name="detail_tranquility">靜謐|%.1f</string>
+    <string name="detail_scenery">景色|%.1f</string>
+
+
+    <string name="event_popular_title">熱門</string>
+    <string name="event_inviting_title">邀請</string>
+    <string name="event_challenging_title">挑戰中</string>
+
+    <string name="event_empty_popular">目前沒有熱門活動</string>
+    <string name="event_empty_inviting">目前無被邀請的活動</string>
+    <string name="event_empty_challenging">目前無挑戰中的活動</string>
+
 
 
 </resources>

@@ -1,11 +1,22 @@
 package tw.com.walkablecity.data.source
 
+import android.graphics.Bitmap
+import android.net.Uri
 import com.google.android.gms.maps.model.LatLng
+import com.google.firebase.firestore.GeoPoint
 import tw.com.walkablecity.data.*
 
 class DefaultWalkableRepository(private val remote: WalkableDataSource): WalkableRepository {
     override suspend fun getAllRoute(): Result<List<Route>> {
         return remote.getAllRoute()
+    }
+
+    override suspend fun getRoutesRanking(
+        sorting: RouteSorting,
+        timeMin: Int,
+        timeMax: Int
+    ): Result<List<Route>> {
+        return remote.getRoutesRanking(sorting, timeMin, timeMax)
     }
 
     override suspend fun getUserFavoriteRoutes(userId: Int): Result<List<Route>> {
@@ -38,5 +49,21 @@ class DefaultWalkableRepository(private val remote: WalkableDataSource): Walkabl
 
     override suspend fun createRouteByUser(route: Route): Result<Boolean> {
         return remote.createRouteByUser(route)
+    }
+
+    override suspend fun getRouteMapImageUrl(routeId: Long, bitmap: Bitmap): Result<String> {
+        return remote.getRouteMapImageUrl(routeId, bitmap)
+    }
+
+    override suspend fun getRouteMapImage(
+        center: GeoPoint,
+        zoom: Int,
+        path: List<GeoPoint>
+    ): Result<MapImageResult> {
+        return remote.getRouteMapImage(center,zoom, path)
+    }
+
+    override suspend fun getRouteComments(routeId: Long): Result<List<Comment>> {
+        return remote.getRouteComments(routeId)
     }
 }
