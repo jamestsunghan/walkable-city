@@ -20,5 +20,7 @@ enum class CurrentFragmentType(val title: String) {
     BADGE(getString(R.string.badge_title)),
     SETTINGS(getString(R.string.setting_title)),
     BEST_WALKERS(getString(R.string.best_walker_title)),
-    EXPLORE(getString(R.string.explore_title))
+    EXPLORE(getString(R.string.explore_title)),
+
+    EVENT_DETAIL(getString(R.string.event_more_info))
 }

@@ -6,14 +6,17 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class Event (
-    val id: Long,
-    val title: String,
-    val type: EventType,
-    val target: EventTarget,
-    val host: String,
-    val invited: List<Int>,
-    val member: List<Int>,
-    val startDate: Timestamp,
-    val endDate: Timestamp,
-    val status: EventStatus
+    val id: String? = null,
+    val title: String? = null,
+    val description: String? = null,
+    val isPublic: Boolean? = null,
+    val type: EventType? = null,
+    val target: EventTarget? = null,
+    val host: Int? = null,
+    val invited: List<Int> = listOf(),
+    val member: List<Int> = listOf(),
+    val memberCount: Int? = null,
+    val startDate: Timestamp? = null,
+    val endDate: Timestamp? = null,
+    val status: EventStatus? = null
 ): Parcelable

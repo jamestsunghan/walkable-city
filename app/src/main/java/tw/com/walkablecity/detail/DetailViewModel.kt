@@ -14,6 +14,7 @@ import tw.com.walkablecity.data.LoadStatus
 import tw.com.walkablecity.data.Result
 import tw.com.walkablecity.data.Route
 import tw.com.walkablecity.data.source.WalkableRepository
+import tw.com.walkablecity.userId
 
 class DetailViewModel(val walkableRepository: WalkableRepository, val route: Route) : ViewModel() {
 
@@ -25,14 +26,27 @@ class DetailViewModel(val walkableRepository: WalkableRepository, val route: Rou
     private val _status = MutableLiveData<LoadStatus>()
     val status: LiveData<LoadStatus> get() = _status
 
+    private val _favStatus = MutableLiveData<LoadStatus>()
+    val favStatus: LiveData<LoadStatus> get() = _favStatus
+
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> get() = _error
 
     private val _commentList = MutableLiveData<List<Comment>>()
     val commentList: LiveData<List<Comment>> get() = _commentList
 
+    private val _favoriteAdded = MutableLiveData<Boolean>().apply{
+        value = route.followers.contains(userId)
+    }
+    val favoriteAdded: LiveData<Boolean> get() = _favoriteAdded
+
     private val viewModelJob = Job()
     private val coroutineScope = CoroutineScope(Dispatchers.Main + viewModelJob)
+
+
+    init{
+        getComment(route.id)
+    }
 
     override fun onCleared() {
         super.onCleared()
@@ -47,8 +61,74 @@ class DetailViewModel(val walkableRepository: WalkableRepository, val route: Rou
         _natigateToRanking.value = false
     }
 
-    init{
-        getComment(route.id)
+    fun switchState(){
+        when(favoriteAdded.value){
+            true -> removeUserFromFollowers(userId, route)
+            false -> addUserToFollowers(userId, route)
+            else -> addUserToFollowers(userId, route)
+        }
+    }
+
+    fun addUserToFollowers(userId: Int, route: Route){
+
+        coroutineScope.launch {
+            _favStatus.value = LoadStatus.LOADING
+
+            _favoriteAdded.value = when(val result = walkableRepository.addUserToFollowers(userId,route)){
+                is Result.Success ->{
+                    _error.value = null
+                    _favStatus.value = LoadStatus.DONE
+                    result.data
+                }
+                is Result.Fail ->{
+                    _error.value = result.error
+                    _favStatus.value = LoadStatus.ERROR
+                    null
+                }
+                is Result.Error ->{
+                    _error.value = result.exception.toString()
+                    _favStatus.value = LoadStatus.ERROR
+                    null
+                }
+                else ->{
+                    _error.value = getString(R.string.not_here)
+                    _favStatus.value = LoadStatus.ERROR
+                    null
+                }
+            }
+
+        }
+
+    }
+
+    fun removeUserFromFollowers(userId: Int, route: Route){
+        coroutineScope.launch {
+            _favStatus.value = LoadStatus.LOADING
+
+            _favoriteAdded.value = when(val result = walkableRepository.removeUserFromFollowers(userId, route)){
+                is Result.Success ->{
+                    _error.value = null
+                    _favStatus.value = LoadStatus.DONE
+                    result.data
+                }
+                is Result.Fail ->{
+                    _error.value = result.error
+                    _favStatus.value = LoadStatus.ERROR
+                    null
+                }
+                is Result.Error ->{
+                    _error.value = result.exception.toString()
+                    _favStatus.value = LoadStatus.ERROR
+                    null
+                }
+                else ->{
+                    _error.value = getString(R.string.not_here)
+                    _favStatus.value = LoadStatus.ERROR
+                    null
+                }
+            }
+
+        }
     }
 
     private fun getComment(routeId : Long){

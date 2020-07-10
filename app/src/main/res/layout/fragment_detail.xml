@@ -6,6 +6,8 @@
     <data>
         <variable name="viewModel" type="tw.com.walkablecity.detail.DetailViewModel" />
         <variable name="route" type="tw.com.walkablecity.data.Route" />
+        <import type="tw.com.walkablecity.data.LoadStatus"/>
+        <import type="android.view.View"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -43,10 +45,10 @@
                 <View
                     android:id="@+id/walk_divider"
                     android:layout_width="1dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="0dp"
                     android:background="@color/primaryColor"
                     app:layout_constraintBottom_toBottomOf="@id/walk_duration"
-                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/fav_icon"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="@id/walk_duration" />
 
@@ -83,9 +85,34 @@
                     android:paddingBottom="4dp"
                     android:text="@{ @string/distance + String.format( @string/approximate_length, route.length )}"
                     android:textSize="16sp"
-                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/fav_icon"
                     app:layout_constraintStart_toStartOf="@+id/walk_divider"
                     app:layout_constraintTop_toBottomOf="@+id/route_in_map" />
+
+                <ImageView
+                    android:id="@+id/fav_icon"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="16dp"
+                    android:visibility="@{viewModel.favStatus == LoadStatus.LOADING ? View.INVISIBLE : View.VISIBLE}"
+                    android:tint="@color/red_heart_c73e3a"
+                    app:layout_constraintTop_toBottomOf="@+id/route_in_map"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:switch="@{viewModel.favoriteAdded}"
+                    android:onClick="@{() -> viewModel.switchState()}"
+                    tools:srcCompat="@drawable/map_fav_24"/>
+
+                <ProgressBar
+                    android:id="@+id/progress_fav"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:theme="@style/ProgressFavTheme"
+                    android:visibility="@{viewModel.favStatus == LoadStatus.LOADING ? View.VISIBLE : View.GONE}"
+                    app:layout_constraintBottom_toBottomOf="@+id/fav_icon"
+                    app:layout_constraintEnd_toEndOf="@+id/fav_icon"
+                    app:layout_constraintStart_toStartOf="@+id/fav_icon"
+                    app:layout_constraintTop_toTopOf="@+id/fav_icon" />
 
 
 

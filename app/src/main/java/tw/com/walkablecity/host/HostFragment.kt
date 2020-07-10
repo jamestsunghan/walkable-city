@@ -7,13 +7,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 
 import tw.com.walkablecity.R
 import tw.com.walkablecity.databinding.FragmentHostBinding
 import tw.com.walkablecity.ext.getVMFactory
 
-class HostFragment : Fragment() {
+class HostFragment : DialogFragment() {
 
 
     private val viewModel: HostViewModel by viewModels{getVMFactory()}
@@ -27,6 +30,13 @@ class HostFragment : Fragment() {
         binding.lifecycleOwner = this
 
         binding.viewModel = viewModel
+
+        viewModel.navigateToEvents.observe(viewLifecycleOwner, Observer{
+            if(it){
+                findNavController().navigate(HostFragmentDirections.actionGlobalEventFragment())
+                viewModel.navigateToEventsComplete()
+            }
+        })
 
         return binding.root
     }

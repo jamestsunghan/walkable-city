@@ -1,9 +1,9 @@
 package tw.com.walkablecity.data
 
-enum class EventType(val title: String) {
-    FREQUENCY("frequency"),
-    DISTANCE_GROUP("distance_group"),
-    DISTANCE_RACE("distance_race"),
-    HOUR_GROUP("hour_group"),
-    HOUR_RACE("hour_race")
+enum class EventType(val title: String, val prefix: String) {
+    FREQUENCY("frequency", "FR"),
+    DISTANCE_GROUP("distance_group", "DG"),
+    DISTANCE_RACE("distance_race", "DR"),
+    HOUR_GROUP("hour_group", "HG"),
+    HOUR_RACE("hour_race", "HR")
 }

@@ -155,9 +155,18 @@
         android:id="@+id/exploreFragment"
         android:name="tw.com.walkablecity.profile.explore.ExploreFragment"
         android:label="ExploreFragment" />
-    <fragment
+    <dialog
         android:id="@+id/hostFragment"
         android:name="tw.com.walkablecity.host.HostFragment"
         android:label="HostFragment" />
+    <fragment
+        android:id="@+id/eventDetailFragment"
+        android:name="tw.com.walkablecity.eventdetail.EventDetailFragment"
+        android:label="EventDetailFragment" >
+        <argument
+            android:name="eventKey"
+            app:argType="tw.com.walkablecity.data.Event" />
+    </fragment>
+    <action android:id="@+id/action_global_eventDetailFragment" app:destination="@id/eventDetailFragment" />
 
 </navigation>

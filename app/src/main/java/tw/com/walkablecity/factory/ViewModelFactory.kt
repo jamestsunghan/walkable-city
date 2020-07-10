@@ -52,9 +52,6 @@ class ViewModelFactory( private val walkableRepository: WalkableRepository)
                 isAssignableFrom(HostViewModel::class.java) ->
                     HostViewModel(walkableRepository)
 
-                isAssignableFrom(EventItemViewModel::class.java) ->
-                    EventItemViewModel(walkableRepository)
-
 
 
                 else ->

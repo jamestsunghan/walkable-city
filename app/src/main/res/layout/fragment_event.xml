@@ -30,5 +30,19 @@
                 app:tabTextColor="@color/primaryColor"/>
         </androidx.viewpager.widget.ViewPager>
 
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/create_event"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
+            android:scaleType="center"
+            app:backgroundTint="@color/primaryColor"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:srcCompat="@drawable/create_event_36"
+            android:onClick="@{() ->viewModel.navigateToHost()}"
+            app:tint="@color/white" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

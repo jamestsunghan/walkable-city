@@ -6,6 +6,7 @@ import android.util.Log
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.firestore.GeoPoint
+import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
@@ -321,6 +322,117 @@ object WalkableRemoteDataSource: WalkableDataSource{
 
     }
 
+    override suspend fun addUserToFollowers(userId: Int, route: Route): Result<Boolean> = suspendCoroutine{continuation->
+        val list = route.followers as MutableList<Int>
+        list.add(userId)
+        db.collection(ROUTE).document(route.id.toString()).update(FOLLOWERS,list).addOnCompleteListener {task->
+            if(task.isSuccessful){
+                continuation.resume(Result.Success(true))
+            }else{
+                task.exception?.let{
+                    Log.d("JJ_fire","[${this::class.simpleName}] Error getting documents. ${it.message}")
+                    continuation.resume(Result.Error(it))
+                }
+                continuation.resume(Result.Fail(WalkableApp.instance.getString(R.string.not_here)))
+            }
+        }
+    }
+
+    override suspend fun removeUserFromFollowers(userId: Int, route: Route): Result<Boolean> = suspendCoroutine{ continuation->
+
+        val list = route.followers as MutableList<Int>
+        list.remove(userId)
+        db.collection(ROUTE).document(route.id.toString()).update(FOLLOWERS,list).addOnCompleteListener {task->
+            if(task.isSuccessful){
+                continuation.resume(Result.Success(false))
+            }else{
+                task.exception?.let{
+                    Log.d("JJ_fire","[${this::class.simpleName}] Error getting documents. ${it.message}")
+                    continuation.resume(Result.Error(it))
+                }
+                continuation.resume(Result.Fail(WalkableApp.instance.getString(R.string.not_here)))
+            }
+        }
+    }
+
+    override suspend fun getPopularEvents(): Result<List<Event>> = suspendCoroutine{continuation->
+
+        db.collection(EVENT).orderBy("memberCount", Query.Direction.DESCENDING).get().addOnCompleteListener { task->
+            if(task.isSuccessful){
+                val list = mutableListOf<Event>()
+                for(document in task.result!!){
+                    Log.d("JJ_fire",document.id + "=>" + document.data)
+                    val event = document.toObject(Event::class.java)
+                    list.add(event)
+                }
+                continuation.resume(Result.Success(list))
+            }else{
+                task.exception?.let{
+                    Log.d("JJ_fire","[${this::class.simpleName}] Error getting documents. ${it.message}")
+                    continuation.resume(Result.Error(it))
+                }
+                continuation.resume(Result.Fail(WalkableApp.instance.getString(R.string.not_here)))
+            }
+        }
+    }
+
+    override suspend fun getUserChallenges(userId: Int): Result<List<Event>> = suspendCoroutine{continuation->
+        db.collection(EVENT).whereArrayContains("member",userId).get().addOnCompleteListener { task->
+            if(task.isSuccessful){
+                val list = mutableListOf<Event>()
+                for(document in task.result!!){
+                    Log.d("JJ_fire",document.id + "=>" + document.data)
+                    val event = document.toObject(Event::class.java).apply {
+
+                    }
+                    list.add(event)
+                }
+                continuation.resume(Result.Success(list))
+            }else{
+                task.exception?.let{
+                    Log.d("JJ_fire","[${this::class.simpleName}] Error getting documents. ${it.message}")
+                    continuation.resume(Result.Error(it))
+                }
+                continuation.resume(Result.Fail(WalkableApp.instance.getString(R.string.not_here)))
+            }
+        }
+    }
+
+    override suspend fun getUserInvitation(userId: Int): Result<List<Event>> = suspendCoroutine{continuation->
+        db.collection(EVENT).whereArrayContains("invited",userId).get().addOnCompleteListener { task->
+            if(task.isSuccessful){
+                val list = mutableListOf<Event>()
+                for(document in task.result!!){
+                    Log.d("JJ_fire",document.id + "=>" + document.data)
+                    val event = document.toObject(Event::class.java).apply {
+
+                    }
+                    list.add(event)
+                }
+                continuation.resume(Result.Success(list))
+            }else{
+                task.exception?.let{
+                    Log.d("JJ_fire","[${this::class.simpleName}] Error getting documents. ${it.message}")
+                    continuation.resume(Result.Error(it))
+                }
+                continuation.resume(Result.Fail(WalkableApp.instance.getString(R.string.not_here)))
+            }
+        }
+    }
+
+    override suspend fun createEvent(event: Event): Result<Boolean> = suspendCoroutine{continuation->
+        db.collection(EVENT).document(requireNotNull(event.id)).set(event).addOnCompleteListener {task->
+            if(task.isSuccessful){
+                continuation.resume(Result.Success(true))
+            }else{
+                task.exception?.let{
+                    Log.d("JJ_fire","[${this::class.simpleName}] Error getting documents. ${it.message}")
+                    continuation.resume(Result.Error(it))
+                }
+                continuation.resume(Result.Fail(WalkableApp.instance.getString(R.string.not_here)))
+            }
+        }
+    }
 
     //google map Api Zone
 

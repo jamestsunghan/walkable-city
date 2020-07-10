@@ -20,4 +20,13 @@ interface WalkableRepository {
     suspend fun getRouteMapImage(center: GeoPoint, zoom: Int, path: List<GeoPoint>): Result<MapImageResult>
     suspend fun getRouteMapImageUrl(routeId: Long, bitmap: Bitmap): Result<String>
     suspend fun getRouteComments(routeId: Long): Result<List<Comment>>
+
+    suspend fun addUserToFollowers(userId: Int, route: Route): Result<Boolean>
+    suspend fun removeUserFromFollowers(userId: Int, route: Route): Result<Boolean>
+
+    suspend fun getUserInvitation(userId: Int): Result<List<Event>>
+    suspend fun getUserChallenges(userId: Int): Result<List<Event>>
+    suspend fun getPopularEvents(): Result<List<Event>>
+
+    suspend fun createEvent(event: Event): Result<Boolean>
 }

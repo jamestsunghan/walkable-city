@@ -75,4 +75,5 @@ object Util {
     fun constructUrl(center: GeoPoint, zoom: Int, path: List<GeoPoint>): String{
         return StringBuilder().append(MAP_BASE_URL).append("center=${center.toQuery()}").toString()
     }
+
 }

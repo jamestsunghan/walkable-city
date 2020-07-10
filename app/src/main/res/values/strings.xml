@@ -121,6 +121,20 @@
     <string name="event_empty_popular">目前沒有熱門活動</string>
     <string name="event_empty_inviting">目前無被邀請的活動</string>
     <string name="event_empty_challenging">目前無挑戰中的活動</string>
+    <string name="event_empty_after_filter">目前無相關中的活動</string>
+
+    <string name="event_member_count">成員|%d</string>
+
+    <string name="event_more_info">詳細資訊</string>
+
+    <string name="event_filter">活動類型</string>
+    <string name="event_all">全部活動</string>
+    <string name="filter_frequency">習慣培養</string>
+    <string name="filter_distance_group">距離合作</string>
+    <string name="filter_distance_race">距離競賽</string>
+    <string name="filter_hour_group">時間累計</string>
+    <string name="filter_hour_race">時間競賽</string>
+
 
 
 

@@ -19,6 +19,10 @@
         <item name="colorAccent">@color/black</item>
     </style>
 
+    <style name="ProgressFavTheme" parent="Widget.AppCompat.ProgressBar">
+        <item name="colorAccent">@color/red_heart_c73e3a</item>
+    </style>
+
     <style name="SecondSlider" parent="@style/Widget.MaterialComponents.Slider">
         <item name="labelStyle">@style/SecondTooltip</item>
     </style>

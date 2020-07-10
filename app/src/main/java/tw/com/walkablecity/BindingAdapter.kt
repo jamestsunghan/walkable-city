@@ -10,6 +10,7 @@ import android.util.TypedValue
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.graphics.toPointF
 import androidx.core.net.toUri
 import androidx.databinding.BindingAdapter
@@ -28,6 +29,7 @@ import tw.com.walkablecity.Util.getString
 import tw.com.walkablecity.Util.lessThenTenPadStart
 import tw.com.walkablecity.data.*
 import tw.com.walkablecity.detail.CommentAdapter
+import tw.com.walkablecity.event.item.EventItemAdapter
 import tw.com.walkablecity.favorite.FavoriteAdapter
 import tw.com.walkablecity.home.WalkerStatus
 import tw.com.walkablecity.loadroute.route.RouteItem
@@ -86,12 +88,37 @@ fun bindComment(view: RecyclerView, list: List<Comment>?){
 
             }
         }
+    }
+}
+
+@BindingAdapter("event")
+fun bindEvent(view: RecyclerView, list: List<Event>?){
+    list?.let{
+        view.adapter.apply {
+            when(this){
+                is EventItemAdapter -> submitList(it)
+
+            }
+        }
+    }
+}
+
+@BindingAdapter("eventType")
+fun bindBackgroundWithEventType(layout: ConstraintLayout, type: EventType){
+    val context = WalkableApp.instance
+    layout.backgroundTintList = when(type){
+        EventType.DISTANCE_GROUP -> context.getColorStateList(R.color.event_distance_group)
+        EventType.DISTANCE_RACE  -> context.getColorStateList(R.color.event_distance_race)
+        EventType.HOUR_GROUP     -> context.getColorStateList(R.color.event_hour_group)
+        EventType.HOUR_RACE     -> context.getColorStateList(R.color.event_hour_race)
+        EventType.FREQUENCY      -> context.getColorStateList(R.color.event_frequency)
 
     }
-
-
-
 }
+
+
+
+
 
 @BindingAdapter("status", "route", "time")
 fun walkerTimer(textView: TextView, status: WalkerStatus, mapRoute: GoogleRoute?, time: Long){
@@ -168,6 +195,14 @@ fun convertFloat2Int(slider: Slider):Int{
 fun setSliderListeners(slider: Slider, attrChange: InverseBindingListener){
     slider.addOnChangeListener { _, _, _ ->
         attrChange.onChange()
+    }
+}
+
+@BindingAdapter("switch")
+fun switchDrawable(imageView: ImageView, added: Boolean){
+    when(added){
+        true -> imageView.setImageResource(R.drawable.map_fav_24_added)
+        false -> imageView.setImageResource(R.drawable.map_fav_24)
     }
 }
 

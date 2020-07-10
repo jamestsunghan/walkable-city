@@ -8,6 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.tabs.TabLayout
 
 import tw.com.walkablecity.R
@@ -33,6 +35,13 @@ class EventFragment : Fragment() {
         }
 
         binding.viewModel = viewModel
+
+        viewModel.navigateToHost.observe(viewLifecycleOwner, Observer{
+            if(it){
+                findNavController().navigate(EventFragmentDirections.actionEventFragmentToHostFragment())
+                viewModel.navigateToHostComplete()
+            }
+        })
 
         return binding.root
     }

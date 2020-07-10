@@ -96,6 +96,8 @@ class MainActivity : AppCompatActivity() {
                 R.id.exploreFragment -> CurrentFragmentType.EXPLORE
                 R.id.settingsFragment -> CurrentFragmentType.SETTINGS
 
+                R.id.eventDetailFragment -> CurrentFragmentType.EVENT_DETAIL
+
 
                 else -> viewModel.currentFragment.value
             }

@@ -11,11 +11,22 @@
 
 
     <color name="white">#ffffff</color>
+    <color name="white_transparent">#77ffffff</color>
     <color name="black">#000000</color>
 
     <color name="blue_2e5c6e">#2e5c6e</color>
 
     <color name="bg_comment">#55d7ccc8</color>
 
+    <color name="red_heart_c73e3a">#c73e3a</color>
+
     <color name="hexagon_fill">#99629749</color>
+
+    <color name="event_frequency">#55b19693</color>
+    <color name="event_distance_group">#55b5caa0</color>
+    <color name="event_distance_race">#5591ad70</color>
+    <color name="event_hour_group">#55a5dee4</color>
+    <color name="event_hour_race">#5566bab7</color>
+
+
 </resources>

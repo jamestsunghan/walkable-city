@@ -30,8 +30,17 @@ class DetailFragment : Fragment() {
         binding.viewModel = viewModel
 
         binding.route = viewModel.route
+        binding.favIcon.isSelected = false
 
         binding.recyclerComment.adapter = CommentAdapter()
+
+        viewModel.favoriteAdded.observe(viewLifecycleOwner, Observer{
+            it?.let{
+                binding.favIcon.isSelected = it
+            }
+        })
+
+
 
         viewModel.navigatingToRanking.observe(viewLifecycleOwner, Observer {
             if(it){

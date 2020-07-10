@@ -66,4 +66,28 @@ class DefaultWalkableRepository(private val remote: WalkableDataSource): Walkabl
     override suspend fun getRouteComments(routeId: Long): Result<List<Comment>> {
         return remote.getRouteComments(routeId)
     }
+
+    override suspend fun addUserToFollowers(userId: Int, route: Route): Result<Boolean> {
+        return remote.addUserToFollowers(userId, route)
+    }
+
+    override suspend fun removeUserFromFollowers(userId: Int, route: Route): Result<Boolean> {
+        return remote.removeUserFromFollowers(userId, route)
+    }
+
+    override suspend fun getPopularEvents(): Result<List<Event>> {
+        return remote.getPopularEvents()
+    }
+
+    override suspend fun getUserChallenges(userId: Int): Result<List<Event>> {
+        return remote.getUserChallenges(userId)
+    }
+
+    override suspend fun getUserInvitation(userId: Int): Result<List<Event>> {
+        return remote.getUserInvitation(userId)
+    }
+
+    override suspend fun createEvent(event: Event): Result<Boolean> {
+        return remote.createEvent(event)
+    }
 }
