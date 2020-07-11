@@ -7,7 +7,7 @@ import tw.com.walkablecity.data.source.DefaultWalkableRepository
 import tw.com.walkablecity.loadroute.LoadRouteType
 import tw.com.walkablecity.loadroute.route.RouteItemViewModel
 
-@Suppress("UNCHECKED CAST")
+@Suppress("UNCHECKED_CAST")
 class LoadRouteViewModelFactory(private val walkableRepository: DefaultWalkableRepository,
                                 private val loadRouteType: LoadRouteType): ViewModelProvider.Factory {
 

@@ -3,6 +3,7 @@ package tw.com.walkablecity.ext
 import android.location.Location
 import android.util.Log
 import com.google.android.gms.maps.model.LatLng
+import com.google.firebase.Timestamp
 import com.google.firebase.Timestamp.now
 import com.google.firebase.firestore.GeoPoint
 import tw.com.walkablecity.R
@@ -10,6 +11,8 @@ import tw.com.walkablecity.Util
 import tw.com.walkablecity.Util.getString
 import tw.com.walkablecity.data.*
 import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.HashMap
 
 fun RouteRating?.toSortList(filter: RouteSorting?): List<String>{
     return if(this == null){
@@ -178,6 +181,9 @@ fun String.toComment(recommend: Int, userId: Int): Comment{
 }
 
 fun Walk.toRouteId(userId: Int): Long{
-    val date = SimpleDateFormat("yyyyMMddHHmmss").format(this.startTime.seconds.times(1000)).toLong()
-    return date.times(100) + userId
+    return this.startTime.toDateLong().times(100) + userId
+}
+
+fun Timestamp.toDateLong(): Long{
+    return SimpleDateFormat("yyyyMMddHHmmss", Locale.TAIWAN).format(this.seconds.times(1000)).toLong()
 }

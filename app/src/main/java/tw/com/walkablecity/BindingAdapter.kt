@@ -110,10 +110,41 @@ fun bindBackgroundWithEventType(layout: ConstraintLayout, type: EventType){
         EventType.DISTANCE_GROUP -> context.getColorStateList(R.color.event_distance_group)
         EventType.DISTANCE_RACE  -> context.getColorStateList(R.color.event_distance_race)
         EventType.HOUR_GROUP     -> context.getColorStateList(R.color.event_hour_group)
-        EventType.HOUR_RACE     -> context.getColorStateList(R.color.event_hour_race)
+        EventType.HOUR_RACE      -> context.getColorStateList(R.color.event_hour_race)
         EventType.FREQUENCY      -> context.getColorStateList(R.color.event_frequency)
 
     }
+}
+
+@BindingAdapter("target")
+fun bindTextWithEventType(textView: TextView, type: EventType?){
+    textView.text =  when(type){
+        EventType.DISTANCE_GROUP -> getString(R.string.create_event_distance_title)
+        EventType.DISTANCE_RACE  -> getString(R.string.create_event_distance_title)
+        EventType.HOUR_GROUP     -> getString(R.string.create_event_hour_title)
+        EventType.HOUR_RACE      -> getString(R.string.create_event_hour_title)
+        EventType.FREQUENCY      -> getString(R.string.create_event_frequency_title)
+        null                     -> getString(R.string.not_here)
+    }
+    if(type == null)textView.visibility = View.GONE
+    else textView.visibility = View.VISIBLE
+}
+
+@BindingAdapter("typePosition")
+fun bindTextWithEventTypePOsition(textView: TextView, position: Int?){
+
+    textView.text = when(position){
+        1 -> getString(R.string.create_event_frequency_distance)
+        2 -> getString(R.string.create_event_frequency_hour)
+        3 -> getString(R.string.create_event_frequency_distance)
+        4 -> getString(R.string.create_event_frequency_distance)
+        5 -> getString(R.string.create_event_frequency_hour)
+        6 -> getString(R.string.create_event_frequency_hour)
+        else -> getString(R.string.not_here)
+    }
+    if(position == null || position == 0 || position > 6)textView.visibility = View.GONE
+    else textView.visibility = View.VISIBLE
+
 }
 
 

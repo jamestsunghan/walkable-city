@@ -1,9 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <variable name="viewModel" type="tw.com.walkablecity.host.HostViewModel" />
+
+        <variable
+            name="viewModel"
+            type="tw.com.walkablecity.host.HostViewModel" />
+
+        <import type="tw.com.walkablecity.data.EventType" />
+
+        <import type="android.view.View" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -11,10 +19,320 @@
         android:layout_height="match_parent"
         tools:context=".host.HostFragment">
 
-        <TextView
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="Hello" />
+            android:layout_height="0dp"
+            android:layout_marginBottom="16dp"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toTopOf="@+id/create_event"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/create_event_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:fontFamily="@font/noto_sans"
+                    android:gravity="center"
+                    android:letterSpacing="0.15"
+                    android:text="@string/create_event_title"
+                    android:textColor="@color/primaryDarkColor"
+                    android:textSize="14sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <EditText
+                    android:id="@+id/edit_event_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:hint="@string/create_title_hint"
+                    android:textColorHint="@color/primaryColor"
+                    android:letterSpacing="0.15"
+                    android:text="@={viewModel.title}"
+                    android:textColor="@color/primaryDarkColor"
+                    android:textSize="14sp"
+                    app:layout_constraintBaseline_toBaselineOf="@+id/create_event_title"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/create_event_title" />
+
+                <TextView
+                    android:id="@+id/create_event_type"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:fontFamily="@font/noto_sans"
+                    android:gravity="center"
+                    android:letterSpacing="0.15"
+                    android:text="@string/create_event_type"
+                    android:textColor="@color/primaryDarkColor"
+                    android:textSize="14sp"
+                    app:layout_constraintStart_toStartOf="@+id/create_event_title"
+                    app:layout_constraintTop_toBottomOf="@+id/create_event_title" />
+
+                <Spinner
+                    android:id="@+id/event_type_spinner"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/noto_sans"
+                    android:gravity="start"
+                    android:letterSpacing="0.15"
+                    android:selectedItemPosition="@={ viewModel.selectTypePosition }"
+                    android:spinnerMode="dropdown"
+                    android:text="@string/create_event_type"
+                    android:textColor="@color/primaryDarkColor"
+                    android:textSize="14sp"
+                    app:layout_constraintBottom_toBottomOf="@+id/create_event_type"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/create_event_type"
+                    app:layout_constraintTop_toTopOf="@+id/create_event_type" />
+
+                <TextView
+                    android:id="@+id/create_event_target_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:fontFamily="@font/noto_sans"
+                    android:gravity="center"
+                    android:letterSpacing="0.15"
+                    android:textColor="@color/primaryDarkColor"
+                    android:textSize="14sp"
+                    app:layout_constraintStart_toStartOf="@+id/create_event_type"
+                    app:layout_constraintTop_toBottomOf="@+id/create_event_type"
+                    app:target="@{viewModel.type}" />
+
+                <Spinner
+                    android:id="@+id/event_target_spinner"
+                    android:layout_width="120dp"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/noto_sans"
+                    android:gravity="center"
+                    android:letterSpacing="0.15"
+                    android:selectedItemPosition="@={ viewModel.selectFQPosition }"
+                    android:spinnerMode="dropdown"
+                    android:text="@string/create_event_type"
+                    android:textColor="@color/primaryColor"
+                    android:textSize="14sp"
+                    android:visibility="@{viewModel.type == EventType.FREQUENCY ? View.VISIBLE : View.GONE}"
+                    app:layout_constraintBottom_toBottomOf="@+id/create_event_target_title"
+                    app:layout_constraintEnd_toStartOf="@+id/edit_target"
+                    app:layout_constraintStart_toEndOf="@+id/create_event_target_title"
+                    app:layout_constraintTop_toTopOf="@+id/create_event_target_title" />
+
+                <EditText
+                    android:id="@+id/edit_target"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:hint="@string/how_much"
+                    android:textColorHint="@color/primaryColor"
+                    android:inputType="number"
+                    android:letterSpacing="0.15"
+                    android:minWidth="70dp"
+                    android:text="@={viewModel.title}"
+                    android:textColor="@color/primaryDarkColor"
+                    android:textSize="14sp"
+                    android:visibility="@{viewModel.type == null ? View.GONE : View.VISIBLE}"
+                    app:layout_constraintBaseline_toBaselineOf="@+id/create_event_target_title"
+                    app:layout_constraintEnd_toStartOf="@+id/create_event_target_set"
+                    app:layout_constraintStart_toEndOf="@+id/event_target_spinner" />
+
+                <TextView
+                    android:id="@+id/create_event_target_set"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:fontFamily="@font/noto_sans"
+                    android:gravity="center"
+                    android:letterSpacing="0.15"
+                    android:textColor="@color/primaryDarkColor"
+                    android:textSize="14sp"
+                    app:layout_constraintBaseline_toBaselineOf="@+id/create_event_target_title"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:typePosition="@{viewModel.selectTypePosition}" />
+
+                <TextView
+                    android:id="@+id/create_event_start_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:fontFamily="@font/noto_sans"
+                    android:gravity="center"
+                    android:letterSpacing="0.15"
+                    android:text="@string/create_event_start_date"
+                    android:textColor="@color/primaryDarkColor"
+                    android:textSize="14sp"
+                    app:layout_constraintStart_toStartOf="@+id/create_event_title"
+                    app:layout_constraintTop_toBottomOf="@+id/create_event_target_title" />
+
+                <TextView
+                    android:id="@+id/select_event_start_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:letterSpacing="0.15"
+                    android:paddingStart="4dp"
+                    android:paddingEnd="4dp"
+                    android:text="@{viewModel.startDateDisplay == null ? @string/select_start_date : viewModel.startDateDisplay}"
+                    android:textColor="@{viewModel.startDateDisplay == null ? @color/primaryColor : @color/primaryDarkColor}"
+                    android:textSize="14sp"
+                    app:layout_constraintBaseline_toBaselineOf="@+id/create_event_start_date"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toEndOf="@+id/create_event_start_date" />
+
+                <TextView
+                    android:id="@+id/create_event_end_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:fontFamily="@font/noto_sans"
+                    android:gravity="center"
+                    android:letterSpacing="0.15"
+                    android:text="@string/create_event_end_date"
+                    android:textColor="@color/primaryDarkColor"
+                    android:textSize="14sp"
+                    app:layout_constraintStart_toStartOf="@+id/create_event_title"
+                    app:layout_constraintTop_toBottomOf="@+id/create_event_start_date" />
+
+                <TextView
+                    android:id="@+id/select_event_end_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:letterSpacing="0.15"
+                    android:paddingStart="4dp"
+                    android:paddingEnd="4dp"
+                    android:text="@{viewModel.endDateDisplay == null ? @string/select_end_date : viewModel.endDateDisplay}"
+                    android:textColor="@{viewModel.endDateDisplay == null ? @color/primaryColor : @color/primaryDarkColor}"
+                    android:textSize="14sp"
+                    app:layout_constraintBaseline_toBaselineOf="@+id/create_event_end_date"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toEndOf="@+id/create_event_end_date" />
+
+                <TextView
+                    android:id="@+id/create_event_description"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:fontFamily="@font/noto_sans"
+                    android:gravity="center"
+                    android:letterSpacing="0.15"
+                    android:text="@string/create_event_description"
+                    android:textColor="@color/primaryDarkColor"
+                    android:textSize="14sp"
+                    app:layout_constraintStart_toStartOf="@+id/create_event_title"
+                    app:layout_constraintTop_toBottomOf="@+id/create_event_end_date" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/edit_event_description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="16dp"
+                    android:background="@color/primaryLightColor"
+                    app:endIconDrawable="@drawable/ic_footprint"
+                    app:endIconMode="custom"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/create_event_description">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="@style/TextForEditTextLayout"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:background="@color/primaryLightColor"
+                        android:fontFamily="@font/noto_sans"
+                        android:hint="@string/create_description_hint"
+                        android:letterSpacing="0.15"
+                        android:text="@={viewModel.description}" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <TextView
+                    android:id="@+id/create_invite_friend"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:fontFamily="@font/noto_sans"
+                    android:gravity="center"
+                    android:letterSpacing="0.15"
+                    android:text="@string/create_invite_friend"
+                    android:textColor="@color/primaryDarkColor"
+                    android:textSize="14sp"
+                    app:layout_constraintStart_toStartOf="@+id/create_event_title"
+                    app:layout_constraintTop_toBottomOf="@+id/edit_event_description" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/edit_invite_friend"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginBottom="16dp"
+                    android:background="@color/primaryLightColor"
+                    app:endIconDrawable="@drawable/ic_footprint"
+                    app:endIconMode="custom"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/create_invite_friend">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="@style/TextForEditTextLayout"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:background="@color/primaryLightColor"
+                        android:fontFamily="@font/noto_sans"
+                        android:hint="@string/inpun_friend_id"
+                        android:letterSpacing="0.15"
+                        android:text="@={viewModel.description}" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </ScrollView>
+
+        <TextView
+            android:id="@+id/create_event"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:background="@drawable/bg_walker_prepare"
+            android:backgroundTint="@color/primaryDarkColor"
+            android:fontFamily="@font/noto_sans"
+            android:gravity="center"
+            android:letterSpacing="0.15"
+            android:onClick="@{() ->viewModel.createEvent()}"
+            android:padding="8dp"
+            android:text="@string/create_event"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintVertical_bias="1.0" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

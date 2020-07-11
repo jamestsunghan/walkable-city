@@ -135,6 +135,42 @@
     <string name="filter_hour_group">時間累計</string>
     <string name="filter_hour_race">時間競賽</string>
 
+    <string name="create_event">建立活動</string>
+    <string name="create_event_title">活動名稱｜</string>
+    <string name="create_title_hint">不超過五個字歐</string>
+    <string name="create_event_type">活動類型｜</string>
+
+    <string name="select_event_type">請選擇活動類型</string>
+    <string name="select_fr_type">頻率</string>
+    <string name="select_start_date">請選擇開始日期</string>
+    <string name="select_end_date">請選擇結束日期</string>
+
+    <string name="frequency_hour_spinner">習慣培養(小時)</string>
+    <string name="frequency_distance_spinner">習慣培養(公里)</string>
+
+    <string name="create_event_frequency">次</string>
+    <string name="create_event_frequency_title">挑戰頻率｜</string>
+    <string name="create_event_frequency_each">挑戰每次｜</string>
+    <string name="create_event_frequency_distance">公里</string>
+    <string name="create_event_frequency_hour">小時</string>
+    <string name="create_event_distance_title">挑戰距離｜</string>
+    <string name="create_event_hour_title">挑戰小時｜</string>
+
+    <string name="how_much">多少</string>
+
+
+    <string name="create_event_start_date">開始日期｜</string>
+    <string name="create_event_end_date">結束日期｜</string>
+    <string name="create_event_description">活動敘述｜</string>
+    <string name="create_description_hint">請描述活動</string>
+    <string name="create_invite_friend">邀請好友｜</string>
+    <string name="inpun_friend_id">請輸入好友ID</string>
+
+    <string name="event_not_complete">尚未填寫完成歐</string>
+
+    <string name="frequency_day">每天</string>
+    <string name="frequency_week">每週</string>
+    <string name="frequency_month">每月</string>
 
 
 

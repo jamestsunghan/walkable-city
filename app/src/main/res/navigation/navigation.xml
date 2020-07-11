@@ -155,7 +155,7 @@
         android:id="@+id/exploreFragment"
         android:name="tw.com.walkablecity.profile.explore.ExploreFragment"
         android:label="ExploreFragment" />
-    <dialog
+    <fragment
         android:id="@+id/hostFragment"
         android:name="tw.com.walkablecity.host.HostFragment"
         android:label="HostFragment" />

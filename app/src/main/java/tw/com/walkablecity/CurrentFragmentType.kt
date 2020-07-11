@@ -22,5 +22,6 @@ enum class CurrentFragmentType(val title: String) {
     BEST_WALKERS(getString(R.string.best_walker_title)),
     EXPLORE(getString(R.string.explore_title)),
 
-    EVENT_DETAIL(getString(R.string.event_more_info))
+    EVENT_DETAIL(getString(R.string.event_more_info)),
+    HOST(getString(R.string.create_event))
 }

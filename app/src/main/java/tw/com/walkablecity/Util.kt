@@ -9,11 +9,16 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.google.android.gms.maps.model.LatLng
+import com.google.firebase.Timestamp
 import com.google.firebase.firestore.GeoPoint
 import tw.com.walkablecity.ext.toLocation
 import tw.com.walkablecity.ext.toQuery
 import tw.com.walkablecity.permission.RationaleDialog
 import java.lang.StringBuilder
+import java.text.ParseException
+import java.text.SimpleDateFormat
+import java.time.format.DateTimeFormatter
+import java.util.*
 import kotlin.math.pow
 import kotlin.math.sqrt
 
@@ -45,6 +50,31 @@ object Util {
             time.toString().padStart(2,'0')
         }else time.toString()
     }
+
+    fun dateToTimeStamp(dateString: String): Timestamp? =
+        try{
+            Timestamp(requireNotNull(SimpleDateFormat("yyyy-MM-dd", Locale.TAIWAN).parse(dateString))
+                .time.div(1000), 0)
+        }catch (e: ParseException){
+            null
+        }
+
+    fun dateAddMonth(dateString: String): String?{
+        return try{
+
+            val c = Calendar.getInstance()
+            c.time = requireNotNull(SimpleDateFormat("yyyy-MM-dd", Locale.TAIWAN).parse(dateString))
+            "${c.get(Calendar.YEAR)}" +
+                    "-${lessThenTenPadStart((c.get(Calendar.MONTH)+2).toLong())}" +
+                    "-${lessThenTenPadStart((c.get(Calendar.DAY_OF_MONTH).toLong()))}"
+        }catch (e: ParseException){
+            null
+        }
+    }
+
+
+
+
     fun calculateDistance(first: LatLng, second: LatLng): Float{
         val distance = first.toLocation().distanceTo(second.toLocation()) / 1000
         return if(distance < 0.002f){
@@ -72,8 +102,8 @@ object Util {
         return false
     }
 
-    fun constructUrl(center: GeoPoint, zoom: Int, path: List<GeoPoint>): String{
-        return StringBuilder().append(MAP_BASE_URL).append("center=${center.toQuery()}").toString()
-    }
+//    fun constructUrl(center: GeoPoint, zoom: Int, path: List<GeoPoint>): String{
+//        return StringBuilder().append(MAP_BASE_URL).append("center=${center.toQuery()}").toString()
+//    }
 
 }

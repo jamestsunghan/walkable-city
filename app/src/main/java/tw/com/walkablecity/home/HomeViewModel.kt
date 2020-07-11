@@ -98,7 +98,7 @@ class HomeViewModel(val walkableRepository: WalkableRepository, val argument: Ro
     val route = MutableLiveData<Route>().apply {
         value = argument
     }
-    private lateinit var locationCallback: LocationCallback
+    private var locationCallback: LocationCallback
 
     private val viewModelJob = Job()
     private val coroutineScope = CoroutineScope(Dispatchers.Main + viewModelJob)

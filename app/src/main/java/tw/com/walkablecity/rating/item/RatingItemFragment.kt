@@ -73,7 +73,7 @@ class RatingItemFragment(private val type: RatingType, private val route: Route?
                     mapFragment.getMapAsync {map ->
 
                         map.moveCamera(CameraUpdateFactory.newLatLngZoom(route.waypoints.toLatLngPoints()[0],15f))
-                        map.addPolyline(PolylineOptions().addAll(route?.waypoints?.toLatLngPoints()))
+                        map.addPolyline(PolylineOptions().addAll(route.waypoints.toLatLngPoints()))
                     }
 
                     childFragmentManager.beginTransaction().replace(R.id.map, mapFragment).commit()
