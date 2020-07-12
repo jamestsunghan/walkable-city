@@ -12,6 +12,6 @@ data class Walk (
     val startTime: Timestamp,
     val endTime: Timestamp,
     val duration: Long,
-    val routeId: Long?,
+    val routeId: String?,
     val waypoints: List<LatLng> = listOf()
 ): Parcelable

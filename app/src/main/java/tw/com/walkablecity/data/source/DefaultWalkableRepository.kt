@@ -19,11 +19,11 @@ class DefaultWalkableRepository(private val remote: WalkableDataSource): Walkabl
         return remote.getRoutesRanking(sorting, timeMin, timeMax)
     }
 
-    override suspend fun getUserFavoriteRoutes(userId: Int): Result<List<Route>> {
+    override suspend fun getUserFavoriteRoutes(userId: String): Result<List<Route>> {
         return remote.getUserFavoriteRoutes(userId)
     }
 
-    override suspend fun getUserRoutes(userId: Int): Result<List<Route>> {
+    override suspend fun getUserRoutes(userId: String): Result<List<Route>> {
         return remote.getUserRoutes(userId)
     }
 
@@ -43,7 +43,7 @@ class DefaultWalkableRepository(private val remote: WalkableDataSource): Walkabl
         return remote.getUserCurrentLocation()
     }
 
-    override suspend fun updateRouteRating(rating: RouteRating, route: Route, userId: Int): Result<Boolean> {
+    override suspend fun updateRouteRating(rating: RouteRating, route: Route, userId: String): Result<Boolean> {
         return remote.updateRouteRating(rating, route, userId)
     }
 
@@ -51,7 +51,7 @@ class DefaultWalkableRepository(private val remote: WalkableDataSource): Walkabl
         return remote.createRouteByUser(route)
     }
 
-    override suspend fun getRouteMapImageUrl(routeId: Long, bitmap: Bitmap): Result<String> {
+    override suspend fun getRouteMapImageUrl(routeId: String, bitmap: Bitmap): Result<String> {
         return remote.getRouteMapImageUrl(routeId, bitmap)
     }
 
@@ -63,15 +63,15 @@ class DefaultWalkableRepository(private val remote: WalkableDataSource): Walkabl
         return remote.getRouteMapImage(center,zoom, path)
     }
 
-    override suspend fun getRouteComments(routeId: Long): Result<List<Comment>> {
+    override suspend fun getRouteComments(routeId: String): Result<List<Comment>> {
         return remote.getRouteComments(routeId)
     }
 
-    override suspend fun addUserToFollowers(userId: Int, route: Route): Result<Boolean> {
+    override suspend fun addUserToFollowers(userId: String, route: Route): Result<Boolean> {
         return remote.addUserToFollowers(userId, route)
     }
 
-    override suspend fun removeUserFromFollowers(userId: Int, route: Route): Result<Boolean> {
+    override suspend fun removeUserFromFollowers(userId: String, route: Route): Result<Boolean> {
         return remote.removeUserFromFollowers(userId, route)
     }
 
@@ -79,11 +79,11 @@ class DefaultWalkableRepository(private val remote: WalkableDataSource): Walkabl
         return remote.getPopularEvents()
     }
 
-    override suspend fun getUserChallenges(userId: Int): Result<List<Event>> {
+    override suspend fun getUserChallenges(userId: String): Result<List<Event>> {
         return remote.getUserChallenges(userId)
     }
 
-    override suspend fun getUserInvitation(userId: Int): Result<List<Event>> {
+    override suspend fun getUserInvitation(userId: String): Result<List<Event>> {
         return remote.getUserInvitation(userId)
     }
 

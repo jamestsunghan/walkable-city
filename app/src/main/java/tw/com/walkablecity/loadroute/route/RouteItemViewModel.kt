@@ -68,7 +68,7 @@ class RouteItemViewModel( private val walkableRepository: WalkableRepository, va
         _filter.value = sorting
     }
 
-    fun getRoutesByType(userId: Int, type: LoadRouteType){
+    fun getRoutesByType(userId: String, type: LoadRouteType){
         coroutineScope.launch {
 
             _status.value = LoadStatus.LOADING

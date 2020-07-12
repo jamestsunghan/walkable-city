@@ -1,10 +1,7 @@
 package tw.com.walkablecity.host
 
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
 import com.google.firebase.Timestamp
 import com.google.firebase.Timestamp.now
 import kotlinx.coroutines.*
@@ -22,10 +19,12 @@ class HostViewModel(private val walkableRepository: WalkableRepository) : ViewMo
 
     val title = MutableLiveData<String>()
     val description = MutableLiveData<String>()
-    val isPublic = MutableLiveData<Boolean>()
-    val invited = MutableLiveData<List<Int>>()
+    val isPublic = MutableLiveData<Boolean>(false)
+    val invited = MutableLiveData<List<String>>()
 
     val selectFQPosition = MutableLiveData<Int>()
+
+    val targetAmount = MutableLiveData<String>()
 
     val frequencyType = Transformations.map(selectFQPosition){
         if(it != null && it > 0 ){
@@ -34,7 +33,34 @@ class HostViewModel(private val walkableRepository: WalkableRepository) : ViewMo
         else null
     }
 
-    val target = MutableLiveData<EventTarget>()
+    val target = MediatorLiveData<EventTarget>().apply{
+
+        addSource(frequencyType) {
+            it?.let{
+                if(value == null) value = EventTarget()
+                this.value?.frequencyType = it
+                value = this.value
+
+            }
+        }
+        addSource(targetAmount){
+            it?.let{
+                if(value == null) value = EventTarget()
+                when(selectTypePosition.value){
+                    1 -> this.value?.distance = it.toFloat()
+                    2 -> this.value?.hour     = it.toFloat()
+                    3 -> this.value?.distance = it.toFloat()
+                    4 -> this.value?.distance = it.toFloat()
+                    5 -> this.value?.hour     = it.toFloat()
+                    6 -> this.value?.hour     = it.toFloat()
+                    else -> {}
+                }
+                value = this.value
+
+
+            }
+        }
+    }
 
     val selectTypePosition = MutableLiveData<Int>()
     val type = Transformations.map(selectTypePosition){
@@ -73,6 +99,19 @@ class HostViewModel(private val walkableRepository: WalkableRepository) : ViewMo
         }
     }
 
+    val eventStatus = Transformations.map(startDate){
+        when(it){
+            null -> null
+            else -> {
+                if(it.seconds > now().seconds){
+                    EventStatus.UPCOMING
+                }else{
+                    EventStatus.ONGOING
+                }
+            }
+        }
+    }
+
 
     private val _status = MutableLiveData<LoadStatus>()
     val status: LiveData<LoadStatus> get() = _status
@@ -97,8 +136,11 @@ class HostViewModel(private val walkableRepository: WalkableRepository) : ViewMo
     }
 
     fun createEvent(){
+        invited.value = listOf("10056","10045")
         if(title.value == null || description.value == null || isPublic.value == null || invited.value == null
-            || type.value == null || target.value == null || startDate.value == null || endDate.value == null){
+            || type.value == null ||( target.value?.hour == null &&  target.value?.distance == null)
+            || (frequencyType.value == null && type.value == EventType.FREQUENCY)
+            || startDate.value == null || endDate.value == null){
             makeShortToast(R.string.event_not_complete)
         }else{
             uploadEvent(
@@ -108,6 +150,7 @@ class HostViewModel(private val walkableRepository: WalkableRepository) : ViewMo
                     description = description.value,
                     isPublic    = isPublic.value,
                     host        = userId,
+                    status      = eventStatus.value,
                     invited     = requireNotNull(invited.value),
                     startDate   = startDate.value,
                     endDate     = endDate.value,

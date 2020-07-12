@@ -172,6 +172,8 @@
     <string name="frequency_week">每週</string>
     <string name="frequency_month">每月</string>
 
+    <string name="set_public">設定為公開</string>
+
 
 
 </resources>

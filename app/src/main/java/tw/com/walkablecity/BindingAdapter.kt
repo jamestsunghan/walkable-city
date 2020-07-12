@@ -8,6 +8,7 @@ import android.graphics.drawable.shapes.Shape
 import android.util.Log
 import android.util.TypedValue
 import android.view.View
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -229,6 +230,7 @@ fun setSliderListeners(slider: Slider, attrChange: InverseBindingListener){
     }
 }
 
+
 @BindingAdapter("switch")
 fun switchDrawable(imageView: ImageView, added: Boolean){
     when(added){
@@ -356,4 +358,4 @@ fun hexagonByRating(view: View, rating: RouteRating) {
 
 
 //mock data area
-const val userId = 10043
+const val userId = "10043"

@@ -8,15 +8,15 @@ import kotlinx.android.parcel.RawValue
 
 @Parcelize
 data class Route(
-    val id: Long = 0L,
+    val id: String? = null,
     val title: String? = null,
     val description: String? = null,
     val ratingAvr: RouteRating? = null,
     @Json(name = "map_image")val mapImage: String? = null,
     val length: Float = 0f,
     val minutes: Float = 0f,
-    val walkers: List<Int> = listOf(),
-    val followers: List<Int> = listOf(),
+    val walkers: List<String> = listOf(),
+    val followers: List<String> = listOf(),
     val comments: List<Comment> = listOf(),
     val photopoints: List<PhotoPoint> = listOf(),
     val ratings: List<RouteRating> = listOf(),

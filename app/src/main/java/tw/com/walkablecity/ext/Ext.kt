@@ -171,7 +171,7 @@ fun Comment.toHashMap(): HashMap<String, Any?>{
     )
 }
 
-fun String.toComment(recommend: Int, userId: Int): Comment{
+fun String.toComment(recommend: Int, userId: String): Comment{
     return Comment(
         content = this,
         createTime = now(),
@@ -180,8 +180,8 @@ fun String.toComment(recommend: Int, userId: Int): Comment{
     )
 }
 
-fun Walk.toRouteId(userId: Int): Long{
-    return this.startTime.toDateLong().times(100) + userId
+fun Walk.toRouteId(userId: String): String{
+    return "${userId}${this.startTime.toDateLong().times(100)}"
 }
 
 fun Timestamp.toDateLong(): Long{

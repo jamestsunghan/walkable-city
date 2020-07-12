@@ -6,7 +6,7 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class Comment (
-    val userId: Int? = null,
+    val userId: String? = null,
     val recommend: Int? = null,
     val content: String? = null,
     val createTime: Timestamp? = null

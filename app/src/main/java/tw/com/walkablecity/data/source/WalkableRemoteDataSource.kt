@@ -1,7 +1,6 @@
 package tw.com.walkablecity.data.source
 
 import android.graphics.Bitmap
-import android.net.Uri
 import android.util.Log
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.maps.model.LatLng
@@ -10,18 +9,15 @@ import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
-import retrofit2.http.Url
 import tw.com.walkablecity.R
 import tw.com.walkablecity.Util.getString
 import tw.com.walkablecity.Util.isInternetConnected
 import tw.com.walkablecity.WalkableApp
 import tw.com.walkablecity.data.*
 import tw.com.walkablecity.ext.*
-import tw.com.walkablecity.home.WalkerStatus
 import tw.com.walkablecity.network.WalkableApi
 import java.io.ByteArrayOutputStream
 import java.lang.Exception
-import java.net.URL
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
@@ -87,7 +83,7 @@ object WalkableRemoteDataSource: WalkableDataSource{
         }
     }
 
-    override suspend fun getUserFavoriteRoutes(userId: Int): Result<List<Route>> = suspendCoroutine{ continuation ->
+    override suspend fun getUserFavoriteRoutes(userId: String): Result<List<Route>> = suspendCoroutine{ continuation ->
         db.collection(ROUTE).whereArrayContains(FOLLOWERS,userId).get().addOnCompleteListener {task ->
             if(task.isSuccessful){
                 val list = mutableListOf<Route>()
@@ -109,7 +105,7 @@ object WalkableRemoteDataSource: WalkableDataSource{
         }
     }
 
-    override suspend fun getUserRoutes(userId: Int): Result<List<Route>> = suspendCoroutine{continuation ->
+    override suspend fun getUserRoutes(userId: String): Result<List<Route>> = suspendCoroutine{continuation ->
         db.collection(ROUTE).whereArrayContains(WALKERS,userId).get().addOnCompleteListener { task ->
             if(task.isSuccessful){
                 val list = mutableListOf<Route>()
@@ -176,7 +172,7 @@ object WalkableRemoteDataSource: WalkableDataSource{
         }
     }
 
-    override suspend fun updateRouteRating(rating: RouteRating, route: Route, userId: Int): Result<Boolean> = suspendCoroutine { continuation ->
+    override suspend fun updateRouteRating(rating: RouteRating, route: Route, userId: String): Result<Boolean> = suspendCoroutine { continuation ->
         val ratingToUpdate = rating.toHashMapInt()
         val walkersNew =
             if(route.walkers.contains(userId))route.walkers
@@ -213,7 +209,7 @@ object WalkableRemoteDataSource: WalkableDataSource{
         }
     }
 
-    override suspend fun getRouteMapImageUrl(routeId: Long, bitmap: Bitmap): Result<String> = suspendCoroutine{continuation->
+    override suspend fun getRouteMapImageUrl(routeId: String, bitmap: Bitmap): Result<String> = suspendCoroutine{continuation->
         val baos = ByteArrayOutputStream()
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
         val data = baos.toByteArray()
@@ -243,8 +239,8 @@ object WalkableRemoteDataSource: WalkableDataSource{
         }
     }
 
-    override suspend fun getRouteComments(routeId: Long): Result<List<Comment>> = suspendCoroutine{continuation->
-        db.collection(ROUTE).document(routeId.toString()).collection(COMMENTS).get().addOnCompleteListener { task ->
+    override suspend fun getRouteComments(routeId: String): Result<List<Comment>> = suspendCoroutine{continuation->
+        db.collection(ROUTE).document(routeId).collection(COMMENTS).get().addOnCompleteListener { task ->
             if(task.isSuccessful){
                 val list = mutableListOf<Comment>()
                 for(document in task.result!!){
@@ -322,8 +318,8 @@ object WalkableRemoteDataSource: WalkableDataSource{
 
     }
 
-    override suspend fun addUserToFollowers(userId: Int, route: Route): Result<Boolean> = suspendCoroutine{continuation->
-        val list = route.followers as MutableList<Int>
+    override suspend fun addUserToFollowers(userId: String, route: Route): Result<Boolean> = suspendCoroutine{continuation->
+        val list = route.followers as MutableList<String>
         list.add(userId)
         db.collection(ROUTE).document(route.id.toString()).update(FOLLOWERS,list).addOnCompleteListener {task->
             if(task.isSuccessful){
@@ -338,9 +334,9 @@ object WalkableRemoteDataSource: WalkableDataSource{
         }
     }
 
-    override suspend fun removeUserFromFollowers(userId: Int, route: Route): Result<Boolean> = suspendCoroutine{ continuation->
+    override suspend fun removeUserFromFollowers(userId: String, route: Route): Result<Boolean> = suspendCoroutine{ continuation->
 
-        val list = route.followers as MutableList<Int>
+        val list = route.followers as MutableList<String>
         list.remove(userId)
         db.collection(ROUTE).document(route.id.toString()).update(FOLLOWERS,list).addOnCompleteListener {task->
             if(task.isSuccessful){
@@ -376,7 +372,7 @@ object WalkableRemoteDataSource: WalkableDataSource{
         }
     }
 
-    override suspend fun getUserChallenges(userId: Int): Result<List<Event>> = suspendCoroutine{continuation->
+    override suspend fun getUserChallenges(userId: String): Result<List<Event>> = suspendCoroutine{continuation->
         db.collection(EVENT).whereArrayContains("member",userId).get().addOnCompleteListener { task->
             if(task.isSuccessful){
                 val list = mutableListOf<Event>()
@@ -398,7 +394,7 @@ object WalkableRemoteDataSource: WalkableDataSource{
         }
     }
 
-    override suspend fun getUserInvitation(userId: Int): Result<List<Event>> = suspendCoroutine{continuation->
+    override suspend fun getUserInvitation(userId: String): Result<List<Event>> = suspendCoroutine{continuation->
         db.collection(EVENT).whereArrayContains("invited",userId).get().addOnCompleteListener { task->
             if(task.isSuccessful){
                 val list = mutableListOf<Event>()

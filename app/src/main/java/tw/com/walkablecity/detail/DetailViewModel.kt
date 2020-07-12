@@ -45,7 +45,7 @@ class DetailViewModel(val walkableRepository: WalkableRepository, val route: Rou
 
 
     init{
-        getComment(route.id)
+        getComment(requireNotNull(route.id))
     }
 
     override fun onCleared() {
@@ -69,7 +69,7 @@ class DetailViewModel(val walkableRepository: WalkableRepository, val route: Rou
         }
     }
 
-    fun addUserToFollowers(userId: Int, route: Route){
+    fun addUserToFollowers(userId: String, route: Route){
 
         coroutineScope.launch {
             _favStatus.value = LoadStatus.LOADING
@@ -101,7 +101,7 @@ class DetailViewModel(val walkableRepository: WalkableRepository, val route: Rou
 
     }
 
-    fun removeUserFromFollowers(userId: Int, route: Route){
+    fun removeUserFromFollowers(userId: String, route: Route){
         coroutineScope.launch {
             _favStatus.value = LoadStatus.LOADING
 
@@ -131,7 +131,7 @@ class DetailViewModel(val walkableRepository: WalkableRepository, val route: Rou
         }
     }
 
-    private fun getComment(routeId : Long){
+    private fun getComment(routeId : String){
 
         coroutineScope.launch {
             _status.value = LoadStatus.LOADING

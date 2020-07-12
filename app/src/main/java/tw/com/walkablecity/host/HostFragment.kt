@@ -59,6 +59,10 @@ class HostFragment : Fragment() {
             mutableListOf(getString(R.string.select_fr_type)).plus(FrequencyType.values().map{it.text})
         )
 
+        binding.publicCheckbox.setOnCheckedChangeListener { buttonView, isChecked ->
+            viewModel.isPublic.value = isChecked
+        }
+
         val c = Calendar.getInstance()
         val year = c.get(Calendar.YEAR)
         val month = c.get(Calendar.MONTH)
@@ -84,11 +88,7 @@ class HostFragment : Fragment() {
             dpd.show()
         }
 
-        viewModel.startDate.observe(viewLifecycleOwner, Observer{
-            it?.let{
-                Log.d("JJ","timestamp ${it.toDateLong()}")
-            }
-        })
+
 
         binding.selectEventEndDate.setOnClickListener {
             val dpd = DatePickerDialog(
@@ -128,6 +128,12 @@ class HostFragment : Fragment() {
         }
 
 
+        viewModel.startDate.observe(viewLifecycleOwner, Observer{
+            it?.let{
+                Log.d("JJ","timestamp ${it.toDateLong()}")
+            }
+        })
+
 
         viewModel.navigateToEvents.observe(viewLifecycleOwner, Observer{
             if(it){
@@ -151,6 +157,12 @@ class HostFragment : Fragment() {
         viewModel.endDate.observe(viewLifecycleOwner, Observer{
             it?.let{
                 Log.d("JJ", "endDate ${it.toDateLong()}")
+            }
+        })
+
+        viewModel.target.observe(viewLifecycleOwner, Observer {
+            it?.let{
+                Log.d("JJ_target", "target $it")
             }
         })
 

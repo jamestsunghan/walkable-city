@@ -21,11 +21,6 @@ import tw.com.walkablecity.userId
 class FavoriteViewModel(val walkableRepository: WalkableRepository) : ViewModel() {
 
 
-    private val _navigateToDetail = MutableLiveData<Route>()
-    val navigateToDetail: LiveData<Route>
-        get() = _navigateToDetail
-
-
     private val _routeAllList = MutableLiveData<List<Route>>()
     val routeAllList: LiveData<List<Route>>
         get() = _routeAllList
@@ -62,15 +57,6 @@ class FavoriteViewModel(val walkableRepository: WalkableRepository) : ViewModel(
 
     }
 
-    fun navigateToDetail(route: Route){
-        _navigateToDetail.value = route
-    }
-
-
-    fun navigateToDetailComplete(){
-        _navigateToDetail.value = null
-    }
-
     fun navigationComplete(){
         selectRoute.value = null
         _filter.value = null
@@ -80,7 +66,7 @@ class FavoriteViewModel(val walkableRepository: WalkableRepository) : ViewModel(
         _filter.value = sorting
     }
 
-    private fun getFavoriteRoutes(userId: Int){
+    private fun getFavoriteRoutes(userId: String){
         coroutineScope.launch {
 
             _status.value = LoadStatus.LOADING

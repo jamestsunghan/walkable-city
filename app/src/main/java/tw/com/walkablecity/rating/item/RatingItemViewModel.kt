@@ -150,7 +150,7 @@ class RatingItemViewModel(val walkableRepository: WalkableRepository, val select
 
     }
 
-    fun getImageUrl(walk: Walk, userId: Int, bitmap: Bitmap){
+    fun getImageUrl(walk: Walk, userId: String, bitmap: Bitmap){
 
         coroutineScope.launch {
 
@@ -181,7 +181,7 @@ class RatingItemViewModel(val walkableRepository: WalkableRepository, val select
 
     }
 
-    private fun createRoute(title: String, description: String, imageUrl: String, walk: Walk, rating: RouteRating, userId: Int, commentContent: String){
+    private fun createRoute(title: String, description: String, imageUrl: String, walk: Walk, rating: RouteRating, userId: String, commentContent: String){
 
         val waypoints = walk.waypoints.filterIndexed { index, latLng ->
             when {
