@@ -98,7 +98,7 @@ class MainActivity : AppCompatActivity() {
 
                 R.id.eventDetailFragment -> CurrentFragmentType.EVENT_DETAIL
                 R.id.hostFragment -> CurrentFragmentType.HOST
-
+                R.id.loginFragment -> CurrentFragmentType.LOGIN
 
                 else -> viewModel.currentFragment.value
             }

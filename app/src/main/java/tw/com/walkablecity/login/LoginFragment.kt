@@ -11,14 +11,11 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
@@ -27,7 +24,6 @@ import tw.com.walkablecity.UserManager
 import tw.com.walkablecity.databinding.FragmentLoginBinding
 import tw.com.walkablecity.ext.getVMFactory
 import tw.com.walkablecity.ext.toSignInUser
-import java.lang.StringBuilder
 
 class LoginFragment : Fragment() {
 

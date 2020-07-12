@@ -23,5 +23,7 @@ enum class CurrentFragmentType(val title: String) {
     EXPLORE(getString(R.string.explore_title)),
 
     EVENT_DETAIL(getString(R.string.event_more_info)),
-    HOST(getString(R.string.create_event))
+    HOST(getString(R.string.create_event)),
+
+    LOGIN("")
 }

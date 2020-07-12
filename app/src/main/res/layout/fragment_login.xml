@@ -15,15 +15,46 @@
         android:layout_height="match_parent"
         tools:context=".login.LoginFragment">
 
-        <com.google.android.gms.common.SignInButton
-            android:id="@+id/signInButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="visible"
+        <ImageView
+            android:id="@+id/walk_icon"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:tint="@color/primaryDarkColor"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.45"
+            app:srcCompat="@drawable/ic_footprint" />
+
+        <TextView
+            android:id="@+id/walk_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/noto_sans"
+            android:gravity="center"
+            android:letterSpacing="0.15"
+            android:paddingStart="8dp"
+            android:paddingTop="4dp"
+            android:paddingEnd="8dp"
+            android:paddingBottom="4dp"
+            android:textColor="@color/primaryDarkColor"
+            android:text="@string/walkable_city"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="@+id/walk_icon"
+            app:layout_constraintStart_toStartOf="@+id/walk_icon"
+            app:layout_constraintTop_toBottomOf="@+id/walk_icon"
+            android:layout_marginTop="16dp" />
+
+        <com.google.android.gms.common.SignInButton
+            android:id="@+id/signInButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:visibility="visible"
+            app:layout_constraintTop_toBottomOf="@+id/walk_title"
+            app:layout_constraintEnd_toEndOf="@+id/walk_icon"
+            app:layout_constraintStart_toStartOf="@+id/walk_icon"
             tools:visibility="gone" />
 
         <TextView
