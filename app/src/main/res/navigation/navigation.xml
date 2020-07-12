@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation"
-    app:startDestination="@id/homeFragment">
+    app:startDestination="@id/loginFragment">
 
     <fragment
         android:id="@+id/homeFragment"
@@ -168,5 +168,9 @@
             app:argType="tw.com.walkablecity.data.Event" />
     </fragment>
     <action android:id="@+id/action_global_eventDetailFragment" app:destination="@id/eventDetailFragment" />
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="tw.com.walkablecity.login.LoginFragment"
+        android:label="LoginFragment" />
 
 </navigation>

@@ -5,6 +5,7 @@ import android.util.Log
 import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.Timestamp
 import com.google.firebase.Timestamp.now
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.GeoPoint
 import tw.com.walkablecity.R
 import tw.com.walkablecity.Util
@@ -186,4 +187,17 @@ fun Walk.toRouteId(userId: String): String{
 
 fun Timestamp.toDateLong(): Long{
     return SimpleDateFormat("yyyyMMddHHmmss", Locale.TAIWAN).format(this.seconds.times(1000)).toLong()
+}
+
+fun FirebaseUser.toSignInUser(): User{
+    return User(
+        id = uid,
+        name = displayName,
+        picture = photoUrl.toString(),
+        email = email,
+        accumulatedKm = Accumulation(0f,0f,0f,0f,0f),
+        accumulatedHour = Accumulation(0f,0f,0f,0f,0f),
+        friends = listOf(),
+        walks = listOf()
+    )
 }

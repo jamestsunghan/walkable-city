@@ -13,6 +13,7 @@ import tw.com.walkablecity.home.HomeViewModel
 import tw.com.walkablecity.host.HostViewModel
 import tw.com.walkablecity.loadroute.LoadRouteViewModel
 import tw.com.walkablecity.loadroute.route.RouteItemViewModel
+import tw.com.walkablecity.login.LoginViewModel
 import tw.com.walkablecity.profile.ProfileViewModel
 import tw.com.walkablecity.ranking.RankingViewModel
 import tw.com.walkablecity.rating.RatingViewModel
@@ -52,7 +53,8 @@ class ViewModelFactory( private val walkableRepository: WalkableRepository)
                 isAssignableFrom(HostViewModel::class.java) ->
                     HostViewModel(walkableRepository)
 
-
+                isAssignableFrom(LoginViewModel::class.java) ->
+                    LoginViewModel(walkableRepository)
 
                 else ->
                     throw IllegalArgumentException("Unknown ViewModel Class ${modelClass.name}")

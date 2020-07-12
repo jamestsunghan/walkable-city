@@ -3,6 +3,7 @@ package tw.com.walkablecity.data.source
 import android.graphics.Bitmap
 import android.net.Uri
 import com.google.android.gms.maps.model.LatLng
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.GeoPoint
 import tw.com.walkablecity.data.*
 
@@ -89,5 +90,13 @@ class DefaultWalkableRepository(private val remote: WalkableDataSource): Walkabl
 
     override suspend fun createEvent(event: Event): Result<Boolean> {
         return remote.createEvent(event)
+    }
+
+    override suspend fun firebaseAuthWithGoogle(idToken: String?): Result<FirebaseUser> {
+        return remote.firebaseAuthWithGoogle(idToken)
+    }
+
+    override suspend fun signUpUser(user: User): Result<User> {
+        return remote.signUpUser(user)
     }
 }

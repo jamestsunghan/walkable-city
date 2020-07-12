@@ -3,6 +3,7 @@ package tw.com.walkablecity.data.source
 import android.graphics.Bitmap
 import android.net.Uri
 import com.google.android.gms.maps.model.LatLng
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.GeoPoint
 import tw.com.walkablecity.data.*
 
@@ -28,5 +29,9 @@ interface WalkableDataSource {
     suspend fun getPopularEvents(): Result<List<Event>>
 
     suspend fun createEvent(event: Event): Result<Boolean>
+
+    suspend fun firebaseAuthWithGoogle(idToken: String?): Result<FirebaseUser>
+
+    suspend fun signUpUser(user: User): Result<User>
 
 }

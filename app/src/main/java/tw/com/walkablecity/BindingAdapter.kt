@@ -359,3 +359,4 @@ fun hexagonByRating(view: View, rating: RouteRating) {
 
 //mock data area
 const val userId = "10043"
+

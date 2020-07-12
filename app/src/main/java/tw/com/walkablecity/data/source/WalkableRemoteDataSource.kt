@@ -4,6 +4,9 @@ import android.graphics.Bitmap
 import android.util.Log
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.maps.model.LatLng
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.GeoPoint
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
@@ -16,6 +19,7 @@ import tw.com.walkablecity.WalkableApp
 import tw.com.walkablecity.data.*
 import tw.com.walkablecity.ext.*
 import tw.com.walkablecity.network.WalkableApi
+import tw.com.walkablecity.userId
 import java.io.ByteArrayOutputStream
 import java.lang.Exception
 import kotlin.coroutines.resume
@@ -33,9 +37,41 @@ object WalkableRemoteDataSource: WalkableDataSource{
     private const val USER = "user"
     private const val RATINGS = "ratings"
     private val fusedLocationClient = FusedLocationProviderClient(WalkableApp.instance)
+    private val auth = Firebase.auth
 
+    override suspend fun firebaseAuthWithGoogle(idToken: String?): Result<FirebaseUser> = suspendCoroutine{continuation ->
+        val credential = GoogleAuthProvider.getCredential(idToken, null)
+        auth.signInWithCredential(credential)
+            .addOnCompleteListener {task ->
+                if(task.isSuccessful){
 
-    override suspend fun getAllRoute(): Result<List<Route>> = suspendCoroutine {continuation ->
+                    continuation.resume(Result.Success(requireNotNull(auth.currentUser)))
+                }else{
+                    task.exception?.let{
+                        Log.d("JJ_fire","[${this::class.simpleName}] Error getting documents. ${it.message}")
+                        continuation.resume(Result.Error(it))
+                    }
+                    continuation.resume(Result.Fail(WalkableApp.instance.getString(R.string.not_here)))
+                }
+            }
+    }
+
+    override suspend fun signUpUser(user: User): Result<User> = suspendCoroutine {continuation ->
+        db.collection(USER).document(user.id).set(user).addOnCompleteListener {task->
+            if(task.isSuccessful){
+
+                continuation.resume(Result.Success(user))
+            }else{
+                task.exception?.let{
+                    Log.d("JJ_fire","[${this::class.simpleName}] Error getting documents. ${it.message}")
+                    continuation.resume(Result.Error(it))
+                }
+                continuation.resume(Result.Fail(WalkableApp.instance.getString(R.string.not_here)))
+            }
+        }
+    }
+
+    override suspend fun getAllRoute(): Result<List<Route>> = suspendCoroutine { continuation ->
         db.collection(ROUTE).get().addOnCompleteListener {task ->
             if(task.isSuccessful){
                 val list = mutableListOf<Route>()
