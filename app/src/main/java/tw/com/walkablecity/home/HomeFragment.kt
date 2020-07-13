@@ -31,11 +31,16 @@ import tw.com.walkablecity.Util.isPermissionGranted
 import tw.com.walkablecity.Util.makeShortToast
 import tw.com.walkablecity.Util.requestPermission
 import tw.com.walkablecity.WalkableApp
+import tw.com.walkablecity.data.Route
 import tw.com.walkablecity.databinding.FragmentHomeBinding
 import tw.com.walkablecity.ext.getVMFactory
 import tw.com.walkablecity.ext.toLatLngPoints
 
-class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationClickListener, GoogleMap.OnMyLocationButtonClickListener, ActivityCompat.OnRequestPermissionsResultCallback{
+class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationClickListener, GoogleMap.OnMyLocationButtonClickListener{
+
+
+
+    lateinit var viewModelInit: HomeViewModel
 
     private var permissionDenied =  false
     private lateinit var mapFragment: SupportMapFragment
@@ -45,23 +50,10 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationClick
         const val REQUEST_LOCATION = 0x00
     }
 
-
     override fun onMapReady(googleMap: GoogleMap?) {
         map = googleMap ?: return
         googleMap.setOnMyLocationButtonClickListener(this)
         googleMap.setOnMyLocationClickListener(this)
-        enableMyLocation()
-    }
-
-    private fun enableMyLocation(){
-        if(!::map.isInitialized)return
-
-        if(checkSelfPermission(requireContext(),Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
-           map.isMyLocationEnabled = true
-        }else{
-            requestPermission(requireActivity().parent as MainActivity, REQUEST_LOCATION
-                , Manifest.permission.ACCESS_FINE_LOCATION,true)
-        }
 
     }
 
@@ -74,18 +66,20 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationClick
         return false
     }
 
+
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<String>,
         grantResults: IntArray
     ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if(requestCode != REQUEST_LOCATION) return
         if(isPermissionGranted(permissions,grantResults, Manifest.permission.ACCESS_FINE_LOCATION)){
-            enableMyLocation()
+            viewModelInit.clientCurrentLocation()
         }else{
             permissionDenied = true
         }
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
     }
 
     override fun onCreateView(
@@ -98,6 +92,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationClick
                 R.layout.fragment_home, container, false)
         binding.lifecycleOwner = this
 
+
         val route = if((arguments as Bundle).containsKey("routeKey")){
             HomeFragmentArgs.fromBundle(arguments as Bundle).routeKey
         }else{
@@ -106,22 +101,22 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationClick
 
         val viewModel: HomeViewModel by viewModels{getVMFactory(route)}
 
+        viewModelInit = viewModel
+
         binding.viewModel = viewModel
 
-        viewModel.checkPermission.observe(viewLifecycleOwner, Observer{
-            if(it){
-                if(checkSelfPermission(WalkableApp.instance, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
-                    viewModel.startWalking()
-                    viewModel.checkPermissionComplete()
-                }else{
-                    if(shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)){
-                        Toast.makeText(WalkableApp.instance,"Location permission is needed for route recording and suggestion routes nearby.",
-                            Toast.LENGTH_SHORT).show()
-                    }
-                    requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), REQUEST_LOCATION)
-                }
-            }
-        })
+
+        if(checkSelfPermission(WalkableApp.instance, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+            viewModel.clientCurrentLocation()
+        }else{
+//            if(shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)){
+//                Toast.makeText(WalkableApp.instance,"Location permission is needed for route recording and suggestion routes nearby.",
+//                    Toast.LENGTH_SHORT).show()
+//            }
+            requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), REQUEST_LOCATION)
+//            requestPermission(requireActivity() as MainActivity, REQUEST_LOCATION
+//                , Manifest.permission.ACCESS_FINE_LOCATION,true)
+        }
 
 
         viewModel.navigateToRating.observe(viewLifecycleOwner, Observer {
@@ -183,7 +178,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationClick
 
                     it.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation,15f))
                     it.uiSettings.isMyLocationButtonEnabled = true
-
+                    it.isMyLocationEnabled = true
                     if(route!=null){
                         viewModel.drawPath(currentLocation, currentLocation, route.waypoints.toLatLngPoints())
                     }

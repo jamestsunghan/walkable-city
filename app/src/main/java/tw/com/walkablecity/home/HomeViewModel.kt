@@ -115,7 +115,7 @@ class HomeViewModel(val walkableRepository: WalkableRepository, val argument: Ro
         Log.d("JJ","date $date")
 
         _walkerStatus.value = WalkerStatus.PREPARE
-        clientCurrentLocation()
+//        clientCurrentLocation()
         locationCallback = object: LocationCallback(){
             override fun onLocationResult(p0: LocationResult?) {
                 super.onLocationResult(p0)
@@ -156,7 +156,7 @@ class HomeViewModel(val walkableRepository: WalkableRepository, val argument: Ro
 
     fun startStopSwitch(){
         when(walkerStatus.value){
-            WalkerStatus.PREPARE -> checkBeforeWalking()
+            WalkerStatus.PREPARE -> startWalking()
             WalkerStatus.PAUSING -> stopWalking()
             WalkerStatus.WALKING -> stopWalking()
             WalkerStatus.FINISH ->{}
@@ -267,7 +267,7 @@ class HomeViewModel(val walkableRepository: WalkableRepository, val argument: Ro
         handler.postDelayed(runnable, 1000)
     }
 
-    private fun clientCurrentLocation(){
+    fun clientCurrentLocation(){
 
         _loadStatus.value = LoadStatus.LOADING
 
@@ -315,13 +315,6 @@ class HomeViewModel(val walkableRepository: WalkableRepository, val argument: Ro
     }
 
 
-    private fun checkBeforeWalking(){
-        _checkPermission.value = true
-    }
-
-    fun checkPermissionComplete(){
-        _checkPermission.value = false
-    }
 
     fun drawPath(origin: LatLng, destination: LatLng, waypoints: List<LatLng>){
         coroutineScope.launch {
