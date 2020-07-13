@@ -40,6 +40,35 @@ class ProfileFragment : Fragment() {
             }
         })
 
+        viewModel.navigateToSetting.observe(viewLifecycleOwner, Observer{
+            if(it){
+                findNavController().navigate(ProfileFragmentDirections.actionProfileFragmentToSettingsFragment())
+                viewModel.navigateToSettingComplete()
+            }
+        })
+
+        viewModel.navigateToWalkers.observe(viewLifecycleOwner, Observer{
+            if(it){
+                findNavController().navigate(ProfileFragmentDirections.actionProfileFragmentToBestWalkersFragment())
+                viewModel.navigateToWalkersComplete()
+            }
+        })
+
+        viewModel.navigateToBadge.observe(viewLifecycleOwner, Observer{
+            if(it){
+                findNavController().navigate(ProfileFragmentDirections.actionProfileFragmentToBadgeFragment())
+                viewModel.navigateToBadgeComplete()
+            }
+        })
+
+        viewModel.navigateToExplorer.observe(viewLifecycleOwner, Observer{
+            if(it){
+                findNavController().navigate(ProfileFragmentDirections.actionProfileFragmentToExploreFragment())
+                viewModel.navigateToExplorerComplete()
+            }
+        })
+
+
         return binding.root
     }
 
