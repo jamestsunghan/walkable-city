@@ -59,8 +59,6 @@ class MainActivity : AppCompatActivity() {
 
 
 
-
-
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         binding.lifecycleOwner = this
 
@@ -104,6 +102,8 @@ class MainActivity : AppCompatActivity() {
 
                 else -> viewModel.currentFragment.value
             }
+
+
 
 
 

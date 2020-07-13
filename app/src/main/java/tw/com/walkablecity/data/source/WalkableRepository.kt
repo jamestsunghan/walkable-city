@@ -44,4 +44,6 @@ interface WalkableRepository {
     suspend fun checkFriendAdded(idCustom: String, userId: String): Result<Boolean>
 
     suspend fun getUser(userId: String): Result<User?>
+
+
 }

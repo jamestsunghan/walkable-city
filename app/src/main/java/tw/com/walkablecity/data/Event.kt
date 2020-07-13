@@ -14,7 +14,7 @@ data class Event (
     val target: EventTarget? = null,
     val host: String? = null,
     val invited: List<String> = listOf(),
-    val member: List<String> = listOf(),
+    val member: List<Friend> = listOf(),
     val memberCount: Int? = null,
     val startDate: Timestamp? = null,
     val endDate: Timestamp? = null,

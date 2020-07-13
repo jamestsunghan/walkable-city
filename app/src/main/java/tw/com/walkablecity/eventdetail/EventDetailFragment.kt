@@ -30,6 +30,8 @@ class EventDetailFragment : Fragment() {
 
         binding.viewModel = viewModel
 
+        binding.recyclerMember.adapter = MemberAdapter(viewModel)
+
         return binding.root
     }
 

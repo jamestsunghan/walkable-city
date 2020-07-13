@@ -6,12 +6,14 @@ import com.google.firebase.Timestamp
 import com.google.firebase.Timestamp.now
 import kotlinx.coroutines.*
 import tw.com.walkablecity.R
+import tw.com.walkablecity.UserManager
 import tw.com.walkablecity.Util.dateToTimeStamp
 import tw.com.walkablecity.Util.getString
 import tw.com.walkablecity.Util.makeShortToast
 import tw.com.walkablecity.data.*
 import tw.com.walkablecity.data.source.WalkableRepository
 import tw.com.walkablecity.ext.toDateLong
+import tw.com.walkablecity.ext.toFriend
 import tw.com.walkablecity.userId
 
 class HostViewModel(private val walkableRepository: WalkableRepository) : ViewModel() {
@@ -155,7 +157,7 @@ class HostViewModel(private val walkableRepository: WalkableRepository) : ViewMo
                     startDate   = startDate.value,
                     endDate     = endDate.value,
                     memberCount = 1,
-                    member      = listOf(userId),
+                    member      = listOf(requireNotNull(UserManager.user).toFriend()),
                     type        = type.value,
                     target      = target.value
                 )

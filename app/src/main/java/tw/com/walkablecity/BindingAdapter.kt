@@ -31,6 +31,7 @@ import tw.com.walkablecity.Util.lessThenTenPadStart
 import tw.com.walkablecity.data.*
 import tw.com.walkablecity.detail.CommentAdapter
 import tw.com.walkablecity.event.item.EventItemAdapter
+import tw.com.walkablecity.eventdetail.MemberAdapter
 import tw.com.walkablecity.favorite.FavoriteAdapter
 import tw.com.walkablecity.home.WalkerStatus
 import tw.com.walkablecity.loadroute.route.RouteItem
@@ -86,6 +87,18 @@ fun bindComment(view: RecyclerView, list: List<Comment>?){
         view.adapter.apply {
             when(this){
                 is CommentAdapter -> submitList(it)
+
+            }
+        }
+    }
+}
+
+@BindingAdapter("friend")
+fun bindFriend(view: RecyclerView, list: List<Friend>?){
+    list?.let{
+        view.adapter.apply {
+            when(this){
+                is MemberAdapter -> submitList(it)
 
             }
         }
