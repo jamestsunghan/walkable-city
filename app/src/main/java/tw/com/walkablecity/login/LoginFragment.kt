@@ -41,8 +41,12 @@ class LoginFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         auth = Firebase.auth
-        val account = GoogleSignIn.getLastSignedInAccount(requireContext())
+//        val account = GoogleSignIn.getLastSignedInAccount(requireContext())
 
+        val user = Firebase.auth.currentUser
+        user?.let{
+            viewModel.getUser(it.uid)
+        }
 
     }
 

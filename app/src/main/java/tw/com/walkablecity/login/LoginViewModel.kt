@@ -58,6 +58,36 @@ class LoginViewModel(private val walkableRepository: WalkableRepository) : ViewM
         _isCustomIdUsable.value = null
     }
 
+    fun getUser(userId: String){
+
+        coroutineScope.launch {
+            _status.value = LoadStatus.LOADING
+
+            _user.value = when(val result = walkableRepository.getUser(userId)){
+                is Result.Success ->{
+                    _error.value = null
+                    _status.value = LoadStatus.DONE
+                    result.data
+                }
+                is Result.Fail ->{
+                    _error.value = result.error
+                    _status.value = LoadStatus.ERROR
+                    null
+                }
+                is Result.Error ->{
+                    _error.value = result.exception.toString()
+                    _status.value = LoadStatus.ERROR
+                    null
+                }
+                else ->{
+                    _error.value = getString(R.string.not_here)
+                    _status.value = LoadStatus.ERROR
+                    null
+                }
+            }
+        }
+    }
+
 
     fun signInWithGoogle(idToken: String?){
 

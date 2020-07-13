@@ -45,7 +45,24 @@ object WalkableRemoteDataSource: WalkableDataSource{
     private val fusedLocationClient = FusedLocationProviderClient(WalkableApp.instance)
     private val auth = Firebase.auth
 
-    override suspend fun checkFriendAdded(idCustom: String, userId: String): Result<Boolean> = suspendCoroutine{continuation->
+    override suspend fun getUser(userId: String): Result<User?> = suspendCoroutine{continuation->
+        db.collection(USER).whereEqualTo("id",userId).get().addOnCompleteListener {task->
+            if(task.isSuccessful){
+
+                if(task.result == null || task.result!!.isEmpty) continuation.resume(Result.Success(null))
+                else continuation.resume(Result.Success(task.result!!.toObjects(User::class.java)[0]))
+
+            }else{
+                task.exception?.let{
+                    Log.d("JJ_fire","[${this::class.simpleName}] Error getting documents. ${it.message}")
+                    continuation.resume(Result.Error(it))
+                }
+                continuation.resume(Result.Fail(WalkableApp.instance.getString(R.string.not_here)))
+            }
+        }
+    }
+
+    override suspend fun checkFriendAdded(idCustom: String, userId: String): Result<Boolean> = suspendCoroutine{ continuation->
         db.collection(USER).document(userId).collection(FRIENDS).whereEqualTo(ID_CUSTOM,idCustom).get().addOnCompleteListener {task->
             if(task.isSuccessful){
 
@@ -122,8 +139,8 @@ object WalkableRemoteDataSource: WalkableDataSource{
     override suspend fun checkIdCustomBeenUsed(idCustom: String): Result<Boolean> = suspendCoroutine{ continuation->
         db.collection(USER).whereEqualTo(ID_CUSTOM,idCustom).get().addOnCompleteListener {task->
             if(task.isSuccessful){
-                if (task.result == null) continuation.resume(Result.Success(false))
-                else continuation.resume(Result.Success(true))
+                if (task.result == null|| task.result!!.isEmpty) continuation.resume(Result.Success(true))
+                else continuation.resume(Result.Success(false))
             }else{
                 task.exception?.let{
                     Log.d("JJ_fire","[${this::class.simpleName}] Error getting documents. ${it.message}")
@@ -308,7 +325,7 @@ object WalkableRemoteDataSource: WalkableDataSource{
 
         db.collection(USER).document(requireNotNull(user.id)).apply{
 
-            update(ACCU_HOUR, user.accumulatedHour?.addNewWalk(walk.duration.toFloat().div(60)),
+            update(ACCU_HOUR, user.accumulatedHour?.addNewWalk(walk.duration.toFloat().div(60 * 60)),
                     ACCU_KM, user.accumulatedKm?.addNewWalk(walk.distance)).addOnCompleteListener {task->
                 if(task.isSuccessful){
                     missionToComplete -= 1

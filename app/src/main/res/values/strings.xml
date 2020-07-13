@@ -193,4 +193,11 @@
 
 
 
+
+<!--    <profile page>-->
+    <string name="walk_accumulate_title">累計｜</string>
+    <string name="walk_accumulate_hours">%.2f小時｜</string>
+    <string name="walk_accumulate_km">%.2f公里｜</string>
+
+
 </resources>

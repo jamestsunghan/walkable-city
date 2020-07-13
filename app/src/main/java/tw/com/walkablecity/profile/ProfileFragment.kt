@@ -1,6 +1,7 @@
 package tw.com.walkablecity.profile
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +12,7 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 
 import tw.com.walkablecity.R
+import tw.com.walkablecity.UserManager
 import tw.com.walkablecity.databinding.FragmentProfileBinding
 import tw.com.walkablecity.ext.getVMFactory
 
@@ -28,6 +30,8 @@ class ProfileFragment : Fragment() {
         binding.lifecycleOwner = this
 
         binding.viewModel = viewModel
+        binding.user = UserManager.user
+        Log.d("JJ", " accumulate hours ${UserManager.user?.accumulatedHour?.total}")
 
         viewModel.navigateToAddFriend.observe(viewLifecycleOwner, Observer{
             if(it){
