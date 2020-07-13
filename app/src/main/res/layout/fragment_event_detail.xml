@@ -31,10 +31,27 @@
             tools:text="第一條路" />
 
         <TextView
-            android:id="@+id/event_detail_timer"
+            android:id="@+id/event_detail_goal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
+            android:layout_marginStart="16dp"
+            android:fontFamily="@font/noto_sans"
+            android:gravity="start"
+            android:letterSpacing="0.15"
+            android:padding="8dp"
+            app:detailType="@{viewModel.event.type}"
+            app:goal="@{viewModel.event.target}"
+            android:textColor="@color/primaryDarkColor"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/event_detail_title" />
+
+        <TextView
+            android:id="@+id/event_detail_timer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
             android:layout_marginStart="16dp"
             android:fontFamily="@font/noto_sans"
             android:gravity="start"
@@ -44,7 +61,7 @@
             android:textColor="@color/primaryDarkColor"
             android:textSize="14sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/event_detail_title" />
+            app:layout_constraintTop_toBottomOf="@+id/event_detail_goal" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_member"

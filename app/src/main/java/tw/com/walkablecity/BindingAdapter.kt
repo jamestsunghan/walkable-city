@@ -117,6 +117,18 @@ fun bindEvent(view: RecyclerView, list: List<Event>?){
     }
 }
 
+@BindingAdapter("detailType", "goal")
+fun bindTargetWithType(textView: TextView, type: EventType, goal:EventTarget){
+    val end = if(goal.distance == null) getString(R.string.walk_accumulate_hours) else getString(R.string.walk_accumulate_km)
+    textView.text = when(type){
+        EventType.FREQUENCY      -> StringBuilder().append(getString(R.string.event_goal)).append(goal.frequencyType?.text).append(String.format(end,goal.distance ?: goal.hour)).toString()
+        EventType.DISTANCE_GROUP -> StringBuilder().append(getString(R.string.event_goal)).append(String.format(getString(R.string.walk_accumulate_km), goal.distance)).toString()
+        EventType.DISTANCE_RACE  -> StringBuilder().append(getString(R.string.event_goal)).append(String.format(getString(R.string.walk_accumulate_km), goal.distance)).toString()
+        EventType.HOUR_GROUP     -> StringBuilder().append(getString(R.string.event_goal)).append(String.format(getString(R.string.walk_accumulate_km), goal.hour)).toString()
+        EventType.HOUR_RACE      -> StringBuilder().append(getString(R.string.event_goal)).append(String.format(getString(R.string.walk_accumulate_km), goal.hour)).toString()
+    }
+}
+
 @BindingAdapter("eventType")
 fun bindBackgroundWithEventType(layout: ConstraintLayout, type: EventType){
     val context = WalkableApp.instance

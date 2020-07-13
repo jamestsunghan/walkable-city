@@ -206,6 +206,7 @@
 
 
     <string name="event_detail_timer">剩餘時間｜23:11:13</string>
+    <string name="event_goal">目標｜</string>
 
 
 </resources>
