@@ -46,24 +46,43 @@
             app:layout_constraintTop_toBottomOf="@+id/walk_icon"
             android:layout_marginTop="16dp" />
 
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/edit_login_id"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginEnd="32dp"
+            android:background="@color/primaryLightColor"
+            app:endIconDrawable="@drawable/map_search_24px"
+            app:endIconMode="custom"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/walk_title"
+            app:startIconDrawable="@drawable/ic_footprint">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:text="@={viewModel.idCustom}"
+                android:background="@color/primaryLightColor"
+                android:fontFamily="@font/noto_sans"
+                android:hint="@string/input_custom_id"
+                android:letterSpacing="0.15" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
         <com.google.android.gms.common.SignInButton
             android:id="@+id/signInButton"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:visibility="visible"
-            app:layout_constraintTop_toBottomOf="@+id/walk_title"
-            app:layout_constraintEnd_toEndOf="@+id/walk_icon"
-            app:layout_constraintStart_toStartOf="@+id/walk_icon"
+            app:layout_constraintTop_toBottomOf="@+id/edit_login_id"
+            app:layout_constraintEnd_toEndOf="@+id/edit_login_id"
+            app:layout_constraintStart_toStartOf="@+id/edit_login_id"
             tools:visibility="gone" />
-
-        <TextView
-            android:id="@+id/user_test"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/signInButton"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

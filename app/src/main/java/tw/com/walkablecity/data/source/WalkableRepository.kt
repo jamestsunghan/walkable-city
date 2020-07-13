@@ -34,4 +34,6 @@ interface WalkableRepository {
     suspend fun firebaseAuthWithGoogle(idToken: String?): Result<FirebaseUser>
 
     suspend fun signUpUser(user: User): Result<User>
+
+    suspend fun checkIdCustomBeenUsed(idCustom: String): Result<Boolean>
 }

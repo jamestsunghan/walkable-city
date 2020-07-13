@@ -176,6 +176,9 @@
 
     <string name="walkable_city">散步城市</string>
 
+    <string name="input_custom_id">請輸入您的id</string>
+    <string name="id_been_used">此id已被用過了歐</string>
+
 
 
 </resources>

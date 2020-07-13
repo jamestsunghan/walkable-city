@@ -24,11 +24,17 @@ class LoginViewModel(private val walkableRepository: WalkableRepository) : ViewM
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> get() = _error
 
+    val idCustom = MutableLiveData<String>()
+
+
     private val _firebaseUser = MutableLiveData<FirebaseUser>()
     val firebaseUser: LiveData<FirebaseUser> get() = _firebaseUser
 
     private val _user = MutableLiveData<User>()
     val user: LiveData<User> get() = _user
+
+    private val _isCustomIdUsable = MutableLiveData<Boolean>()
+    val isCustomIdUsable: LiveData<Boolean> get() = _isCustomIdUsable
 
 
     private val viewModelJob = Job()
@@ -48,6 +54,10 @@ class LoginViewModel(private val walkableRepository: WalkableRepository) : ViewM
         _user.value = null
     }
 
+    fun resetCustomIdCheck(){
+        _isCustomIdUsable.value = null
+    }
+
 
     fun signInWithGoogle(idToken: String?){
 
@@ -56,6 +66,38 @@ class LoginViewModel(private val walkableRepository: WalkableRepository) : ViewM
             _status.value = LoadStatus.LOADING
 
             _firebaseUser.value = when(val result = walkableRepository.firebaseAuthWithGoogle(idToken)){
+                is Result.Success ->{
+                    _error.value = null
+                    _status.value = LoadStatus.DONE
+                    result.data
+                }
+                is Result.Fail ->{
+                    _error.value = result.error
+                    _status.value = LoadStatus.ERROR
+                    null
+                }
+                is Result.Error ->{
+                    _error.value = result.exception.toString()
+                    _status.value = LoadStatus.ERROR
+                    null
+                }
+                else ->{
+                    _error.value = getString(R.string.not_here)
+                    _status.value = LoadStatus.ERROR
+                    null
+                }
+            }
+
+        }
+    }
+
+    fun checkUserCustomId(idCustom: String){
+
+        coroutineScope.launch {
+
+            _status.value = LoadStatus.LOADING
+
+            _isCustomIdUsable.value = when(val result = walkableRepository.checkIdCustomBeenUsed(idCustom)){
                 is Result.Success ->{
                     _error.value = null
                     _status.value = LoadStatus.DONE

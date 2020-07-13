@@ -7,6 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 
 import tw.com.walkablecity.R
 import tw.com.walkablecity.databinding.FragmentProfileBinding
@@ -27,7 +29,12 @@ class ProfileFragment : Fragment() {
 
         binding.viewModel = viewModel
 
-
+        viewModel.navigateToAddFriend.observe(viewLifecycleOwner, Observer{
+            if(it){
+                findNavController().navigate(ProfileFragmentDirections.actionGlobalAddFriendFragment())
+                viewModel.navigateToAddFriendComplete()
+            }
+        })
 
         return binding.root
     }

@@ -171,6 +171,6 @@
     <fragment
         android:id="@+id/loginFragment"
         android:name="tw.com.walkablecity.login.LoginFragment"
-        android:label="LoginFragment" />
+        android:label="LoginFragment" /><action android:id="@+id/action_global_addFriendFragment" app:destination="@id/addFriendFragment"/>
 
 </navigation>

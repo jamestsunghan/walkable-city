@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 
 import tw.com.walkablecity.R
@@ -26,6 +27,10 @@ class AddFriendFragment : Fragment() {
         binding.lifecycleOwner = this
 
         binding.viewModel = viewModel
+
+        binding.editLoginId.setEndIconOnClickListener {
+            
+        }
 
         return binding.root
     }

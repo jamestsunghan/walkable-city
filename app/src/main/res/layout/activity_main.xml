@@ -19,7 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:background="@color/white"
-            android:visibility="@{viewModel.currentFragment == CurrentFragmentType.HOME || viewModel.currentFragment == CurrentFragmentType.SEARCH ? View.GONE : View.VISIBLE}"
+            android:visibility="@{viewModel.currentFragment == CurrentFragmentType.HOME || viewModel.currentFragment == CurrentFragmentType.SEARCH || viewModel.currentFragment == CurrentFragmentType.LOGIN ? View.GONE : View.VISIBLE}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -59,7 +59,7 @@
             android:background="@color/white"
             app:itemIconSize="36dp"
             app:labelVisibilityMode="unlabeled"
-            android:visibility="@{viewModel.currentFragment == CurrentFragmentType.LOAD_ROUTE ? View.GONE : View.VISIBLE }"
+            android:visibility="@{viewModel.currentFragment == CurrentFragmentType.LOAD_ROUTE || viewModel.currentFragment == CurrentFragmentType.LOGIN ? View.GONE : View.VISIBLE }"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

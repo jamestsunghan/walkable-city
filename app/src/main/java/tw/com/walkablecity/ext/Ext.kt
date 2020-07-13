@@ -189,9 +189,10 @@ fun Timestamp.toDateLong(): Long{
     return SimpleDateFormat("yyyyMMddHHmmss", Locale.TAIWAN).format(this.seconds.times(1000)).toLong()
 }
 
-fun FirebaseUser.toSignInUser(): User{
+fun FirebaseUser.toSignInUser(idCustom: String?): User{
     return User(
         id = uid,
+        idCustom = idCustom,
         name = displayName,
         picture = photoUrl.toString(),
         email = email,

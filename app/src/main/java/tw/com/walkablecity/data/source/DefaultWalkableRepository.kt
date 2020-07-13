@@ -99,4 +99,8 @@ class DefaultWalkableRepository(private val remote: WalkableDataSource): Walkabl
     override suspend fun signUpUser(user: User): Result<User> {
         return remote.signUpUser(user)
     }
+
+    override suspend fun checkIdCustomBeenUsed(idCustom: String): Result<Boolean> {
+        return remote.checkIdCustomBeenUsed(idCustom)
+    }
 }

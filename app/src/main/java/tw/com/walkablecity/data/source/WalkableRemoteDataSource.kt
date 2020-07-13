@@ -36,10 +36,27 @@ object WalkableRemoteDataSource: WalkableDataSource{
     private const val EVENT = "event"
     private const val USER = "user"
     private const val RATINGS = "ratings"
+    private const val ID_CUSTOM = "idCustom"
     private val fusedLocationClient = FusedLocationProviderClient(WalkableApp.instance)
     private val auth = Firebase.auth
 
-    override suspend fun firebaseAuthWithGoogle(idToken: String?): Result<FirebaseUser> = suspendCoroutine{continuation ->
+
+    override suspend fun checkIdCustomBeenUsed(idCustom: String): Result<Boolean> = suspendCoroutine{continuation->
+        db.collection(USER).whereEqualTo(ID_CUSTOM,idCustom).get().addOnCompleteListener {task->
+            if(task.isSuccessful){
+                if (task.result == null) continuation.resume(Result.Success(false))
+                else continuation.resume(Result.Success(true))
+            }else{
+                task.exception?.let{
+                    Log.d("JJ_fire","[${this::class.simpleName}] Error getting documents. ${it.message}")
+                    continuation.resume(Result.Error(it))
+                }
+                continuation.resume(Result.Fail(WalkableApp.instance.getString(R.string.not_here)))
+            }
+        }
+    }
+
+    override suspend fun firebaseAuthWithGoogle(idToken: String?): Result<FirebaseUser> = suspendCoroutine{ continuation ->
         val credential = GoogleAuthProvider.getCredential(idToken, null)
         auth.signInWithCredential(credential)
             .addOnCompleteListener {task ->

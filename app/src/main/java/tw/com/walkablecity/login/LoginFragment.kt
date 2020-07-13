@@ -21,6 +21,8 @@ import com.google.firebase.ktx.Firebase
 
 import tw.com.walkablecity.R
 import tw.com.walkablecity.UserManager
+import tw.com.walkablecity.Util
+import tw.com.walkablecity.Util.makeShortToast
 import tw.com.walkablecity.databinding.FragmentLoginBinding
 import tw.com.walkablecity.ext.getVMFactory
 import tw.com.walkablecity.ext.toSignInUser
@@ -61,12 +63,27 @@ class LoginFragment : Fragment() {
         binding.viewModel = viewModel
 
         binding.signInButton.setOnClickListener {
-            signIn()
+
+            if(viewModel.idCustom.value == null)signIn()
+            else {
+                viewModel.checkUserCustomId(viewModel.idCustom.value as String)
+            }
         }
+
+        viewModel.isCustomIdUsable.observe(viewLifecycleOwner, Observer{
+            it?.let{
+                if(it){
+                    signIn()
+                }else{
+                    makeShortToast(R.string.id_been_used)
+                }
+                viewModel.resetCustomIdCheck()
+            }
+        })
 
         viewModel.firebaseUser.observe(viewLifecycleOwner, Observer{
             it?.let{
-                viewModel.addUser(it.toSignInUser())
+                viewModel.addUser(it.toSignInUser(viewModel.idCustom.value))
             }
         })
 
