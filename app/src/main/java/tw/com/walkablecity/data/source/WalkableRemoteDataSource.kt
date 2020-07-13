@@ -10,6 +10,7 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.GeoPoint
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.firestore.ktx.toObjects
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import tw.com.walkablecity.R
@@ -33,6 +34,7 @@ object WalkableRemoteDataSource: WalkableDataSource{
     private const val RATINGAVR = "ratingAvr"
     private const val WALKERS = "walkers"
     private const val COMMENTS = "comments"
+    private const val FRIENDS = "friends"
     private const val EVENT = "event"
     private const val USER = "user"
     private const val RATINGS = "ratings"
@@ -40,8 +42,81 @@ object WalkableRemoteDataSource: WalkableDataSource{
     private val fusedLocationClient = FusedLocationProviderClient(WalkableApp.instance)
     private val auth = Firebase.auth
 
+    override suspend fun checkFriendAdded(idCustom: String, userId: String): Result<Boolean> = suspendCoroutine{continuation->
+        db.collection(USER).document(userId).collection(FRIENDS).whereEqualTo(ID_CUSTOM,idCustom).get().addOnCompleteListener {task->
+            if(task.isSuccessful){
 
-    override suspend fun checkIdCustomBeenUsed(idCustom: String): Result<Boolean> = suspendCoroutine{continuation->
+                if(task.result == null || task.result!!.isEmpty) continuation.resume(Result.Success(false))
+                else continuation.resume(Result.Success(true))
+
+            }else{
+                task.exception?.let{
+                    Log.d("JJ_fire","[${this::class.simpleName}] Error getting documents. ${it.message}")
+                    continuation.resume(Result.Error(it))
+                }
+                continuation.resume(Result.Fail(WalkableApp.instance.getString(R.string.not_here)))
+            }
+        }
+    }
+
+    override suspend fun searchFriendWithId(idCustom: String): Result<Friend?> = suspendCoroutine{ continuation ->
+
+        db.collection(USER).whereEqualTo(ID_CUSTOM,idCustom).get().addOnCompleteListener {task->
+            if(task.isSuccessful){
+                if(task.result == null ||task.result!!.isEmpty){
+                    continuation.resume(Result.Success(null))
+                }else{
+                    val friend = task.result!!.toObjects(User::class.java)[0].toFriend()
+                    continuation.resume(Result.Success(friend))
+                }
+
+            }else{
+                task.exception?.let{
+                    Log.d("JJ_fire","[${this::class.simpleName}] Error getting documents. ${it.message}")
+                    continuation.resume(Result.Error(it))
+                }
+                continuation.resume(Result.Fail(WalkableApp.instance.getString(R.string.not_here)))
+            }
+        }
+    }
+
+    override suspend fun addFriend(friend: Friend, user: User): Result<Boolean> = suspendCoroutine{continuation->
+
+        var missionToComplete = 2
+
+        db.collection(USER).document(requireNotNull(user.id)).collection(FRIENDS).add(friend).addOnCompleteListener{ task->
+            if(task.isSuccessful){
+
+                missionToComplete -= 1
+
+                if(missionToComplete == 0)continuation.resume(Result.Success(true))
+
+            }else{
+                task.exception?.let{
+                    Log.d("JJ_fire","[${this::class.simpleName}] Error getting documents. ${it.message}")
+                    continuation.resume(Result.Error(it))
+                }
+                continuation.resume(Result.Fail(WalkableApp.instance.getString(R.string.not_here)))
+            }
+        }
+
+        db.collection(USER).document(requireNotNull(friend.id)).collection(FRIENDS).add(user.toFriend()).addOnCompleteListener{ task->
+            if(task.isSuccessful){
+
+                missionToComplete -= 1
+                if(missionToComplete == 0) continuation.resume(Result.Success(true))
+
+            }else{
+                task.exception?.let{
+                    Log.d("JJ_fire","[${this::class.simpleName}] Error getting documents. ${it.message}")
+                    continuation.resume(Result.Error(it))
+                }
+                continuation.resume(Result.Fail(WalkableApp.instance.getString(R.string.not_here)))
+            }
+        }
+    }
+
+    override suspend fun checkIdCustomBeenUsed(idCustom: String): Result<Boolean> = suspendCoroutine{ continuation->
         db.collection(USER).whereEqualTo(ID_CUSTOM,idCustom).get().addOnCompleteListener {task->
             if(task.isSuccessful){
                 if (task.result == null) continuation.resume(Result.Success(false))
@@ -74,7 +149,7 @@ object WalkableRemoteDataSource: WalkableDataSource{
     }
 
     override suspend fun signUpUser(user: User): Result<User> = suspendCoroutine {continuation ->
-        db.collection(USER).document(user.id).set(user).addOnCompleteListener {task->
+        db.collection(USER).document(requireNotNull(user.id)).set(user).addOnCompleteListener { task->
             if(task.isSuccessful){
 
                 continuation.resume(Result.Success(user))

@@ -25,5 +25,6 @@ enum class CurrentFragmentType(val title: String) {
     EVENT_DETAIL(getString(R.string.event_more_info)),
     HOST(getString(R.string.create_event)),
 
-    LOGIN("")
+    LOGIN(""),
+    ADD_FRIEND(getString(R.string.add_friend_title))
 }

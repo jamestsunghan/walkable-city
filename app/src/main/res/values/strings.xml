@@ -176,8 +176,18 @@
 
     <string name="walkable_city">散步城市</string>
 
-    <string name="input_custom_id">請輸入您的id</string>
+    <string name="input_custom_id">請輸入您的ID</string>
     <string name="id_been_used">此id已被用過了歐</string>
+    <string name="no_search_id">未輸入ID</string>
+    <string name="add_friend">加入</string>
+    <string name="add_friend_title">加朋友</string>
+
+    <string name="input_friend_id">請輸入朋友的ID</string>
+    <string name="no_such_friend">該朋友不存在</string>
+
+    <string name="add_success">加入成功</string>
+    <string name="add_failed">加入失敗，請稍後再試</string>
+    <string name="already_friend">你們已經是朋友了歐</string>
 
 
 

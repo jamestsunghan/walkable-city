@@ -102,5 +102,19 @@ class DefaultWalkableRepository(private val remote: WalkableDataSource): Walkabl
 
     override suspend fun checkIdCustomBeenUsed(idCustom: String): Result<Boolean> {
         return remote.checkIdCustomBeenUsed(idCustom)
+
+
+    }
+
+    override suspend fun searchFriendWithId(idCustom: String): Result<Friend?> {
+        return remote.searchFriendWithId(idCustom)
+    }
+
+    override suspend fun addFriend(friend: Friend, user: User): Result<Boolean> {
+        return remote.addFriend(friend, user)
+    }
+
+    override suspend fun checkFriendAdded(idCustom: String, userId: String): Result<Boolean> {
+        return remote.checkFriendAdded(idCustom, userId)
     }
 }

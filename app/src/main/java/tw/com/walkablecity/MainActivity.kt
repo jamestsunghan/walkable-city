@@ -100,6 +100,8 @@ class MainActivity : AppCompatActivity() {
                 R.id.hostFragment -> CurrentFragmentType.HOST
                 R.id.loginFragment -> CurrentFragmentType.LOGIN
 
+                R.id.addFriendFragment -> CurrentFragmentType.ADD_FRIEND
+
                 else -> viewModel.currentFragment.value
             }
 

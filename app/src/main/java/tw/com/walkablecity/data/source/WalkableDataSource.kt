@@ -35,5 +35,9 @@ interface WalkableDataSource {
     suspend fun signUpUser(user: User): Result<User>
     suspend fun checkIdCustomBeenUsed(idCustom: String): Result<Boolean>
 
+    suspend fun searchFriendWithId(idCustom: String): Result<Friend?>
+    suspend fun addFriend(friend: Friend, user: User): Result<Boolean>
+    suspend fun checkFriendAdded(idCustom: String, userId: String): Result<Boolean>
+
 
 }

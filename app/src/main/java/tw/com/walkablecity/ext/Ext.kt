@@ -201,4 +201,15 @@ fun FirebaseUser.toSignInUser(idCustom: String?): User{
         friends = listOf(),
         walks = listOf()
     )
+
+}
+
+fun User.toFriend(): Friend{
+    return Friend(
+        id = id,
+        idCustom = idCustom,
+        name = name,
+        picture = picture,
+        email = email
+    )
 }

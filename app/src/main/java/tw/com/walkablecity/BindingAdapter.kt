@@ -257,6 +257,22 @@ fun glideImage(imageView: ImageView, url: String?){
 
 }
 
+@BindingAdapter("glide")
+fun glidingImage(imageView: ImageView, url: String?){
+    url?.let{
+        val uri = it.toUri().buildUpon().build()
+
+        Glide.with(imageView.context)
+            .load(uri).apply(
+                RequestOptions()
+                    .placeholder(R.drawable.placeholder)
+                    .error(R.drawable.placeholder)
+            )
+            .into(imageView)
+    }
+
+}
+
 @BindingAdapter("date")
 fun timeStampToDate(textView: TextView, time: Timestamp){
     textView.text = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(time.seconds.times(1000))

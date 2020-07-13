@@ -1,10 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <variable name="viewModel" type="tw.com.walkablecity.addfriend.AddFriendViewModel" />
+
+        <variable
+            name="viewModel"
+            type="tw.com.walkablecity.addfriend.AddFriendViewModel" />
+
+        <variable
+            name="friend"
+            type="tw.com.walkablecity.data.Friend" />
+
+        <import type="android.view.View" />
+
+        <import type="tw.com.walkablecity.data.LoadStatus" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -29,13 +40,95 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
-                android:text="@={viewModel.idSearch}"
                 android:background="@color/primaryLightColor"
                 android:fontFamily="@font/noto_sans"
-                android:hint="@string/input_custom_id"
-                android:letterSpacing="0.15" />
+                android:hint="@string/input_friend_id"
+                android:letterSpacing="0.15"
+                android:text="@={viewModel.idSearch}" />
 
         </com.google.android.material.textfield.TextInputLayout>
+
+        <ImageView
+            android:id="@+id/image_add_friend_avatar"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/placeholder"
+            android:outlineProvider="@{viewModel.outlineProvider}"
+            android:scaleType="centerCrop"
+            android:visibility="@{viewModel.friendToAdd == null || viewModel.status == LoadStatus.LOADING ? View.GONE : View.VISIBLE}"
+            app:glide="@{friend.picture}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/edit_login_id"
+            app:layout_constraintVertical_bias="0.3" />
+
+        <TextView
+            android:id="@+id/friend_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:fontFamily="@font/noto_sans"
+            android:gravity="center"
+            android:letterSpacing="0.15"
+            android:text="@{friend.name}"
+            android:textColor="@color/primaryDarkColor"
+            android:textSize="14sp"
+            android:visibility="@{viewModel.friendToAdd == null || viewModel.status == LoadStatus.LOADING ? View.GONE : View.VISIBLE}"
+            app:layout_constraintEnd_toEndOf="@+id/image_add_friend_avatar"
+            app:layout_constraintStart_toStartOf="@+id/image_add_friend_avatar"
+            app:layout_constraintTop_toBottomOf="@+id/image_add_friend_avatar" />
+
+        <TextView
+            android:id="@+id/button_add"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/bg_walker_prepare"
+            android:backgroundTint="@color/primaryDarkColor"
+            android:fontFamily="@font/noto_sans"
+            android:gravity="center"
+            android:onClick="@{() ->viewModel.addFriend(friend)}"
+            android:letterSpacing="0.15"
+            android:paddingStart="8dp"
+            android:paddingTop="4dp"
+            android:paddingEnd="8dp"
+            android:paddingBottom="4dp"
+            android:text="@string/add_friend"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            android:visibility="@{viewModel.friendToAdd == null || viewModel.status == LoadStatus.LOADING ? View.GONE : View.VISIBLE}"
+            app:layout_constraintEnd_toEndOf="@+id/friend_name"
+            app:layout_constraintStart_toStartOf="@+id/friend_name"
+            app:layout_constraintTop_toBottomOf="@+id/friend_name" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/noto_sans"
+            android:letterSpacing="0.15"
+            android:text="@string/no_such_friend"
+            android:textColor="@color/primaryColor"
+            android:textSize="24sp"
+            android:visibility="@{viewModel.status == LoadStatus.LOADING || viewModel.noSuchFriend == null ? View.GONE : (viewModel.noSuchFriend == true ? View.VISIBLE : View.GONE)}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ProgressBar
+            android:id="@+id/progress_payment_checkout"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:theme="@style/ProgressPrimaryTheme"
+            android:visibility="@{viewModel.status == LoadStatus.LOADING ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
