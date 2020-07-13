@@ -14,6 +14,7 @@ import com.google.firebase.firestore.ktx.toObjects
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import tw.com.walkablecity.R
+import tw.com.walkablecity.UserManager
 import tw.com.walkablecity.Util.getString
 import tw.com.walkablecity.Util.isInternetConnected
 import tw.com.walkablecity.WalkableApp
@@ -325,10 +326,23 @@ object WalkableRemoteDataSource: WalkableDataSource{
 
         db.collection(USER).document(requireNotNull(user.id)).apply{
 
+
+
             update(ACCU_HOUR, user.accumulatedHour?.addNewWalk(walk.duration.toFloat().div(60 * 60)),
-                    ACCU_KM, user.accumulatedKm?.addNewWalk(walk.distance)).addOnCompleteListener {task->
+                    ACCU_KM, user.accumulatedKm?.addNewWalk(walk.distance)).continueWithTask {task->
+
+                if(!task.isSuccessful){
+                    task.exception?.let{
+                        continuation.resume(Result.Error(it))
+                    }
+                    continuation.resume(Result.Fail(getString(R.string.not_here)))
+                }
+
+                get()
+            }.addOnCompleteListener {task->
                 if(task.isSuccessful){
                     missionToComplete -= 1
+                    UserManager.user = task.result!!.toObject(User::class.java)
                     if(missionToComplete == 0)continuation.resume(Result.Success(true))
                 }else{
                     task.exception?.let{
