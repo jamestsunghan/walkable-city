@@ -189,6 +189,8 @@
     <string name="add_failed">加入失敗，請稍後再試</string>
     <string name="already_friend">你們已經是朋友了歐</string>
 
+    <string name="walk_update_error">散步更新未完成</string>
+
 
 
 </resources>

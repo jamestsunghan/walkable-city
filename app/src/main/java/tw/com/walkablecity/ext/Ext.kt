@@ -213,3 +213,13 @@ fun User.toFriend(): Friend{
         email = email
     )
 }
+
+fun Accumulation.addNewWalk(input: Float): Accumulation{
+    return Accumulation(
+        daily   = daily   + input,
+        weekly  = weekly  + input,
+        monthly = monthly + input,
+        yearly  = yearly  + input,
+        total   = total   + input
+    )
+}

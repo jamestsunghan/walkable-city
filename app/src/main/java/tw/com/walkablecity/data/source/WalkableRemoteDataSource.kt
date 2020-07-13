@@ -36,9 +36,12 @@ object WalkableRemoteDataSource: WalkableDataSource{
     private const val COMMENTS = "comments"
     private const val FRIENDS = "friends"
     private const val EVENT = "event"
+    private const val WALKS = "walks"
     private const val USER = "user"
     private const val RATINGS = "ratings"
     private const val ID_CUSTOM = "idCustom"
+    private const val ACCU_HOUR = "accumulatedHour"
+    private const val ACCU_KM = "accumulatedKm"
     private val fusedLocationClient = FusedLocationProviderClient(WalkableApp.instance)
     private val auth = Firebase.auth
 
@@ -297,6 +300,40 @@ object WalkableRemoteDataSource: WalkableDataSource{
                 continuation.resume(Result.Fail(WalkableApp.instance.getString(R.string.not_here)))
             }
 
+        }
+    }
+
+    override suspend fun updateWalks(walk: Walk, user: User): Result<Boolean> = suspendCoroutine{continuation->
+        var missionToComplete = 2
+
+        db.collection(USER).document(requireNotNull(user.id)).apply{
+
+            update(ACCU_HOUR, user.accumulatedHour?.addNewWalk(walk.duration.toFloat().div(60)),
+                    ACCU_KM, user.accumulatedKm?.addNewWalk(walk.distance)).addOnCompleteListener {task->
+                if(task.isSuccessful){
+                    missionToComplete -= 1
+                    if(missionToComplete == 0)continuation.resume(Result.Success(true))
+                }else{
+                    task.exception?.let{
+                        continuation.resume(Result.Error(it))
+                    }
+                    continuation.resume(Result.Fail(getString(R.string.not_here)))
+                }
+            }
+
+            collection(WALKS).add(walk).addOnCompleteListener {task->
+                if(task.isSuccessful){
+
+                    missionToComplete -= 1
+                    if(missionToComplete == 0)continuation.resume(Result.Success(true))
+
+                }else{
+                    task.exception?.let{
+                        continuation.resume(Result.Error(it))
+                    }
+                    continuation.resume(Result.Fail(getString(R.string.not_here)))
+                }
+            }
         }
     }
 

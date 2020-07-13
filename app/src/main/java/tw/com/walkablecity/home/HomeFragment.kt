@@ -157,6 +157,12 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationClick
             }
         })
 
+        viewModel.error.observe(viewLifecycleOwner, Observer{
+            it?.let{
+                Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+            }
+        })
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
 
 

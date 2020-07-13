@@ -16,6 +16,8 @@ interface WalkableRepository {
     suspend fun getRoutesNearby(userLocation: LatLng): Result<List<Route>>
     suspend fun drawPath(origin: LatLng, destination: LatLng, waypoints: List<LatLng>): Result<DirectionResult>
     suspend fun getUserCurrentLocation(): Result<LatLng>
+
+    suspend fun updateWalks(walk: Walk, user: User): Result<Boolean>
     suspend fun updateRouteRating(rating: RouteRating, route: Route, userId: String): Result<Boolean>
     suspend fun createRouteByUser(route: Route): Result<Boolean>
     suspend fun getRouteMapImage(center: GeoPoint, zoom: Int, path: List<GeoPoint>): Result<MapImageResult>

@@ -18,8 +18,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import tw.com.walkablecity.R
+import tw.com.walkablecity.UserManager
 import tw.com.walkablecity.Util.getColor
 import tw.com.walkablecity.Util.getString
+import tw.com.walkablecity.Util.makeShortToast
 import tw.com.walkablecity.WalkableApp
 import tw.com.walkablecity.data.*
 import tw.com.walkablecity.data.source.WalkableRepository
@@ -220,7 +222,40 @@ class HomeViewModel(val walkableRepository: WalkableRepository, val argument: Ro
             endTime = endTime.value as Timestamp,
             routeId = route.value?.id,
             waypoints = trackPoints.value as List<LatLng>)
-        navigateToRating(walk)
+        updateWalk(walk)
+    }
+
+    private fun updateWalk(walk: Walk){
+
+        coroutineScope.launch {
+
+            _loadStatus.value = LoadStatus.LOADING
+
+            val result = walkableRepository.updateWalks(walk, requireNotNull(UserManager.user))
+
+            when(result){
+                is Result.Success->{
+                    _error.value = null
+                    _loadStatus.value = LoadStatus.DONE
+                    navigateToRating(walk)
+                }
+                is Result.Fail ->{
+                    _error.value = result.error
+                    _loadStatus.value = LoadStatus.ERROR
+                    navigateToRating(walk)
+                }
+                is Result.Error ->{
+                    _error.value = result.exception.toString()
+                    _loadStatus.value = LoadStatus.ERROR
+                    navigateToRating(walk)
+                }
+                else ->{
+                    _error.value = getString(R.string.not_here)
+                    _loadStatus.value = LoadStatus.ERROR
+                }
+            }
+
+        }
     }
 
     private fun startTimer(){
