@@ -11,6 +11,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import tw.com.walkablecity.R
+import tw.com.walkablecity.UserManager
 import tw.com.walkablecity.Util.getString
 import tw.com.walkablecity.Util.makeShortToast
 import tw.com.walkablecity.data.*
@@ -19,7 +20,6 @@ import tw.com.walkablecity.ext.toComment
 import tw.com.walkablecity.ext.toGeoPoint
 import tw.com.walkablecity.ext.toRouteId
 import tw.com.walkablecity.rating.RatingType
-import tw.com.walkablecity.userId
 import java.text.SimpleDateFormat
 
 class RatingItemViewModel(val walkableRepository: WalkableRepository, val selectedRoute: Route?
@@ -27,7 +27,7 @@ class RatingItemViewModel(val walkableRepository: WalkableRepository, val select
     val colorId = R.color.primaryColor
 
     val duration = MutableLiveData<Float>().apply{
-        value = walk.duration.toFloat() / 60
+        value = requireNotNull(walk.duration).toFloat() / 60
     }
 
     private val _sendRating = MutableLiveData<Boolean>(false)
@@ -111,7 +111,7 @@ class RatingItemViewModel(val walkableRepository: WalkableRepository, val select
                     createRoute(requireNotNull(routeTitle.value)
                         , requireNotNull(routeDescription.value)
                         , requireNotNull(imageUrl.value)
-                        , walk,ratingUpdate, userId, requireNotNull(routeCommentContent.value))
+                        , walk,ratingUpdate, requireNotNull(UserManager.user?.id), requireNotNull(routeCommentContent.value))
                 }
             }
             else ->{}
@@ -124,7 +124,7 @@ class RatingItemViewModel(val walkableRepository: WalkableRepository, val select
         coroutineScope.launch {
 
             _status.value = LoadStatus.LOADING
-            _sendRating.value = when(val result = walkableRepository.updateRouteRating(ratingUpdate, selectedRoute as Route, userId)){
+            _sendRating.value = when(val result = walkableRepository.updateRouteRating(ratingUpdate, selectedRoute as Route, requireNotNull(UserManager.user?.id))){
                 is Result.Success ->{
                     _error.value = null
                     _status.value = LoadStatus.DONE
@@ -150,12 +150,12 @@ class RatingItemViewModel(val walkableRepository: WalkableRepository, val select
 
     }
 
-    fun getImageUrl(walk: Walk, userId: String, bitmap: Bitmap){
+    fun getImageUrl(walk: Walk, userIdCustom: String, bitmap: Bitmap){
 
         coroutineScope.launch {
 
             _status.value = LoadStatus.LOADING
-            _imageUrl.value = when(val result = walkableRepository.getRouteMapImageUrl(walk.toRouteId(userId), bitmap)){
+            _imageUrl.value = when(val result = walkableRepository.getRouteMapImageUrl(walk.toRouteId(userIdCustom), bitmap)){
                 is Result.Success ->{
                     _error.value = null
                     _status.value = LoadStatus.DONE
@@ -198,8 +198,8 @@ class RatingItemViewModel(val walkableRepository: WalkableRepository, val select
             title = title,
             mapImage = imageUrl,
             description = description,
-            length = walk.distance,
-            minutes = walk.duration.toFloat().div(60),
+            length = requireNotNull(walk.distance),
+            minutes = requireNotNull(walk.duration).toFloat().div(60),
             ratingAvr = rating,
             waypoints = waypoints.map{ it.toGeoPoint()},
             walkers = listOf(userId),

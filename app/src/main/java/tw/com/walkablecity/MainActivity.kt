@@ -17,6 +17,7 @@ import tw.com.walkablecity.data.Walker
 import tw.com.walkablecity.databinding.ActivityMainBinding
 import tw.com.walkablecity.ext.getVMFactory
 import tw.com.walkablecity.home.WalkerStatus
+import tw.com.walkablecity.rating.RatingFragmentDirections
 
 class MainActivity : AppCompatActivity() {
 
@@ -111,4 +112,12 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    override fun onBackPressed() {
+
+        if(viewModel.currentFragment.value == CurrentFragmentType.RATING){
+            findNavController(R.id.nav_host_fragment).navigate(RatingFragmentDirections.actionGlobalHomeFragment(null))
+        }else
+
+        super.onBackPressed()
+    }
 }

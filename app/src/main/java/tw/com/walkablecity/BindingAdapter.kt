@@ -117,15 +117,37 @@ fun bindEvent(view: RecyclerView, list: List<Event>?){
     }
 }
 
+
+@BindingAdapter("progress", "wid", "targeter")
+fun bindWidthWithFloat(view: TextView, input: Float?, width: Int, target: EventTarget){
+    input?.let{
+
+        view.layoutParams.width =
+
+            input.times(width).div(target.distance ?: requireNotNull(target.hour)*3600).toInt()
+
+    }
+}
+
+@BindingAdapter("progress", "targeting")
+fun bindTextWithFloat(view: TextView, input: Float?, target: EventTarget){
+    input?.let{
+        val percentage =
+            input.div(target.distance ?: requireNotNull(target.hour)*3600).times(100)
+        view.text = String.format(getString(R.string.accomplish_rate), percentage)
+    }
+
+}
+
 @BindingAdapter("detailType", "goal")
 fun bindTargetWithType(textView: TextView, type: EventType, goal:EventTarget){
     val end = if(goal.distance == null) getString(R.string.walk_accumulate_hours) else getString(R.string.walk_accumulate_km)
     textView.text = when(type){
         EventType.FREQUENCY      -> StringBuilder().append(getString(R.string.event_goal)).append(goal.frequencyType?.text).append(String.format(end,goal.distance ?: goal.hour)).toString()
-        EventType.DISTANCE_GROUP -> StringBuilder().append(getString(R.string.event_goal)).append(String.format(getString(R.string.walk_accumulate_km), goal.distance)).toString()
-        EventType.DISTANCE_RACE  -> StringBuilder().append(getString(R.string.event_goal)).append(String.format(getString(R.string.walk_accumulate_km), goal.distance)).toString()
-        EventType.HOUR_GROUP     -> StringBuilder().append(getString(R.string.event_goal)).append(String.format(getString(R.string.walk_accumulate_km), goal.hour)).toString()
-        EventType.HOUR_RACE      -> StringBuilder().append(getString(R.string.event_goal)).append(String.format(getString(R.string.walk_accumulate_km), goal.hour)).toString()
+        EventType.DISTANCE_GROUP -> StringBuilder().append(getString(R.string.event_group_goal)).append(String.format(getString(R.string.walk_accumulate_km), goal.distance)).toString()
+        EventType.DISTANCE_RACE  -> StringBuilder().append(getString(R.string.event_race_goal)).append(String.format(getString(R.string.walk_accumulate_km), goal.distance)).toString()
+        EventType.HOUR_GROUP     -> StringBuilder().append(getString(R.string.event_group_goal)).append(String.format(getString(R.string.walk_accumulate_hours), goal.hour)).toString()
+        EventType.HOUR_RACE      -> StringBuilder().append(getString(R.string.event_race_goal)).append(String.format(getString(R.string.walk_accumulate_hours), goal.hour)).toString()
     }
 }
 
@@ -399,5 +421,5 @@ fun hexagonByRating(view: View, rating: RouteRating) {
 
 
 //mock data area
-const val userId = "10043"
+
 

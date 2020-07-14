@@ -9,5 +9,6 @@ data class Friend (
     val idCustom: String? = null,
     val name: String? = null,
     val picture: String? = null,
-    val email: String? = null
+    val email: String? = null,
+    var accomplish: Float? = null
 ): Parcelable

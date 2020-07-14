@@ -3,6 +3,7 @@ package tw.com.walkablecity.data.source
 import android.graphics.Bitmap
 import android.net.Uri
 import com.google.android.gms.maps.model.LatLng
+import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.GeoPoint
 import tw.com.walkablecity.data.*
@@ -124,5 +125,22 @@ class DefaultWalkableRepository(private val remote: WalkableDataSource): Walkabl
 
     override suspend fun getUser(userId: String): Result<User?> {
         return remote.getUser(userId)
+    }
+
+
+    override suspend fun getMemberWalkDistance(eventStartTime: Timestamp, memberId: String): Result<Float> {
+        return remote.getMemberWalkDistance(eventStartTime, memberId)
+    }
+
+    override suspend fun getMemberWalkHours(eventStartTime: Timestamp, memberId: String): Result<Float> {
+        return remote.getMemberWalkHours(eventStartTime, memberId)
+    }
+
+    override suspend fun getMemberWalkFrequencyResult(
+        eventStartTime: Timestamp,
+        target: EventTarget,
+        memberId: String
+    ): Result<Float> {
+        return remote.getMemberWalkFrequencyResult(eventStartTime, target, memberId)
     }
 }

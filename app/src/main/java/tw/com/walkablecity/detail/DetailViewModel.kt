@@ -8,13 +8,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import tw.com.walkablecity.R
+import tw.com.walkablecity.UserManager
 import tw.com.walkablecity.Util.getString
 import tw.com.walkablecity.data.Comment
 import tw.com.walkablecity.data.LoadStatus
 import tw.com.walkablecity.data.Result
 import tw.com.walkablecity.data.Route
 import tw.com.walkablecity.data.source.WalkableRepository
-import tw.com.walkablecity.userId
 
 class DetailViewModel(val walkableRepository: WalkableRepository, val route: Route) : ViewModel() {
 
@@ -36,7 +36,7 @@ class DetailViewModel(val walkableRepository: WalkableRepository, val route: Rou
     val commentList: LiveData<List<Comment>> get() = _commentList
 
     private val _favoriteAdded = MutableLiveData<Boolean>().apply{
-        value = route.followers.contains(userId)
+        value = route.followers.contains(requireNotNull(UserManager.user?.id))
     }
     val favoriteAdded: LiveData<Boolean> get() = _favoriteAdded
 
@@ -63,9 +63,9 @@ class DetailViewModel(val walkableRepository: WalkableRepository, val route: Rou
 
     fun switchState(){
         when(favoriteAdded.value){
-            true -> removeUserFromFollowers(userId, route)
-            false -> addUserToFollowers(userId, route)
-            else -> addUserToFollowers(userId, route)
+            true -> removeUserFromFollowers(requireNotNull(UserManager.user?.id), route)
+            false -> addUserToFollowers(requireNotNull(UserManager.user?.id), route)
+            else -> addUserToFollowers(requireNotNull(UserManager.user?.id), route)
         }
     }
 

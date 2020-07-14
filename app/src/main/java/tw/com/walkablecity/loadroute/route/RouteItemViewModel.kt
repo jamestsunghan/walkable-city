@@ -9,6 +9,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import tw.com.walkablecity.R
+import tw.com.walkablecity.UserManager
 import tw.com.walkablecity.WalkableApp
 import tw.com.walkablecity.data.LoadStatus
 import tw.com.walkablecity.data.Result
@@ -17,7 +18,6 @@ import tw.com.walkablecity.data.RouteRating
 import tw.com.walkablecity.data.RouteSorting
 import tw.com.walkablecity.data.source.WalkableRepository
 import tw.com.walkablecity.loadroute.LoadRouteType
-import tw.com.walkablecity.userId
 
 class RouteItemViewModel( private val walkableRepository: WalkableRepository, val loadRouteType: LoadRouteType) : ViewModel() {
 
@@ -55,7 +55,7 @@ class RouteItemViewModel( private val walkableRepository: WalkableRepository, va
 
     init{
 
-        getRoutesByType(userId,loadRouteType)
+        getRoutesByType(requireNotNull(UserManager.user?.id),loadRouteType)
 
     }
 

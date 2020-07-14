@@ -15,9 +15,6 @@ import tw.com.walkablecity.data.Result
 import tw.com.walkablecity.data.Route
 import tw.com.walkablecity.data.RouteSorting
 import tw.com.walkablecity.data.source.WalkableRepository
-import tw.com.walkablecity.loadroute.LoadRouteType
-import tw.com.walkablecity.loadroute.route.RouteItemAdapter
-import tw.com.walkablecity.userId
 
 class RankingViewModel(val walkableRepository: WalkableRepository) : ViewModel() {
 

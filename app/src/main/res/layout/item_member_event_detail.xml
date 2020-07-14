@@ -5,6 +5,9 @@
 
     <data>
         <variable name="friend" type="tw.com.walkablecity.data.Friend" />
+        <variable name="viewModel" type="tw.com.walkablecity.eventdetail.EventDetailViewModel" />
+        <variable name="position" type="Integer" />
+        <variable name="width" type="Integer" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -49,6 +52,35 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/guideline"
             tools:layout_editor_absoluteY="60dp" />
+
+        <TextView
+            android:id="@+id/friend_bar_progress"
+            android:layout_marginEnd="16dp"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:progress="@{friend.accomplish}"
+            app:wid="@{width}"
+            app:targeter="@{viewModel.event.target}"
+            android:layout_marginStart="16dp"
+            android:background="@drawable/bg_walker_prepare"
+            android:backgroundTint="@color/white_transparent"
+            app:layout_constraintTop_toTopOf="@+id/friend_name"
+            app:layout_constraintBottom_toBottomOf="@+id/friend_name"
+            app:layout_constraintStart_toEndOf="@+id/guideline"
+            tools:layout_editor_absoluteY="60dp" />
+
+        <TextView
+            android:id="@+id/friend_bar_progress_text"
+            android:layout_marginEnd="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:progress="@{friend.accomplish}"
+            app:targeting="@{viewModel.event.target}"
+            android:layout_marginStart="16dp"
+            android:textColor="@color/secondaryColor"
+            app:layout_constraintTop_toTopOf="@+id/friend_name"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="@+id/friend_name" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

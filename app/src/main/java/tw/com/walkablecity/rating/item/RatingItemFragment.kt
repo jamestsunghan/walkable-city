@@ -20,13 +20,13 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.PolylineOptions
 
 import tw.com.walkablecity.R
+import tw.com.walkablecity.UserManager
 import tw.com.walkablecity.data.Route
 import tw.com.walkablecity.data.Walk
 import tw.com.walkablecity.databinding.FragmentRatingItemBinding
 import tw.com.walkablecity.ext.getVMFactory
 import tw.com.walkablecity.ext.toLatLngPoints
 import tw.com.walkablecity.rating.RatingType
-import tw.com.walkablecity.userId
 
 class RatingItemFragment(private val type: RatingType, private val route: Route?, private val walk: Walk) : Fragment(),
     OnMapReadyCallback, GoogleMap.SnapshotReadyCallback {
@@ -43,7 +43,7 @@ class RatingItemFragment(private val type: RatingType, private val route: Route?
 
     override fun onSnapshotReady(bitmap: Bitmap?) {
         if(type == RatingType.WALK){
-            viewModel.getImageUrl(walk, userId,bitmap as Bitmap)
+            viewModel.getImageUrl(walk, requireNotNull(UserManager.user?.idCustom),bitmap as Bitmap)
         }
     }
 

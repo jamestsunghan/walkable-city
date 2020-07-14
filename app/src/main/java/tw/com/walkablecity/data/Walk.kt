@@ -8,10 +8,10 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class Walk (
-    val distance: Float,
-    val startTime: Timestamp,
-    val endTime: Timestamp,
-    val duration: Long,
-    val routeId: String?,
+    val distance: Float? = null,
+    val startTime: Timestamp? = null,
+    val endTime: Timestamp? = null,
+    val duration: Long? = null,
+    val routeId: String? = null,
     val waypoints: List<LatLng> = listOf()
 ): Parcelable

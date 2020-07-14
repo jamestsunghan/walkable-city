@@ -9,14 +9,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import tw.com.walkablecity.R
+import tw.com.walkablecity.UserManager
 import tw.com.walkablecity.WalkableApp
 import tw.com.walkablecity.data.LoadStatus
 import tw.com.walkablecity.data.Result
 import tw.com.walkablecity.data.Route
 import tw.com.walkablecity.data.RouteSorting
 import tw.com.walkablecity.data.source.WalkableRepository
-import tw.com.walkablecity.ranking.RankingAdapter
-import tw.com.walkablecity.userId
 
 class FavoriteViewModel(val walkableRepository: WalkableRepository) : ViewModel() {
 
@@ -53,7 +52,7 @@ class FavoriteViewModel(val walkableRepository: WalkableRepository) : ViewModel(
 
     init{
 
-        getFavoriteRoutes(userId)
+        getFavoriteRoutes(requireNotNull(UserManager.user?.id))
 
     }
 

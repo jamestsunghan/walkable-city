@@ -207,6 +207,10 @@
 
     <string name="event_detail_timer">剩餘時間｜23:11:13</string>
     <string name="event_goal">目標｜</string>
+    <string name="event_group_goal">共同目標｜</string>
+    <string name="event_race_goal">競賽目標｜</string>
+
+    <string name="accomplish_rate">%.1f％</string>
 
 
 </resources>

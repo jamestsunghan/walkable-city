@@ -4,6 +4,7 @@ import android.graphics.Bitmap
 import android.util.Log
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.maps.model.LatLng
+import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
@@ -21,7 +22,6 @@ import tw.com.walkablecity.WalkableApp
 import tw.com.walkablecity.data.*
 import tw.com.walkablecity.ext.*
 import tw.com.walkablecity.network.WalkableApi
-import tw.com.walkablecity.userId
 import java.io.ByteArrayOutputStream
 import java.lang.Exception
 import kotlin.coroutines.resume
@@ -328,8 +328,8 @@ object WalkableRemoteDataSource: WalkableDataSource{
 
 
 
-            update(ACCU_HOUR, user.accumulatedHour?.addNewWalk(walk.duration.toFloat().div(60 * 60)),
-                    ACCU_KM, user.accumulatedKm?.addNewWalk(walk.distance)).continueWithTask {task->
+            update(ACCU_HOUR, user.accumulatedHour?.addNewWalk(requireNotNull(walk.duration?.toFloat()?.div(60 * 60))),
+                    ACCU_KM, user.accumulatedKm?.addNewWalk(requireNotNull(walk.distance))).continueWithTask { task->
 
                 if(!task.isSuccessful){
                     task.exception?.let{
@@ -624,6 +624,88 @@ object WalkableRemoteDataSource: WalkableDataSource{
                 continuation.resume(Result.Fail(WalkableApp.instance.getString(R.string.not_here)))
             }
         }
+    }
+
+    override suspend fun getMemberWalkDistance(eventStartTime: Timestamp, memberId: String): Result<Float> = suspendCoroutine {continuation->
+
+
+
+        db.collection(USER).document(memberId).collection(WALKS).whereGreaterThanOrEqualTo("endTime", eventStartTime).get().addOnCompleteListener { task->
+            if(task.isSuccessful){
+                var distanceResult = 0f
+                for(walk in task.result!!.toObjects(Walk::class.java)){
+                    distanceResult += requireNotNull(walk.distance)
+                }
+                continuation.resume(Result.Success(distanceResult))
+            }else{
+                task.exception?.let{
+                    Log.d("JJ_fire","[${this::class.simpleName}] Error getting documents. ${it.message}")
+                    continuation.resume(Result.Error(it))
+                }
+                continuation.resume(Result.Fail(WalkableApp.instance.getString(R.string.not_here)))
+            }
+        }
+
+
+    }
+
+    override suspend fun getMemberWalkHours(eventStartTime: Timestamp, memberId: String): Result<Float> = suspendCoroutine {continuation->
+
+
+        db.collection(USER).document(memberId).collection(WALKS).whereGreaterThanOrEqualTo("endTime", eventStartTime).get().addOnCompleteListener { task->
+            if(task.isSuccessful){
+                var hourResult = 0f
+                for(walk in task.result!!.toObjects(Walk::class.java)){
+                    hourResult += (requireNotNull(walk.duration).toFloat())
+                    Log.d("JJ_fire", "member id $memberId hours $hourResult")
+                }
+
+
+                continuation.resume(Result.Success(hourResult))
+            }else{
+                task.exception?.let{
+                    Log.d("JJ_fire","[${this::class.simpleName}] Error getting documents. ${it.message}")
+                    continuation.resume(Result.Error(it))
+                }
+                continuation.resume(Result.Fail(WalkableApp.instance.getString(R.string.not_here)))
+            }
+        }
+
+
+
+    }
+
+    override suspend fun getMemberWalkFrequencyResult(
+        eventStartTime: Timestamp,
+        target: EventTarget,
+        memberId: String
+    ): Result<Float> = suspendCoroutine {continuation->
+
+        db.collection(USER).document(memberId).get().addOnCompleteListener { task->
+            if(task.isSuccessful){
+
+                val user = task.result!!.toObject(User::class.java)
+                val accumulation = if(target.distance == null) requireNotNull(user?.accumulatedHour)  // frequency_hour
+                else requireNotNull(user?.accumulatedKm) // frequency_distance
+
+                continuation.resume(Result.Success(
+                    when(target.frequencyType){
+                        FrequencyType.DAILY -> accumulation.daily
+                        FrequencyType.WEEKLY -> accumulation.weekly
+                        FrequencyType.MONTHLY -> accumulation.monthly
+                        else -> 20200714f
+                    }
+                ))
+            }else{
+                task.exception?.let{
+                    Log.d("JJ_fire","[${this::class.simpleName}] Error getting documents. ${it.message}")
+                    continuation.resume(Result.Error(it))
+                }
+                continuation.resume(Result.Fail(WalkableApp.instance.getString(R.string.not_here)))
+            }
+        }
+
+
     }
 
     //google map Api Zone

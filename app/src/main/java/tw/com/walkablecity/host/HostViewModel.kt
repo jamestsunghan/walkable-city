@@ -14,7 +14,6 @@ import tw.com.walkablecity.data.*
 import tw.com.walkablecity.data.source.WalkableRepository
 import tw.com.walkablecity.ext.toDateLong
 import tw.com.walkablecity.ext.toFriend
-import tw.com.walkablecity.userId
 
 class HostViewModel(private val walkableRepository: WalkableRepository) : ViewModel() {
 
@@ -147,11 +146,11 @@ class HostViewModel(private val walkableRepository: WalkableRepository) : ViewMo
         }else{
             uploadEvent(
                 Event(
-                    id          = "${requireNotNull(type.value).prefix}${now().toDateLong()}${userId}",
+                    id          = "${requireNotNull(type.value).prefix}${now().toDateLong()}${UserManager.user?.idCustom}",
                     title       = title.value,
                     description = description.value,
                     isPublic    = isPublic.value,
-                    host        = userId,
+                    host        = UserManager.user?.idCustom,
                     status      = eventStatus.value,
                     invited     = requireNotNull(invited.value),
                     startDate   = startDate.value,

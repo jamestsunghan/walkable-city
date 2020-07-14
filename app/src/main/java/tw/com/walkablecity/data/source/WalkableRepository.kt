@@ -3,6 +3,7 @@ package tw.com.walkablecity.data.source
 import android.graphics.Bitmap
 import android.net.Uri
 import com.google.android.gms.maps.model.LatLng
+import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.GeoPoint
 import tw.com.walkablecity.data.*
@@ -45,5 +46,7 @@ interface WalkableRepository {
 
     suspend fun getUser(userId: String): Result<User?>
 
-
+    suspend fun getMemberWalkDistance(eventStartTime: Timestamp, memberId: String): Result<Float>
+    suspend fun getMemberWalkHours(eventStartTime: Timestamp, memberId: String): Result<Float>
+    suspend fun getMemberWalkFrequencyResult(eventStartTime: Timestamp, target: EventTarget, memberId: String): Result<Float>
 }

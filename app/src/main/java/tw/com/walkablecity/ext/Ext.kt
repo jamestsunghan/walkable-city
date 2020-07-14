@@ -181,8 +181,8 @@ fun String.toComment(recommend: Int, userId: String): Comment{
     )
 }
 
-fun Walk.toRouteId(userId: String): String{
-    return "${userId}${this.startTime.toDateLong().times(100)}"
+fun Walk.toRouteId(userIdCustom: String): String{
+    return "${userIdCustom}${this.startTime?.toDateLong()?.times(100)}"
 }
 
 fun Timestamp.toDateLong(): Long{
