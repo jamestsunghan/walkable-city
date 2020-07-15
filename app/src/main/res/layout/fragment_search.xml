@@ -18,29 +18,32 @@
         android:layout_height="wrap_content"
         tools:context=".search.SearchFragment">
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/edit_search_route"
+<!--        <com.google.android.material.textfield.TextInputLayout-->
+<!--            android:id="@+id/edit_search_route"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:background="@color/primaryLightColor"-->
+<!--            app:endIconDrawable="@drawable/map_search_24px"-->
+<!--            app:endIconMode="custom"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toTopOf="parent"-->
+<!--            app:startIconDrawable="@drawable/ic_footprint">-->
+
+
+
+<!--        </com.google.android.material.textfield.TextInputLayout>-->
+
+        <fragment android:id="@+id/autocomplete_fragment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/primaryLightColor"
-            app:endIconDrawable="@drawable/map_search_24px"
-            app:endIconMode="custom"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:startIconDrawable="@drawable/ic_footprint">
+            android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
+            />
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
-                android:background="@color/primaryLightColor"
-                android:fontFamily="@font/noto_sans"
-                android:hint="@string/search_destination"
-                android:letterSpacing="0.15" />
 
-        </com.google.android.material.textfield.TextInputLayout>
 
 
         <TextView
@@ -75,7 +78,7 @@
             android:onClick="@{() -> viewModel.sortBy(RouteSorting.SCENERY)}"
             android:text="@string/filter_scenery"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/edit_search_route"
+            app:layout_constraintTop_toBottomOf="@+id/autocomplete_fragment"
             tools:background="@drawable/bg_filter_button_unclicked" />
 
         <TextView
@@ -92,7 +95,7 @@
             android:onClick="@{() -> viewModel.sortBy(RouteSorting.TRANQUILITY)}"
             android:text="@string/filter_tranquility"
             app:layout_constraintEnd_toStartOf="@+id/search_scenery"
-            app:layout_constraintTop_toBottomOf="@+id/edit_search_route"
+            app:layout_constraintTop_toBottomOf="@+id/autocomplete_fragment"
             tools:background="@drawable/bg_filter_button_unclicked" />
 
         <TextView
@@ -109,7 +112,7 @@
             android:onClick="@{() -> viewModel.sortBy(RouteSorting.COVERAGE)}"
             android:text="@string/filter_coverage"
             app:layout_constraintEnd_toStartOf="@+id/search_tranquility"
-            app:layout_constraintTop_toBottomOf="@+id/edit_search_route"
+            app:layout_constraintTop_toBottomOf="@+id/autocomplete_fragment"
             tools:background="@drawable/bg_filter_button_unclicked" />
 
         <TextView
