@@ -205,7 +205,7 @@
     <string name="friend_description">一起在城市中散步的好朋友們</string>
 
 
-    <string name="event_detail_timer">距離結束時間｜23:11:13</string>
+    <string name="event_detail_timer">距離結束時間｜</string>
     <string name="event_detail_pre_timer">距離開始時間｜</string>
     <string name="event_goal">目標｜</string>
     <string name="event_group_goal">共同目標｜</string>
@@ -214,6 +214,7 @@
     <string name="accomplish_rate">%.1f％</string>
     <string name="no_destination_yet">尚未選擇目的地</string>
     <string name="no_route_fit_as_shortest">附近無推薦路線，提供給您最短路徑</string>
+    <string name="days_left">%d天</string>
 
 
 </resources>

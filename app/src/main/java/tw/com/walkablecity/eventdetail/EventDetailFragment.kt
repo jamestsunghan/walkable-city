@@ -2,6 +2,7 @@ package tw.com.walkablecity.eventdetail
 
 
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -10,12 +11,16 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import com.google.firebase.Timestamp
 
 import tw.com.walkablecity.R
+import tw.com.walkablecity.Util
+import tw.com.walkablecity.Util.lessThenTenPadStart
 import tw.com.walkablecity.databinding.FragmentEventDetailBinding
 import tw.com.walkablecity.ext.getVMFactory
 
 class EventDetailFragment : Fragment() {
+
 
 
     val viewModel: EventDetailViewModel by viewModels{getVMFactory(EventDetailFragmentArgs.fromBundle(requireArguments()).eventKey)}
@@ -73,8 +78,23 @@ class EventDetailFragment : Fragment() {
 
 
 
+
+//        viewModel.timerText.observe(viewLifecycleOwner, Observer{
+//            it?.let{
+//                Log.d("JJ_time","time $it")
+//                binding.timerText = it
+//            }
+//        })
+
+
+
         return binding.root
     }
 
 
+    companion object{
+        private const val DONE = 0L
+        private const val ONE_SECOND = 1000L
+        private const val ONE_DAY = 24 * 60 * 60 * ONE_SECOND
+    }
 }

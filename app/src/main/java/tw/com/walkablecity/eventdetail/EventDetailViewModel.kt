@@ -1,19 +1,24 @@
 package tw.com.walkablecity.eventdetail
 
+import android.os.CountDownTimer
 import android.util.Log
 import androidx.lifecycle.*
 import com.google.firebase.Timestamp
+import com.google.firebase.Timestamp.now
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import tw.com.walkablecity.R
 import tw.com.walkablecity.Util.getString
+import tw.com.walkablecity.Util.lessThenTenPadStart
 import tw.com.walkablecity.WalkableApp
 import tw.com.walkablecity.data.*
 import tw.com.walkablecity.data.source.WalkableRepository
 
 class EventDetailViewModel(private val walkableRepository: WalkableRepository, val event: Event) : ViewModel() {
+
+    private lateinit var timer: CountDownTimer
 
     private val _status = MutableLiveData<LoadStatus>()
     val status: LiveData<LoadStatus> get() = _status
@@ -23,6 +28,19 @@ class EventDetailViewModel(private val walkableRepository: WalkableRepository, v
 
     private val _walkResult = MutableLiveData<List<Float>>()
     val walkResult: LiveData<List<Float>> get() = _walkResult
+
+    val currentCountDown = MutableLiveData<String>()
+
+    var eventIsStarted = requireNotNull(event.startDate?.seconds) < now().seconds
+
+    var countDownTime =
+        if(eventIsStarted){
+            (requireNotNull(event.endDate?.seconds) - now().seconds).times(ONE_SECOND)
+        }else{
+            (requireNotNull(event.startDate?.seconds) - now().seconds).times(ONE_SECOND)
+        }
+
+
 
 
     val eventMember = MutableLiveData<List<Friend>>().apply{
@@ -52,11 +70,18 @@ class EventDetailViewModel(private val walkableRepository: WalkableRepository, v
     override fun onCleared() {
         super.onCleared()
         viewModelJob.cancel()
+        timer.cancel()
     }
 
     init{
         Log.d("JJ", "member list ${event.member}")
         getMemberWalkResult(requireNotNull(event.startDate), requireNotNull(event.target) ,listMemberId)
+
+
+        getTimerStart(countDownTime)
+
+//        checkEventStarted(eventIsStarted)
+
     }
 
     fun addToWalkResult(result: Float){
@@ -71,6 +96,70 @@ class EventDetailViewModel(private val walkableRepository: WalkableRepository, v
 
         }
     }
+
+    fun getTimerStart(time: Long){
+
+        val lessThanADay = (time < ONE_DAY)
+        Log.d("JJ","less than a day: $lessThanADay")
+        val timeUnit = if(lessThanADay) ONE_SECOND else ONE_DAY
+        timer = object : CountDownTimer(time, timeUnit){
+            override fun onFinish() {
+                currentCountDown.value = if(lessThanADay){
+                    DONE.toString()
+                }else{
+                    eventIsStarted =
+                        (requireNotNull(event.startDate?.seconds) < now().seconds)
+                    countDownTime =
+                        if(eventIsStarted){
+                            (requireNotNull(event.endDate?.seconds) - now().seconds).times(ONE_SECOND)
+                        }else{
+                            (requireNotNull(event.startDate?.seconds) - now().seconds).times(ONE_SECOND)
+                        }
+                    getTimerStart(countDownTime)
+                    DONE.toString()
+                }
+            }
+
+            override fun onTick(millisUntilFinished: Long) {
+                val sec = millisUntilFinished / ONE_SECOND % 60
+                val min = millisUntilFinished / ONE_SECOND / 60 % 60
+                val hr = millisUntilFinished / ONE_SECOND / 60 / 60 % 24
+                val day = millisUntilFinished / ONE_DAY
+                currentCountDown.value =
+                    when{
+                        eventIsStarted && lessThanADay ->{
+                            StringBuilder().append(getString(R.string.event_detail_timer))
+                                .append(lessThenTenPadStart(hr)).append(":")
+                                .append(lessThenTenPadStart(min)).append(":")
+                                .append(lessThenTenPadStart(sec)).toString()
+
+                        }
+                        eventIsStarted && !lessThanADay ->{
+                            StringBuilder().append(getString(R.string.event_detail_timer))
+                                .append(String.format(getString(R.string.days_left), day)).toString()
+                        }
+                        !eventIsStarted && lessThanADay ->{
+                            StringBuilder().append(getString(R.string.event_detail_pre_timer))
+                                .append(lessThenTenPadStart(hr)).append(":")
+                                .append(lessThenTenPadStart(min)).append(":")
+                                .append(lessThenTenPadStart(sec)).toString()
+                        }
+                        !eventIsStarted && !lessThanADay ->{
+                            StringBuilder().append(getString(R.string.event_detail_pre_timer))
+                                .append(String.format(getString(R.string.days_left), day+1)).toString()
+                        }
+                        else -> ""
+                    }
+
+            }
+        }
+        timer.start()
+
+
+    }
+
+
+
 
     fun getMemberWalkResult(startTime: Timestamp, target: EventTarget, memberId: List<String>){
 
@@ -115,6 +204,12 @@ class EventDetailViewModel(private val walkableRepository: WalkableRepository, v
             }
 
         }
+    }
+
+    companion object{
+        private const val DONE = 0L
+        private const val ONE_SECOND = 1000L
+        private const val ONE_DAY = 24 * 60 * 60 * ONE_SECOND
     }
 
 }

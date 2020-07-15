@@ -5,6 +5,7 @@
 
     <data>
         <variable name="viewModel" type="tw.com.walkablecity.eventdetail.EventDetailViewModel" />
+        <variable name="timerText" type="String" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -57,7 +58,7 @@
             android:gravity="start"
             android:letterSpacing="0.15"
             android:padding="8dp"
-            android:text="@string/event_detail_timer"
+            android:text="@{viewModel.currentCountDown}"
             android:textColor="@color/primaryDarkColor"
             android:textSize="14sp"
             app:layout_constraintStart_toStartOf="parent"
