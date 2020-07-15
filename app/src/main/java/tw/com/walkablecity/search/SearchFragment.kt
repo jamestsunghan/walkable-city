@@ -97,6 +97,8 @@ class SearchFragment : DialogFragment() {
             val dismissIcon = view?.findViewById<ImageView>(R.id.places_autocomplete_clear_button)
             dismissIcon?.setImageResource(R.drawable.cancel_24px)
 
+            setCountries("TW")
+
             setPlaceFields(listOf(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG))
             setOnPlaceSelectedListener(object : PlaceSelectionListener{
                 override fun onPlaceSelected(place: Place) {
