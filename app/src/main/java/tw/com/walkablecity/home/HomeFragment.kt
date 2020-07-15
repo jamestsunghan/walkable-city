@@ -99,7 +99,13 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationClick
             null
         }
 
-        val viewModel: HomeViewModel by viewModels{getVMFactory(route)}
+        val destination = if((arguments as Bundle).containsKey("destinationKey")){
+            HomeFragmentArgs.fromBundle(arguments as Bundle).destinationKey
+        }else{
+            null
+        }
+
+        val viewModel: HomeViewModel by viewModels{getVMFactory(route, destination)}
 
         viewModelInit = viewModel
 
@@ -135,7 +141,8 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationClick
 
         viewModel.navigateToSearch.observe(viewLifecycleOwner, Observer {
             if(it){
-                findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToSearchFragment())
+                findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToSearchFragment(
+                    requireNotNull(viewModel.currentLocation.value)))
                 viewModel.navigateToSearchComplete()
             }
         })
@@ -180,7 +187,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationClick
                     it.uiSettings.isMyLocationButtonEnabled = true
                     it.isMyLocationEnabled = true
                     if(route!=null){
-                        viewModel.drawPath(currentLocation, currentLocation, route.waypoints.toLatLngPoints())
+                        viewModel.drawPath(currentLocation, destination ?: currentLocation, route.waypoints.toLatLngPoints())
                     }
                 }
 

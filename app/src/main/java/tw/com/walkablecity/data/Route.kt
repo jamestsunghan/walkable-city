@@ -1,6 +1,7 @@
 package tw.com.walkablecity.data
 
 import android.os.Parcelable
+import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.firestore.GeoPoint
 import com.squareup.moshi.Json
 import kotlinx.android.parcel.Parcelize

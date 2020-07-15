@@ -44,9 +44,6 @@ class ViewModelFactory( private val walkableRepository: WalkableRepository)
                 isAssignableFrom(LoadRouteViewModel::class.java) ->
                     LoadRouteViewModel(walkableRepository)
 
-                isAssignableFrom(SearchViewModel::class.java) ->
-                    SearchViewModel(walkableRepository)
-
                 isAssignableFrom(AddFriendViewModel::class.java) ->
                     AddFriendViewModel(walkableRepository)
 

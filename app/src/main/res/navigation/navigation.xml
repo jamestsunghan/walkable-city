@@ -23,6 +23,10 @@
             android:name="routeKey"
             app:argType="tw.com.walkablecity.data.Route"
             app:nullable="true" />
+        <argument
+            android:name="destinationKey"
+            app:argType="com.google.android.gms.maps.model.LatLng"
+            app:nullable="true" />
     </fragment>
 
     <fragment
@@ -84,7 +88,11 @@
         android:id="@+id/searchFragment"
         android:name="tw.com.walkablecity.search.SearchFragment"
         android:label="SearchFragment"
-        tools:layout="@layout/fragment_search"/>
+        tools:layout="@layout/fragment_search">
+        <argument
+            android:name="LatLngKey"
+            app:argType="com.google.android.gms.maps.model.LatLng" />
+    </dialog>
 
     <action
         android:id="@+id/action_global_rankingFragment"

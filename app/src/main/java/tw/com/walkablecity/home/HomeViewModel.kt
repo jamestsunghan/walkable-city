@@ -29,7 +29,7 @@ import tw.com.walkablecity.ext.toDistance
 import tw.com.walkablecity.ext.toGeoPoint
 import java.text.SimpleDateFormat
 
-class HomeViewModel(val walkableRepository: WalkableRepository, val argument: Route?): ViewModel(){
+class HomeViewModel(val walkableRepository: WalkableRepository, val argument: Route?, val destination: LatLng?): ViewModel(){
 
     companion object{
         const val UPDATE_INTERVAL_IN_MILLISECONDS = 5000L

@@ -212,6 +212,8 @@
     <string name="event_race_goal">競賽目標｜</string>
 
     <string name="accomplish_rate">%.1f％</string>
+    <string name="no_destination_yet">尚未選擇目的地</string>
+    <string name="no_route_fit_as_shortest">附近無推薦路線，提供給您最短路徑</string>
 
 
 </resources>

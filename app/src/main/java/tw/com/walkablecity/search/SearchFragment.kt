@@ -23,6 +23,7 @@ import com.google.android.libraries.places.widget.AutocompleteSupportFragment
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener
 
 import tw.com.walkablecity.R
+import tw.com.walkablecity.Util.makeShortToast
 import tw.com.walkablecity.WalkableApp
 import tw.com.walkablecity.databinding.FragmentSearchBinding
 import tw.com.walkablecity.ext.getVMFactory
@@ -32,7 +33,7 @@ import java.util.*
 class SearchFragment : DialogFragment() {
 
     private lateinit var placesClient: PlacesClient
-    private val viewModel: SearchViewModel by viewModels{getVMFactory()}
+    private val viewModel: SearchViewModel by viewModels{getVMFactory( SearchFragmentArgs.fromBundle(requireArguments()).latLngKey )}
     private lateinit var autoCompleteFragment: AutocompleteSupportFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -62,8 +63,13 @@ class SearchFragment : DialogFragment() {
         })
 
         viewModel.selectedRoute.observe(viewLifecycleOwner, Observer {
-            it?.let{
-                findNavController().navigate(SearchFragmentDirections.actionGlobalHomeFragment(it))
+            it?.let{route->
+                if(route.waypoints.isEmpty()){
+                    makeShortToast(R.string.no_route_fit_as_shortest)
+                }else{
+                    findNavController().navigate(SearchFragmentDirections.actionGlobalHomeFragment(route, viewModel.destination.value))
+
+                }
                 viewModel.searchComplete()
             }
         })
@@ -94,7 +100,7 @@ class SearchFragment : DialogFragment() {
             setPlaceFields(listOf(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG))
             setOnPlaceSelectedListener(object : PlaceSelectionListener{
                 override fun onPlaceSelected(place: Place) {
-                    // TODO: Get info about the selected place.
+                    viewModel.setDestination(place.latLng)
                     Log.d("JJ", "Place: ${place.name}, ${place.id}, ${place.latLng}")
                 }
 

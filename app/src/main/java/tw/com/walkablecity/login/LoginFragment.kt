@@ -95,7 +95,7 @@ class LoginFragment : Fragment() {
         viewModel.user.observe(viewLifecycleOwner, Observer{
             it?.let{
                 UserManager.user = it
-                findNavController().navigate(LoginFragmentDirections.actionGlobalHomeFragment(null))
+                findNavController().navigate(LoginFragmentDirections.actionGlobalHomeFragment(null, null))
                 viewModel.navigateComplete()
             }
         })

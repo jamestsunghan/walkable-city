@@ -16,8 +16,6 @@ class RouteViewModelFactory(private val walkableRepository: WalkableRepository, 
     override fun <T : ViewModel?> create(modelClass: Class<T>) =
         with(modelClass){
             when{
-                isAssignableFrom(HomeViewModel::class.java) ->
-                    HomeViewModel(walkableRepository, route)
 
                 isAssignableFrom(DetailViewModel::class.java) ->
                     DetailViewModel(walkableRepository, requireNotNull(route))

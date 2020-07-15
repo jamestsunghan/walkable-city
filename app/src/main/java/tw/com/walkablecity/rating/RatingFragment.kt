@@ -49,7 +49,7 @@ class RatingFragment : Fragment() {
         viewModel.navigateToSearch.observe(viewLifecycleOwner, Observer{
             it?.let{
                 if(it > 1){
-                    findNavController().navigate(RatingFragmentDirections.actionGlobalHomeFragment(null))
+                    findNavController().navigate(RatingFragmentDirections.actionGlobalHomeFragment(null, null))
                     viewModel.sendComplete()
                 }
             }

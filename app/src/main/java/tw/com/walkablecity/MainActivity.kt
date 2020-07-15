@@ -31,7 +31,7 @@ class MainActivity : AppCompatActivity() {
             R.id.home ->{
                 findNavController(R.id.nav_host_fragment).navigate(NavigationDirections.actionGlobalHomeFragment(
                     null
-                ))
+                ,null))
                 return@OnNavigationItemSelectedListener true
             }
             R.id.ranking ->{
@@ -115,7 +115,7 @@ class MainActivity : AppCompatActivity() {
     override fun onBackPressed() {
 
         if(viewModel.currentFragment.value == CurrentFragmentType.RATING){
-            findNavController(R.id.nav_host_fragment).navigate(RatingFragmentDirections.actionGlobalHomeFragment(null))
+            findNavController(R.id.nav_host_fragment).navigate(RatingFragmentDirections.actionGlobalHomeFragment(null,null))
         }else
 
         super.onBackPressed()

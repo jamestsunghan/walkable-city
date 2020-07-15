@@ -1,6 +1,7 @@
 package tw.com.walkablecity.ext
 
 import androidx.fragment.app.Fragment
+import com.google.android.gms.maps.model.LatLng
 import tw.com.walkablecity.WalkableApp
 import tw.com.walkablecity.data.*
 import tw.com.walkablecity.event.EventPageType
@@ -41,4 +42,14 @@ fun Fragment.getVMFactory(eventPage: EventPageType): EventPageViewModelFactory {
 fun Fragment.getVMFactory(event: Event): EventVIewModelFactory{
     val repo = (requireContext().applicationContext as WalkableApp).repo
     return EventVIewModelFactory(repo, event)
+}
+
+fun Fragment.getVMFactory(currentLocation: LatLng): LatLngViewModelFactory{
+    val repo = (requireContext().applicationContext as WalkableApp).repo
+    return LatLngViewModelFactory(repo, currentLocation)
+}
+
+fun Fragment.getVMFactory(route: Route?,destination: LatLng?): HomeViewModelFactory{
+    val repo = (requireContext().applicationContext as WalkableApp).repo
+    return HomeViewModelFactory(repo, route, destination)
 }
