@@ -201,7 +201,7 @@ class RatingItemViewModel(val walkableRepository: WalkableRepository, val select
             length = requireNotNull(walk.distance),
             minutes = requireNotNull(walk.duration).toFloat().div(60),
             ratingAvr = rating,
-            waypoints = waypoints.map{ it.toGeoPoint()},
+            waypoints = waypoints,
             walkers = listOf(userId),
             comments = listOf(commentContent.toComment(4,userId))
         )

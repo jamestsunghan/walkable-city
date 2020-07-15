@@ -205,7 +205,8 @@
     <string name="friend_description">一起在城市中散步的好朋友們</string>
 
 
-    <string name="event_detail_timer">剩餘時間｜23:11:13</string>
+    <string name="event_detail_timer">距離結束時間｜23:11:13</string>
+    <string name="event_detail_pre_timer">距離開始時間｜</string>
     <string name="event_goal">目標｜</string>
     <string name="event_group_goal">共同目標｜</string>
     <string name="event_race_goal">競賽目標｜</string>

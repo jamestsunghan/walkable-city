@@ -5,6 +5,7 @@ import android.util.Log
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.Timestamp
+import com.google.firebase.Timestamp.now
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
@@ -549,7 +550,7 @@ object WalkableRemoteDataSource: WalkableDataSource{
 
     override suspend fun getPopularEvents(): Result<List<Event>> = suspendCoroutine{continuation->
 
-        db.collection(EVENT).orderBy("memberCount", Query.Direction.DESCENDING).get().addOnCompleteListener { task->
+        db.collection(EVENT).whereGreaterThanOrEqualTo("endDate",now()).orderBy("endDate").orderBy("memberCount", Query.Direction.DESCENDING).get().addOnCompleteListener { task->
             if(task.isSuccessful){
                 val list = mutableListOf<Event>()
                 for(document in task.result!!){
@@ -569,7 +570,7 @@ object WalkableRemoteDataSource: WalkableDataSource{
     }
 
     override suspend fun getUserChallenges(userId: String): Result<List<Event>> = suspendCoroutine{continuation->
-        db.collection(EVENT).whereArrayContains("member",userId).get().addOnCompleteListener { task->
+        db.collection(EVENT).whereArrayContains("member",userId).whereGreaterThanOrEqualTo("endDate",now()).get().addOnCompleteListener { task->
             if(task.isSuccessful){
                 val list = mutableListOf<Event>()
                 for(document in task.result!!){
@@ -591,7 +592,7 @@ object WalkableRemoteDataSource: WalkableDataSource{
     }
 
     override suspend fun getUserInvitation(userId: String): Result<List<Event>> = suspendCoroutine{continuation->
-        db.collection(EVENT).whereArrayContains("invited",userId).get().addOnCompleteListener { task->
+        db.collection(EVENT).whereArrayContains("invited",userId).whereGreaterThanOrEqualTo("endDate",now()).get().addOnCompleteListener { task->
             if(task.isSuccessful){
                 val list = mutableListOf<Event>()
                 for(document in task.result!!){

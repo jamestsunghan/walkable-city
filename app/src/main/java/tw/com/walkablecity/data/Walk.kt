@@ -5,6 +5,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.GeoPoint
 import kotlinx.android.parcel.Parcelize
+import kotlinx.android.parcel.RawValue
 
 @Parcelize
 data class Walk (
@@ -13,5 +14,5 @@ data class Walk (
     val endTime: Timestamp? = null,
     val duration: Long? = null,
     val routeId: String? = null,
-    val waypoints: List<LatLng> = listOf()
+    val waypoints: @RawValue List<GeoPoint> = listOf()
 ): Parcelable

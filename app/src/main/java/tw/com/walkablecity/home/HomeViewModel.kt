@@ -26,6 +26,7 @@ import tw.com.walkablecity.WalkableApp
 import tw.com.walkablecity.data.*
 import tw.com.walkablecity.data.source.WalkableRepository
 import tw.com.walkablecity.ext.toDistance
+import tw.com.walkablecity.ext.toGeoPoint
 import java.text.SimpleDateFormat
 
 class HomeViewModel(val walkableRepository: WalkableRepository, val argument: Route?): ViewModel(){
@@ -221,7 +222,7 @@ class HomeViewModel(val walkableRepository: WalkableRepository, val argument: Ro
             startTime = startTime.value as Timestamp,
             endTime = endTime.value as Timestamp,
             routeId = route.value?.id,
-            waypoints = trackPoints.value as List<LatLng>)
+            waypoints = trackPoints.value?.map{it.toGeoPoint()} as List<GeoPoint>)
         updateWalk(walk)
     }
 

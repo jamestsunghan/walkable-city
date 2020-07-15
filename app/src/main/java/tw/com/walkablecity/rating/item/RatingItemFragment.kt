@@ -87,8 +87,8 @@ class RatingItemFragment(private val type: RatingType, private val route: Route?
             RatingType.WALK->{
                 mapFragment.getMapAsync {
 
-                    it.moveCamera(CameraUpdateFactory.newLatLngZoom(walk.waypoints[0],15f))
-                    it.addPolyline(PolylineOptions().addAll(walk.waypoints))
+                    it.moveCamera(CameraUpdateFactory.newLatLngZoom(walk.waypoints.toLatLngPoints()[0],15f))
+                    it.addPolyline(PolylineOptions().addAll(walk.waypoints.toLatLngPoints()))
 
                 }
 
