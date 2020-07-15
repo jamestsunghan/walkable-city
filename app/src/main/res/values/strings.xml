@@ -14,6 +14,8 @@
     <string name="setting_title">個人設定</string>
     <string name="explore_title">行跡地圖</string>
 
+    <string name="enter_walkable">進入散步城市</string>
+
     <string name="start_walking">開始散步</string>
     <string name="end_walking">結束散步</string>
     <string name="pause_walking">暫停散步</string>

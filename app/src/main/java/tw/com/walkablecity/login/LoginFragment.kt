@@ -50,11 +50,6 @@ class LoginFragment : Fragment() {
 
     }
 
-    override fun onStart() {
-        super.onStart()
-        val currentUser = auth.currentUser
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -67,17 +62,13 @@ class LoginFragment : Fragment() {
         binding.viewModel = viewModel
 
         binding.signInButton.setOnClickListener {
-
-            if(viewModel.idCustom.value == null)signIn()
-            else {
-                viewModel.checkUserCustomId(viewModel.idCustom.value as String)
-            }
+            signIn()
         }
 
         viewModel.isCustomIdUsable.observe(viewLifecycleOwner, Observer{
             it?.let{
                 if(it){
-                    signIn()
+                    viewModel.addUser(requireNotNull(viewModel.firebaseUser.value).toSignInUser(viewModel.idCustom.value))
                 }else{
                     makeShortToast(R.string.id_been_used)
                 }
@@ -86,8 +77,16 @@ class LoginFragment : Fragment() {
         })
 
         viewModel.firebaseUser.observe(viewLifecycleOwner, Observer{
-            it?.let{
-                viewModel.addUser(it.toSignInUser(viewModel.idCustom.value))
+            it?.let{user->
+                viewModel.getUser(user.uid)
+
+                binding.getInButton.setOnClickListener {
+
+                    if(viewModel.idCustom.value == null) makeShortToast(R.string.no_search_id)
+                    else {
+                        viewModel.checkUserCustomId(viewModel.idCustom.value as String)
+                    }
+                }
             }
         })
 
