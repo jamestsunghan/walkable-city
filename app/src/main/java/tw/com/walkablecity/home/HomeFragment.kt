@@ -42,7 +42,6 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationClick
 
     lateinit var viewModelInit: HomeViewModel
 
-    private var permissionDenied =  false
     private lateinit var mapFragment: SupportMapFragment
     private lateinit var map: GoogleMap
 
@@ -75,9 +74,13 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationClick
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if(requestCode != REQUEST_LOCATION) return
         if(isPermissionGranted(permissions,grantResults, Manifest.permission.ACCESS_FINE_LOCATION)){
+            viewModelInit.permissionGranted()
             viewModelInit.clientCurrentLocation()
         }else{
-            permissionDenied = true
+            if(!shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)){
+                viewModelInit.permissionDeniedForever()
+            }
+            viewModelInit.permissionDenied()
         }
 
     }
@@ -113,17 +116,20 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationClick
 
 
         if(checkSelfPermission(WalkableApp.instance, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+            viewModel.permissionGranted()
             viewModel.clientCurrentLocation()
         }else{
-//            if(shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)){
-//                Toast.makeText(WalkableApp.instance,"Location permission is needed for route recording and suggestion routes nearby.",
-//                    Toast.LENGTH_SHORT).show()
-//            }
+            if(!shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)){
+                viewModel.permissionDeniedForever()
+            }
             requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), REQUEST_LOCATION)
 //            requestPermission(requireActivity() as MainActivity, REQUEST_LOCATION
 //                , Manifest.permission.ACCESS_FINE_LOCATION,true)
         }
 
+        binding.permissionDialogButton.setOnClickListener {
+            requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), REQUEST_LOCATION)
+        }
 
         viewModel.navigateToRating.observe(viewLifecycleOwner, Observer {
             it?.let{

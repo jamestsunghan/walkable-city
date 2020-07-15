@@ -100,6 +100,9 @@
     <string name="no_route_selected">您這次並未選擇載入路線</string>
     <string name="no_more_to_comment">您已評論完了歐</string>
 
+    <string name="no_permission">您並未開啟位置權限</string>
+    <string name="permission_again">開啟權限</string>
+
     <string name="not_complete_yet">路線項目尚未填寫完成</string>
 
     <string name="see_detail">詳細資訊</string>

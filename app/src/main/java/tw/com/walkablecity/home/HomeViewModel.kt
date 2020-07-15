@@ -28,6 +28,7 @@ import tw.com.walkablecity.data.source.WalkableRepository
 import tw.com.walkablecity.ext.toDistance
 import tw.com.walkablecity.ext.toGeoPoint
 import java.text.SimpleDateFormat
+import java.util.*
 
 class HomeViewModel(val walkableRepository: WalkableRepository, val argument: Route?, val destination: LatLng?): ViewModel(){
 
@@ -36,10 +37,16 @@ class HomeViewModel(val walkableRepository: WalkableRepository, val argument: Ro
         const val FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS = UPDATE_INTERVAL_IN_MILLISECONDS / 2
     }
 
+    private val _permissionDenied =  MutableLiveData<Boolean>(false)
+    val permissionDenied: LiveData<Boolean> get() = _permissionDenied
+
     private val fusedLocationClient = FusedLocationProviderClient(WalkableApp.instance)
 
     private val _checkPermission = MutableLiveData<Boolean>(false)
     val checkPermission: LiveData<Boolean> get() = _checkPermission
+
+    private val _dontAskAgain = MutableLiveData<Boolean>(false)
+    val dontAskAgain: LiveData<Boolean> get() = _dontAskAgain
 
     private val _navigateToLoad = MutableLiveData<Boolean>()
     val navigateToLoad: LiveData<Boolean> get() = _navigateToLoad
@@ -70,7 +77,6 @@ class HomeViewModel(val walkableRepository: WalkableRepository, val argument: Ro
     val startTime = MutableLiveData<Timestamp>()
 
     val duration = MutableLiveData<Long>()
-
 
     val endTime = MutableLiveData<Timestamp>()
 
@@ -112,7 +118,7 @@ class HomeViewModel(val walkableRepository: WalkableRepository, val argument: Ro
     }
 
     init{
-        val date = SimpleDateFormat("yyyyMMddHHmmss").format(now().seconds.times(1000)).toLong()
+        val date = SimpleDateFormat("yyyyMMddHHmmss", Locale.TAIWAN).format(now().seconds.times(1000)).toLong()
         Log.d("JJ","date $date")
 
         _walkerStatus.value = WalkerStatus.PREPARE
@@ -130,6 +136,18 @@ class HomeViewModel(val walkableRepository: WalkableRepository, val argument: Ro
                 super.onLocationAvailability(p0)
             }
         }
+    }
+
+    fun permissionDeniedForever(){
+        _dontAskAgain.value = true
+    }
+
+    fun permissionDenied(){
+        _permissionDenied.value = true
+    }
+
+    fun permissionGranted(){
+        _permissionDenied.value = false
     }
 
     fun navigateToLoad(){
