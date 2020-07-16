@@ -21,7 +21,7 @@ interface WalkableRepository {
     suspend fun updateWalks(walk: Walk, user: User): Result<Boolean>
     suspend fun updateRouteRating(rating: RouteRating, route: Route, userId: String): Result<Boolean>
     suspend fun createRouteByUser(route: Route): Result<Boolean>
-    suspend fun getRouteMapImage(center: GeoPoint, zoom: Int, path: List<GeoPoint>): Result<MapImageResult>
+    suspend fun getRouteMapImage(center: GeoPoint, zoom: Int, path: List<GeoPoint>): Result<MapImageResult>  // not used
     suspend fun getRouteMapImageUrl(routeId: String, bitmap: Bitmap): Result<String>
     suspend fun getRouteComments(routeId: String): Result<List<Comment>>
 
@@ -37,14 +37,14 @@ interface WalkableRepository {
     suspend fun firebaseAuthWithGoogle(idToken: String?): Result<FirebaseUser>
 
     suspend fun signUpUser(user: User): Result<User>
-
+    suspend fun getUser(userId: String): Result<User?>
     suspend fun checkIdCustomBeenUsed(idCustom: String): Result<Boolean>
 
     suspend fun searchFriendWithId(idCustom: String): Result<Friend?>
     suspend fun addFriend(friend: Friend, user: User): Result<Boolean>
     suspend fun checkFriendAdded(idCustom: String, userId: String): Result<Boolean>
 
-    suspend fun getUser(userId: String): Result<User?>
+    suspend fun getUserFriends(userId: String): Result<List<User>>
 
     suspend fun getMemberWalkDistance(eventStartTime: Timestamp, memberId: String): Result<Float>
     suspend fun getMemberWalkHours(eventStartTime: Timestamp, memberId: String): Result<Float>

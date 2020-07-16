@@ -36,13 +36,15 @@ interface WalkableDataSource {
     suspend fun firebaseAuthWithGoogle(idToken: String?): Result<FirebaseUser>
 
     suspend fun signUpUser(user: User): Result<User>
+    suspend fun getUser(userId: String): Result<User?>
     suspend fun checkIdCustomBeenUsed(idCustom: String): Result<Boolean>
 
     suspend fun searchFriendWithId(idCustom: String): Result<Friend?>
     suspend fun addFriend(friend: Friend, user: User): Result<Boolean>
     suspend fun checkFriendAdded(idCustom: String, userId: String): Result<Boolean>
 
-    suspend fun getUser(userId: String): Result<User?>
+    suspend fun getUserFriends(userId: String): Result<List<User>>
+
 
     suspend fun getMemberWalkDistance(eventStartTime: Timestamp, memberId: String): Result<Float>
     suspend fun getMemberWalkHours(eventStartTime: Timestamp, memberId: String): Result<Float>

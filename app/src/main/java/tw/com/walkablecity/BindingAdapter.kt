@@ -32,10 +32,12 @@ import tw.com.walkablecity.data.*
 import tw.com.walkablecity.detail.CommentAdapter
 import tw.com.walkablecity.event.item.EventItemAdapter
 import tw.com.walkablecity.eventdetail.MemberAdapter
+import tw.com.walkablecity.ext.toWalkerItem
 import tw.com.walkablecity.favorite.FavoriteAdapter
 import tw.com.walkablecity.home.WalkerStatus
 import tw.com.walkablecity.loadroute.route.RouteItem
 import tw.com.walkablecity.loadroute.route.RouteItemAdapter
+import tw.com.walkablecity.profile.bestwalker.BestWalkersAdapter
 import tw.com.walkablecity.ranking.RankingAdapter
 import java.math.BigDecimal
 import java.text.DecimalFormat
@@ -60,6 +62,17 @@ fun walkPausing(view: TextView, status: WalkerStatus) {
         }
         WalkerStatus.FINISH -> {
             view.visibility = View.GONE
+        }
+    }
+}
+
+@BindingAdapter("walker")
+fun bindBestWalkers(view: RecyclerView, list: List<User>?){
+    list?.let{item->
+        view.adapter.apply {
+            when(this){
+                is BestWalkersAdapter -> submitList(item.toWalkerItem())
+            }
         }
     }
 }

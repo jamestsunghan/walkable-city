@@ -11,6 +11,7 @@ import tw.com.walkablecity.R
 import tw.com.walkablecity.Util
 import tw.com.walkablecity.Util.getString
 import tw.com.walkablecity.data.*
+import tw.com.walkablecity.profile.bestwalker.WalkerItem
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.HashMap
@@ -222,4 +223,19 @@ fun Accumulation.addNewWalk(input: Float): Accumulation{
         yearly  = yearly  + input,
         total   = total   + input
     )
+}
+
+fun List<User>.toWalkerItem(): List<WalkerItem>{
+    return when(this.size > 3){
+         true  ->{
+             val top3 = this.subList(0,3)
+             val theRest = this.slice(3..lastIndex)
+             Log.d("JJ", "the rest ${theRest.size}")
+             listOf(top3).map{WalkerItem.Tops(it)} + theRest.map{WalkerItem.Walkers(it)}
+         }
+         false -> {
+             val theRest = this.slice(1..lastIndex)
+             listOf(WalkerItem.Tops(listOf(this[0]))) + theRest.map{WalkerItem.Walkers(it)}
+         }
+    }
 }

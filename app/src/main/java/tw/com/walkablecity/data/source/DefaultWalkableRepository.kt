@@ -143,4 +143,8 @@ class DefaultWalkableRepository(private val remote: WalkableDataSource): Walkabl
     ): Result<Float> {
         return remote.getMemberWalkFrequencyResult(eventStartTime, target, memberId)
     }
+
+    override suspend fun getUserFriends(userId: String): Result<List<User>> {
+        return remote.getUserFriends(userId)
+    }
 }
