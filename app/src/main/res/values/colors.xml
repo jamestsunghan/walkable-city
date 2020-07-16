@@ -28,5 +28,9 @@
     <color name="event_hour_group">#55a5dee4</color>
     <color name="event_hour_race">#5566bab7</color>
 
+    <color name="bronze">#B35C37</color>
+    <color name="silver">#91989f</color>
+    <color name="gold">#efbb24</color>
+
 
 </resources>

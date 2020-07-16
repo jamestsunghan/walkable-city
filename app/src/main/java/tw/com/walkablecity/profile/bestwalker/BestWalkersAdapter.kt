@@ -5,33 +5,39 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import tw.com.walkablecity.UserManager
 import tw.com.walkablecity.data.User
 import tw.com.walkablecity.databinding.ItemWalkersChampionBinding
 import tw.com.walkablecity.databinding.ItemWalkersTheRestBinding
 import tw.com.walkablecity.databinding.ItemWalkersTop3Binding
 import java.lang.IllegalArgumentException
 
-class BestWalkersAdapter: ListAdapter<WalkerItem, RecyclerView.ViewHolder>(DiffCallback) {
+class BestWalkersAdapter(val viewModel: BestWalkersViewModel): ListAdapter<WalkerItem, RecyclerView.ViewHolder>(DiffCallback) {
 
     class ChampionViewHolder(private val binding: ItemWalkersChampionBinding): RecyclerView.ViewHolder(binding.root){
-        fun bind(champ: User){
+        fun bind(champ: User, viewModel: BestWalkersViewModel){
             binding.champ = champ
+            binding.viewModel = viewModel
             binding.executePendingBindings()
         }
     }
 
     class Top3ViewHolder(private val binding: ItemWalkersTop3Binding): RecyclerView.ViewHolder(binding.root){
-        fun bind(top3: List<User>){
+        fun bind(top3: List<User>, viewModel: BestWalkersViewModel){
             binding.first = top3[0]
             binding.second = top3[1]
             binding.third = top3[2]
+            binding.viewModel = viewModel
             binding.executePendingBindings()
         }
     }
 
     class WalkersViewHolder(private val binding: ItemWalkersTheRestBinding): RecyclerView.ViewHolder(binding.root){
-        fun bind(walker: User){
+        fun bind(walker: User, rankingDisplay: Int, viewModel: BestWalkersViewModel){
             binding.walker = walker
+            binding.position = rankingDisplay
+            binding.viewModel = viewModel
+            binding.user = UserManager.user
             binding.executePendingBindings()
         }
     }
@@ -75,10 +81,11 @@ class BestWalkersAdapter: ListAdapter<WalkerItem, RecyclerView.ViewHolder>(DiffC
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        val rankingDisplay = if(itemCount>3)position else position + 1
         when(holder){
-            is ChampionViewHolder ->holder.bind((getItem(position) as WalkerItem.Tops).tops[0])
-            is Top3ViewHolder     ->holder.bind((getItem(position) as WalkerItem.Tops).tops)
-            is WalkersViewHolder  ->holder.bind((getItem(position) as WalkerItem.Walkers).walker)
+            is ChampionViewHolder ->holder.bind((getItem(position) as WalkerItem.Tops).tops[0], viewModel)
+            is Top3ViewHolder     ->holder.bind((getItem(position) as WalkerItem.Tops).tops, viewModel)
+            is WalkersViewHolder  ->holder.bind((getItem(position) as WalkerItem.Walkers).walker, rankingDisplay, viewModel)
         }
     }
 }

@@ -221,5 +221,17 @@
     <string name="no_route_fit_as_shortest">附近無推薦路線，提供給您最短路徑</string>
     <string name="days_left">%d天</string>
 
+    <string name="walker_km">%.2f公里</string>
+
+    <string name="week_ranking">本週排行</string>
+    <string name="month_ranking">本月排行</string>
+    <string name="total_ranking">累計排行</string>
+
+    <string name="accumulate_daily">本日累計｜</string>
+    <string name="accumulate_weekly">本週累計｜</string>
+    <string name="accumulate_monthly">本月累計｜</string>
+    <string name="accumulate_yearly">今年累計｜</string>
+    <string name="accumulate_total">總累計｜</string>
+
 
 </resources>

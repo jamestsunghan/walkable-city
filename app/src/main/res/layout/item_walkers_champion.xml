@@ -5,72 +5,117 @@
 
     <data>
         <variable name="champ" type="tw.com.walkablecity.data.User" />
+        <variable name="viewModel" type="tw.com.walkablecity.profile.bestwalker.BestWalkersViewModel" />
+        <import type="tw.com.walkablecity.data.AccumulationType"/>
     </data>
 
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/profile_head_zone"
+    <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/secondaryLightColor">
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        app:cardCornerRadius="8dp"
+        app:strokeWidth="1dp"
+        app:cardElevation="8dp"
+        app:cardUseCompatPadding="true"
+        app:strokeColor="@color/white">
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/card_view_profile_image"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="16dp"
-            android:contentDescription="Your profile image"
-            app:cardCornerRadius="50dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/profile_head_zone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-            <ImageView
-                android:id="@+id/profile_image"
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_view_profile_image"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
+                app:strokeColor="@color/gold"
+                app:strokeWidth="5dp"
                 android:contentDescription="Your profile image"
-                app:glide="@{champ.picture}"
-                tools:srcCompat="@drawable/placeholder" />
-        </androidx.cardview.widget.CardView>
+                app:cardCornerRadius="50dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/user_name"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="21dp"
-            android:layout_marginEnd="16dp"
-            android:fontFamily="@font/noto_sans"
-            android:letterSpacing="0.15"
-            android:text="@{champ.name}"
-            android:textColor="@color/white"
-            android:textSize="16sp"
-            app:layout_constraintBottom_toTopOf="@+id/user_accumulated"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/card_view_profile_image"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="JJ" />
+                <ImageView
+                    android:id="@+id/profile_image"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:contentDescription="Your profile image"
+                    app:glide="@{champ.picture}"
+                    tools:srcCompat="@drawable/placeholder" />
+            </com.google.android.material.card.MaterialCardView>
 
-        <TextView
-            android:id="@+id/user_accumulated"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:layout_marginBottom="21dp"
-            android:fontFamily="@font/noto_sans"
-            android:letterSpacing="0.15"
-            android:text="@{ @string/walk_accumulate_title + String.format(@string/walk_accumulate_km, champ.accumulatedKm.total)}"
-            android:textColor="@color/white"
-            android:textSize="13sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@+id/user_name"
-            app:layout_constraintStart_toStartOf="@+id/user_name"
-            app:layout_constraintTop_toBottomOf="@+id/user_name"
-            tools:text="累計｜0.12小時｜0.22公里｜" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_view_first_badge"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                app:cardCornerRadius="40dp"
+                android:layout_marginTop="2dp"
+                android:layout_marginEnd="2dp"
+                app:layout_constraintEnd_toEndOf="@+id/card_view_profile_image"
+                app:layout_constraintTop_toTopOf="@+id/card_view_profile_image">
+
+                <TextView
+                    android:id="@+id/badge_first"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:textColor="@color/white"
+                    android:gravity="center"
+                    android:fontFamily="@font/noto_sans"
+                    android:textSize="14dp"
+                    android:textStyle="bold"
+                    android:background="@color/gold"
+                    android:text="1" />
+            </com.google.android.material.card.MaterialCardView>
+
+            <TextView
+                android:id="@+id/user_name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="21dp"
+                android:layout_marginEnd="16dp"
+                android:fontFamily="@font/noto_sans"
+                android:letterSpacing="0.15"
+                android:text="@{champ.name}"
+                android:requiresFadingEdge="horizontal"
+                android:marqueeRepeatLimit="0"
+                android:fadingEdge="horizontal"
+                android:fadingEdgeLength="40dp"
+                android:ellipsize="marquee"
+                android:singleLine="true"
+                android:textColor="@color/blue_2e5c6e"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toTopOf="@+id/user_accumulated"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/card_view_profile_image"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="JJ" />
+
+            <TextView
+                android:id="@+id/user_accumulated"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="21dp"
+                android:fontFamily="@font/noto_sans"
+                android:letterSpacing="0.15"
+                android:text="@{viewModel.accumulationType.text + String.format(@string/walker_km, (viewModel.accumulationType == AccumulationType.WEEKLY ? champ.accumulatedKm.weekly : viewModel.accumulationType == AccumulationType.MONTHLY ? champ.accumulatedKm.monthly: champ.accumulatedKm.total))}"
+                android:textColor="@color/blue_2e5c6e"
+                android:textSize="14sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/user_name"
+                app:layout_constraintStart_toStartOf="@+id/user_name"
+                app:layout_constraintTop_toBottomOf="@+id/user_name"
+                tools:text="累計｜0.12小時｜0.22公里｜" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.google.android.material.card.MaterialCardView>
 
 
 </layout>

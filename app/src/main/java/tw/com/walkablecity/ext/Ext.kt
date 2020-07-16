@@ -228,10 +228,10 @@ fun Accumulation.addNewWalk(input: Float): Accumulation{
 fun List<User>.toWalkerItem(): List<WalkerItem>{
     return when(this.size > 3){
          true  ->{
-             val top3 = this.subList(0,3)
+             val top3 = this.slice(0..2)
              val theRest = this.slice(3..lastIndex)
              Log.d("JJ", "the rest ${theRest.size}")
-             listOf(top3).map{WalkerItem.Tops(it)} + theRest.map{WalkerItem.Walkers(it)}
+             listOf(top3).map{WalkerItem.Tops(it)} + this.map{WalkerItem.Walkers(it)}
          }
          false -> {
              val theRest = this.slice(1..lastIndex)

@@ -31,12 +31,20 @@ class BestWalkersFragment : Fragment() {
 
         binding.viewModel = viewModel
 
-        binding.recyclerWalker.adapter = BestWalkersAdapter()
+        binding.recyclerWalker.adapter = BestWalkersAdapter(viewModel)
 
         viewModel.userFriendList.observe(viewLifecycleOwner, Observer{
             it?.let{list->
 
-                viewModel.sortList(list)
+                viewModel.sortList(list, requireNotNull(viewModel.accumulationType.value))
+            }
+        })
+
+        viewModel.accumulationType.observe(viewLifecycleOwner, Observer{
+            it?.let{type->
+                viewModel.userFriendList.value?.let{friend->
+                    viewModel.sortList(friend,type)
+                }
             }
         })
 

@@ -10,10 +10,7 @@ import kotlinx.coroutines.launch
 import tw.com.walkablecity.R
 import tw.com.walkablecity.UserManager
 import tw.com.walkablecity.Util.getString
-import tw.com.walkablecity.data.FrequencyType
-import tw.com.walkablecity.data.LoadStatus
-import tw.com.walkablecity.data.Result
-import tw.com.walkablecity.data.User
+import tw.com.walkablecity.data.*
 import tw.com.walkablecity.data.source.WalkableRepository
 
 class BestWalkersViewModel(private val walkableRepository: WalkableRepository) : ViewModel() {
@@ -31,8 +28,8 @@ class BestWalkersViewModel(private val walkableRepository: WalkableRepository) :
     private val _sortList = MutableLiveData<List<User>>()
     val sortList: LiveData<List<User>> get() = _sortList
 
-    private val _frequencyType = MutableLiveData<FrequencyType>(FrequencyType.WEEKLY)
-    val frequencyType: LiveData<FrequencyType> get() = _frequencyType
+    private val _accumulationType = MutableLiveData<AccumulationType>(AccumulationType.WEEKLY)
+    val accumulationType: LiveData<AccumulationType> get() = _accumulationType
 
     private val viewModelJob = Job()
     private val coroutineScope = CoroutineScope(Dispatchers.Main + viewModelJob)
@@ -46,14 +43,26 @@ class BestWalkersViewModel(private val walkableRepository: WalkableRepository) :
         getUserFriends(requireNotNull(UserManager.user?.id))
     }
 
-    fun sortList(list: List<User>){
+    fun sortList(list: List<User>, type: AccumulationType){
         _sortList.value = (list as MutableList<User>).plus(requireNotNull(UserManager.user)).sortedByDescending { walker->
-            when(frequencyType.value){
-                FrequencyType.WEEKLY -> walker.accumulatedKm?.weekly
-                FrequencyType.MONTHLY -> walker.accumulatedKm?.monthly
+            when(type){
+                AccumulationType.WEEKLY -> walker.accumulatedKm?.weekly
+                AccumulationType.MONTHLY -> walker.accumulatedKm?.monthly
                 else-> walker.accumulatedKm?.total
             }
         }
+    }
+
+    fun weekRanking(){
+        _accumulationType.value = AccumulationType.WEEKLY
+    }
+
+    fun monthRanking(){
+        _accumulationType.value = AccumulationType.MONTHLY
+    }
+
+    fun totalRanking(){
+        _accumulationType.value = AccumulationType.TOTAL
     }
 
 

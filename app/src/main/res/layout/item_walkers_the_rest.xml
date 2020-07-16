@@ -5,12 +5,38 @@
 
     <data>
         <variable name="walker" type="tw.com.walkablecity.data.User" />
+        <variable name="user" type="tw.com.walkablecity.data.User" />
+        <variable name="viewModel" type="tw.com.walkablecity.profile.bestwalker.BestWalkersViewModel" />
+        <variable name="position" type="Integer" />
+        <import type="tw.com.walkablecity.data.AccumulationType"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/profile_head_zone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_view_position"
+            android:layout_marginStart="16dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            app:cardCornerRadius="40dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:cardElevation="2dp">
+
+            <TextView
+                android:id="@+id/badge_position"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textColor="@{walker == user ? @color/blue_2e5c6e : @color/primaryColor}"
+                android:gravity="center"
+                android:fontFamily="@font/noto_sans"
+                android:textSize="14dp"
+                android:text="@{String.valueOf(position)}" />
+        </com.google.android.material.card.MaterialCardView>
 
         <androidx.cardview.widget.CardView
             android:id="@+id/card_view_profile_image"
@@ -22,7 +48,7 @@
             android:contentDescription="Your profile image"
             app:cardCornerRadius="30dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/card_view_position"
             app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
@@ -44,7 +70,7 @@
             android:fontFamily="@font/noto_sans"
             android:letterSpacing="0.15"
             android:text="@{walker.name}"
-            android:textColor="@color/primaryColor"
+            android:textColor="@{walker == user ? @color/blue_2e5c6e : @color/primaryColor}"
             android:textSize="16sp"
             app:layout_constraintBottom_toTopOf="@+id/user_accumulated"
             app:layout_constraintEnd_toEndOf="parent"
@@ -60,8 +86,8 @@
             android:layout_marginBottom="21dp"
             android:fontFamily="@font/noto_sans"
             android:letterSpacing="0.15"
-            android:text="@{ @string/walk_accumulate_title + String.format(@string/walk_accumulate_km, walker.accumulatedKm.total)}"
-            android:textColor="@color/primaryColor"
+            android:text="@{viewModel.accumulationType.text + String.format(@string/walker_km, (viewModel.accumulationType == AccumulationType.WEEKLY ? walker.accumulatedKm.weekly : viewModel.accumulationType == AccumulationType.MONTHLY ? walker.accumulatedKm.monthly: walker.accumulatedKm.total))}"
+            android:textColor="@{walker == user ? @color/blue_2e5c6e : @color/primaryColor}"
             android:textSize="13sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/user_name"
