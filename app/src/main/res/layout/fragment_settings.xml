@@ -1,21 +1,648 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
         <variable name="viewModel" type="tw.com.walkablecity.profile.settings.SettingsViewModel" />
+        <variable name="user" type="tw.com.walkablecity.data.User" />
     </data>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         tools:context=".profile.settings.SettingsFragment">
 
-        <TextView
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_user_setting_section"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:text="settings" />
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="8dp"
+            app:cardElevation="4dp"
+            app:cardCornerRadius="8dp">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/user_setting_section"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/user_profile"
+                    android:textColor="@color/secondaryLightColor"
+                    android:textSize="18sp"
+                    android:letterSpacing="0.15"
+                    android:textStyle="bold"
+                    android:fontFamily="@font/noto_sans"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/user_name_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/user_name"
+                    android:textColor="@color/secondaryLightColor"
+                    android:textSize="14sp"
+                    android:letterSpacing="0.15"
+                    android:fontFamily="@font/noto_sans"
+                    app:layout_constraintStart_toStartOf="@+id/user_setting_section"
+                    app:layout_constraintTop_toBottomOf="@+id/user_setting_section" />
+
+                <View
+                    android:id="@+id/user_name_divider"
+                    android:layout_width="1dp"
+                    android:layout_height="0dp"
+                    android:background="@color/primaryColor"
+                    app:layout_constraintBottom_toBottomOf="@id/user_name_title"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.3"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/user_name_title" />
+
+                <TextView
+                    android:id="@+id/user_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:text="@{user.name}"
+                    android:textColor="@color/secondaryLightColor"
+                    android:textSize="14sp"
+                    android:letterSpacing="0.15"
+                    android:fontFamily="@font/noto_sans"
+                    app:layout_constraintStart_toEndOf="@+id/user_name_divider"
+                    app:layout_constraintBaseline_toBaselineOf="@+id/user_name_title" />
+
+                <TextView
+                    android:id="@+id/user_id_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/user_id"
+                    android:textColor="@color/secondaryLightColor"
+                    android:textSize="14sp"
+                    android:letterSpacing="0.15"
+                    android:fontFamily="@font/noto_sans"
+                    app:layout_constraintStart_toStartOf="@+id/user_setting_section"
+                    app:layout_constraintTop_toBottomOf="@+id/user_name_title" />
+
+                <View
+                    android:id="@+id/user_id_divider"
+                    android:layout_width="1dp"
+                    android:layout_height="0dp"
+                    android:background="@color/primaryColor"
+                    app:layout_constraintBottom_toBottomOf="@id/user_id_title"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.3"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/user_id_title" />
+
+                <TextView
+                    android:id="@+id/user_id"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:text="@{user.idCustom}"
+                    android:textColor="@color/secondaryLightColor"
+                    android:textSize="14sp"
+                    android:letterSpacing="0.15"
+                    android:fontFamily="@font/noto_sans"
+                    app:layout_constraintStart_toEndOf="@+id/user_id_divider"
+                    app:layout_constraintBaseline_toBaselineOf="@+id/user_id_title" />
+
+                <TextView
+                    android:id="@+id/user_email_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/user_email"
+                    android:textColor="@color/secondaryLightColor"
+                    android:textSize="14sp"
+                    android:letterSpacing="0.15"
+                    android:fontFamily="@font/noto_sans"
+                    app:layout_constraintStart_toStartOf="@+id/user_setting_section"
+                    app:layout_constraintTop_toBottomOf="@+id/user_id_title"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:layout_marginBottom="16dp"/>
+
+                <View
+                    android:id="@+id/user_email_divider"
+                    android:layout_width="1dp"
+                    android:layout_height="0dp"
+                    android:background="@color/primaryColor"
+                    app:layout_constraintBottom_toBottomOf="@id/user_email_title"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.3"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/user_email_title" />
+
+                <TextView
+                    android:id="@+id/user_email"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginBottom="16dp"
+                    android:fontFamily="@font/noto_sans"
+                    android:letterSpacing="0.15"
+                    android:singleLine="true"
+                    android:requiresFadingEdge="horizontal"
+                    android:fadingEdge="horizontal"
+                    android:marqueeRepeatLimit="0"
+                    android:fadingEdgeLength="40dp"
+                    android:ellipsize="marquee"
+                    android:text="@{user.email}"
+                    android:textColor="@color/secondaryLightColor"
+                    android:textSize="14sp"
+                    app:layout_constraintBaseline_toBaselineOf="@+id/user_email_title"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toEndOf="@+id/user_email_divider" />
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_user_walk_section"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/card_user_setting_section"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="8dp"
+            app:cardElevation="4dp"
+            app:cardCornerRadius="8dp">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/user_walk_section"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/walk_record"
+                    android:textColor="@color/secondaryLightColor"
+                    android:textSize="18sp"
+                    android:letterSpacing="0.15"
+                    android:textStyle="bold"
+                    android:fontFamily="@font/noto_sans"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/today_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/today"
+                    android:textColor="@color/secondaryLightColor"
+                    android:textSize="14sp"
+                    android:letterSpacing="0.15"
+                    android:textStyle="bold"
+                    android:fontFamily="@font/noto_sans"
+                    app:layout_constraintStart_toStartOf="@+id/user_walk_section"
+                    app:layout_constraintTop_toBottomOf="@+id/user_walk_section" />
+
+                <View
+                    android:id="@+id/today_divider"
+                    android:layout_width="1dp"
+                    android:layout_height="0dp"
+                    android:background="@color/primaryColor"
+                    app:layout_constraintBottom_toBottomOf="@id/today_title"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.3"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/today_title" />
+
+                <TextView
+                    android:id="@+id/today_km"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{String.format( @string/walker_km, user.accumulatedKm.daily)}"
+                    android:textColor="@color/secondaryLightColor"
+                    android:textSize="14sp"
+                    android:letterSpacing="0.15"
+                    android:fontFamily="@font/noto_sans"
+                    app:layout_constraintStart_toEndOf="@+id/today_divider"
+                    app:layout_constraintEnd_toStartOf="@+id/today_km_hour_divider"
+                    app:layout_constraintBaseline_toBaselineOf="@+id/today_title" />
+
+                <View
+                    android:id="@+id/today_km_hour_divider"
+                    android:layout_width="1dp"
+                    android:layout_height="0dp"
+                    android:background="@color/primaryColor"
+                    app:layout_constraintBottom_toBottomOf="@id/today_title"
+                    android:layout_marginEnd="16dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/today_divider"
+                    app:layout_constraintTop_toTopOf="@id/today_title" />
+
+                <TextView
+                    android:id="@+id/today_hour"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:text="@{String.format( @string/walker_hour, user.accumulatedHour.daily)}"
+                    android:textColor="@color/secondaryLightColor"
+                    android:textSize="14sp"
+                    android:letterSpacing="0.15"
+                    android:fontFamily="@font/noto_sans"
+                    app:layout_constraintStart_toEndOf="@+id/today_km_hour_divider"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBaseline_toBaselineOf="@+id/today_title" />
+
+                <TextView
+                    android:id="@+id/this_week_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/this_week"
+                    android:textColor="@color/secondaryLightColor"
+                    android:textSize="14sp"
+                    android:letterSpacing="0.15"
+                    android:textStyle="bold"
+                    android:fontFamily="@font/noto_sans"
+                    app:layout_constraintStart_toStartOf="@+id/user_walk_section"
+                    app:layout_constraintTop_toBottomOf="@+id/today_title" />
+
+                <View
+                    android:id="@+id/this_week_divider"
+                    android:layout_width="1dp"
+                    android:layout_height="0dp"
+                    android:background="@color/primaryColor"
+                    app:layout_constraintBottom_toBottomOf="@id/this_week_title"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.3"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/this_week_title" />
+
+                <TextView
+                    android:id="@+id/this_week_km"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{String.format( @string/walker_km, user.accumulatedKm.weekly)}"
+                    android:textColor="@color/secondaryLightColor"
+                    android:textSize="14sp"
+                    android:letterSpacing="0.15"
+                    android:fontFamily="@font/noto_sans"
+                    app:layout_constraintStart_toEndOf="@+id/this_week_divider"
+                    app:layout_constraintEnd_toStartOf="@+id/this_week_km_hour_divider"
+                    app:layout_constraintBaseline_toBaselineOf="@+id/this_week_title" />
+
+                <View
+                    android:id="@+id/this_week_km_hour_divider"
+                    android:layout_width="1dp"
+                    android:layout_height="0dp"
+                    android:background="@color/primaryColor"
+                    app:layout_constraintBottom_toBottomOf="@id/this_week_title"
+                    android:layout_marginEnd="16dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/this_week_divider"
+                    app:layout_constraintTop_toTopOf="@id/this_week_title" />
+
+                <TextView
+                    android:id="@+id/this_week_hour"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:text="@{String.format( @string/walker_hour, user.accumulatedHour.weekly)}"
+                    android:textColor="@color/secondaryLightColor"
+                    android:textSize="14sp"
+                    android:letterSpacing="0.15"
+                    android:fontFamily="@font/noto_sans"
+                    app:layout_constraintStart_toEndOf="@+id/this_week_km_hour_divider"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBaseline_toBaselineOf="@+id/this_week_title" />
+
+                <TextView
+                    android:id="@+id/this_month_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/this_month"
+                    android:textColor="@color/secondaryLightColor"
+                    android:textSize="14sp"
+                    android:letterSpacing="0.15"
+                    android:textStyle="bold"
+                    android:fontFamily="@font/noto_sans"
+                    app:layout_constraintStart_toStartOf="@+id/user_walk_section"
+                    app:layout_constraintTop_toBottomOf="@+id/this_week_title" />
+
+                <View
+                    android:id="@+id/this_month_divider"
+                    android:layout_width="1dp"
+                    android:layout_height="0dp"
+                    android:background="@color/primaryColor"
+                    app:layout_constraintBottom_toBottomOf="@id/this_month_title"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.3"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/this_month_title" />
+
+                <TextView
+                    android:id="@+id/this_month_km"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{String.format( @string/walker_km, user.accumulatedKm.monthly)}"
+                    android:textColor="@color/secondaryLightColor"
+                    android:textSize="14sp"
+                    android:letterSpacing="0.15"
+                    android:fontFamily="@font/noto_sans"
+                    app:layout_constraintStart_toEndOf="@+id/this_month_divider"
+                    app:layout_constraintEnd_toStartOf="@+id/this_month_km_hour_divider"
+                    app:layout_constraintBaseline_toBaselineOf="@+id/this_month_title" />
+
+                <View
+                    android:id="@+id/this_month_km_hour_divider"
+                    android:layout_width="1dp"
+                    android:layout_height="0dp"
+                    android:background="@color/primaryColor"
+                    app:layout_constraintBottom_toBottomOf="@id/this_month_title"
+                    android:layout_marginEnd="16dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/this_month_divider"
+                    app:layout_constraintTop_toTopOf="@id/this_month_title" />
+
+                <TextView
+                    android:id="@+id/this_month_hour"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:text="@{String.format( @string/walker_hour, user.accumulatedHour.monthly)}"
+                    android:textColor="@color/secondaryLightColor"
+                    android:textSize="14sp"
+                    android:letterSpacing="0.15"
+                    android:fontFamily="@font/noto_sans"
+                    app:layout_constraintStart_toEndOf="@+id/this_month_km_hour_divider"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBaseline_toBaselineOf="@+id/this_month_title" />
+
+                <TextView
+                    android:id="@+id/this_year_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/this_year"
+                    android:textColor="@color/secondaryLightColor"
+                    android:textSize="14sp"
+                    android:letterSpacing="0.15"
+                    android:textStyle="bold"
+                    android:fontFamily="@font/noto_sans"
+                    app:layout_constraintStart_toStartOf="@+id/user_walk_section"
+                    app:layout_constraintTop_toBottomOf="@+id/this_month_title" />
+
+                <View
+                    android:id="@+id/this_year_divider"
+                    android:layout_width="1dp"
+                    android:layout_height="0dp"
+                    android:background="@color/primaryColor"
+                    app:layout_constraintBottom_toBottomOf="@id/this_year_title"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.3"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/this_year_title" />
+
+                <TextView
+                    android:id="@+id/this_year_km"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{String.format( @string/walker_km, user.accumulatedKm.yearly)}"
+                    android:textColor="@color/secondaryLightColor"
+                    android:textSize="14sp"
+                    android:letterSpacing="0.15"
+                    android:fontFamily="@font/noto_sans"
+                    app:layout_constraintStart_toEndOf="@+id/this_year_divider"
+                    app:layout_constraintEnd_toStartOf="@+id/this_year_km_hour_divider"
+                    app:layout_constraintBaseline_toBaselineOf="@+id/this_year_title" />
+
+                <View
+                    android:id="@+id/this_year_km_hour_divider"
+                    android:layout_width="1dp"
+                    android:layout_height="0dp"
+                    android:background="@color/primaryColor"
+                    app:layout_constraintBottom_toBottomOf="@id/this_year_title"
+                    android:layout_marginEnd="16dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/this_year_divider"
+                    app:layout_constraintTop_toTopOf="@id/this_year_title" />
+
+                <TextView
+                    android:id="@+id/this_year_hour"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:text="@{String.format( @string/walker_hour, user.accumulatedHour.yearly)}"
+                    android:textColor="@color/secondaryLightColor"
+                    android:textSize="14sp"
+                    android:letterSpacing="0.15"
+                    android:fontFamily="@font/noto_sans"
+                    app:layout_constraintStart_toEndOf="@+id/this_year_km_hour_divider"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBaseline_toBaselineOf="@+id/this_year_title" />
+
+                <TextView
+                    android:id="@+id/total_walk_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="16dp"
+                    android:text="@string/total_walk"
+                    android:textColor="@color/secondaryLightColor"
+                    android:textSize="14sp"
+                    android:letterSpacing="0.15"
+                    android:textStyle="bold"
+                    android:fontFamily="@font/noto_sans"
+                    app:layout_constraintStart_toStartOf="@+id/user_walk_section"
+                    app:layout_constraintTop_toBottomOf="@+id/this_year_title"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+
+                <View
+                    android:id="@+id/total_walk_divider"
+                    android:layout_width="1dp"
+                    android:layout_height="0dp"
+                    android:background="@color/primaryColor"
+                    app:layout_constraintBottom_toBottomOf="@id/total_walk_title"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.3"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/total_walk_title" />
+
+                <TextView
+                    android:id="@+id/total_walk_km"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{String.format( @string/walker_km, user.accumulatedKm.total)}"
+                    android:textColor="@color/secondaryLightColor"
+                    android:textSize="14sp"
+                    android:letterSpacing="0.15"
+                    android:fontFamily="@font/noto_sans"
+                    app:layout_constraintStart_toEndOf="@+id/total_walk_divider"
+                    app:layout_constraintEnd_toStartOf="@+id/total_walk_km_hour_divider"
+                    app:layout_constraintBaseline_toBaselineOf="@+id/total_walk_title" />
+
+                <View
+                    android:id="@+id/total_walk_km_hour_divider"
+                    android:layout_width="1dp"
+                    android:layout_height="0dp"
+                    android:background="@color/primaryColor"
+                    app:layout_constraintBottom_toBottomOf="@id/total_walk_title"
+                    android:layout_marginEnd="16dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/total_walk_divider"
+                    app:layout_constraintTop_toTopOf="@id/total_walk_title" />
+
+                <TextView
+                    android:id="@+id/total_walk_hour"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:text="@{String.format( @string/walker_hour, user.accumulatedHour.total)}"
+                    android:textColor="@color/secondaryLightColor"
+                    android:textSize="14sp"
+                    android:letterSpacing="0.15"
+                    android:fontFamily="@font/noto_sans"
+                    app:layout_constraintStart_toEndOf="@+id/total_walk_km_hour_divider"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBaseline_toBaselineOf="@+id/total_walk_title" />
+
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_notification_section"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/card_user_walk_section"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_margin="8dp"
+            app:cardElevation="4dp"
+            app:cardCornerRadius="8dp">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/notification_section"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/notification_settings"
+                    android:textColor="@color/secondaryLightColor"
+                    android:textSize="18sp"
+                    android:letterSpacing="0.15"
+                    android:textStyle="bold"
+                    android:fontFamily="@font/noto_sans"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/good_weather_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/good_weather"
+                    android:textColor="@color/secondaryLightColor"
+                    android:textSize="14sp"
+                    android:letterSpacing="0.15"
+                    android:textStyle="bold"
+                    android:fontFamily="@font/noto_sans"
+                    app:layout_constraintStart_toStartOf="@+id/notification_section"
+                    app:layout_constraintTop_toBottomOf="@+id/notification_section" />
+
+                <View
+                    android:id="@+id/good_weather_divider"
+                    android:layout_width="1dp"
+                    android:layout_height="0dp"
+                    android:background="@color/primaryColor"
+                    app:layout_constraintBottom_toBottomOf="@id/good_weather_title"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.3"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/good_weather_title" />
+
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/good_weather_switch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    app:layout_constraintBottom_toBottomOf="@id/good_weather_title"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/good_weather_title"/>
+
+                <TextView
+                    android:id="@+id/after_meal_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/after_meal"
+                    android:textColor="@color/secondaryLightColor"
+                    android:textSize="14sp"
+                    android:letterSpacing="0.15"
+                    android:textStyle="bold"
+                    android:fontFamily="@font/noto_sans"
+                    app:layout_constraintStart_toStartOf="@+id/notification_section"
+                    app:layout_constraintTop_toBottomOf="@+id/good_weather_title" />
+
+                <View
+                    android:id="@+id/after_meal_divider"
+                    android:layout_width="1dp"
+                    android:layout_height="0dp"
+                    android:background="@color/primaryColor"
+                    app:layout_constraintBottom_toBottomOf="@id/after_meal_title"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.3"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/after_meal_title" />
+
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/after_meal_switch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    app:layout_constraintBottom_toBottomOf="@id/after_meal_title"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/after_meal_title"/>
+
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+
+
+
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
 </layout>

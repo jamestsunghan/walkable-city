@@ -222,6 +222,7 @@
     <string name="days_left">%d天</string>
 
     <string name="walker_km">%.2f公里</string>
+    <string name="walker_hour">%.2f小時</string>
 
     <string name="week_ranking">本週排行</string>
     <string name="month_ranking">本月排行</string>
@@ -232,6 +233,30 @@
     <string name="accumulate_monthly">本月累計｜</string>
     <string name="accumulate_yearly">今年累計｜</string>
     <string name="accumulate_total">總累計｜</string>
+
+    <!--    <settings page>-->
+
+    <string name="user_profile">個人資料</string>
+    <string name="user_name">使用者</string>
+    <string name="user_id">ID</string>
+    <string name="user_email">Email</string>
+
+    <string name="walk_record">散步紀錄</string>
+    <string name="user_hour">散步小時</string>
+    <string name="user_km">散步距離</string>
+
+    <string name="today">本日</string>
+    <string name="this_week">本週</string>
+    <string name="this_month">本月</string>
+    <string name="this_year">今年</string>
+    <string name="total_walk">總計</string>
+
+    <string name="notification_settings">通知設定</string>
+    <string name="good_weather">好天氣</string>
+    <string name="after_meal">晚飯後</string>
+
+    <string name="empty_string"> </string>
+
 
 
 </resources>
