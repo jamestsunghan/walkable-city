@@ -253,7 +253,11 @@
 
     <string name="notification_settings">通知設定</string>
     <string name="good_weather">好天氣</string>
+    <string name="good_weather_on">好天氣通知開啟</string>
+    <string name="good_weather_off">好天氣通知關閉</string>
     <string name="after_meal">晚飯後</string>
+    <string name="after_meal_on">晚飯後通知開啟</string>
+    <string name="after_meal_off">晚飯後通知關閉</string>
 
     <string name="empty_string"> </string>
 

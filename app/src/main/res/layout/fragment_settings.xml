@@ -150,7 +150,7 @@
 
                 <TextView
                     android:id="@+id/user_email"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
@@ -160,9 +160,7 @@
                     android:singleLine="true"
                     android:requiresFadingEdge="horizontal"
                     android:fadingEdge="horizontal"
-                    android:marqueeRepeatLimit="0"
                     android:fadingEdgeLength="40dp"
-                    android:ellipsize="marquee"
                     android:text="@{user.email}"
                     android:textColor="@color/secondaryLightColor"
                     android:textSize="14sp"
