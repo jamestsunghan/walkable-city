@@ -151,4 +151,8 @@ class DefaultWalkableRepository(private val remote: WalkableDataSource): Walkabl
     override suspend fun getUserFriends(userId: String): Result<List<User>> {
         return remote.getUserFriends(userId)
     }
+
+    override suspend fun getUserWalks(userId: String): Result<List<Walk>> {
+        return remote.getUserWalks(userId)
+    }
 }

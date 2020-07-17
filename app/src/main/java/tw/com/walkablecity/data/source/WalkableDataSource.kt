@@ -46,6 +46,7 @@ interface WalkableDataSource {
     suspend fun checkFriendAdded(idCustom: String, userId: String): Result<Boolean>
 
     suspend fun getUserFriends(userId: String): Result<List<User>>
+    suspend fun getUserWalks(userId: String): Result<List<Walk>>
 
 
     suspend fun getMemberWalkDistance(eventStartTime: Timestamp, memberId: String): Result<Float>

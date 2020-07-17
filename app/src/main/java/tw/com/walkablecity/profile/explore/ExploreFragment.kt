@@ -1,21 +1,56 @@
 package tw.com.walkablecity.profile.explore
 
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.content.res.Resources
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MapStyleOptions
+import com.google.android.gms.maps.model.PolylineOptions
 
 import tw.com.walkablecity.R
+import tw.com.walkablecity.WalkableApp
 import tw.com.walkablecity.databinding.FragmentExploreBinding
+import tw.com.walkablecity.ext.getVMFactory
+import tw.com.walkablecity.ext.toLatLngPoints
+import tw.com.walkablecity.home.HomeFragment
 
-class ExploreFragment : Fragment() {
+class ExploreFragment : Fragment(), OnMapReadyCallback {
 
 
-    private lateinit var viewModel: ExploreViewModel
+    private lateinit var map: GoogleMap
+    private lateinit var  mapFragment: SupportMapFragment
+
+    private val viewModel: ExploreViewModel by viewModels{ getVMFactory() }
+
+    override fun onMapReady(googleMap: GoogleMap?) {
+        map = googleMap ?: return
+        try{
+            val success = map.setMapStyle(MapStyleOptions
+                .loadRawResourceStyle(requireContext(), R.raw.style_json))
+            if(!success){
+                Log.e("JJ_map","style parsing fail")
+            }
+        }catch (e: Resources.NotFoundException){
+            Log.e("JJ_map","Can't find style. Error: $e")
+        }
+
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -25,14 +60,78 @@ class ExploreFragment : Fragment() {
             .inflate(inflater, R.layout.fragment_explore, container, false)
         binding.lifecycleOwner = this
 
-        viewModel = ViewModelProvider(this).get(ExploreViewModel::class.java)
 
         binding.viewModel = viewModel
+
+        if(ContextCompat.checkSelfPermission(
+                WalkableApp.instance,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED){
+            viewModel.permissionGranted()
+            viewModel.clientCurrentLocation()
+        }else{
+            if(!shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)){
+                viewModel.permissionDeniedForever()
+            }
+            requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                HomeFragment.REQUEST_LOCATION
+            )
+
+        }
+
+        viewModel.userWalks.observe(viewLifecycleOwner, Observer {
+            it?.let{walks->
+                viewModel.currentLocation.value?.let{latLng->
+                    mapFragment.getMapAsync {map->
+
+                        map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,10f))
+
+                        for(walk in walks){
+
+
+                            map.addPolyline(PolylineOptions().addAll(walk.waypoints.toLatLngPoints()))
+
+                        }
+                    }
+                }
+
+            }
+        })
+
+        viewModel.currentLocation.observe(viewLifecycleOwner, Observer {latLng ->
+            latLng?.let{
+                viewModel.userWalks.value?.let{walks->
+                    mapFragment.getMapAsync {map->
+
+                        map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,10f))
+
+                        for(walk in walks){
+
+
+                        map.addPolyline(PolylineOptions().color(WalkableApp.instance.getColor(R.color.red_heart_c73e3a))
+                            .addAll(walk.waypoints.toLatLngPoints()))
+
+                        }
+                    }
+
+
+                }
+
+                childFragmentManager.beginTransaction().replace(R.id.explore_map, mapFragment).commit()
+            }
+        })
 
         return binding.root
 
 
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        mapFragment = SupportMapFragment().apply {
+            getMapAsync(this@ExploreFragment)
+        }
 
+
+    }
 }

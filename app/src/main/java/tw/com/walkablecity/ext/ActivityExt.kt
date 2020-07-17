@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import androidx.core.content.FileProvider
 import androidx.fragment.app.FragmentActivity
+import tw.com.walkablecity.R
 import tw.com.walkablecity.WalkableApp
 import tw.com.walkablecity.factory.ViewModelFactory
 import java.io.File
@@ -32,7 +33,7 @@ fun FragmentActivity.shareCacheDirBitmap(){
             .putExtra(Intent.EXTRA_STREAM, contentUri)
             .setType("image/*")
 
-        this.startActivity(Intent.createChooser(shareIntent, "Share Image"))
+        this.startActivity(Intent.createChooser(shareIntent, getString(R.string.share_badge)))
     } catch (e: FileNotFoundException) {
         e.printStackTrace()
     }
