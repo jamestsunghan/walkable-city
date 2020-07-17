@@ -261,6 +261,40 @@
 
     <string name="empty_string"> </string>
 
+    <!--    <badge page>-->
+
+    <string name="badge_hour_section">散策時間</string>
+    <string name="badge_hour_0">開始散策</string>
+    <string name="badge_hour_1">半個時辰</string>
+    <string name="badge_hour_5">一晌午</string>
+    <string name="badge_hour_10">走了十小時</string>
+    <string name="badge_hour_50">持之以恆</string>
+    <string name="badge_hour_100">散策達人</string>
+
+
+    <string name="badge_km_section">散策旅程</string>
+    <string name="badge_km_0">起步走</string>
+    <string name="badge_km_3">走三千</string>
+    <string name="badge_km_10">十里桃花</string>
+    <string name="badge_km_80">兩次全馬</string>
+    <string name="badge_km_350">台北到高雄</string>
+    <string name="badge_km_1000">台灣繞一圈</string>
+
+    <string name="badge_event_section">散步趣</string>
+    <string name="badge_event_0">第一次</string>
+    <string name="badge_event_3">揪三次</string>
+    <string name="badge_event_10">揪十次</string>
+    <string name="badge_event_25">揪很多</string>
+    <string name="badge_event_50">說走揪走</string>
+    <string name="badge_event_100">揪走達人</string>
+
+    <string name="badge_friend_section">一起去散步</string>
+    <string name="badge_friend_0">請不要說不</string>
+    <string name="badge_friend_3">三人成群</string>
+    <string name="badge_friend_10">打個全場</string>
+    <string name="badge_friend_50">過了半百</string>
+    <string name="badge_friend_100">百人齊步</string>
+    <string name="badge_friend_300">三百步士</string>
 
 
 </resources>

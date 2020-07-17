@@ -28,6 +28,8 @@ class BadgeViewModel(val walkableRepository: WalkableRepository) : ViewModel() {
     private val _eventCount = MutableLiveData<Int>()
     val eventCount: LiveData<Int> get() = _eventCount
 
+    private val _shareThisBadge = MutableLiveData<Boolean>()
+
     private val viewModelJob = Job()
     private val coroutineScope = CoroutineScope(Dispatchers.Main + viewModelJob)
 
@@ -96,7 +98,6 @@ class BadgeViewModel(val walkableRepository: WalkableRepository) : ViewModel() {
 
         }
     }
-
 
 
 }

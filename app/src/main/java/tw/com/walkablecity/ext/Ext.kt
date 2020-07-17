@@ -1,6 +1,10 @@
 package tw.com.walkablecity.ext
 
+import android.content.Context
+import android.content.ContextWrapper
+import android.graphics.Bitmap
 import android.location.Location
+import android.net.Uri
 import android.util.Log
 import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.Timestamp
@@ -12,6 +16,9 @@ import tw.com.walkablecity.Util
 import tw.com.walkablecity.Util.getString
 import tw.com.walkablecity.data.*
 import tw.com.walkablecity.profile.bestwalker.WalkerItem
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.HashMap
@@ -238,4 +245,23 @@ fun List<User>.toWalkerItem(): List<WalkerItem>{
              listOf(WalkerItem.Tops(listOf(this[0]))) + theRest.map{WalkerItem.Walkers(it)}
          }
     }
+}
+
+fun Bitmap.saveToInternalStorage(context: Context){
+
+
+    val file = File(context.cacheDir,"images")
+
+    try{
+        file.mkdir()
+        val stream = FileOutputStream("${file}/image.png")
+
+        this.compress(Bitmap.CompressFormat.PNG, 100, stream)
+
+        stream.flush()
+        stream.close()
+    }catch (e: IOException){
+        e.printStackTrace()
+    }
+
 }

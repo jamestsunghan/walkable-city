@@ -32,5 +32,7 @@
     <color name="silver">#91989f</color>
     <color name="gold">#efbb24</color>
 
+    <color name="grey_transparent">#33BDC0BA</color>
+
 
 </resources>

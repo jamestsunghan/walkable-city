@@ -1,10 +1,14 @@
 package tw.com.walkablecity
 
 
+import android.app.Activity
+import android.content.Intent
 import android.graphics.*
+import android.graphics.drawable.Drawable
 import android.graphics.drawable.ShapeDrawable
 import android.graphics.drawable.shapes.RectShape
 import android.graphics.drawable.shapes.Shape
+import android.net.Uri
 import android.util.Log
 import android.util.TypedValue
 import android.view.View
@@ -12,11 +16,17 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.app.ShareCompat
+import androidx.core.content.FileProvider
+import androidx.core.graphics.drawable.toBitmap
 import androidx.core.graphics.toPointF
 import androidx.core.net.toUri
+import androidx.core.view.drawToBitmap
 import androidx.databinding.BindingAdapter
+import androidx.databinding.BindingMethod
 import androidx.databinding.InverseBindingAdapter
 import androidx.databinding.InverseBindingListener
+import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -32,6 +42,8 @@ import tw.com.walkablecity.data.*
 import tw.com.walkablecity.detail.CommentAdapter
 import tw.com.walkablecity.event.item.EventItemAdapter
 import tw.com.walkablecity.eventdetail.MemberAdapter
+import tw.com.walkablecity.ext.saveToInternalStorage
+import tw.com.walkablecity.ext.shareCacheDirBitmap
 import tw.com.walkablecity.ext.toWalkerItem
 import tw.com.walkablecity.favorite.FavoriteAdapter
 import tw.com.walkablecity.home.WalkerStatus
@@ -39,6 +51,8 @@ import tw.com.walkablecity.loadroute.route.RouteItem
 import tw.com.walkablecity.loadroute.route.RouteItemAdapter
 import tw.com.walkablecity.profile.bestwalker.BestWalkersAdapter
 import tw.com.walkablecity.ranking.RankingAdapter
+import java.io.ByteArrayOutputStream
+import java.io.File
 import java.math.BigDecimal
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
@@ -336,6 +350,43 @@ fun glidingImage(imageView: ImageView, url: String?){
 @BindingAdapter("date")
 fun timeStampToDate(textView: TextView, time: Timestamp){
     textView.text = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(time.seconds.times(1000))
+}
+
+@BindingAdapter("app:srcCompat")
+fun setDrawableToImageView(imageView: ImageView, drawable: Drawable){
+    imageView.setImageDrawable(drawable)
+
+//    imageView.setOnClickListener {view->
+//        val bitmap = Bitmap.createBitmap(drawable.intrinsicWidth, drawable.intrinsicHeight, Bitmap.Config.ARGB_8888)
+//        val canvas = Canvas(bitmap)
+//        drawable.setBounds(0,0,canvas.width, canvas.height)
+//        drawable.draw(canvas)
+//
+//        bitmap.saveToInternalStorage(WalkableApp.instance)
+//
+//        activity.shareCacheDirBitmap()
+//
+//    }
+
+}
+
+@BindingAdapter("app:srcCompat", "send", "shareable")
+fun setDrawableAndSendImageView(imageView: ImageView, drawable: Drawable, activity: FragmentActivity, shareable: Boolean){
+    imageView.setImageDrawable(drawable)
+
+    imageView.setOnClickListener {view->
+        if(shareable){
+            val bitmap = Bitmap.createBitmap(drawable.intrinsicWidth, drawable.intrinsicHeight, Bitmap.Config.ARGB_8888)
+            val canvas = Canvas(bitmap)
+            drawable.setBounds(0,0,canvas.width, canvas.height)
+            drawable.draw(canvas)
+
+            bitmap.saveToInternalStorage(WalkableApp.instance)
+
+            activity.shareCacheDirBitmap()
+        }
+    }
+
 }
 
 
