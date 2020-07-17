@@ -85,8 +85,12 @@ class DefaultWalkableRepository(private val remote: WalkableDataSource): Walkabl
         return remote.getPopularEvents()
     }
 
-    override suspend fun getUserChallenges(userId: String): Result<List<Event>> {
-        return remote.getUserChallenges(userId)
+    override suspend fun getUserChallenges(user: User): Result<List<Event>> {
+        return remote.getUserChallenges(user)
+    }
+
+    override suspend fun getUserParticipateEvent(user: User): Result<List<Event>> {
+        return remote.getUserParticipateEvent(user)
     }
 
     override suspend fun getUserInvitation(userId: String): Result<List<Event>> {

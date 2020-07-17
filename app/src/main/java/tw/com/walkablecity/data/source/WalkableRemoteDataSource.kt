@@ -597,8 +597,8 @@ object WalkableRemoteDataSource: WalkableDataSource{
         }
     }
 
-    override suspend fun getUserChallenges(userId: String): Result<List<Event>> = suspendCoroutine{continuation->
-        db.collection(EVENT).whereArrayContains("member",userId).whereGreaterThanOrEqualTo("endDate",now()).get().addOnCompleteListener { task->
+    override suspend fun getUserChallenges(user: User): Result<List<Event>> = suspendCoroutine{continuation->
+        db.collection(EVENT).whereArrayContains("member",user.toFriend()).whereGreaterThanOrEqualTo("endDate",now()).get().addOnCompleteListener { task->
             if(task.isSuccessful){
                 val list = mutableListOf<Event>()
                 for(document in task.result!!){
@@ -619,7 +619,31 @@ object WalkableRemoteDataSource: WalkableDataSource{
         }
     }
 
-    override suspend fun getUserInvitation(userId: String): Result<List<Event>> = suspendCoroutine{continuation->
+    override suspend fun getUserParticipateEvent(user: User): Result<List<Event>> = suspendCoroutine{continuation->
+        db.collection(EVENT).whereArrayContains("member",user.toFriend()).whereLessThanOrEqualTo("startDate",now())
+            .get().addOnCompleteListener { task->
+            if(task.isSuccessful){
+                val list = mutableListOf<Event>()
+                for(document in task.result!!){
+                    Log.d("JJ_fire",document.id + "=>" + document.data)
+                    val event = document.toObject(Event::class.java).apply {
+
+                    }
+                    list.add(event)
+                }
+                continuation.resume(Result.Success(list))
+            }else{
+                task.exception?.let{
+                    Log.d("JJ_fire","[${this::class.simpleName}] Error getting documents. ${it.message}")
+                    continuation.resume(Result.Error(it))
+                    return@addOnCompleteListener
+                }
+                continuation.resume(Result.Fail(WalkableApp.instance.getString(R.string.not_here)))
+            }
+        }
+    }
+
+    override suspend fun getUserInvitation(userId: String): Result<List<Event>> = suspendCoroutine{ continuation->
         db.collection(EVENT).whereArrayContains("invited",userId).whereGreaterThanOrEqualTo("endDate",now()).get().addOnCompleteListener { task->
             if(task.isSuccessful){
                 val list = mutableListOf<Event>()

@@ -27,9 +27,11 @@ interface WalkableDataSource {
     suspend fun addUserToFollowers(userId: String, route: Route): Result<Boolean>
     suspend fun removeUserFromFollowers(userId: String, route: Route): Result<Boolean>
 
-    suspend fun getUserInvitation(userId: String): Result<List<Event>>
-    suspend fun getUserChallenges(userId: String): Result<List<Event>>
+
     suspend fun getPopularEvents(): Result<List<Event>>
+    suspend fun getUserInvitation(userId: String): Result<List<Event>>
+    suspend fun getUserChallenges(user: User): Result<List<Event>>
+    suspend fun getUserParticipateEvent(user: User): Result<List<Event>>
 
     suspend fun createEvent(event: Event): Result<Boolean>
 

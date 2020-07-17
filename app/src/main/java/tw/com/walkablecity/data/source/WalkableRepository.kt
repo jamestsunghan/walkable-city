@@ -28,9 +28,10 @@ interface WalkableRepository {
     suspend fun addUserToFollowers(userId: String, route: Route): Result<Boolean>
     suspend fun removeUserFromFollowers(userId: String, route: Route): Result<Boolean>
 
-    suspend fun getUserInvitation(userId: String): Result<List<Event>>
-    suspend fun getUserChallenges(userId: String): Result<List<Event>>
     suspend fun getPopularEvents(): Result<List<Event>>
+    suspend fun getUserInvitation(userId: String): Result<List<Event>>
+    suspend fun getUserChallenges(user: User): Result<List<Event>>
+    suspend fun getUserParticipateEvent(user: User): Result<List<Event>>
 
     suspend fun createEvent(event: Event): Result<Boolean>
 
@@ -49,4 +50,6 @@ interface WalkableRepository {
     suspend fun getMemberWalkDistance(eventStartTime: Timestamp, memberId: String): Result<Float>
     suspend fun getMemberWalkHours(eventStartTime: Timestamp, memberId: String): Result<Float>
     suspend fun getMemberWalkFrequencyResult(eventStartTime: Timestamp, target: EventTarget, memberId: String): Result<Float>
+
+
 }

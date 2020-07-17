@@ -86,7 +86,7 @@ class EventItemViewModel(val walkableRepository: WalkableRepository, val eventPa
             val result = when(page){
                 EventPageType.POPULAR -> walkableRepository.getPopularEvents()
                 EventPageType.INVITED -> walkableRepository.getUserInvitation(requireNotNull(UserManager.user?.id))
-                EventPageType.CHALLENGING -> walkableRepository.getUserChallenges(requireNotNull(UserManager.user?.id))
+                EventPageType.CHALLENGING -> walkableRepository.getUserChallenges(requireNotNull(UserManager.user))
             }
 
             _eventAllList.value = when(result){

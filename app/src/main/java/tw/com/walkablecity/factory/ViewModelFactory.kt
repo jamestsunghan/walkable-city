@@ -15,6 +15,7 @@ import tw.com.walkablecity.loadroute.LoadRouteViewModel
 import tw.com.walkablecity.loadroute.route.RouteItemViewModel
 import tw.com.walkablecity.login.LoginViewModel
 import tw.com.walkablecity.profile.ProfileViewModel
+import tw.com.walkablecity.profile.badge.BadgeViewModel
 import tw.com.walkablecity.profile.bestwalker.BestWalkersViewModel
 import tw.com.walkablecity.profile.settings.SettingsViewModel
 import tw.com.walkablecity.ranking.RankingViewModel
@@ -60,6 +61,9 @@ class ViewModelFactory( private val walkableRepository: WalkableRepository)
 
                 isAssignableFrom(SettingsViewModel::class.java) ->
                     SettingsViewModel(walkableRepository)
+
+                isAssignableFrom(BadgeViewModel::class.java) ->
+                    BadgeViewModel(walkableRepository)
 
                 else ->
                     throw IllegalArgumentException("Unknown ViewModel Class ${modelClass.name}")
