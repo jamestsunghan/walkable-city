@@ -166,7 +166,11 @@
     <fragment
         android:id="@+id/hostFragment"
         android:name="tw.com.walkablecity.host.HostFragment"
-        android:label="HostFragment" />
+        android:label="HostFragment" >
+        <action
+            android:id="@+id/action_hostFragment_to_addFriend2EventFragment"
+            app:destination="@id/addFriend2EventFragment" />
+    </fragment>
     <fragment
         android:id="@+id/eventDetailFragment"
         android:name="tw.com.walkablecity.eventdetail.EventDetailFragment"
@@ -180,5 +184,13 @@
         android:id="@+id/loginFragment"
         android:name="tw.com.walkablecity.login.LoginFragment"
         android:label="LoginFragment" /><action android:id="@+id/action_global_addFriendFragment" app:destination="@id/addFriendFragment"/>
+    <fragment
+        android:id="@+id/addFriend2EventFragment"
+        android:name="tw.com.walkablecity.host.add2event.AddFriend2EventFragment"
+        android:label="AddFriend2EventFragment" >
+        <action
+            android:id="@+id/action_addFriend2EventFragment_to_hostFragment"
+            app:destination="@id/hostFragment" />
+    </fragment>
 
 </navigation>

@@ -123,12 +123,23 @@ class HostViewModel(private val walkableRepository: WalkableRepository) : ViewMo
     private val _navigateToEvents = MutableLiveData<Boolean>(false)
     val navigateToEvents: LiveData<Boolean> get() = _navigateToEvents
 
+    private val _navigateToAddFriends = MutableLiveData<Boolean>(false)
+    val navigateToAddFriends: LiveData<Boolean> get() = _navigateToAddFriends
+
     private val viewModelJob = Job()
     private val coroutineScope = CoroutineScope(Dispatchers.Main + viewModelJob)
 
     override fun onCleared() {
         super.onCleared()
         viewModelJob.cancel()
+    }
+
+    fun addSomeFriends(){
+        _navigateToAddFriends.value = true
+    }
+
+    fun addSomeFriendsComplete(){
+        _navigateToAddFriends.value = false
     }
 
 

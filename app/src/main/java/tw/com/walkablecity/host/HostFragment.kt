@@ -134,6 +134,13 @@ class HostFragment : Fragment() {
             }
         })
 
+        viewModel.navigateToAddFriends.observe(viewLifecycleOwner, Observer{
+            if(it){
+                findNavController().navigate(HostFragmentDirections.actionHostFragmentToAddFriend2EventFragment())
+                viewModel.addSomeFriendsComplete()
+            }
+        })
+
 
         viewModel.navigateToEvents.observe(viewLifecycleOwner, Observer{
             if(it){

@@ -92,7 +92,26 @@ object WalkableRemoteDataSource: WalkableDataSource{
         }
     }
 
-    override suspend fun getUserWalks(userId: String): Result<List<Walk>> = suspendCoroutine{continuation->
+    override suspend fun getUserFriendSimple(userId: String): Result<List<Friend>> = suspendCoroutine{continuation->
+        db.collection(USER).document(userId).collection(FRIENDS).get().addOnCompleteListener {task->
+            if(task.isSuccessful){
+
+                if(task.result == null || task.result!!.isEmpty) continuation.resume(Result.Success(listOf()))
+                else continuation.resume(Result.Success(task.result!!.toObjects(Friend::class.java)))
+
+            }else{
+                when(val exception = task.exception) {
+                    null -> continuation.resume(Result.Fail(getString(R.string.not_here)))
+                    else -> {
+                        Log.d("JJ_fire","[${this::class.simpleName}] Error getting documents. ${exception.message}")
+                        continuation.resume(Result.Error(exception))
+                    }
+                }
+            }
+        }
+    }
+
+    override suspend fun getUserWalks(userId: String): Result<List<Walk>> = suspendCoroutine{ continuation->
         db.collection(USER).document(userId).collection(WALKS).get().addOnCompleteListener {task->
             if(task.isSuccessful){
 

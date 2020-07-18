@@ -13,10 +13,12 @@ import androidx.navigation.findNavController
 import com.google.android.gms.location.LocationServices
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.FirebaseApp
+import tw.com.walkablecity.addfriend.AddFriendFragmentDirections
 import tw.com.walkablecity.data.Walker
 import tw.com.walkablecity.databinding.ActivityMainBinding
 import tw.com.walkablecity.ext.getVMFactory
 import tw.com.walkablecity.home.WalkerStatus
+import tw.com.walkablecity.host.add2event.AddFriend2EventFragmentDirections
 import tw.com.walkablecity.rating.RatingFragmentDirections
 
 class MainActivity : AppCompatActivity() {
@@ -100,6 +102,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.loginFragment -> CurrentFragmentType.LOGIN
 
                 R.id.addFriendFragment -> CurrentFragmentType.ADD_FRIEND
+                R.id.addFriend2EventFragment  -> CurrentFragmentType.ADD_2_EVENT
 
                 else -> viewModel.currentFragment.value
             }
@@ -114,10 +117,13 @@ class MainActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
 
-        if(viewModel.currentFragment.value == CurrentFragmentType.RATING){
-            findNavController(R.id.nav_host_fragment).navigate(RatingFragmentDirections.actionGlobalHomeFragment(null,null))
-        }else
+        when(viewModel.currentFragment.value){
+            CurrentFragmentType.RATING -> findNavController(R.id.nav_host_fragment).
+                navigate(RatingFragmentDirections.actionGlobalHomeFragment(null,null))
+            CurrentFragmentType.ADD_2_EVENT -> findNavController(R.id.nav_host_fragment).
+                navigate(AddFriend2EventFragmentDirections.actionAddFriend2EventFragmentToHostFragment())
 
-        super.onBackPressed()
+            else -> super.onBackPressed()
+        }
     }
 }

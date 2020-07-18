@@ -11,6 +11,7 @@ import tw.com.walkablecity.event.item.EventItemViewModel
 import tw.com.walkablecity.favorite.FavoriteViewModel
 import tw.com.walkablecity.home.HomeViewModel
 import tw.com.walkablecity.host.HostViewModel
+import tw.com.walkablecity.host.add2event.AddFriend2EventViewModel
 import tw.com.walkablecity.loadroute.LoadRouteViewModel
 import tw.com.walkablecity.loadroute.route.RouteItemViewModel
 import tw.com.walkablecity.login.LoginViewModel
@@ -68,6 +69,9 @@ class ViewModelFactory( private val walkableRepository: WalkableRepository)
 
                 isAssignableFrom(ExploreViewModel::class.java) ->
                     ExploreViewModel(walkableRepository)
+
+                isAssignableFrom(AddFriend2EventViewModel::class.java) ->
+                    AddFriend2EventViewModel(walkableRepository)
 
                 else ->
                     throw IllegalArgumentException("Unknown ViewModel Class ${modelClass.name}")
