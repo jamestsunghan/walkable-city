@@ -8,11 +8,18 @@ import androidx.recyclerview.widget.RecyclerView
 import tw.com.walkablecity.data.Friend
 import tw.com.walkablecity.databinding.ItemAddFriend2EventBinding
 
-class AddFriend2EventAdapter: ListAdapter<Friend, AddFriend2EventAdapter.FriendViewHolder>(DiffCallback) {
+class AddFriend2EventAdapter(val viewModel: AddFriend2EventViewModel): ListAdapter<Friend, AddFriend2EventAdapter.FriendViewHolder>(DiffCallback) {
 
     class FriendViewHolder(private val binding: ItemAddFriend2EventBinding): RecyclerView.ViewHolder(binding.root){
-        fun bind(friend: Friend){
+        fun bind(friend: Friend, viewModel: AddFriend2EventViewModel){
             binding.friend = friend
+            binding.friendCheckbox.setOnCheckedChangeListener { buttonView, isChecked ->
+                if(isChecked){
+                    viewModel.addFriendToAddList(friend)
+                }else{
+                    viewModel.removeFriendToAddList(friend)
+                }
+            }
             binding.executePendingBindings()
         }
     }
@@ -33,6 +40,6 @@ class AddFriend2EventAdapter: ListAdapter<Friend, AddFriend2EventAdapter.FriendV
     }
 
     override fun onBindViewHolder(holder: FriendViewHolder, position: Int) {
-        holder.bind(getItem(position))
+        holder.bind(getItem(position), viewModel)
     }
 }

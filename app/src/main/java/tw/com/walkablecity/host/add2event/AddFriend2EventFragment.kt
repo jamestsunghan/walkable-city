@@ -30,14 +30,26 @@ class AddFriend2EventFragment : Fragment() {
 
         binding.viewModel = viewModel
 
-        val adapter = AddFriend2EventAdapter()
+        val adapter = AddFriend2EventAdapter(viewModel)
+
+        val adapterAddList = AddListAdapter()
 
         binding.recyclerFriend.adapter = adapter
+        binding.recyclerAddList.adapter = adapterAddList
+
+
 
         viewModel.friendList.observe(viewLifecycleOwner, Observer {
             it?.let{
                 Log.d("JJ", "friendlist $it")
                 adapter.notifyDataSetChanged()
+            }
+        })
+
+        viewModel.addList.observe(viewLifecycleOwner, Observer{
+            it?.let{
+                Log.d("JJ","addList $it")
+                adapterAddList.notifyDataSetChanged()
             }
         })
 
