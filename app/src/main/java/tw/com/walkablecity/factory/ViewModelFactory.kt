@@ -52,9 +52,6 @@ class ViewModelFactory( private val walkableRepository: WalkableRepository)
                 isAssignableFrom(AddFriendViewModel::class.java) ->
                     AddFriendViewModel(walkableRepository)
 
-                isAssignableFrom(HostViewModel::class.java) ->
-                    HostViewModel(walkableRepository)
-
                 isAssignableFrom(LoginViewModel::class.java) ->
                     LoginViewModel(walkableRepository)
 
@@ -69,9 +66,6 @@ class ViewModelFactory( private val walkableRepository: WalkableRepository)
 
                 isAssignableFrom(ExploreViewModel::class.java) ->
                     ExploreViewModel(walkableRepository)
-
-                isAssignableFrom(AddFriend2EventViewModel::class.java) ->
-                    AddFriend2EventViewModel(walkableRepository)
 
                 else ->
                     throw IllegalArgumentException("Unknown ViewModel Class ${modelClass.name}")

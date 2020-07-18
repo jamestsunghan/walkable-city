@@ -53,3 +53,8 @@ fun Fragment.getVMFactory(route: Route?,destination: LatLng?): HomeViewModelFact
     val repo = (requireContext().applicationContext as WalkableApp).repo
     return HomeViewModelFactory(repo, route, destination)
 }
+
+fun Fragment.getVMFactory(friendList: List<Friend>?): FriendListViewModelFactory{
+    val repo = (requireContext().applicationContext as WalkableApp).repo
+    return FriendListViewModelFactory(repo, friendList)
+}

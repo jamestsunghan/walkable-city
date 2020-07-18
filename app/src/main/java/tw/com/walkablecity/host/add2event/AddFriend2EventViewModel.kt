@@ -8,12 +8,13 @@ import kotlinx.coroutines.launch
 import tw.com.walkablecity.R
 import tw.com.walkablecity.UserManager
 import tw.com.walkablecity.Util.getString
+import tw.com.walkablecity.Util.makeShortToast
 import tw.com.walkablecity.data.Friend
 import tw.com.walkablecity.data.LoadStatus
 import tw.com.walkablecity.data.Result
 import tw.com.walkablecity.data.source.WalkableRepository
 
-class AddFriend2EventViewModel(private val walkableRepository: WalkableRepository) : ViewModel() {
+class AddFriend2EventViewModel(private val walkableRepository: WalkableRepository, val friendOldList: List<Friend>?) : ViewModel() {
 
     private val _status = MutableLiveData<LoadStatus>()
     val status: LiveData<LoadStatus> get() = _status
@@ -56,10 +57,13 @@ class AddFriend2EventViewModel(private val walkableRepository: WalkableRepositor
         }
     }
 
-    private val _addList = MutableLiveData<List<Friend>>()
+    private val _addList = MutableLiveData<List<Friend>>().apply {
+        value = friendOldList
+    }
     val addList: LiveData<List<Friend>> get() = _addList
 
-
+    private val _navigateToHost = MutableLiveData<List<Friend>>()
+    val navigateToHost: LiveData<List<Friend>> get() = _navigateToHost
 
 
     private val viewModelJob = Job()
@@ -77,15 +81,37 @@ class AddFriend2EventViewModel(private val walkableRepository: WalkableRepositor
     }
 
     fun addFriendToAddList(friend: Friend){
-        _addList.value = (addList.value ?: listOf()).plus(friend)
+        when(addList.value?.contains(friend)){
+            true ->{}
+            false ->{
+                _addList.value = (addList.value ?: listOf()).plus(friend)
+            }
+            null->{
+                _addList.value = (addList.value ?: listOf()).plus(friend)
+            }
+        }
     }
 
     fun removeFriendToAddList(friend: Friend){
-        _addList.value = (addList.value ?: listOf()).minus(friend)
+        when(addList.value?.contains(friend)){
+            true ->{
+                _addList.value = (addList.value ?: listOf(friend)).minus(friend)
+            }
+            false ->{ }
+            null->{}
+        }
     }
 
     fun friendSelected(){
+        if(addList.value == null){
+            makeShortToast(R.string.no_friend_invited)
+        }else
 
+        _navigateToHost.value = addList.value
+    }
+
+    fun friendSelectedComplete(){
+        _navigateToHost.value = null
     }
 
     fun getUserFriends(userId: String){

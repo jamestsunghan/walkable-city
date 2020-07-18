@@ -15,13 +15,15 @@ import tw.com.walkablecity.data.source.WalkableRepository
 import tw.com.walkablecity.ext.toDateLong
 import tw.com.walkablecity.ext.toFriend
 
-class HostViewModel(private val walkableRepository: WalkableRepository) : ViewModel() {
+class HostViewModel(private val walkableRepository: WalkableRepository, val friendList: List<Friend>?) : ViewModel() {
 
 
     val title = MutableLiveData<String>()
     val description = MutableLiveData<String>()
     val isPublic = MutableLiveData<Boolean>(false)
-    val invited = MutableLiveData<List<String>>()
+    val invited = MutableLiveData<List<String>?>().apply{
+        value = friendList?.map{ requireNotNull(it.id)}
+    }
 
     val selectFQPosition = MutableLiveData<Int>()
 
@@ -148,7 +150,7 @@ class HostViewModel(private val walkableRepository: WalkableRepository) : ViewMo
     }
 
     fun createEvent(){
-        invited.value = listOf("10056","10045")
+//        invited.value = listOf("10056","10045")
         if(title.value == null || description.value == null || isPublic.value == null || invited.value == null
             || type.value == null ||( target.value?.hour == null &&  target.value?.distance == null)
             || (frequencyType.value == null && type.value == EventType.FREQUENCY)

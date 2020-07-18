@@ -13,6 +13,7 @@ class AddFriend2EventAdapter(val viewModel: AddFriend2EventViewModel): ListAdapt
     class FriendViewHolder(private val binding: ItemAddFriend2EventBinding): RecyclerView.ViewHolder(binding.root){
         fun bind(friend: Friend, viewModel: AddFriend2EventViewModel){
             binding.friend = friend
+            binding.friendCheckbox.isChecked = viewModel.friendOldList?.contains(friend) ?: false
             binding.friendCheckbox.setOnCheckedChangeListener { buttonView, isChecked ->
                 if(isChecked){
                     viewModel.addFriendToAddList(friend)

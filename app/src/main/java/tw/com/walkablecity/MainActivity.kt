@@ -120,8 +120,6 @@ class MainActivity : AppCompatActivity() {
         when(viewModel.currentFragment.value){
             CurrentFragmentType.RATING -> findNavController(R.id.nav_host_fragment).
                 navigate(RatingFragmentDirections.actionGlobalHomeFragment(null,null))
-            CurrentFragmentType.ADD_2_EVENT -> findNavController(R.id.nav_host_fragment).
-                navigate(AddFriend2EventFragmentDirections.actionAddFriend2EventFragmentToHostFragment())
 
             else -> super.onBackPressed()
         }

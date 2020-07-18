@@ -170,6 +170,10 @@
         <action
             android:id="@+id/action_hostFragment_to_addFriend2EventFragment"
             app:destination="@id/addFriend2EventFragment" />
+        <argument
+            android:name="friendList"
+            app:argType="tw.com.walkablecity.data.Friend[]"
+            app:nullable="true" />
     </fragment>
     <fragment
         android:id="@+id/eventDetailFragment"
@@ -191,6 +195,10 @@
         <action
             android:id="@+id/action_addFriend2EventFragment_to_hostFragment"
             app:destination="@id/hostFragment" />
+        <argument
+            android:name="friendListKey"
+            app:argType="tw.com.walkablecity.data.Friend[]"
+            app:nullable="true" />
     </fragment>
 
 </navigation>

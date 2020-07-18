@@ -24,13 +24,15 @@ import tw.com.walkablecity.data.FrequencyType
 import tw.com.walkablecity.databinding.FragmentHostBinding
 import tw.com.walkablecity.ext.getVMFactory
 import tw.com.walkablecity.ext.toDateLong
+import tw.com.walkablecity.host.add2event.AddFriend2EventAdapter
+import tw.com.walkablecity.host.add2event.AddListAdapter
 import java.text.SimpleDateFormat
 import java.util.*
 
 class HostFragment : Fragment() {
 
 
-    private val viewModel: HostViewModel by viewModels{getVMFactory()}
+    private val viewModel: HostViewModel by viewModels{getVMFactory( HostFragmentArgs.fromBundle(requireArguments()).friendList?.toList())}
 
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreateView(
@@ -43,6 +45,7 @@ class HostFragment : Fragment() {
 
         binding.viewModel = viewModel
 
+        binding.recyclerFriendAdding.adapter = AddListAdapter()
 
         binding.eventTypeSpinner.adapter = EventTypeSpinnerAdapter(
             mutableListOf(
@@ -136,7 +139,8 @@ class HostFragment : Fragment() {
 
         viewModel.navigateToAddFriends.observe(viewLifecycleOwner, Observer{
             if(it){
-                findNavController().navigate(HostFragmentDirections.actionHostFragmentToAddFriend2EventFragment())
+                findNavController().navigate(HostFragmentDirections
+                    .actionHostFragmentToAddFriend2EventFragment(viewModel.friendList?.toTypedArray()))
                 viewModel.addSomeFriendsComplete()
             }
         })
