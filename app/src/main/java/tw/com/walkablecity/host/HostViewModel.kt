@@ -162,7 +162,7 @@ class HostViewModel(private val walkableRepository: WalkableRepository, val frie
                     id          = "${requireNotNull(type.value).prefix}${now().toDateLong()}${UserManager.user?.idCustom}",
                     title       = title.value,
                     description = description.value,
-                    isPublic    = isPublic.value,
+                    public      = isPublic.value,
                     host        = UserManager.user?.idCustom,
                     status      = eventStatus.value,
                     invited     = requireNotNull(invited.value),

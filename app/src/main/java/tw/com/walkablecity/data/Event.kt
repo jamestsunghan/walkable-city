@@ -9,7 +9,7 @@ data class Event (
     val id: String? = null,
     val title: String? = null,
     val description: String? = null,
-    val isPublic: Boolean? = null,
+    val public: Boolean? = null,
     val type: EventType? = null,
     val target: EventTarget? = null,
     val host: String? = null,

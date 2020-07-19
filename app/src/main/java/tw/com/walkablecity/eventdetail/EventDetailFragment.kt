@@ -11,13 +11,16 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import com.google.firebase.Timestamp
 
 import tw.com.walkablecity.R
+import tw.com.walkablecity.UserManager
 import tw.com.walkablecity.Util
 import tw.com.walkablecity.Util.lessThenTenPadStart
 import tw.com.walkablecity.databinding.FragmentEventDetailBinding
 import tw.com.walkablecity.ext.getVMFactory
+import tw.com.walkablecity.ext.toFriend
 
 class EventDetailFragment : Fragment() {
 
@@ -37,8 +40,16 @@ class EventDetailFragment : Fragment() {
 
         binding.viewModel = viewModel
 
+        binding.user = UserManager.user
+
+        binding.friend = UserManager.user?.toFriend()
+
         val adapter = MemberAdapter(viewModel)
         binding.recyclerMember.adapter = adapter
+
+        binding.maybeLater.setOnClickListener {
+            findNavController().navigateUp()
+        }
 
         viewModel.walkResultSingle.observe(viewLifecycleOwner, Observer{
             it?.let{
@@ -72,6 +83,15 @@ class EventDetailFragment : Fragment() {
                     viewModel.getMemberWalkResult(requireNotNull(viewModel.event.startDate)
                         , requireNotNull(viewModel.event.target) ,viewModel.listMemberId)
 
+                }
+            }
+        })
+
+        viewModel.joinSuccess.observe(viewLifecycleOwner, Observer{
+            it?.let{
+
+                if(it){
+                    findNavController().navigate(EventDetailFragmentDirections.actionGlobalEventFragment())
                 }
             }
         })

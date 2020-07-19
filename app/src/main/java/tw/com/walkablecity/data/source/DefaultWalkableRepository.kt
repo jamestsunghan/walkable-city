@@ -101,6 +101,14 @@ class DefaultWalkableRepository(private val remote: WalkableDataSource): Walkabl
         return remote.createEvent(event)
     }
 
+    override suspend fun joinEvent(user: User, event: Event): Result<Boolean> {
+        return remote.joinEvent(user, event)
+    }
+
+    override suspend fun joinPublicEvent(user: User, event: Event): Result<Boolean> {
+        return remote.joinPublicEvent(user, event)
+    }
+
     override suspend fun firebaseAuthWithGoogle(idToken: String?): Result<FirebaseUser> {
         return remote.firebaseAuthWithGoogle(idToken)
     }

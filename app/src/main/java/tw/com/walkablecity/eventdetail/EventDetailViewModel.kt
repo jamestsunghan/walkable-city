@@ -10,6 +10,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import tw.com.walkablecity.R
+import tw.com.walkablecity.UserManager
 import tw.com.walkablecity.Util.getString
 import tw.com.walkablecity.Util.lessThenTenPadStart
 import tw.com.walkablecity.WalkableApp
@@ -20,6 +21,8 @@ class EventDetailViewModel(private val walkableRepository: WalkableRepository, v
 
     private lateinit var timer: CountDownTimer
 
+    val hostName = event.member.first { it.idCustom == event.host }.name
+
     private val _status = MutableLiveData<LoadStatus>()
     val status: LiveData<LoadStatus> get() = _status
 
@@ -28,6 +31,9 @@ class EventDetailViewModel(private val walkableRepository: WalkableRepository, v
 
     private val _walkResult = MutableLiveData<List<Float>>()
     val walkResult: LiveData<List<Float>> get() = _walkResult
+
+    private val _joinSuccess = MutableLiveData<Boolean>()
+    val joinSuccess: LiveData<Boolean> get() = _joinSuccess
 
     val currentCountDown = MutableLiveData<String>()
 
@@ -76,7 +82,6 @@ class EventDetailViewModel(private val walkableRepository: WalkableRepository, v
     init{
         Log.d("JJ", "member list ${event.member}")
         getMemberWalkResult(requireNotNull(event.startDate), requireNotNull(event.target) ,listMemberId)
-
 
         getTimerStart(countDownTime)
 
@@ -157,6 +162,73 @@ class EventDetailViewModel(private val walkableRepository: WalkableRepository, v
 
 
     }
+
+    fun joinEvent(){
+
+        coroutineScope.launch {
+
+            _status.value = LoadStatus.LOADING
+
+            val result  = walkableRepository.joinEvent(requireNotNull(UserManager.user), event)
+
+            _joinSuccess.value = when(result){
+                is Result.Success ->{
+                    _error.value = null
+                    _status.value = LoadStatus.DONE
+                    result.data
+                }
+                is Result.Fail ->{
+                    _error.value = result.error
+                    _status.value = LoadStatus.ERROR
+                    null
+                }
+                is Result.Error ->{
+                    _error.value = result.exception.toString()
+                    _status.value = LoadStatus.ERROR
+                    null
+                }
+                else ->{
+                    _error.value = getString(R.string.not_here)
+                    _status.value = LoadStatus.ERROR
+                    null
+                }
+            }
+        }
+    }
+
+    fun joinPublicEvent(){
+
+        coroutineScope.launch {
+
+            _status.value = LoadStatus.LOADING
+
+            val result  = walkableRepository.joinPublicEvent(requireNotNull(UserManager.user), event)
+
+            _joinSuccess.value = when(result){
+                is Result.Success ->{
+                    _error.value = null
+                    _status.value = LoadStatus.DONE
+                    result.data
+                }
+                is Result.Fail ->{
+                    _error.value = result.error
+                    _status.value = LoadStatus.ERROR
+                    null
+                }
+                is Result.Error ->{
+                    _error.value = result.exception.toString()
+                    _status.value = LoadStatus.ERROR
+                    null
+                }
+                else ->{
+                    _error.value = getString(R.string.not_here)
+                    _status.value = LoadStatus.ERROR
+                    null
+                }
+            }
+        }
+    }
+
 
 
 

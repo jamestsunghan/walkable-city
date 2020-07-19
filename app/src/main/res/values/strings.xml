@@ -299,6 +299,11 @@
 
     <string name="share_badge">分享徽章到</string>
     <string name="no_friend_invited">您尚未邀請任何好友歐</string>
+    <string name="join_event">加入活動</string>
+
+    <string name="invite_you">邀請您加入此活動</string>
+    <string name="maybe_later">稍後再說</string>
+    <string name="join_now">加入</string>
 
 
 </resources>

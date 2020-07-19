@@ -34,6 +34,8 @@ interface WalkableDataSource {
     suspend fun getUserParticipateEvent(user: User): Result<List<Event>>
 
     suspend fun createEvent(event: Event): Result<Boolean>
+    suspend fun joinEvent(user: User, event: Event): Result<Boolean>
+    suspend fun joinPublicEvent(user: User, event: Event): Result<Boolean>
 
     suspend fun firebaseAuthWithGoogle(idToken: String?): Result<FirebaseUser>
 

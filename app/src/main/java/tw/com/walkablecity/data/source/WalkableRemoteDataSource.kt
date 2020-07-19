@@ -9,6 +9,7 @@ import com.google.firebase.Timestamp.now
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.GeoPoint
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
@@ -41,6 +42,10 @@ object WalkableRemoteDataSource: WalkableDataSource{
     private const val WALKS = "walks"
     private const val USER = "user"
     private const val RATINGS = "ratings"
+    private const val INVITED = "invited"
+    private const val MEMBER = "member"
+    private const val MEMBER_COUNT = "memberCount"
+    private const val ID = "id"
     private const val ID_CUSTOM = "idCustom"
     private const val ACCU_HOUR = "accumulatedHour"
     private const val ACCU_KM = "accumulatedKm"
@@ -48,7 +53,7 @@ object WalkableRemoteDataSource: WalkableDataSource{
     private val auth = Firebase.auth
 
     override suspend fun getUser(userId: String): Result<User?> = suspendCoroutine{continuation->
-        db.collection(USER).whereEqualTo("id",userId).get().addOnCompleteListener {task->
+        db.collection(USER).whereEqualTo(ID,userId).get().addOnCompleteListener {task->
             if(task.isSuccessful){
 
                 if(task.result == null || task.result!!.isEmpty) continuation.resume(Result.Success(null))
@@ -717,7 +722,51 @@ object WalkableRemoteDataSource: WalkableDataSource{
         }
     }
 
-    override suspend fun getMemberWalkDistance(eventStartTime: Timestamp, memberId: String): Result<Float> = suspendCoroutine {continuation->
+    override suspend fun joinEvent(user: User, event: Event): Result<Boolean> = suspendCoroutine{continuation->
+        db.collection(EVENT).document(requireNotNull(event.id))
+            .update(INVITED, FieldValue.arrayRemove(user.id)
+                , MEMBER, FieldValue.arrayUnion(user.toFriend())
+                , MEMBER_COUNT, event.memberCount?.plus(1))
+            .addOnCompleteListener {task->
+                if(task.isSuccessful){
+
+                    continuation.resume(Result.Success(true))
+                }else{
+                    val result = task.exception
+                    if(result != null){
+                        Log.d("JJ_fire","[${this::class.simpleName}] Error getting documents. ${result.message}")
+                        continuation.resume(Result.Error(result))
+                    }else
+                    continuation.resume(Result.Fail(WalkableApp.instance.getString(R.string.not_here)))
+                }
+
+
+            }
+
+    }
+
+    override suspend fun joinPublicEvent(user: User, event: Event): Result<Boolean> = suspendCoroutine{continuation->
+        db.collection(EVENT).document(requireNotNull(event.id))
+            .update(MEMBER, FieldValue.arrayUnion(user.toFriend())
+                , MEMBER_COUNT, event.memberCount?.plus(1))
+            .addOnCompleteListener {task->
+                if(task.isSuccessful){
+
+                    continuation.resume(Result.Success(true))
+                }else{
+                    val result = task.exception
+                    if(result != null){
+                        Log.d("JJ_fire","[${this::class.simpleName}] Error getting documents. ${result.message}")
+                        continuation.resume(Result.Error(result))
+                    }else
+                        continuation.resume(Result.Fail(WalkableApp.instance.getString(R.string.not_here)))
+                }
+
+
+            }
+    }
+
+    override suspend fun getMemberWalkDistance(eventStartTime: Timestamp, memberId: String): Result<Float> = suspendCoroutine { continuation->
 
 
 
