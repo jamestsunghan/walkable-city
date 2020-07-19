@@ -27,5 +27,7 @@ enum class CurrentFragmentType(val title: String) {
 
     LOGIN(""),
     ADD_FRIEND(getString(R.string.add_friend_title)),
-    ADD_2_EVENT(getString(R.string.add_friend_event_title))
+    ADD_2_EVENT(getString(R.string.add_friend_event_title)),
+
+    CREATE_ROUTE_DIALOG("")
 }

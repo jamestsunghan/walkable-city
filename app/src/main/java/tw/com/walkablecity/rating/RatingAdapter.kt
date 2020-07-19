@@ -6,10 +6,15 @@ import androidx.fragment.app.FragmentStatePagerAdapter
 import tw.com.walkablecity.rating.item.RatingItemFragment
 
 
-class RatingAdapter(fragmentManager: FragmentManager, val viewModel: RatingViewModel): FragmentStatePagerAdapter(fragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
+class RatingAdapter(fragmentManager: FragmentManager, val viewModel: RatingViewModel, val willComment: Boolean): FragmentStatePagerAdapter(fragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
 
     override fun getItem(position: Int): Fragment {
-        return RatingItemFragment(RatingType.values()[position], viewModel.route, viewModel.walk)
+        return RatingItemFragment(RatingType.values()[position].apply{
+            when(this){
+                RatingType.WALK -> this.willComment = this@RatingAdapter.willComment
+                else->{}
+            }
+        }, viewModel.route, viewModel.walk)
     }
 
     override fun getCount(): Int = RatingType.values().size

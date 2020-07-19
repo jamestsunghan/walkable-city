@@ -16,9 +16,6 @@
         <action
             android:id="@+id/action_homeFragment_to_loadRouteFragment"
             app:destination="@id/loadRouteFragment" />
-        <action
-            android:id="@+id/action_homeFragment_to_ratingFragment"
-            app:destination="@id/ratingFragment" />
         <argument
             android:name="routeKey"
             app:argType="tw.com.walkablecity.data.Route"
@@ -27,6 +24,9 @@
             android:name="destinationKey"
             app:argType="com.google.android.gms.maps.model.LatLng"
             app:nullable="true" />
+        <action
+            android:id="@+id/action_homeFragment_to_createRouteDialogFragment"
+            app:destination="@id/createRouteDialogFragment" />
     </fragment>
 
     <fragment
@@ -132,6 +132,9 @@
         <argument
             android:name="walkKey"
             app:argType="tw.com.walkablecity.data.Walk" />
+        <argument
+            android:name="willCreateKey"
+            app:argType="boolean" />
     </fragment>
     <fragment
         android:id="@+id/detailFragment"
@@ -200,5 +203,20 @@
             app:argType="tw.com.walkablecity.data.Friend[]"
             app:nullable="true" />
     </fragment>
+    <dialog
+        android:id="@+id/createRouteDialogFragment"
+        android:name="tw.com.walkablecity.home.createroute.CreateRouteDialogFragment"
+        android:label="CreateRouteDialogFragment" >
+        <argument
+            android:name="selectedRoute"
+            app:argType="tw.com.walkablecity.data.Route"
+            app:nullable="true" />
+        <argument
+            android:name="walkKey"
+            app:argType="tw.com.walkablecity.data.Walk" />
+        <action
+            android:id="@+id/action_createRouteDialogFragment_to_ratingFragment"
+            app:destination="@id/ratingFragment" />
+    </dialog>
 
 </navigation>

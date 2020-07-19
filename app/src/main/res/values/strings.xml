@@ -305,5 +305,9 @@
     <string name="maybe_later">稍後再說</string>
     <string name="join_now">加入</string>
 
+    <string name="will_you_create_route">想為此次的散步創建一個分享路線嗎?</string>
+    <string name="will_create">好歐</string>
+    <string name="will_not_create">不用了</string>
+
 
 </resources>

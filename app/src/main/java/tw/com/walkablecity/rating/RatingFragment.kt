@@ -39,7 +39,7 @@ class RatingFragment : Fragment() {
         }
 
 
-        val adapter = RatingAdapter(childFragmentManager, viewModel)
+        val adapter = RatingAdapter(childFragmentManager, viewModel, RatingFragmentArgs.fromBundle(requireArguments()).willCreateKey)
 
         binding.viewpagerRating.let{
             it.adapter = adapter

@@ -133,7 +133,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationClick
 
         viewModel.navigateToRating.observe(viewLifecycleOwner, Observer {
             it?.let{
-                findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToRatingFragment(viewModel.route.value, it))
+                findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToCreateRouteDialogFragment(viewModel.route.value, it))
                 viewModel.navigateToRatingComplete()
             }
         })

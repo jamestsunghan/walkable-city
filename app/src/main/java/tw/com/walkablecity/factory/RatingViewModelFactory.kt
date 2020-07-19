@@ -8,6 +8,7 @@ import tw.com.walkablecity.data.Walk
 import tw.com.walkablecity.data.Walker
 import tw.com.walkablecity.data.source.WalkableRepository
 import tw.com.walkablecity.home.HomeViewModel
+import tw.com.walkablecity.home.createroute.CreateRouteDialogViewModel
 import tw.com.walkablecity.rating.RatingType
 import tw.com.walkablecity.rating.RatingViewModel
 import tw.com.walkablecity.rating.item.RatingItemViewModel
@@ -21,6 +22,10 @@ class RatingViewModelFactory(private val walkableRepository: WalkableRepository,
     override fun <T : ViewModel?> create(modelClass: Class<T>) =
         with(modelClass){
             when{
+
+
+                isAssignableFrom(CreateRouteDialogViewModel::class.java) ->
+                    CreateRouteDialogViewModel(walkableRepository, route, walk, type)
 
                 isAssignableFrom(RatingViewModel::class.java) ->
                     RatingViewModel(walkableRepository, route, walk, type)

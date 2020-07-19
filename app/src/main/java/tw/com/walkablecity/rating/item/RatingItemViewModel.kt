@@ -27,7 +27,7 @@ class RatingItemViewModel(val walkableRepository: WalkableRepository, val select
     val colorId = R.color.primaryColor
 
     val duration = MutableLiveData<Float>().apply{
-        value = requireNotNull(walk.duration).toFloat() / 60
+        value = requireNotNull(walk.duration).toFloat().div(60)
     }
 
     private val _sendRating = MutableLiveData<Boolean>(false)
