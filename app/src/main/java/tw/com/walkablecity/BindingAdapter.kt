@@ -40,6 +40,7 @@ import tw.com.walkablecity.Util.getString
 import tw.com.walkablecity.Util.lessThenTenPadStart
 import tw.com.walkablecity.data.*
 import tw.com.walkablecity.detail.CommentAdapter
+import tw.com.walkablecity.detail.ImageUrlAdapter
 import tw.com.walkablecity.event.item.EventItemAdapter
 import tw.com.walkablecity.eventdetail.MemberAdapter
 import tw.com.walkablecity.ext.saveToInternalStorage
@@ -106,6 +107,18 @@ fun bindPhotoPoints(view: RecyclerView, list: List<PhotoPoint>?){
     }
 }
 
+@BindingAdapter("routeImage")
+fun bindRouteImages(view: RecyclerView, list: List<String>?){
+    list?.let{
+        view.adapter.apply {
+            when(this){
+                is ImageUrlAdapter -> submitList(it)
+
+            }
+        }
+    }
+}
+
 @BindingAdapter("friendly")
 fun bindFriends(view: RecyclerView, list: List<Friend>?){
     list?.let{item->
@@ -158,6 +171,8 @@ fun bindFriend(view: RecyclerView, list: List<Friend>?){
         }
     }
 }
+
+
 
 @BindingAdapter("event")
 fun bindEvent(view: RecyclerView, list: List<Event>?){

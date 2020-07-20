@@ -10,6 +10,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearSnapHelper
 
 import tw.com.walkablecity.R
 import tw.com.walkablecity.databinding.FragmentDetailBinding
@@ -33,6 +34,18 @@ class DetailFragment : Fragment() {
         binding.favIcon.isSelected = false
 
         binding.recyclerComment.adapter = CommentAdapter()
+        binding.recyclerDetailUrl.adapter = ImageUrlAdapter()
+
+        val linearSnapHelper = LinearSnapHelper().apply {
+            attachToRecyclerView(binding.recyclerDetailUrl)
+        }
+
+//        binding.recyclerDetailUrl.setOnScrollChangeListener { _, _, _, _, _ ->
+//            viewModel.onGalleryScrollChange(
+//                binding.recyclerDetailUrl.layoutManager,
+//                linearSnapHelper
+//            )
+//        }
 
         viewModel.favoriteAdded.observe(viewLifecycleOwner, Observer{
             it?.let{
@@ -46,6 +59,12 @@ class DetailFragment : Fragment() {
             if(it){
                 findNavController().navigateUp()
                 viewModel.navigationComplete()
+            }
+        })
+
+        viewModel.photoPoints.observe(viewLifecycleOwner, Observer{
+            it?.let{
+                viewModel.addMaptodisplayPhotos(it)
             }
         })
 
