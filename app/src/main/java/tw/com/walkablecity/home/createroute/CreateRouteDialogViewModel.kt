@@ -8,7 +8,7 @@ import tw.com.walkablecity.data.Walk
 import tw.com.walkablecity.data.source.WalkableRepository
 import tw.com.walkablecity.rating.RatingType
 
-class CreateRouteDialogViewModel(val repo: WalkableRepository, val route: Route?, val walk: Walk, val type: RatingType?) : ViewModel() {
+class CreateRouteDialogViewModel(val repo: WalkableRepository) : ViewModel() {
 
 
     private val _navigateToRating = MutableLiveData<Boolean>(false)

@@ -8,7 +8,7 @@
         android:layout_height="match_parent"
         tools:context=".loadroute.LoadRouteFragment">
 
-        <androidx.viewpager.widget.ViewPager
+        <tw.com.walkablecity.CustomViewPager
             android:id="@+id/viewpager_rating"
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -24,7 +24,7 @@
                 app:tabTextAppearance="@style/TabForLoadTitle"
                 app:tabSelectedTextColor="@color/secondaryColor"
                 app:tabTextColor="@color/primaryColor"/>
-        </androidx.viewpager.widget.ViewPager>
+        </tw.com.walkablecity.CustomViewPager>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

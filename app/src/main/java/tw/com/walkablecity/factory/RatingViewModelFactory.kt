@@ -2,10 +2,7 @@ package tw.com.walkablecity.factory
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import tw.com.walkablecity.data.Route
-import tw.com.walkablecity.data.User
-import tw.com.walkablecity.data.Walk
-import tw.com.walkablecity.data.Walker
+import tw.com.walkablecity.data.*
 import tw.com.walkablecity.data.source.WalkableRepository
 import tw.com.walkablecity.home.HomeViewModel
 import tw.com.walkablecity.home.createroute.CreateRouteDialogViewModel
@@ -16,22 +13,15 @@ import tw.com.walkablecity.rating.item.RatingItemViewModel
 
 @Suppress("UNCHECKED_CAST")
 class RatingViewModelFactory(private val walkableRepository: WalkableRepository, private val route: Route?
-                             , private val walk: Walk, private val type: RatingType?)
+                             , private val walk: Walk, private val type: RatingType?, private val photoPoints: List<PhotoPoint>?)
     : ViewModelProvider.Factory{
 
     override fun <T : ViewModel?> create(modelClass: Class<T>) =
         with(modelClass){
             when{
 
-
-                isAssignableFrom(CreateRouteDialogViewModel::class.java) ->
-                    CreateRouteDialogViewModel(walkableRepository, route, walk, type)
-
-                isAssignableFrom(RatingViewModel::class.java) ->
-                    RatingViewModel(walkableRepository, route, walk, type)
-
                 isAssignableFrom(RatingItemViewModel::class.java) ->
-                    RatingItemViewModel(walkableRepository, route, walk, type)
+                    RatingItemViewModel(walkableRepository, route, walk, type, photoPoints)
 
 
                 else ->

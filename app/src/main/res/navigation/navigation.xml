@@ -135,6 +135,10 @@
         <argument
             android:name="willCreateKey"
             app:argType="boolean" />
+        <argument
+            android:name="photoPointsKey"
+            app:argType="tw.com.walkablecity.data.PhotoPoint[]"
+            app:nullable="true" />
     </fragment>
     <fragment
         android:id="@+id/detailFragment"
@@ -217,6 +221,10 @@
         <action
             android:id="@+id/action_createRouteDialogFragment_to_ratingFragment"
             app:destination="@id/ratingFragment" />
+        <argument
+            android:name="photoPoints"
+            app:argType="tw.com.walkablecity.data.PhotoPoint[]"
+            app:nullable="true" />
     </dialog>
 
 </navigation>

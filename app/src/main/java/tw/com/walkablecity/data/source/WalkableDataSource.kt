@@ -20,6 +20,10 @@ interface WalkableDataSource {
     suspend fun updateWalks(walk: Walk, user: User): Result<Boolean>
     suspend fun updateRouteRating(rating: RouteRating, route: Route, userId: String): Result<Boolean>
     suspend fun createRouteByUser(route: Route): Result<Boolean>
+    suspend fun uploadPhotoPoints(routeId: String, photoPoints: List<PhotoPoint>): Result<Boolean>
+    suspend fun downloadPhotoPoints(routeId: String): Result<List<PhotoPoint>>
+
+
     suspend fun getRouteMapImage(center: GeoPoint, zoom: Int, path: List<GeoPoint>): Result<MapImageResult>
     suspend fun getRouteMapImageUrl(routeId: String, bitmap: Bitmap): Result<String>
     suspend fun getRouteComments(routeId: String): Result<List<Comment>>

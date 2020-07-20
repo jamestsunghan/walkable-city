@@ -157,6 +157,10 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationClick
 
         binding.viewModel = viewModel
 
+        route?.apply {
+            this.waypointsLatLng = this.waypoints.toLatLngPoints()
+            this.waypoints = listOf()
+        }
 
         if(checkSelfPermission(WalkableApp.instance, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
             viewModel.permissionGranted()
@@ -191,7 +195,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationClick
 
         viewModel.navigateToRating.observe(viewLifecycleOwner, Observer {
             it?.let{
-                findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToCreateRouteDialogFragment(viewModel.route.value, it))
+                findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToCreateRouteDialogFragment(viewModel.route.value, it, viewModel.photopoints.value?.toTypedArray()))
                 viewModel.navigateToRatingComplete()
             }
         })
@@ -251,7 +255,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationClick
                     it.uiSettings.isMyLocationButtonEnabled = true
                     it.isMyLocationEnabled = true
                     if(route!=null){
-                        viewModel.drawPath(currentLocation, destination ?: currentLocation, route.waypoints.toLatLngPoints())
+                        viewModel.drawPath(currentLocation, destination ?: currentLocation, route.waypointsLatLng)
                     }
                 }
 
@@ -288,7 +292,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationClick
                 if(points.isNotEmpty()){
                     mapFragment.getMapAsync {markerMap->
                         for(item in points){
-                            val latLng = LatLng(item.point.latitude, item.point.longitude)
+                            val latLng = LatLng(requireNotNull(item.point).latitude, item.point.longitude)
                             val file = File(item.photo)
                             val imageUri = FileProvider.getUriForFile(WalkableApp.instance, WalkableApp.instance.packageName + ".provider", file)
 //                            val stream = WalkableApp.instance.contentResolver.openInputStream(imageUri)
@@ -304,6 +308,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationClick
 
                     }
                 }
+                Log.d("JJ_camera", "camera ")
             }
         })
 
@@ -345,6 +350,8 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationClick
 
     }
 
+
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
@@ -375,11 +382,11 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationClick
         Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
             takePictureIntent.resolveActivity(requireActivity().packageManager)?.also {
                 val file = File(context?.cacheDir,"images")
-                val stream = FileOutputStream("${file}/image${photoShootNum}.jpg")
-                val streamFile = File("${file}/image${photoShootNum}.jpg")
+                val pathName = "${file}/image${photoShootNum}.jpg"
+
                 val photoFile: FileOutputStream? = try{
                     file.mkdir()
-
+                    val stream = FileOutputStream("${file}/image${photoShootNum}.jpg")
                     stream.flush()
                     stream.close()
                     stream
@@ -388,9 +395,9 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationClick
                     null
                 }
 
-                Log.d("JJ_camera", "stream $stream")
+                Log.d("JJ_camera", "stream $photoFile")
                 photoFile?.also {
-                    val uri = FileProvider.getUriForFile(WalkableApp.instance, WalkableApp.instance.packageName + ".provider", streamFile)
+                    val uri = FileProvider.getUriForFile(WalkableApp.instance, WalkableApp.instance.packageName + ".provider", File(pathName))
                     takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, uri)
                     startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
                 }

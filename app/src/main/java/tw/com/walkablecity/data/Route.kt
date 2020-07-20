@@ -21,6 +21,7 @@ data class Route(
     val comments: List<Comment> = listOf(),
     val photopoints: List<PhotoPoint> = listOf(),
     val ratings: List<RouteRating> = listOf(),
-    val waypoints: @RawValue List<GeoPoint> = listOf()
+    var waypoints:@RawValue List< @RawValue GeoPoint> = listOf(),
+    var waypointsLatLng: List<LatLng> = listOf()
 
     ): Parcelable

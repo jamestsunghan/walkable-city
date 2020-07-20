@@ -20,8 +20,7 @@ import tw.com.walkablecity.ext.getVMFactory
 
 class RatingFragment : Fragment() {
 
-    val viewModel: RatingViewModel by viewModels{getVMFactory(RatingFragmentArgs.fromBundle(requireArguments()).selectedRoute
-        , RatingFragmentArgs.fromBundle(requireArguments()).walkKey, null)}
+    val viewModel: RatingViewModel by viewModels{getVMFactory()}
 
 
 
@@ -38,8 +37,12 @@ class RatingFragment : Fragment() {
             viewModel.navigateToSearch.value = viewModel.navigateToSearch.value?.plus(result) ?:1
         }
 
+        val selectedRoute = RatingFragmentArgs.fromBundle(requireArguments()).selectedRoute
+        val walk = RatingFragmentArgs.fromBundle(requireArguments()).walkKey
 
-        val adapter = RatingAdapter(childFragmentManager, viewModel, RatingFragmentArgs.fromBundle(requireArguments()).willCreateKey)
+        val adapter = RatingAdapter(childFragmentManager, selectedRoute, walk
+            , RatingFragmentArgs.fromBundle(requireArguments()).willCreateKey
+            , RatingFragmentArgs.fromBundle(requireArguments()).photoPointsKey?.toList())
 
         binding.viewpagerRating.let{
             it.adapter = adapter

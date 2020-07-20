@@ -57,6 +57,14 @@ class DefaultWalkableRepository(private val remote: WalkableDataSource): Walkabl
         return remote.createRouteByUser(route)
     }
 
+    override suspend fun uploadPhotoPoints(routeId: String, photoPoints: List<PhotoPoint>): Result<Boolean> {
+        return remote.uploadPhotoPoints(routeId, photoPoints)
+    }
+
+    override suspend fun downloadPhotoPoints(routeId: String): Result<List<PhotoPoint>> {
+        return remote.downloadPhotoPoints(routeId)
+    }
+
     override suspend fun getRouteMapImageUrl(routeId: String, bitmap: Bitmap): Result<String> {
         return remote.getRouteMapImageUrl(routeId, bitmap)
     }

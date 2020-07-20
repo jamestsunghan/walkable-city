@@ -53,6 +53,8 @@ import tw.com.walkablecity.loadroute.route.RouteItem
 import tw.com.walkablecity.loadroute.route.RouteItemAdapter
 import tw.com.walkablecity.profile.bestwalker.BestWalkersAdapter
 import tw.com.walkablecity.ranking.RankingAdapter
+import tw.com.walkablecity.rating.RatingType
+import tw.com.walkablecity.rating.item.RatingItemPhotoAdapter
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.math.BigDecimal
@@ -88,6 +90,17 @@ fun bindBestWalkers(view: RecyclerView, list: List<User>?){
         view.adapter.apply {
             when(this){
                 is BestWalkersAdapter -> submitList(item.toWalkerItem())
+            }
+        }
+    }
+}
+
+@BindingAdapter("photopts")
+fun bindPhotoPoints(view: RecyclerView, list: List<PhotoPoint>?){
+    list?.let{item->
+        view.adapter.apply {
+            when(this){
+                is RatingItemPhotoAdapter -> submitList(item)
             }
         }
     }
@@ -352,6 +365,26 @@ fun glidingImage(imageView: ImageView, url: String?){
 
         Glide.with(imageView.context)
             .load(uri).apply(
+                RequestOptions()
+                    .placeholder(R.drawable.placeholder)
+                    .error(R.drawable.placeholder)
+            )
+            .into(imageView)
+    }
+
+}
+
+@BindingAdapter("reference", "type")
+fun glidingImage(imageView: ImageView, ref: String?, type: RatingType){
+    ref?.let{reference->
+        val glider = when(type){
+        RatingType.WALK ->FileProvider.getUriForFile(WalkableApp.instance, WalkableApp.instance.packageName + ".provider"
+            , File(reference))
+        RatingType.ROUTE ->  Firebase.storage.reference.child(reference)
+    }
+
+        Glide.with(imageView.context)
+            .load(glider).apply(
                 RequestOptions()
                     .placeholder(R.drawable.placeholder)
                     .error(R.drawable.placeholder)

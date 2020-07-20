@@ -23,11 +23,20 @@ import tw.com.walkablecity.rating.RatingType
 import java.text.SimpleDateFormat
 
 class RatingItemViewModel(val walkableRepository: WalkableRepository, val selectedRoute: Route?
-                          , val walk: Walk, val type: RatingType?) : ViewModel() {
+                          , val walk: Walk, val type: RatingType?, val photoPoints: List<PhotoPoint>?) : ViewModel() {
     val colorId = R.color.primaryColor
 
     val duration = MutableLiveData<Float>().apply{
         value = requireNotNull(walk.duration).toFloat().div(60)
+    }
+
+
+    val photos = MutableLiveData<List<PhotoPoint>>().apply {
+        value = when(type){
+            RatingType.ROUTE -> null
+            RatingType.WALK -> photoPoints
+            null -> null
+        }
     }
 
     private val _sendRating = MutableLiveData<Boolean>(false)
@@ -37,6 +46,10 @@ class RatingItemViewModel(val walkableRepository: WalkableRepository, val select
     private val _imageUrl = MutableLiveData<String>()
     val imageUrl: LiveData<String>
         get() = _imageUrl
+
+    private val _uploadPointsSuccess = MutableLiveData<Boolean>()
+    val uploadPointsSuccess: LiveData<Boolean>
+        get() = _uploadPointsSuccess
 
 
     val ratingCoverage = MutableLiveData<Int>().apply{
@@ -83,7 +96,12 @@ class RatingItemViewModel(val walkableRepository: WalkableRepository, val select
         when(type){
             RatingType.WALK->_sendRating.value = !type.willComment
 
-            RatingType.ROUTE -> _sendRating.value = selectedRoute == null
+            RatingType.ROUTE -> {
+                _sendRating.value = selectedRoute == null
+                if(selectedRoute != null){
+                    downloadPhotoPoints(requireNotNull(selectedRoute.id))
+                }
+            }
 
         }
 
@@ -150,6 +168,7 @@ class RatingItemViewModel(val walkableRepository: WalkableRepository, val select
 
     }
 
+
     fun getImageUrl(walk: Walk, userIdCustom: String, bitmap: Bitmap){
 
         coroutineScope.launch {
@@ -181,7 +200,88 @@ class RatingItemViewModel(val walkableRepository: WalkableRepository, val select
 
     }
 
-    private fun createRoute(title: String, description: String, imageUrl: String, walk: Walk, rating: RouteRating, userId: String, commentContent: String){
+    fun uploadPhotoPoints(list: List<PhotoPoint>?, walk: Walk, userId: String){
+        if(list.isNullOrEmpty()){
+            sendRouteRating()
+        }else
+        coroutineScope.launch {
+
+            _status.value = LoadStatus.LOADING
+
+            val result = walkableRepository.uploadPhotoPoints(walk.toRouteId(userId), list)
+
+            _uploadPointsSuccess.value = when(result){
+                is Result.Success ->{
+                    _error.value = null
+                    _status.value = LoadStatus.DONE
+                    result.data
+                }
+                is Result.Fail ->{
+                    _error.value = result.error
+                    _status.value = LoadStatus.ERROR
+                    null
+                }
+                is Result.Error ->{
+                    _error.value = result.exception.toString()
+                    _status.value = LoadStatus.ERROR
+                    null
+                }
+                else ->{
+                    _error.value = getString(R.string.not_here)
+                    _status.value = LoadStatus.ERROR
+                    null
+                }
+
+
+
+            }
+
+        }
+    }
+
+    fun downloadPhotoPoints(routeId: String){
+
+        coroutineScope.launch {
+
+            _status.value = LoadStatus.LOADING
+
+            val result = walkableRepository.downloadPhotoPoints(routeId)
+
+            when(result){
+                is Result.Success ->{
+                    _error.value = null
+                    _status.value = LoadStatus.DONE
+                    setPhotosValue(result.data)
+                }
+                is Result.Fail ->{
+                    _error.value = result.error
+                    _status.value = LoadStatus.ERROR
+                }
+                is Result.Error ->{
+                    _error.value = result.exception.toString()
+                    _status.value = LoadStatus.ERROR
+                }
+                else ->{
+                    _error.value = getString(R.string.not_here)
+                    _status.value = LoadStatus.ERROR
+                }
+
+
+            }
+        }
+    }
+
+    fun setPhotosValue(list: List<PhotoPoint>?){
+        photos.value = when(type){
+            RatingType.ROUTE -> list
+            RatingType.WALK -> photoPoints
+            null -> null
+        }
+    }
+
+    private fun createRoute(title: String, description: String, imageUrl: String
+                            , walk: Walk, rating: RouteRating, userId: String
+                            , commentContent: String){
 
         val waypoints = walk.waypoints.filterIndexed { index, latLng ->
             when {

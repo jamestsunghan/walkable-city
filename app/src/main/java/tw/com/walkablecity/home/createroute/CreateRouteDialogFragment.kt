@@ -22,11 +22,7 @@ import tw.com.walkablecity.ext.getVMFactory
 class CreateRouteDialogFragment : DialogFragment() {
 
 
-    private val viewModel: CreateRouteDialogViewModel by viewModels{ getVMFactory(
-        CreateRouteDialogFragmentArgs.fromBundle(requireArguments()).selectedRoute,
-        CreateRouteDialogFragmentArgs.fromBundle(requireArguments()).walkKey,
-        null
-    ) }
+    private val viewModel: CreateRouteDialogViewModel by viewModels{ getVMFactory() }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -40,12 +36,17 @@ class CreateRouteDialogFragment : DialogFragment() {
 
         dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
+        val selectRoute = CreateRouteDialogFragmentArgs.fromBundle(requireArguments()).selectedRoute
+        val walk = CreateRouteDialogFragmentArgs.fromBundle(requireArguments()).walkKey
+        val photoPoints = CreateRouteDialogFragmentArgs.fromBundle(requireArguments()).photoPoints
+
 
         viewModel.navigateToRating.observe(viewLifecycleOwner, Observer {
             if(it){
                 findNavController().navigate(CreateRouteDialogFragmentDirections
                     .actionCreateRouteDialogFragmentToRatingFragment(
-                        viewModel.route, viewModel.walk, requireNotNull(viewModel.willCreate.value)))
+                        selectRoute, walk, requireNotNull(viewModel.willCreate.value)
+                        , photoPoints))
                 viewModel.navigationComplete()
             }
         })

@@ -1,6 +1,7 @@
 package tw.com.walkablecity.data.source
 
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.util.Log
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.maps.model.LatLng
@@ -586,7 +587,63 @@ object WalkableRemoteDataSource: WalkableDataSource{
 
     }
 
-    override suspend fun addUserToFollowers(userId: String, route: Route): Result<Boolean> = suspendCoroutine{continuation->
+    override suspend fun uploadPhotoPoints(routeId: String, photoPoints: List<PhotoPoint>): Result<Boolean> = suspendCoroutine{continuation->
+        var missionToComplete = photoPoints.size
+        var position = 0
+        for(item in photoPoints){
+            val baos = ByteArrayOutputStream()
+            val bitmap = BitmapFactory.decodeFile(item.photo)
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 50, baos)
+            val data = baos.toByteArray()
+            position++
+            val pathString = "images/$routeId/photo${position}.jpg"
+            val routesImageRef = storageRef.child(pathString)
+
+            routesImageRef.putBytes(data).continueWithTask{task ->
+                if (!task.isSuccessful) {
+                    task.exception?.let {
+                        throw it
+                    }
+                }
+                val newItem = PhotoPoint(point = item.point, photo = pathString)
+                db.collection(ROUTE).document(routeId).collection("photoPoints").add(newItem)
+
+            }.addOnCompleteListener {taskUri->
+                if(taskUri.isSuccessful){
+                    missionToComplete -= 1
+                    if(missionToComplete == 0) continuation.resume(Result.Success(true))
+                }else{
+                    taskUri.exception?.let{
+                        Log.d("JJ_fire","[${this::class.simpleName}] Error getting documents. ${it.message}")
+                        continuation.resume(Result.Error(it))
+                    }
+                    continuation.resume(Result.Fail(WalkableApp.instance.getString(R.string.not_here)))
+                }
+            }
+
+        }
+
+    }
+
+    override suspend fun downloadPhotoPoints(routeId: String): Result<List<PhotoPoint>> = suspendCoroutine{continuation->
+        db.collection(ROUTE).document(routeId).collection("photoPoints").get().addOnCompleteListener {task->
+            if(task.isSuccessful){
+                val list = mutableListOf<PhotoPoint>()
+                for(document in task.result!!){
+                    list.add(document.toObject(PhotoPoint::class.java))
+                }
+                continuation.resume(Result.Success(list))
+            }else{
+                task.exception?.let{
+                    Log.d("JJ_fire","[${this::class.simpleName}] Error getting documents. ${it.message}")
+                    continuation.resume(Result.Error(it))
+                }
+                continuation.resume(Result.Fail(WalkableApp.instance.getString(R.string.not_here)))
+            }
+        }
+    }
+
+    override suspend fun addUserToFollowers(userId: String, route: Route): Result<Boolean> = suspendCoroutine{ continuation->
         val list = route.followers as MutableList<String>
         list.add(userId)
         db.collection(ROUTE).document(route.id.toString()).update(FOLLOWERS,list).addOnCompleteListener {task->

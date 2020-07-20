@@ -24,9 +24,9 @@ fun Fragment.getVMFactory(route: Route?): RouteViewModelFactory {
     return RouteViewModelFactory(repo, route)
 }
 
-fun Fragment.getVMFactory(route: Route?, walk: Walk, type: RatingType?): RatingViewModelFactory {
+fun Fragment.getVMFactory(route: Route?, walk: Walk, type: RatingType?, photoPoints: List<PhotoPoint>?): RatingViewModelFactory {
     val repo = (requireContext().applicationContext as WalkableApp).repo
-    return RatingViewModelFactory(repo, route, walk, type)
+    return RatingViewModelFactory(repo, route, walk, type,photoPoints)
 }
 
 fun Fragment.getVMFactory(loadRouteType: LoadRouteType): LoadRouteViewModelFactory {

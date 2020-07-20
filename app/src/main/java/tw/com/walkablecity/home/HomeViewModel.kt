@@ -42,6 +42,8 @@ class HomeViewModel(val walkableRepository: WalkableRepository, val argument: Ro
         const val FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS = UPDATE_INTERVAL_IN_MILLISECONDS / 2
     }
 
+    val waypointLatLng = MutableLiveData<List<LatLng>>()
+
     private val _permissionDenied =  MutableLiveData<Boolean>(false)
     val permissionDenied: LiveData<Boolean> get() = _permissionDenied
 

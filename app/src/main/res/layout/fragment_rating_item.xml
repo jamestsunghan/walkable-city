@@ -54,6 +54,15 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"/>
 
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycler_photo_point"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="@+id/map"
+                    android:orientation="horizontal"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:photopts="@{viewModel.photos}" />
+
                 <View
                     android:id="@+id/walk_divider"
                     android:layout_width="1dp"
