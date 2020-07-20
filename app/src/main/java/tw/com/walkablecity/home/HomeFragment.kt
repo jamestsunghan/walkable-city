@@ -42,6 +42,7 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
+import com.google.firebase.Timestamp.now
 import com.google.maps.android.PolyUtil
 import com.google.maps.android.ktx.addMarker
 import kotlinx.android.synthetic.main.fragment_home.*
@@ -357,12 +358,11 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationClick
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
 //            val imageBitmap = data?.extras?.get("data") as Bitmap
             val file = File(context?.cacheDir,"images")
-            val pathName = "${file}/image${photoShootNum}.jpg"
+            val pathName = "${file}/image${time.seconds}.jpg"
             val streamFile = File(pathName)
 
             val imageUri = FileProvider.getUriForFile(WalkableApp.instance, WalkableApp.instance.packageName + ".provider", streamFile)
             viewModelInit.addPhotoPoint(pathName)
-            photoShootNum += 1
 //            Glide.with(photo_booth.context)
 //                .load(imageUri).apply(
 //                    RequestOptions()
@@ -374,19 +374,18 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationClick
         }
     }
 
-    var photoShootNum = 1
+    var time = now()
 
-
-    lateinit var currentPath: String
     private fun dispatchTakePictureIntent() {
         Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
             takePictureIntent.resolveActivity(requireActivity().packageManager)?.also {
                 val file = File(context?.cacheDir,"images")
-                val pathName = "${file}/image${photoShootNum}.jpg"
+                time = now()
+                val pathName = "${file}/image${time.seconds}.jpg"
 
                 val photoFile: FileOutputStream? = try{
                     file.mkdir()
-                    val stream = FileOutputStream("${file}/image${photoShootNum}.jpg")
+                    val stream = FileOutputStream("${file}/image${time.seconds}.jpg")
                     stream.flush()
                     stream.close()
                     stream
