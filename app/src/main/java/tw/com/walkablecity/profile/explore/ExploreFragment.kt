@@ -89,7 +89,9 @@ class ExploreFragment : Fragment(), OnMapReadyCallback {
                         for(walk in walks){
 
 
-                            map.addPolyline(PolylineOptions().addAll(walk.waypoints.toLatLngPoints()))
+                            map.addPolyline(PolylineOptions()
+                                .color(WalkableApp.instance.getColor(R.color.red_heart_c73e3a))
+                                .addAll(walk.waypoints.toLatLngPoints()))
 
                         }
                     }

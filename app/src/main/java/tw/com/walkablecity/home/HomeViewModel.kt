@@ -1,5 +1,11 @@
 package tw.com.walkablecity.home
 
+
+import android.annotation.SuppressLint
+import android.content.pm.PackageManager
+import android.hardware.Camera
+import android.hardware.camera2.CameraDevice
+import android.hardware.camera2.CameraManager
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
@@ -13,22 +19,21 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.Timestamp
 import com.google.firebase.Timestamp.now
 import com.google.firebase.firestore.GeoPoint
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import tw.com.walkablecity.R
 import tw.com.walkablecity.UserManager
 import tw.com.walkablecity.Util.getColor
 import tw.com.walkablecity.Util.getString
-import tw.com.walkablecity.Util.makeShortToast
 import tw.com.walkablecity.WalkableApp
 import tw.com.walkablecity.data.*
 import tw.com.walkablecity.data.source.WalkableRepository
 import tw.com.walkablecity.ext.toDistance
 import tw.com.walkablecity.ext.toGeoPoint
+import java.lang.Exception
+import java.lang.Runnable
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.coroutines.resume
 
 class HomeViewModel(val walkableRepository: WalkableRepository, val argument: Route?, val destination: LatLng?): ViewModel(){
 
@@ -39,6 +44,9 @@ class HomeViewModel(val walkableRepository: WalkableRepository, val argument: Ro
 
     private val _permissionDenied =  MutableLiveData<Boolean>(false)
     val permissionDenied: LiveData<Boolean> get() = _permissionDenied
+
+    private val _cameraPermissionDenied =  MutableLiveData<Boolean>(false)
+    val cameraPermissionDenied: LiveData<Boolean> get() = _cameraPermissionDenied
 
     private val fusedLocationClient = FusedLocationProviderClient(WalkableApp.instance)
 
@@ -60,9 +68,6 @@ class HomeViewModel(val walkableRepository: WalkableRepository, val argument: Ro
     private val _walkerStatus = MutableLiveData<WalkerStatus>()
     val walkerStatus: LiveData<WalkerStatus> get() = _walkerStatus
 
-
-
-
     private val _loadStatus = MutableLiveData<LoadStatus>()
     val loadStatus: LiveData<LoadStatus> get() = _loadStatus
 
@@ -71,6 +76,9 @@ class HomeViewModel(val walkableRepository: WalkableRepository, val argument: Ro
 
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> get() = _error
+
+    private val _photoPoints = MutableLiveData<MutableList<PhotoPoint>>(mutableListOf())
+    val photopoints: LiveData<MutableList<PhotoPoint>> get() = _photoPoints
 
 
 
@@ -108,6 +116,8 @@ class HomeViewModel(val walkableRepository: WalkableRepository, val argument: Ro
         value = argument
     }
     private var locationCallback: LocationCallback
+
+    val cameraClicked = MutableLiveData<Boolean>(false)
 
     private val viewModelJob = Job()
     private val coroutineScope = CoroutineScope(Dispatchers.Main + viewModelJob)
@@ -150,6 +160,14 @@ class HomeViewModel(val walkableRepository: WalkableRepository, val argument: Ro
         _permissionDenied.value = false
     }
 
+    fun cameraPermissionDenied(){
+        _cameraPermissionDenied.value = true
+    }
+
+    fun cameraPermissionGranted(){
+        _cameraPermissionDenied.value = false
+    }
+
     fun navigateToLoad(){
         _navigateToLoad.value = true
     }
@@ -171,6 +189,14 @@ class HomeViewModel(val walkableRepository: WalkableRepository, val argument: Ro
 
     fun navigateToRatingComplete(){
         _navigateToRating.value = null
+    }
+
+    fun addPhotoPoint(url: String){
+        val photoPoint = PhotoPoint(
+            point = trackPoints.value?.last()?.toGeoPoint() ?: requireNotNull(currentLocation.value).toGeoPoint(),
+            photo = url
+        )
+        _photoPoints.value = photopoints.value?.plus(photoPoint) as MutableList<PhotoPoint>
     }
 
     fun startStopSwitch(){
@@ -366,6 +392,11 @@ class HomeViewModel(val walkableRepository: WalkableRepository, val argument: Ro
             }
         }
     }
+
+    private fun checkCameraHardWare(): Boolean{
+        return WalkableApp.instance.packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)
+    }
+
 
 
 }

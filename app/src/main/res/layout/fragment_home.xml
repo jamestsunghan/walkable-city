@@ -6,9 +6,7 @@
 
     <data>
 
-        <variable
-            name="viewModel"
-            type="tw.com.walkablecity.home.HomeViewModel" />
+        <variable name="viewModel" type="tw.com.walkablecity.home.HomeViewModel" />
 
         <import type="tw.com.walkablecity.home.WalkerStatus" />
 
@@ -25,9 +23,31 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
+<!--        <ImageView-->
+<!--            android:id="@+id/photo_booth"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="250dp"-->
+<!--            android:visibility="@{viewModel.cameraClicked ? View.VISIBLE : View.GONE}"-->
+<!--            android:scaleType="centerCrop"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toTopOf="parent"-->
+<!--            app:srcCompat="@drawable/placeholder" />-->
+
+<!--        <tw.com.walkablecity.CameraPreview-->
+<!--            android:id="@+id/photo_booth"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="250dp"-->
+<!--            android:visibility="@{viewModel.cameraClicked ? View.VISIBLE : View.GONE}"-->
+<!--            android:scaleType="centerCrop"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toTopOf="parent"-->
+<!--            app:srcCompat="@drawable/placeholder" />-->
+
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/edit_search_route"
-            android:visibility="@{viewModel.permissionDenied ? View.GONE : View.VISIBLE}"
+            android:visibility="@{viewModel.permissionDenied || viewModel.walkerStatus ==WalkerStatus.WALKING || viewModel.walkerStatus == WalkerStatus.PAUSING ? View.GONE : View.VISIBLE}"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/primaryLightColor"
@@ -52,9 +72,22 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/take_picture"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="16dp"
+            android:scaleType="center"
+            app:backgroundTint="@color/primaryDarkColor"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:srcCompat="@drawable/add_friend_36"
+            app:tint="@color/white" />
+
         <TextView
             android:id="@+id/load_route"
-            android:visibility="@{viewModel.permissionDenied ? View.GONE : View.VISIBLE}"
+            android:visibility="@{viewModel.permissionDenied || viewModel.walkerStatus ==WalkerStatus.WALKING || viewModel.walkerStatus == WalkerStatus.PAUSING ? View.GONE : View.VISIBLE}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"

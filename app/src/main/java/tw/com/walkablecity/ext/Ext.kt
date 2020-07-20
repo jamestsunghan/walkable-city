@@ -2,7 +2,7 @@ package tw.com.walkablecity.ext
 
 import android.content.Context
 import android.content.ContextWrapper
-import android.graphics.Bitmap
+import android.graphics.*
 import android.location.Location
 import android.net.Uri
 import android.util.Log
@@ -263,5 +263,23 @@ fun Bitmap.saveToInternalStorage(context: Context){
     }catch (e: IOException){
         e.printStackTrace()
     }
+
+}
+
+fun Bitmap.getCroppedBitmap(): Bitmap{
+    val output = Bitmap.createBitmap(this.width, this.height, Bitmap.Config.ARGB_8888)
+    val canvas = Canvas(output)
+
+    val color = 0xff424242
+    val paint = Paint()
+    val rect = Rect(0,0,this.width, this.height)
+
+    paint.isAntiAlias = true
+    canvas.drawARGB(0,0,0,0)
+    paint.color = color.toInt()
+    canvas.drawCircle((this.width / 2).toFloat(), (this.height / 2).toFloat(), (this.height / 2).toFloat(), paint)
+    paint.xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC_IN)
+    canvas.drawBitmap(this, rect, rect, paint)
+    return output
 
 }
