@@ -43,11 +43,10 @@
             android:id="@+id/friend_bar"
             android:layout_marginEnd="16dp"
             android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_height="6dp"
             android:layout_marginStart="16dp"
             android:background="@drawable/bg_walker_prepare"
-            android:backgroundTint="@color/primaryColor"
-            app:layout_constraintTop_toTopOf="@+id/friend_name"
+            android:backgroundTint="@color/grey_transparent"
             app:layout_constraintBottom_toBottomOf="@+id/friend_name"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/guideline"
@@ -57,14 +56,12 @@
             android:id="@+id/friend_bar_progress"
             android:layout_marginEnd="16dp"
             android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_height="6dp"
             app:progress="@{friend.accomplish}"
             app:wid="@{width}"
             app:targeter="@{viewModel.event.target}"
             android:layout_marginStart="16dp"
             android:background="@drawable/bg_walker_prepare"
-            android:backgroundTint="@color/white_transparent"
-            app:layout_constraintTop_toTopOf="@+id/friend_name"
             app:layout_constraintBottom_toBottomOf="@+id/friend_name"
             app:layout_constraintStart_toEndOf="@+id/guideline"
             tools:layout_editor_absoluteY="60dp" />
@@ -80,7 +77,7 @@
             android:textColor="@color/secondaryColor"
             app:layout_constraintTop_toTopOf="@+id/friend_name"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="@+id/friend_name" />
+            app:layout_constraintBottom_toTopOf="@+id/friend_bar" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

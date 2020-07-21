@@ -9,6 +9,7 @@
         <variable name="user" type="tw.com.walkablecity.data.User" />
         <variable name="friend" type="tw.com.walkablecity.data.Friend" />
         <import type="android.view.View"/>
+        <import type="tw.com.walkablecity.data.LoadStatus"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -87,22 +88,22 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/event_detail_goal" />
 
-        <tw.com.walkablecity.CircleView
-            android:id="@+id/circle_accomplish"
-            android:layout_width="match_parent"
-            app:strokeColor="@color/primaryColor"
-            app:strokeWidth="20dp"
-            android:layout_height="180dp"
-            android:layout_margin="16dp"
-            android:padding="20dp"
-            app:sweepWithData="@{viewModel.circleList}"
-            app:layout_constraintTop_toBottomOf="@+id/event_detail_timer"/>
+<!--        <tw.com.walkablecity.CircleView-->
+<!--            android:id="@+id/circle_accomplish"-->
+<!--            android:layout_width="match_parent"-->
+<!--            app:strokeColor="@color/primaryColor"-->
+<!--            app:strokeWidth="20dp"-->
+<!--            android:layout_height="180dp"-->
+<!--            android:layout_margin="16dp"-->
+<!--            android:padding="20dp"-->
+<!--            app:sweepWithData="@{viewModel.circleList}"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/event_detail_timer"/>-->
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_member"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            app:layout_constraintTop_toBottomOf="@id/circle_accomplish"
+            app:layout_constraintTop_toBottomOf="@id/event_detail_timer"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:friend="@{viewModel.eventMember}"/>
@@ -206,6 +207,17 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </com.google.android.material.card.MaterialCardView>
+
+        <ProgressBar
+            android:id="@+id/progress_payment_checkout"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:theme="@style/ProgressTheme"
+            android:visibility="@{viewModel.status == LoadStatus.LOADING ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

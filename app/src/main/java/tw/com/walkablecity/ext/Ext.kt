@@ -15,6 +15,7 @@ import tw.com.walkablecity.R
 import tw.com.walkablecity.Util
 import tw.com.walkablecity.Util.getString
 import tw.com.walkablecity.data.*
+import tw.com.walkablecity.eventdetail.MemberItem
 import tw.com.walkablecity.profile.bestwalker.WalkerItem
 import java.io.File
 import java.io.FileOutputStream
@@ -245,6 +246,10 @@ fun List<User>.toWalkerItem(): List<WalkerItem>{
              listOf(WalkerItem.Tops(listOf(this[0]))) + theRest.map{WalkerItem.Walkers(it)}
          }
     }
+}
+
+fun List<Friend>.toMemberItem(): List<MemberItem>{
+    return listOf(MemberItem.Board) + this.map{MemberItem.Member(it)}
 }
 
 fun Bitmap.saveToInternalStorage(context: Context){

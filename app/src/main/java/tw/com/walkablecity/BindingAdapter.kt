@@ -44,6 +44,7 @@ import tw.com.walkablecity.event.item.EventItemAdapter
 import tw.com.walkablecity.eventdetail.MemberAdapter
 import tw.com.walkablecity.ext.saveToInternalStorage
 import tw.com.walkablecity.ext.shareCacheDirBitmap
+import tw.com.walkablecity.ext.toMemberItem
 import tw.com.walkablecity.ext.toWalkerItem
 import tw.com.walkablecity.favorite.FavoriteAdapter
 import tw.com.walkablecity.home.WalkerStatus
@@ -164,12 +165,24 @@ fun bindFriend(view: RecyclerView, list: List<Friend>?){
     list?.let{
         view.adapter.apply {
             when(this){
-                is MemberAdapter -> submitList(it)
+                is MemberAdapter -> submitList(it.toMemberItem())
 
             }
         }
     }
 }
+
+//@BindingAdapter("memberItem")
+//fun bindMemberItem(view: RecyclerView, list: List<Friend>?){
+//    list?.let{
+//        view.adapter.apply {
+//            when(this){
+//                is MemberAdapter -> submitList(it)
+//
+//            }
+//        }
+//    }
+//}
 
 
 
@@ -539,6 +552,14 @@ fun hexagonByRating(view: View, rating: RouteRating) {
         }
     })
 
+}
+
+@BindingAdapter("dataTotal")
+fun sweepDataTotal(view: TextView, list: List<Float>?){
+
+    list?.let{
+        view.text = String.format(getString(R.string.accomplish_rate), it.sum().times(100))
+    }
 }
 
 @BindingAdapter("sweepWithData")

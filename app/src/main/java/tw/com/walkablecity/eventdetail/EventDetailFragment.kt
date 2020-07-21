@@ -52,11 +52,6 @@ class EventDetailFragment : Fragment() {
             findNavController().navigateUp()
         }
 
-        binding.circleAccomplish.apply{
-            setCircleColor(getColor(R.color.primaryColor))
-            setStrokeWidth(20f)
-        }
-
         viewModel.walkResultSingle.observe(viewLifecycleOwner, Observer{
             it?.let{
                 viewModel.addToWalkResult(it)
@@ -65,7 +60,7 @@ class EventDetailFragment : Fragment() {
 
         viewModel.walkResult.observe(viewLifecycleOwner, Observer{
             it?.let{ list ->
-                //                binding.recyclerMember.adapter = MemberAdapter(viewModel)
+
                 Log.d("JJ", "list size ${list.size}")
                 Log.d("JJ", "list $list")
                 viewModel.resultCount += 1
@@ -82,10 +77,6 @@ class EventDetailFragment : Fragment() {
                     viewModel.circleList.value = list.sortedByDescending { f->f }.map{ fa-> fa.div(viewModel.event.target?.distance ?: requireNotNull(viewModel.event.target?.hour)*60*60) }
                     viewModel.sortByAccomplish()
                     adapter.notifyDataSetChanged()
-//                    binding.circleAccomplish.apply{
-//                        setRateList(list.sortedByDescending {f->f })
-//                        this.draw()
-//                    }
                 }else if(viewModel.resultCount > viewModel.listMemberId.size){
                     viewModel.resultCount = 0
                     adapter.notifyDataSetChanged()

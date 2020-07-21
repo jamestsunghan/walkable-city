@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable name="viewModel" type="tw.com.walkablecity.eventdetail.EventDetailViewModel" />
+        <variable name="total" type="Float" />
+    </data>
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="8dp"
+        android:layout_margin="16dp"
+        app:cardElevation="8dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <tw.com.walkablecity.CircleView
+                android:id="@+id/circle_accomplish"
+                android:layout_width="match_parent"
+                app:strokeColor="@color/primaryColor"
+                app:strokeWidth="20dp"
+                android:layout_height="180dp"
+                android:layout_margin="16dp"
+                android:padding="20dp"
+                app:sweepWithData="@{viewModel.circleList}"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+            <TextView
+                android:id="@+id/event_detail_goal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/noto_sans"
+                android:gravity="center"
+                android:letterSpacing="0.15"
+                android:padding="4dp"
+                android:text="@string/accomplishment"
+                android:textColor="@color/secondaryColor"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toBottomOf="@+id/circle_accomplish"
+                app:layout_constraintEnd_toEndOf="@+id/circle_accomplish"
+                app:layout_constraintStart_toStartOf="@+id/circle_accomplish"
+                app:layout_constraintTop_toTopOf="@+id/circle_accomplish"
+                app:layout_constraintVertical_bias="0.40" />
+
+            <TextView
+                android:id="@+id/event_detail_accomplish"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/noto_sans"
+                android:gravity="center"
+                android:letterSpacing="0.15"
+                app:dataTotal="@{viewModel.circleList}"
+                android:textColor="@color/secondaryColor"
+                android:textSize="16sp"
+                app:layout_constraintStart_toStartOf="@+id/circle_accomplish"
+                app:layout_constraintEnd_toEndOf="@+id/circle_accomplish"
+                app:layout_constraintTop_toBottomOf="@+id/event_detail_goal"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+    </com.google.android.material.card.MaterialCardView>
+
+
+</layout>
