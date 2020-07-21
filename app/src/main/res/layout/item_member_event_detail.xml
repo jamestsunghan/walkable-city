@@ -8,11 +8,34 @@
         <variable name="viewModel" type="tw.com.walkablecity.eventdetail.EventDetailViewModel" />
         <variable name="position" type="Integer" />
         <variable name="width" type="Integer" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_view_position"
+            android:layout_marginStart="16dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            app:cardCornerRadius="40dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:cardElevation="2dp">
+
+            <TextView
+                android:id="@+id/badge_position"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textColor="@color/primaryDarkColor"
+                android:gravity="center"
+                android:fontFamily="@font/noto_sans"
+                android:textSize="14dp"
+                android:text="@{String.valueOf(position)}" />
+        </com.google.android.material.card.MaterialCardView>
 
         <TextView
             android:id="@+id/friend_name"
@@ -29,7 +52,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/guideline"
             app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/card_view_position"
             app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.constraintlayout.widget.Guideline
@@ -37,7 +60,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintGuide_begin="120dp" />
+            app:layout_constraintGuide_begin="180dp" />
 
         <TextView
             android:id="@+id/friend_bar"

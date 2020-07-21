@@ -5,6 +5,9 @@
     <data>
         <variable name="viewModel" type="tw.com.walkablecity.eventdetail.EventDetailViewModel" />
         <variable name="total" type="Float" />
+        <import type="android.view.View"/>
+        <import type="tw.com.walkablecity.data.EventType"/>
+        <import type="androidx.constraintlayout.widget.ConstraintLayout.LayoutParams"/>
     </data>
 
     <com.google.android.material.card.MaterialCardView
@@ -14,7 +17,8 @@
         android:layout_margin="16dp"
         app:cardElevation="8dp">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+
+    <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -28,7 +32,8 @@
                 android:padding="20dp"
                 app:sweepWithData="@{viewModel.circleList}"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"/>
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:visibility="@{viewModel.event.type == EventType.HOUR_GROUP || viewModel.event.type == EventType.DISTANCE_GROUP ? View.VISIBLE : View.GONE}" />
 
             <TextView
                 android:id="@+id/event_detail_goal"
@@ -45,9 +50,11 @@
                 app:layout_constraintEnd_toEndOf="@+id/circle_accomplish"
                 app:layout_constraintStart_toStartOf="@+id/circle_accomplish"
                 app:layout_constraintTop_toTopOf="@+id/circle_accomplish"
-                app:layout_constraintVertical_bias="0.40" />
+                app:layout_constraintVertical_bias="0.40"
+                android:visibility="@{viewModel.event.type == EventType.HOUR_GROUP || viewModel.event.type == EventType.DISTANCE_GROUP ? View.VISIBLE : View.GONE}" />
 
-            <TextView
+
+        <TextView
                 android:id="@+id/event_detail_accomplish"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -59,9 +66,11 @@
                 android:textSize="16sp"
                 app:layout_constraintStart_toStartOf="@+id/circle_accomplish"
                 app:layout_constraintEnd_toEndOf="@+id/circle_accomplish"
-                app:layout_constraintTop_toBottomOf="@+id/event_detail_goal"/>
+                app:layout_constraintTop_toBottomOf="@+id/event_detail_goal"
+                android:visibility="@{viewModel.event.type == EventType.HOUR_GROUP || viewModel.event.type == EventType.DISTANCE_GROUP ? View.VISIBLE : View.GONE}" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
 
