@@ -8,7 +8,6 @@ import android.graphics.drawable.Drawable
 import android.graphics.drawable.ShapeDrawable
 import android.graphics.drawable.shapes.RectShape
 import android.graphics.drawable.shapes.Shape
-import android.net.Uri
 import android.util.Log
 import android.util.TypedValue
 import android.view.View
@@ -540,6 +539,54 @@ fun hexagonByRating(view: View, rating: RouteRating) {
         }
     })
 
+}
+
+@BindingAdapter("sweepWithData")
+fun sweepWithData(view: CircleView, list: List<Float>?){
+
+//    val paint = Paint()
+//    val w = view.width
+//    val h = view.height
+//    var startAngle = 0f
+
+//    val pl = view.paddingLeft
+//    val pr = view.paddingRight
+//    val pt = view.paddingTop
+//    val pb = view.paddingBottom
+//
+//    val usableWidth = w - (pl + pr)
+//    val usableHeight = h - (pt + pb)
+//
+//    val radius = usableWidth.coerceAtMost(usableHeight) / 2
+//    val cx = pl + usableWidth / 2
+//    val cy = pt + usableHeight / 2
+//    val rateColor = listOf<Int>(
+//        getColor(R.color.secondaryLightColor), getColor(R.color.secondaryColor), getColor(R.color.secondaryDarkColor)
+//    )
+//    paint.style = Paint.Style.STROKE
+//    paint.strokeWidth = view.getStrokeWidth()
+//    view.foreground = ShapeDrawable(object: Shape(){
+//        override fun draw(canvas: Canvas?, paint: Paint?) {
+//
+//        }
+//    })
+
+    list?.let{
+        view.rate = list
+        val canvas = Canvas()
+        view.invalidate()
+//        if(list.isNullOrEmpty()) canvas.drawCircle(cx.toFloat(), cy.toFloat(), radius.toFloat(), paint)
+//        else {
+//            for((listPosition, item) in list.withIndex()){
+//                paint.color = rateColor[listPosition % 3]
+//                canvas.drawArc(cx.toFloat()- radius.toFloat(), cy.toFloat()-radius.toFloat()
+//                    , cx.toFloat() + radius.toFloat(), cy.toFloat()+radius.toFloat()
+//                    , startAngle, item.times(360), false, paint)
+//                startAngle += item.times(360)
+//            }
+//        }
+
+    }
 }
 
 

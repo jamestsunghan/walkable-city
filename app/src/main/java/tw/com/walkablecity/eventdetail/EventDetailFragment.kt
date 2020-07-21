@@ -17,6 +17,7 @@ import com.google.firebase.Timestamp
 import tw.com.walkablecity.R
 import tw.com.walkablecity.UserManager
 import tw.com.walkablecity.Util
+import tw.com.walkablecity.Util.getColor
 import tw.com.walkablecity.Util.lessThenTenPadStart
 import tw.com.walkablecity.databinding.FragmentEventDetailBinding
 import tw.com.walkablecity.ext.getVMFactory
@@ -51,6 +52,11 @@ class EventDetailFragment : Fragment() {
             findNavController().navigateUp()
         }
 
+        binding.circleAccomplish.apply{
+            setCircleColor(getColor(R.color.primaryColor))
+            setStrokeWidth(20f)
+        }
+
         viewModel.walkResultSingle.observe(viewLifecycleOwner, Observer{
             it?.let{
                 viewModel.addToWalkResult(it)
@@ -58,10 +64,10 @@ class EventDetailFragment : Fragment() {
         })
 
         viewModel.walkResult.observe(viewLifecycleOwner, Observer{
-            it?.let{
-//                binding.recyclerMember.adapter = MemberAdapter(viewModel)
-                Log.d("JJ", "list size ${it.size}")
-                Log.d("JJ", "list $it")
+            it?.let{ list ->
+                //                binding.recyclerMember.adapter = MemberAdapter(viewModel)
+                Log.d("JJ", "list size ${list.size}")
+                Log.d("JJ", "list $list")
                 viewModel.resultCount += 1
 
                 Log.d("JJ","count ${viewModel.resultCount}")
@@ -70,12 +76,16 @@ class EventDetailFragment : Fragment() {
                 if(viewModel.resultCount == viewModel.listMemberId.size) {
 
                     viewModel.eventMember.value?.mapIndexed { index, friend ->
-                        requireNotNull(viewModel.eventMember.value)[index].accomplish = it[index]
+                        requireNotNull(viewModel.eventMember.value)[index].accomplish = list[index]
                         friend
                     }
-
+                    viewModel.circleList.value = list.sortedByDescending { f->f }.map{ fa-> fa.div(viewModel.event.target?.distance ?: requireNotNull(viewModel.event.target?.hour)*60*60) }
                     viewModel.sortByAccomplish()
                     adapter.notifyDataSetChanged()
+//                    binding.circleAccomplish.apply{
+//                        setRateList(list.sortedByDescending {f->f })
+//                        this.draw()
+//                    }
                 }else if(viewModel.resultCount > viewModel.listMemberId.size){
                     viewModel.resultCount = 0
                     adapter.notifyDataSetChanged()

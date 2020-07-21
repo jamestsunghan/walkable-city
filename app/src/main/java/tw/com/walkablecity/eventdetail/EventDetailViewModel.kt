@@ -23,6 +23,8 @@ class EventDetailViewModel(private val walkableRepository: WalkableRepository, v
 
     val hostName = event.member.first { it.idCustom == event.host }.name
 
+    val circleList = MutableLiveData<List<Float>>()
+
     private val _status = MutableLiveData<LoadStatus>()
     val status: LiveData<LoadStatus> get() = _status
 
