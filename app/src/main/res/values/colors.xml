@@ -45,5 +45,9 @@
 
     <color name="grey_transparent">#33BDC0BA</color>
 
+    <color name="badge_hour">#E2943B</color>
+    <color name="badge_event">#904840</color>
+    <color name="badge_friend">#1A3C49</color>
+
 
 </resources>
