@@ -225,6 +225,7 @@
     <string name="walker_km">%.2f公里</string>
     <string name="walker_hour">%.2f小時</string>
 
+    <string name="daily_ranking">本日排行</string>
     <string name="week_ranking">本週排行</string>
     <string name="month_ranking">本月排行</string>
     <string name="total_ranking">累計排行</string>

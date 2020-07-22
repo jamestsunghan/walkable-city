@@ -202,11 +202,13 @@ fun bindEvent(view: RecyclerView, list: List<Event>?){
 @BindingAdapter("progress", "wid", "targeter")
 fun bindWidthWithFloat(view: TextView, input: Float?, width: Int, target: EventTarget){
     input?.let{
+        if(width != 0){
 
-        view.layoutParams.width =
-
-            input.times(width).div(target.distance ?: requireNotNull(target.hour)*3600).toInt()
-
+            val layoutParams = view.layoutParams
+            layoutParams.width =
+                input.times(width).div(target.distance ?: requireNotNull(target.hour)*3600).toInt()
+            view.layoutParams = layoutParams
+        }
     }
 }
 
@@ -562,8 +564,8 @@ fun sweepDataTotal(view: TextView, list: List<Float>?){
     }
 }
 
-@BindingAdapter("sweepWithData")
-fun sweepWithData(view: CircleView, list: List<Float>?){
+@BindingAdapter("sweepWithData", "type")
+fun sweepWithData(view: CircleView, list: List<Float>?, type: EventType){
 
 //    val paint = Paint()
 //    val w = view.width
@@ -593,8 +595,8 @@ fun sweepWithData(view: CircleView, list: List<Float>?){
 //    })
 
     list?.let{
-        view.rate = list
-        val canvas = Canvas()
+        view.setRateList(list)
+        view.setRateListColor(type.colorList)
         view.invalidate()
 //        if(list.isNullOrEmpty()) canvas.drawCircle(cx.toFloat(), cy.toFloat(), radius.toFloat(), paint)
 //        else {

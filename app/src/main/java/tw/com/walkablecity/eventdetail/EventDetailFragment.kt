@@ -79,7 +79,7 @@ class EventDetailFragment : Fragment() {
                     adapter.notifyDataSetChanged()
                 }else if(viewModel.resultCount > viewModel.listMemberId.size){
                     viewModel.resultCount = 0
-                    adapter.notifyDataSetChanged()
+//                    adapter.notifyDataSetChanged()
                 }else{
                     viewModel.getMemberWalkResult(requireNotNull(viewModel.event.startDate)
                         , requireNotNull(viewModel.event.target) ,viewModel.listMemberId)

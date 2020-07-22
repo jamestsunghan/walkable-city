@@ -10,71 +10,101 @@
         <import type="androidx.constraintlayout.widget.ConstraintLayout.LayoutParams"/>
     </data>
 
-    <com.google.android.material.card.MaterialCardView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:cardCornerRadius="8dp"
-        android:layout_margin="16dp"
-        app:cardElevation="8dp">
-
-
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_group_board"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="8dp"
+            android:layout_margin="16dp"
+            app:cardElevation="8dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/event_detail_ranking">
 
-            <tw.com.walkablecity.CircleView
-                android:id="@+id/circle_accomplish"
+
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                app:strokeColor="@color/primaryColor"
-                app:strokeWidth="20dp"
-                android:layout_height="180dp"
-                android:layout_margin="16dp"
-                android:padding="20dp"
-                app:sweepWithData="@{viewModel.circleList}"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                android:visibility="@{viewModel.event.type == EventType.HOUR_GROUP || viewModel.event.type == EventType.DISTANCE_GROUP ? View.VISIBLE : View.GONE}" />
+                android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/event_detail_goal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/noto_sans"
-                android:gravity="center"
-                android:letterSpacing="0.15"
-                android:padding="4dp"
-                android:text="@string/accomplishment"
-                android:textColor="@color/secondaryColor"
-                android:textSize="12sp"
-                app:layout_constraintBottom_toBottomOf="@+id/circle_accomplish"
-                app:layout_constraintEnd_toEndOf="@+id/circle_accomplish"
-                app:layout_constraintStart_toStartOf="@+id/circle_accomplish"
-                app:layout_constraintTop_toTopOf="@+id/circle_accomplish"
-                app:layout_constraintVertical_bias="0.40"
-                android:visibility="@{viewModel.event.type == EventType.HOUR_GROUP || viewModel.event.type == EventType.DISTANCE_GROUP ? View.VISIBLE : View.GONE}" />
+                <tw.com.walkablecity.CircleView
+                    android:id="@+id/circle_accomplish"
+                    android:layout_width="match_parent"
+                    app:strokeColor="@color/primaryColor"
+                    app:strokeWidth="20dp"
+                    android:layout_height="180dp"
+                    android:layout_margin="16dp"
+                    android:padding="20dp"
+                    app:sweepWithData="@{viewModel.circleList}"
+                    app:type="@{viewModel.event.type}"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:visibility="@{viewModel.event.type == EventType.HOUR_GROUP || viewModel.event.type == EventType.DISTANCE_GROUP ? View.VISIBLE : View.GONE}" />
 
+                <TextView
+                    android:id="@+id/event_detail_goal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/noto_sans"
+                    android:gravity="center"
+                    android:letterSpacing="0.15"
+                    android:padding="4dp"
+                    android:text="@string/accomplishment"
+                    android:textColor="@color/secondaryColor"
+                    android:textSize="12sp"
+                    app:layout_constraintBottom_toBottomOf="@+id/circle_accomplish"
+                    app:layout_constraintEnd_toEndOf="@+id/circle_accomplish"
+                    app:layout_constraintStart_toStartOf="@+id/circle_accomplish"
+                    app:layout_constraintTop_toTopOf="@+id/circle_accomplish"
+                    app:layout_constraintVertical_bias="0.40"
+                    android:visibility="@{viewModel.event.type == EventType.HOUR_GROUP || viewModel.event.type == EventType.DISTANCE_GROUP ? View.VISIBLE : View.GONE}" />
+
+
+                <TextView
+                    android:id="@+id/event_detail_accomplish"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/noto_sans"
+                    android:gravity="center"
+                    android:letterSpacing="0.15"
+                    app:dataTotal="@{viewModel.circleList}"
+                    android:textColor="@color/secondaryColor"
+                    android:textSize="16sp"
+                    app:layout_constraintStart_toStartOf="@+id/circle_accomplish"
+                    app:layout_constraintEnd_toEndOf="@+id/circle_accomplish"
+                    app:layout_constraintTop_toBottomOf="@+id/event_detail_goal"
+                    android:visibility="@{viewModel.event.type == EventType.HOUR_GROUP || viewModel.event.type == EventType.DISTANCE_GROUP ? View.VISIBLE : View.GONE}" />
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+        </com.google.android.material.card.MaterialCardView>
 
         <TextView
-                android:id="@+id/event_detail_accomplish"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/noto_sans"
-                android:gravity="center"
-                android:letterSpacing="0.15"
-                app:dataTotal="@{viewModel.circleList}"
-                android:textColor="@color/secondaryColor"
-                android:textSize="16sp"
-                app:layout_constraintStart_toStartOf="@+id/circle_accomplish"
-                app:layout_constraintEnd_toEndOf="@+id/circle_accomplish"
-                app:layout_constraintTop_toBottomOf="@+id/event_detail_goal"
-                android:visibility="@{viewModel.event.type == EventType.HOUR_GROUP || viewModel.event.type == EventType.DISTANCE_GROUP ? View.VISIBLE : View.GONE}" />
+            android:id="@+id/event_detail_ranking"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="16dp"
+            android:fontFamily="@font/noto_sans"
+            android:gravity="start"
+            android:letterSpacing="0.15"
+            android:padding="8dp"
+            android:text="@{viewModel.event.type == EventType.FREQUENCY ? viewModel.event.target.frequencyType.ranking : @string/total_ranking}"
+            android:textColor="@color/primaryDarkColor"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-
-    </com.google.android.material.card.MaterialCardView>
 
 
 </layout>

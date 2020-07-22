@@ -678,7 +678,7 @@ object WalkableRemoteDataSource: WalkableDataSource{
 
     override suspend fun getPopularEvents(): Result<List<Event>> = suspendCoroutine{continuation->
 
-        db.collection(EVENT).whereGreaterThanOrEqualTo("endDate",now()).orderBy("endDate").orderBy("memberCount", Query.Direction.DESCENDING).get().addOnCompleteListener { task->
+        db.collection(EVENT).whereGreaterThanOrEqualTo("endDate",now()).whereEqualTo("public",true).get().addOnCompleteListener { task->
             if(task.isSuccessful){
                 val list = mutableListOf<Event>()
                 for(document in task.result!!){
@@ -686,6 +686,7 @@ object WalkableRemoteDataSource: WalkableDataSource{
                     val event = document.toObject(Event::class.java)
                     list.add(event)
                 }
+                list.sortByDescending { it.memberCount }
                 continuation.resume(Result.Success(list))
             }else{
                 task.exception?.let{

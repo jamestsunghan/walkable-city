@@ -22,7 +22,7 @@ class CircleView(context: Context, attrs: AttributeSet): View(context, attrs) {
     private val paint = Paint()
     private var circleColor = DEFAULT_CIRCLE_COLOR
     private var strokewidth = DEFAULT_STROKE_WIDTH
-    var rate = listOf<Float>(0.1f,0.2f)
+    private var rate = listOf<Float>()
     private var rateColor = listOf<Int>(
         getColor(R.color.secondaryLightColor), getColor(R.color.secondaryColor), getColor(R.color.secondaryDarkColor)
     )
@@ -83,45 +83,6 @@ class CircleView(context: Context, attrs: AttributeSet): View(context, attrs) {
     }
 
 
-
-    override fun draw(canvas: Canvas) {
-        super.draw(canvas)
-//        startAngle = -90f
-//        val w = width
-//        val h = height
-//
-//        val pl = paddingLeft
-//        val pr = paddingRight
-//        val pt = paddingTop
-//        val pb = paddingBottom
-//
-//        val usableWidth = w - (pl + pr)
-//        val usableHeight = h - (pt + pb)
-//
-//        val radius = usableWidth.coerceAtMost(usableHeight) / 2
-//        val cx = pl + usableWidth / 2
-//        val cy = pt + usableHeight / 2
-//
-//        paint.color = circleColor
-//        paint.style = Paint.Style.STROKE
-//        paint.strokeWidth = strokewidth
-//
-//        if(rate.isNullOrEmpty()){}
-//        else {
-//            startAngle = 0f
-//            for((listPosition, item) in rate.withIndex()){
-//                paint.color = rateColor[listPosition % 3]
-//                canvas.drawArc(cx.toFloat()- radius.toFloat(), cy.toFloat()-radius.toFloat()
-//                    , cx.toFloat() + radius.toFloat(), cy.toFloat()-radius.toFloat()
-//                    , startAngle, item.times(360), false, paint)
-//                startAngle += item.times(360)
-//            }
-//        }
-
-
-
-    }
-
     fun setCircleColor(circleColor: Int){
         this.circleColor = circleColor
         invalidate()
@@ -146,6 +107,6 @@ class CircleView(context: Context, attrs: AttributeSet): View(context, attrs) {
     }
 
     fun setRateListColor(list: List<Int>){
-
+        this.rateColor = list
     }
 }

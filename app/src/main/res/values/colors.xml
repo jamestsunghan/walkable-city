@@ -12,6 +12,7 @@
 
     <color name="white">#ffffff</color>
     <color name="white_transparent">#77ffffff</color>
+    <color name="real_transparent">#00ffffff</color>
     <color name="black">#000000</color>
 
     <color name="blue_2e5c6e">#2e5c6e</color>
@@ -23,10 +24,20 @@
     <color name="hexagon_fill">#99629749</color>
 
     <color name="event_frequency">#55b19693</color>
+    <color name="event_frequency_darker">#99b19693</color>
+    <color name="event_frequency_darkest">#b19693</color>
     <color name="event_distance_group">#55b5caa0</color>
+    <color name="event_distance_group_darker">#99b5caa0</color>
+    <color name="event_distance_group_darkest">#b5caa0</color>
     <color name="event_distance_race">#5591ad70</color>
+    <color name="event_distance_race_darker">#9991ad70</color>
+    <color name="event_distance_race_darkest">#91ad70</color>
     <color name="event_hour_group">#55a5dee4</color>
+    <color name="event_hour_group_darker">#99a5dee4</color>
+    <color name="event_hour_group_darkest">#a5dee4</color>
     <color name="event_hour_race">#5566bab7</color>
+    <color name="event_hour_race_darker">#9966bab7</color>
+    <color name="event_hour_race_darkest">#66bab7</color>
 
     <color name="bronze">#B35C37</color>
     <color name="silver">#91989f</color>

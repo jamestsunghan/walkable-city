@@ -8,6 +8,7 @@
         <variable name="viewModel" type="tw.com.walkablecity.eventdetail.EventDetailViewModel" />
         <variable name="position" type="Integer" />
         <variable name="width" type="Integer" />
+        <variable name="user" type="tw.com.walkablecity.data.Friend" />
 
     </data>
 
@@ -46,7 +47,7 @@
             android:layout_marginBottom="8dp"
             android:padding="8dp"
             android:text="@{friend.name}"
-            android:textColor="@color/primaryDarkColor"
+            android:textColor="@{friend.idCustom == user.idCustom ? @color/blue_2e5c6e : @color/primaryDarkColor }"
             android:letterSpacing="0.15"
             android:fontFamily="@font/noto_sans"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -61,6 +62,17 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             app:layout_constraintGuide_begin="180dp" />
+
+<!--        <SeekBar-->
+<!--            android:id="@+id/friend_seek_bar"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="10dp"-->
+<!--            android:splitTrack="false"-->
+<!--            android:thumbTint="@color/real_transparent"-->
+<!--            app:layout_constraintBottom_toBottomOf="@+id/friend_name"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toEndOf="@+id/guideline"-->
+<!--            />-->
 
         <TextView
             android:id="@+id/friend_bar"
@@ -77,17 +89,17 @@
 
         <TextView
             android:id="@+id/friend_bar_progress"
-            android:layout_marginEnd="16dp"
             android:layout_width="0dp"
             android:layout_height="6dp"
-            app:progress="@{friend.accomplish}"
-            app:wid="@{width}"
-            app:targeter="@{viewModel.event.target}"
             android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
             android:background="@drawable/bg_walker_prepare"
+            android:backgroundTint="@{viewModel.event.type.colorList[0]}"
             app:layout_constraintBottom_toBottomOf="@+id/friend_name"
             app:layout_constraintStart_toEndOf="@+id/guideline"
-            tools:layout_editor_absoluteY="60dp" />
+            app:progress="@{friend.accomplish}"
+            app:targeter="@{viewModel.event.target}"
+            app:wid="@{width}" />
 
         <TextView
             android:id="@+id/friend_bar_progress_text"

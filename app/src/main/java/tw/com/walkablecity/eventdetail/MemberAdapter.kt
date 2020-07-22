@@ -8,10 +8,12 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import tw.com.walkablecity.R
+import tw.com.walkablecity.UserManager
 import tw.com.walkablecity.Util
 import tw.com.walkablecity.data.Friend
 import tw.com.walkablecity.databinding.ItemEventDetailBoardBinding
 import tw.com.walkablecity.databinding.ItemMemberEventDetailBinding
+import tw.com.walkablecity.ext.toFriend
 
 class MemberAdapter(val viewModel: EventDetailViewModel): ListAdapter<MemberItem, RecyclerView.ViewHolder>(DiffCallback) {
 
@@ -29,10 +31,26 @@ class MemberAdapter(val viewModel: EventDetailViewModel): ListAdapter<MemberItem
     class MemberViewHolder(private val binding: ItemMemberEventDetailBinding): RecyclerView.ViewHolder(binding.root){
         fun bind(friend: Friend, viewModel: EventDetailViewModel, position: Int){
             binding.friend = friend
-            binding.friendBarProgress.backgroundTintList = ColorStateList.valueOf(viewModel.typeColor)
             binding.viewModel = viewModel
             binding.width = binding.friendBar.width
-            Log.d("JJ","friend bar width ${binding.friendBar.width}")
+//            binding.friendSeekBar.apply{
+//                max = viewModel.event.target?.distance?.times(1000)?.toInt() ?: requireNotNull(viewModel.event.target?.hour?.times(60*60)?.toInt())
+//                progress = if(viewModel.event.target?.distance == null){
+//                    friend.accomplish?.toInt() ?: 0
+//                }else{
+//                    friend.accomplish?.times(1000)?.toInt() ?: 0
+//                }
+//                Log.d("JJ_seekbar","max $max progress $progress")
+//                isActivated = false
+//                secondaryProgress = viewModel.typeColor
+//            }
+            binding.friendBarProgress.width =  friend.accomplish?.let{
+                it.times(binding.friendBar.width).div(viewModel.event.target?.distance ?: requireNotNull(viewModel.event.target?.hour)*3600).toInt()
+            } ?: binding.friendBar.width
+
+            binding.user = UserManager.user?.toFriend()
+//            Log.d("JJ","friend bar width ${binding.friendBar.width}")
+//            Log.d("JJ","friend bar progress width ${binding.friendBarProgress.width}")
             binding.position = position
             binding.executePendingBindings()
         }
@@ -40,7 +58,7 @@ class MemberAdapter(val viewModel: EventDetailViewModel): ListAdapter<MemberItem
 
     companion object DiffCallback: DiffUtil.ItemCallback<MemberItem>(){
         override fun areItemsTheSame(oldItem: MemberItem, newItem: MemberItem): Boolean {
-            return oldItem === newItem
+            return oldItem == newItem
         }
 
         override fun areContentsTheSame(oldItem: MemberItem, newItem: MemberItem): Boolean {
