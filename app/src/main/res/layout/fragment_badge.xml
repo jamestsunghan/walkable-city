@@ -62,7 +62,7 @@
                         app:layout_constraintHorizontal_bias="0.5"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/badge_hour_section"
-                        app:srcCompat="@{user.accumulatedHour.total > 0f ? @drawable/badge_0_hour : @drawable/badge_not_complete }"
+                        app:srcCompat="@{user.accumulatedHour.total > 0f ? @drawable/badge_0_hour : @drawable/badge_question }"
                         tools:layout_editor_absoluteY="0dp" />
 
                     <TextView
@@ -90,7 +90,7 @@
                         app:layout_constraintHorizontal_bias="0.5"
                         app:layout_constraintStart_toEndOf="@+id/badge_hour_0"
                         app:layout_constraintTop_toTopOf="@+id/badge_hour_0"
-                        app:srcCompat="@{user.accumulatedHour.total >= 1f ? @drawable/badge_1_hour : @drawable/badge_not_complete }"
+                        app:srcCompat="@{user.accumulatedHour.total >= 1f ? @drawable/badge_1_hour : @drawable/badge_question }"
                         tools:layout_editor_absoluteY="0dp" />
 
                     <TextView
@@ -119,7 +119,7 @@
                         app:layout_constraintHorizontal_bias="0.5"
                         app:layout_constraintStart_toEndOf="@+id/badge_hour_1"
                         app:layout_constraintTop_toTopOf="@+id/badge_hour_0"
-                        app:srcCompat="@{user.accumulatedHour.total >= 5f ? @drawable/badge_5_hour : @drawable/badge_not_complete }" />
+                        app:srcCompat="@{user.accumulatedHour.total >= 5f ? @drawable/badge_5_hour : @drawable/badge_question }" />
 
                     <TextView
                         android:id="@+id/badge_hour_5_text"
@@ -147,7 +147,7 @@
                         app:layout_constraintHorizontal_bias="0.5"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/badge_hour_0_text"
-                        app:srcCompat="@{user.accumulatedHour.total >= 10f ? @drawable/badge_10_hour : @drawable/badge_not_complete }"
+                        app:srcCompat="@{user.accumulatedHour.total >= 10f ? @drawable/badge_10_hour : @drawable/badge_question }"
                         tools:layout_editor_absoluteY="0dp" />
 
                     <TextView
@@ -177,7 +177,7 @@
                         app:layout_constraintHorizontal_bias="0.5"
                         app:layout_constraintStart_toEndOf="@+id/badge_hour_10"
                         app:layout_constraintTop_toTopOf="@+id/badge_hour_10"
-                        app:srcCompat="@{user.accumulatedHour.total >= 50f ? @drawable/badge_50_hour : @drawable/badge_not_complete }"
+                        app:srcCompat="@{user.accumulatedHour.total >= 50f ? @drawable/badge_50_hour : @drawable/badge_question }"
                         tools:layout_editor_absoluteY="0dp" />
 
                     <TextView
@@ -206,7 +206,7 @@
                         app:layout_constraintHorizontal_bias="0.5"
                         app:layout_constraintStart_toEndOf="@+id/badge_hour_50"
                         app:layout_constraintTop_toTopOf="@+id/badge_hour_10"
-                        app:srcCompat="@{user.accumulatedHour.total >= 100f ? @drawable/badge_100_hour : @drawable/badge_not_complete }" />
+                        app:srcCompat="@{user.accumulatedHour.total >= 100f ? @drawable/badge_100_hour : @drawable/badge_question }" />
 
                     <TextView
                         android:id="@+id/badge_hour_100_text"
@@ -270,7 +270,7 @@
                         app:layout_constraintHorizontal_bias="0.5"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/badge_km_section"
-                        app:srcCompat="@{user.accumulatedKm.total > 0 ? @drawable/badge_0_distance : @drawable/badge_not_complete }"
+                        app:srcCompat="@{user.accumulatedKm.total > 0 ? @drawable/badge_0_distance : @drawable/badge_question }"
                         tools:layout_editor_absoluteY="0dp" />
 
                     <TextView
@@ -298,7 +298,7 @@
                         app:layout_constraintHorizontal_bias="0.5"
                         app:layout_constraintStart_toEndOf="@+id/badge_km_0"
                         app:layout_constraintTop_toTopOf="@+id/badge_km_0"
-                        app:srcCompat="@{user.accumulatedKm.total >= 3f ? @drawable/badge_3_distance : @drawable/badge_not_complete }"
+                        app:srcCompat="@{user.accumulatedKm.total >= 3f ? @drawable/badge_3_distance : @drawable/badge_question }"
                         tools:layout_editor_absoluteY="0dp" />
 
                     <TextView
@@ -327,7 +327,7 @@
                         app:layout_constraintHorizontal_bias="0.5"
                         app:layout_constraintStart_toEndOf="@+id/badge_km_3"
                         app:layout_constraintTop_toTopOf="@+id/badge_km_0"
-                        app:srcCompat="@{user.accumulatedKm.total >= 10f ? @drawable/badge_10_distance : @drawable/badge_not_complete }" />
+                        app:srcCompat="@{user.accumulatedKm.total >= 10f ? @drawable/badge_10_distance : @drawable/badge_question }" />
 
                     <TextView
                         android:id="@+id/badge_km_10_text"
@@ -355,7 +355,7 @@
                         app:layout_constraintHorizontal_bias="0.5"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/badge_km_0_text"
-                        app:srcCompat="@{user.accumulatedKm.total >= 80f ? @drawable/badge_80_distance : @drawable/badge_not_complete }"
+                        app:srcCompat="@{user.accumulatedKm.total >= 80f ? @drawable/badge_80_distance : @drawable/badge_question }"
                         tools:layout_editor_absoluteY="0dp" />
 
                     <TextView
@@ -385,7 +385,7 @@
                         app:layout_constraintHorizontal_bias="0.5"
                         app:layout_constraintStart_toEndOf="@+id/badge_km_80"
                         app:layout_constraintTop_toTopOf="@+id/badge_km_80"
-                        app:srcCompat="@{user.accumulatedKm.total >= 350f ? @drawable/badge_350_distance : @drawable/badge_not_complete }"
+                        app:srcCompat="@{user.accumulatedKm.total >= 350f ? @drawable/badge_350_distance : @drawable/badge_question }"
                         tools:layout_editor_absoluteY="0dp" />
 
                     <TextView
@@ -414,7 +414,7 @@
                         app:layout_constraintHorizontal_bias="0.5"
                         app:layout_constraintStart_toEndOf="@+id/badge_km_350"
                         app:layout_constraintTop_toTopOf="@+id/badge_km_80"
-                        app:srcCompat="@{user.accumulatedKm.total >= 1000f ? @drawable/badge_1000_distance : @drawable/badge_not_complete }" />
+                        app:srcCompat="@{user.accumulatedKm.total >= 1000f ? @drawable/badge_1000_distance : @drawable/badge_question }" />
 
                     <TextView
                         android:id="@+id/badge_km_1000_text"
@@ -478,7 +478,7 @@
                         app:layout_constraintHorizontal_bias="0.5"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/badge_event_section"
-                        app:srcCompat="@{viewModel.eventCount > 0 ? @drawable/badge_one_love : @drawable/badge_not_complete }"
+                        app:srcCompat="@{viewModel.eventCount > 0 ? @drawable/badge_one_love : @drawable/badge_question }"
                         tools:layout_editor_absoluteY="0dp" />
 
                     <TextView
@@ -506,7 +506,7 @@
                         app:layout_constraintHorizontal_bias="0.5"
                         app:layout_constraintStart_toEndOf="@+id/badge_event_0"
                         app:layout_constraintTop_toTopOf="@+id/badge_event_0"
-                        app:srcCompat="@{viewModel.eventCount >= 3 ? @drawable/badge_3_love : @drawable/badge_not_complete }"
+                        app:srcCompat="@{viewModel.eventCount >= 3 ? @drawable/badge_3_love : @drawable/badge_question }"
                         tools:layout_editor_absoluteY="0dp" />
 
                     <TextView
@@ -535,7 +535,7 @@
                         app:layout_constraintHorizontal_bias="0.5"
                         app:layout_constraintStart_toEndOf="@+id/badge_event_3"
                         app:layout_constraintTop_toTopOf="@+id/badge_event_0"
-                        app:srcCompat="@{viewModel.eventCount >= 10 ? @drawable/badge_10_love : @drawable/badge_not_complete }" />
+                        app:srcCompat="@{viewModel.eventCount >= 10 ? @drawable/badge_10_love : @drawable/badge_question }" />
 
                     <TextView
                         android:id="@+id/badge_event_10_text"
@@ -563,7 +563,7 @@
                         app:layout_constraintHorizontal_bias="0.5"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/badge_event_0_text"
-                        app:srcCompat="@{viewModel.eventCount >= 25 ? @drawable/badge_25_love : @drawable/badge_not_complete }"
+                        app:srcCompat="@{viewModel.eventCount >= 25 ? @drawable/badge_25_love : @drawable/badge_question }"
                         tools:layout_editor_absoluteY="0dp" />
 
                     <TextView
@@ -593,7 +593,7 @@
                         app:layout_constraintHorizontal_bias="0.5"
                         app:layout_constraintStart_toEndOf="@+id/badge_event_25"
                         app:layout_constraintTop_toTopOf="@+id/badge_event_25"
-                        app:srcCompat="@{viewModel.eventCount >= 50 ? @drawable/badge_50_love : @drawable/badge_not_complete }"
+                        app:srcCompat="@{viewModel.eventCount >= 50 ? @drawable/badge_50_love : @drawable/badge_question }"
                         tools:layout_editor_absoluteY="0dp" />
 
                     <TextView
@@ -622,7 +622,7 @@
                         app:layout_constraintHorizontal_bias="0.5"
                         app:layout_constraintStart_toEndOf="@+id/badge_event_50"
                         app:layout_constraintTop_toTopOf="@+id/badge_event_25"
-                        app:srcCompat="@{viewModel.eventCount >= 100 ? @drawable/badge_100_love : @drawable/badge_not_complete }" />
+                        app:srcCompat="@{viewModel.eventCount >= 100 ? @drawable/badge_100_love : @drawable/badge_question }" />
 
                     <TextView
                         android:id="@+id/badge_event_100_text"
@@ -688,7 +688,7 @@
                         app:layout_constraintHorizontal_bias="0.5"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/badge_friend_section"
-                        app:srcCompat="@{viewModel.friendCount > 0 ? @drawable/badge_0_friend : @drawable/badge_not_complete }"
+                        app:srcCompat="@{viewModel.friendCount > 0 ? @drawable/badge_0_friend : @drawable/badge_question }"
                         tools:layout_editor_absoluteY="0dp" />
 
                     <TextView
@@ -716,7 +716,7 @@
                         app:layout_constraintHorizontal_bias="0.5"
                         app:layout_constraintStart_toEndOf="@+id/badge_friend_0"
                         app:layout_constraintTop_toTopOf="@+id/badge_friend_0"
-                        app:srcCompat="@{viewModel.friendCount >= 3 ? @drawable/badge_3_friend : @drawable/badge_not_complete }"
+                        app:srcCompat="@{viewModel.friendCount >= 3 ? @drawable/badge_3_friend : @drawable/badge_question }"
                         tools:layout_editor_absoluteY="0dp" />
 
                     <TextView
@@ -745,7 +745,7 @@
                         app:layout_constraintHorizontal_bias="0.5"
                         app:layout_constraintStart_toEndOf="@+id/badge_friend_3"
                         app:layout_constraintTop_toTopOf="@+id/badge_friend_0"
-                        app:srcCompat="@{viewModel.friendCount >= 10 ? @drawable/badge_10_friend : @drawable/badge_not_complete }" />
+                        app:srcCompat="@{viewModel.friendCount >= 10 ? @drawable/badge_10_friend : @drawable/badge_question }" />
 
                     <TextView
                         android:id="@+id/badge_friend_10_text"
@@ -773,7 +773,7 @@
                         app:layout_constraintHorizontal_bias="0.5"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/badge_friend_0_text"
-                        app:srcCompat="@{viewModel.friendCount >= 50 ? @drawable/badge_50_friend : @drawable/badge_not_complete }"
+                        app:srcCompat="@{viewModel.friendCount >= 50 ? @drawable/badge_50_friend : @drawable/badge_question }"
                         tools:layout_editor_absoluteY="0dp" />
 
                     <TextView
@@ -803,7 +803,7 @@
                         app:layout_constraintHorizontal_bias="0.5"
                         app:layout_constraintStart_toEndOf="@+id/badge_friend_50"
                         app:layout_constraintTop_toTopOf="@+id/badge_friend_50"
-                        app:srcCompat="@{viewModel.friendCount >= 100 ? @drawable/badge_100_friend : @drawable/badge_not_complete }"
+                        app:srcCompat="@{viewModel.friendCount >= 100 ? @drawable/badge_100_friend : @drawable/badge_question }"
                         tools:layout_editor_absoluteY="0dp" />
 
                     <TextView
@@ -832,7 +832,7 @@
                         app:layout_constraintHorizontal_bias="0.5"
                         app:layout_constraintStart_toEndOf="@+id/badge_friend_100"
                         app:layout_constraintTop_toTopOf="@+id/badge_friend_50"
-                        app:srcCompat="@{viewModel.friendCount >= 300 ? @drawable/badge_300_friend : @drawable/badge_not_complete }" />
+                        app:srcCompat="@{viewModel.friendCount >= 300 ? @drawable/badge_300_friend : @drawable/badge_question }" />
 
                     <TextView
                         android:id="@+id/badge_friend_300_text"
