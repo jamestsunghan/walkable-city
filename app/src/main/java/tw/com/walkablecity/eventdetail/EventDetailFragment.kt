@@ -74,9 +74,9 @@ class EventDetailFragment : Fragment() {
                         requireNotNull(viewModel.eventMember.value)[index].accomplish = list[index]
                         friend
                     }
-                    viewModel.circleList.value = list.sortedByDescending { f->f }.map{ fa-> fa.div(viewModel.event.target?.distance ?: requireNotNull(viewModel.event.target?.hour)*60*60) }
                     viewModel.sortByAccomplish()
-                    adapter.notifyDataSetChanged()
+                    viewModel.circleList.value = list.sortedByDescending { f->f }.map{ fa-> fa.div(viewModel.event.target?.distance ?: requireNotNull(viewModel.event.target?.hour)*60*60) }
+//                    adapter.notifyDataSetChanged()
                 }else if(viewModel.resultCount > viewModel.listMemberId.size){
                     viewModel.resultCount = 0
 //                    adapter.notifyDataSetChanged()
@@ -94,6 +94,12 @@ class EventDetailFragment : Fragment() {
                 if(it){
                     findNavController().navigate(EventDetailFragmentDirections.actionGlobalEventFragment())
                 }
+            }
+        })
+
+        viewModel.circleList.observe(viewLifecycleOwner, Observer {
+            it?.let{
+                adapter.notifyDataSetChanged()
             }
         })
 

@@ -61,7 +61,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintGuide_begin="180dp" />
+            app:layout_constraintGuide_end="180dp" />
 
 <!--        <SeekBar-->
 <!--            android:id="@+id/friend_seek_bar"-->
@@ -79,7 +79,6 @@
             android:layout_marginEnd="16dp"
             android:layout_width="0dp"
             android:layout_height="6dp"
-            android:layout_marginStart="16dp"
             android:background="@drawable/bg_walker_prepare"
             android:backgroundTint="@color/grey_transparent"
             app:layout_constraintBottom_toBottomOf="@+id/friend_name"
@@ -91,15 +90,12 @@
             android:id="@+id/friend_bar_progress"
             android:layout_width="0dp"
             android:layout_height="6dp"
-            android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
             android:background="@drawable/bg_walker_prepare"
             android:backgroundTint="@{viewModel.event.type.colorList[0]}"
             app:layout_constraintBottom_toBottomOf="@+id/friend_name"
             app:layout_constraintStart_toEndOf="@+id/guideline"
-            app:progress="@{friend.accomplish}"
-            app:targeter="@{viewModel.event.target}"
-            app:wid="@{width}" />
+             />
 
         <TextView
             android:id="@+id/friend_bar_progress_text"

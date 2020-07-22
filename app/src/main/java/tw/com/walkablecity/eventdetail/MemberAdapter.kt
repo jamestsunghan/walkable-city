@@ -2,14 +2,17 @@ package tw.com.walkablecity.eventdetail
 
 import android.content.res.ColorStateList
 import android.util.Log
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.view.marginEnd
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import tw.com.walkablecity.R
 import tw.com.walkablecity.UserManager
 import tw.com.walkablecity.Util
+import tw.com.walkablecity.WalkableApp
 import tw.com.walkablecity.data.Friend
 import tw.com.walkablecity.databinding.ItemEventDetailBoardBinding
 import tw.com.walkablecity.databinding.ItemMemberEventDetailBinding
@@ -44,8 +47,12 @@ class MemberAdapter(val viewModel: EventDetailViewModel): ListAdapter<MemberItem
 //                isActivated = false
 //                secondaryProgress = viewModel.typeColor
 //            }
+            val progressWidth = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 180f, WalkableApp.instance.resources.displayMetrics)
+            binding.guideline.setGuidelineEnd(progressWidth.toInt())
+
             binding.friendBarProgress.width =  friend.accomplish?.let{
-                it.times(binding.friendBar.width).div(viewModel.event.target?.distance ?: requireNotNull(viewModel.event.target?.hour)*3600).toInt()
+                it.times(progressWidth-binding.friendBar.marginEnd)
+                    .div(viewModel.event.target?.distance ?: requireNotNull(viewModel.event.target?.hour)*3600).toInt()
             } ?: binding.friendBar.width
 
             binding.user = UserManager.user?.toFriend()
@@ -58,14 +65,15 @@ class MemberAdapter(val viewModel: EventDetailViewModel): ListAdapter<MemberItem
 
     companion object DiffCallback: DiffUtil.ItemCallback<MemberItem>(){
         override fun areItemsTheSame(oldItem: MemberItem, newItem: MemberItem): Boolean {
-            return oldItem == newItem
+            return oldItem === newItem
         }
 
         override fun areContentsTheSame(oldItem: MemberItem, newItem: MemberItem): Boolean {
-            return oldItem == newItem
+            return oldItem.id == newItem.id
         }
         private const val ITEM_VIEW_TYPE_BOARD     = 0x00
-        private const val ITEM_VIEW_TYPE_MEMBER       = 0x01
+        private const val ITEM_VIEW_TYPE_MEMBER    = 0x01
+        private const val PROGRESS_WIDTH           = 180
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -94,10 +102,13 @@ class MemberAdapter(val viewModel: EventDetailViewModel): ListAdapter<MemberItem
 }
 
 sealed class MemberItem{
+    abstract val id : String
     data class Member(val member: Friend): MemberItem(){
-
+        override val id: String
+            get() = requireNotNull(member.id)
     }
     object Board: MemberItem(){
-
+        override val id: String
+            get() = "this is a book"
     }
 }
