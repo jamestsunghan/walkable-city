@@ -322,7 +322,7 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     android:orientation="horizontal"
-                    app:friendly="@{viewModel.friendList}"/>
+                    app:friendly="@{viewModel.addList}"/>
 
 
 

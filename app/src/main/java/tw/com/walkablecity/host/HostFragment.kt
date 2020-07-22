@@ -15,6 +15,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.navGraphViewModels
 import com.google.firebase.Timestamp.now
 
 import tw.com.walkablecity.R
@@ -32,7 +33,10 @@ import java.util.*
 class HostFragment : Fragment() {
 
 
-    private val viewModel: HostViewModel by viewModels{getVMFactory( HostFragmentArgs.fromBundle(requireArguments()).friendList?.toList())}
+
+    private val viewModel: HostViewModel by navGraphViewModels(R.id.navigation2){
+        getVMFactory()
+    }
 
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreateView(
@@ -140,7 +144,7 @@ class HostFragment : Fragment() {
         viewModel.navigateToAddFriends.observe(viewLifecycleOwner, Observer{
             if(it){
                 findNavController().navigate(HostFragmentDirections
-                    .actionHostFragmentToAddFriend2EventFragment(viewModel.friendList?.toTypedArray()))
+                    .actionHostFragmentToAddFriend2EventFragment())
                 viewModel.addSomeFriendsComplete()
             }
         })

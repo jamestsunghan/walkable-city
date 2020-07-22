@@ -38,7 +38,7 @@ class EventFragment : Fragment() {
 
         viewModel.navigateToHost.observe(viewLifecycleOwner, Observer{
             if(it){
-                findNavController().navigate(EventFragmentDirections.actionEventFragmentToHostFragment(null))
+                findNavController().navigate(EventFragmentDirections.actionEventFragmentToHostFragment())
                 viewModel.navigateToHostComplete()
             }
         })

@@ -74,6 +74,9 @@ class ViewModelFactory( private val walkableRepository: WalkableRepository)
                 isAssignableFrom(RatingViewModel::class.java) ->
                     RatingViewModel(walkableRepository)
 
+                isAssignableFrom(HostViewModel::class.java) ->
+                    HostViewModel(walkableRepository)
+
                 else ->
                     throw IllegalArgumentException("Unknown ViewModel Class ${modelClass.name}")
             }

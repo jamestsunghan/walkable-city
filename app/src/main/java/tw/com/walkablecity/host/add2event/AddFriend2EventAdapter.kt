@@ -7,13 +7,14 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import tw.com.walkablecity.data.Friend
 import tw.com.walkablecity.databinding.ItemAddFriend2EventBinding
+import tw.com.walkablecity.host.HostViewModel
 
-class AddFriend2EventAdapter(val viewModel: AddFriend2EventViewModel): ListAdapter<Friend, AddFriend2EventAdapter.FriendViewHolder>(DiffCallback) {
+class AddFriend2EventAdapter(val viewModel: HostViewModel): ListAdapter<Friend, AddFriend2EventAdapter.FriendViewHolder>(DiffCallback) {
 
     class FriendViewHolder(private val binding: ItemAddFriend2EventBinding): RecyclerView.ViewHolder(binding.root){
-        fun bind(friend: Friend, viewModel: AddFriend2EventViewModel){
+        fun bind(friend: Friend, viewModel: HostViewModel){
             binding.friend = friend
-            binding.friendCheckbox.isChecked = viewModel.friendOldList?.contains(friend) ?: false
+            binding.friendCheckbox.isChecked = viewModel.addList.value?.contains(friend) ?: false
             binding.friendCheckbox.setOnCheckedChangeListener { buttonView, isChecked ->
                 if(isChecked){
                     viewModel.addFriendToAddList(friend)

@@ -16,8 +16,6 @@ class FriendListViewModelFactory(private val walkableRepository: WalkableReposit
         with(modelClass){
 
             when{
-                isAssignableFrom(HostViewModel::class.java) ->
-                    HostViewModel(walkableRepository, friendList)
 
                 isAssignableFrom(AddFriend2EventViewModel::class.java) ->
                     AddFriend2EventViewModel(walkableRepository, friendList)
