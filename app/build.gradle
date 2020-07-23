@@ -109,6 +109,9 @@ dependencies {
     implementation 'com.google.maps.android:maps-utils-ktx:1.8.0'
 
     // Paging
-    implementation "androidx.paging:paging-runtime-ktx:$version_paging"
+    implementation "androidx.paging:paging-runtime-ktx:$paging_version"
 
+    //WorkManager
+    implementation "androidx.work:work-runtime-ktx:$work_version"
+    implementation 'com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava'
 }

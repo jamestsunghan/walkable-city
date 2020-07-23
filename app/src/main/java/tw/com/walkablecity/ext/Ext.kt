@@ -223,6 +223,17 @@ fun User.toFriend(): Friend{
     )
 }
 
+fun User.toFriend(accomplished: MutableList<MissionFQ>): Friend{
+    return Friend(
+        id = id,
+        idCustom = idCustom,
+        name = name,
+        picture = picture,
+        email = email,
+        accomplishFQ = accomplished
+    )
+}
+
 fun Accumulation.addNewWalk(input: Float): Accumulation{
     return Accumulation(
         daily   = daily   + input,
@@ -230,6 +241,43 @@ fun Accumulation.addNewWalk(input: Float): Accumulation{
         monthly = monthly + input,
         yearly  = yearly  + input,
         total   = total   + input
+    )
+}
+
+fun Accumulation.dailyUpdate(): Accumulation{
+    return Accumulation(
+        daily   = 0f,
+        weekly  = weekly,
+        monthly = monthly,
+        yearly  = yearly,
+        total   = total
+    )
+}
+
+fun Accumulation.weeklyUpdate(): Accumulation{
+    return Accumulation(
+        daily   = 0f,
+        weekly  = 0f,
+        monthly = monthly,
+        yearly  = yearly,
+        total   = total
+    )
+}
+
+fun Float.toMissionFQ(): MissionFQ{
+    return MissionFQ(
+        date = Timestamp(now().seconds - (60*60*12), now().nanoseconds),
+        accomplish = this
+    )
+}
+
+fun Accumulation.monthlyUpdate(): Accumulation{
+    return Accumulation(
+        daily   = 0f,
+        weekly  = 0f,
+        monthly = 0f,
+        yearly  = yearly,
+        total   = total
     )
 }
 

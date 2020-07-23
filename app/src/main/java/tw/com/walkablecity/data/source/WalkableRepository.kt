@@ -58,5 +58,9 @@ interface WalkableRepository {
     suspend fun getMemberWalkHours(eventStartTime: Timestamp, memberId: String): Result<Float>
     suspend fun getMemberWalkFrequencyResult(eventStartTime: Timestamp, target: EventTarget, memberId: String): Result<Float>
 
+    suspend fun updateDailyEvents(user: User?, eventList: List<Event>): Result<Boolean>
+    suspend fun updateWeeklyEvents(user: User?, eventList: List<Event>): Result<Boolean>
+    suspend fun updateMonthlyEvents(user: User?, eventList: List<Event>): Result<Boolean>
+
 
 }

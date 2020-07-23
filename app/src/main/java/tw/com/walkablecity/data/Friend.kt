@@ -10,5 +10,6 @@ data class Friend (
     val name: String? = null,
     val picture: String? = null,
     val email: String? = null,
-    var accomplish: Float? = null
+    var accomplish: Float? = null,
+    var accomplishFQ: MutableList<MissionFQ> = mutableListOf()
 ): Parcelable

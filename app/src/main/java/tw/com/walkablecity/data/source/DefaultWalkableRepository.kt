@@ -175,4 +175,16 @@ class DefaultWalkableRepository(private val remote: WalkableDataSource): Walkabl
     override suspend fun getUserWalks(userId: String): Result<List<Walk>> {
         return remote.getUserWalks(userId)
     }
+
+    override suspend fun updateDailyEvents(user: User?, eventList: List<Event>): Result<Boolean> {
+        return remote.updateDailyEvents(user, eventList)
+    }
+
+    override suspend fun updateWeeklyEvents(user: User?, eventList: List<Event>): Result<Boolean> {
+        return remote.updateWeeklyEvents(user, eventList)
+    }
+
+    override suspend fun updateMonthlyEvents(user: User?, eventList: List<Event>): Result<Boolean> {
+        return remote.updateMonthlyEvents(user, eventList)
+    }
 }

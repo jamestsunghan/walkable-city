@@ -906,6 +906,150 @@ object WalkableRemoteDataSource: WalkableDataSource{
 
     }
 
+    override suspend fun updateDailyEvents(user: User?, eventList: List<Event>): Result<Boolean> = suspendCoroutine{continuation->
+        if(user == null || eventList.isEmpty()){
+            continuation.resume(Result.Fail(getString(R.string.no_internet)))
+        }else{
+            var missionToComplete = eventList.size + 1
+            Log.d("JJ_work","daily mission $missionToComplete")
+            db.collection(USER).document(requireNotNull(user.id)).update(ACCU_KM, user.accumulatedKm?.dailyUpdate(),
+                ACCU_HOUR, user.accumulatedHour?.dailyUpdate()).addOnCompleteListener{ task ->
+                if(!task.isSuccessful){
+                    when(task.exception){
+                        null -> continuation.resume(Result.Fail(getString(R.string.not_here)))
+                        else -> continuation.resume(Result.Error(task.exception!!))
+                    }
+                }else{
+                    missionToComplete -= 1
+                    Log.d("JJ_work","daily user mission $missionToComplete")
+                    if(missionToComplete == 0){
+                       continuation.resume(Result.Success(true))
+                   }
+                }
+            }
+
+            for(event in eventList){
+                val isBasedOnHr: Boolean = event.target?.hour != null
+                val friend = event.member.find { it.id == user.id}
+                val newList: List<MissionFQ> = if(isBasedOnHr) friend?.accomplishFQ?.plus((user.accumulatedHour?.daily ?: 0f).toMissionFQ()) ?: listOf()
+                else friend?.accomplishFQ?.plus((user.accumulatedKm?.daily ?: 0f).toMissionFQ()) ?: listOf()
+
+                db.collection(EVENT).document(requireNotNull(event.id)).update(
+                    MEMBER, FieldValue.arrayRemove(friend), MEMBER, FieldValue.arrayUnion(user.toFriend(newList as MutableList<MissionFQ>))).addOnCompleteListener{ task ->
+                    if(!task.isSuccessful){
+                        when(task.exception){
+                            null -> continuation.resume(Result.Fail(getString(R.string.not_here)))
+                            else -> continuation.resume(Result.Error(task.exception!!))
+                        }
+                    }else{
+                        missionToComplete -= 1
+                        Log.d("JJ_work","daily mission $missionToComplete")
+
+                        if(missionToComplete == 0){
+                            continuation.resume(Result.Success(true))
+                        }
+                    }
+                }
+
+            }
+
+        }
+    }
+
+    override suspend fun updateWeeklyEvents(user: User?, eventList: List<Event>): Result<Boolean> = suspendCoroutine{continuation->
+        if(user == null || eventList.isEmpty()){
+            continuation.resume(Result.Fail(getString(R.string.no_internet)))
+        }else{
+            var missionToComplete = eventList.size + 1
+            Log.d("JJ_work","weekly mission $missionToComplete")
+            db.collection(USER).document(requireNotNull(user.id)).update(ACCU_KM, user.accumulatedKm?.weeklyUpdate(),
+                ACCU_HOUR, user.accumulatedHour?.weeklyUpdate()).addOnCompleteListener{ task ->
+                if(!task.isSuccessful){
+                    when(task.exception){
+                        null -> continuation.resume(Result.Fail(getString(R.string.not_here)))
+                        else -> continuation.resume(Result.Error(task.exception!!))
+                    }
+                }else{
+                    missionToComplete -= 1
+                    Log.d("JJ_work","weekly user mission $missionToComplete")
+                    if(missionToComplete == 0){
+                        continuation.resume(Result.Success(true))
+                    }
+                }
+            }
+
+            for(event in eventList){
+                val isBasedOnHr: Boolean = event.target?.hour != null
+                val friend = event.member.find { it.id == user.id}
+                val newList: List<MissionFQ> = if(isBasedOnHr) friend?.accomplishFQ?.plus((user.accumulatedHour?.weekly ?: 0f).toMissionFQ()) ?: listOf()
+                else friend?.accomplishFQ?.plus((user.accumulatedKm?.weekly ?: 0f).toMissionFQ()) ?: listOf()
+
+                db.collection(EVENT).document(requireNotNull(event.id)).update(
+                    MEMBER, FieldValue.arrayRemove(friend), MEMBER, FieldValue.arrayUnion(user.toFriend(newList as MutableList<MissionFQ>))).addOnCompleteListener{ task ->
+                    if(!task.isSuccessful){
+                        when(task.exception){
+                            null -> continuation.resume(Result.Fail(getString(R.string.not_here)))
+                            else -> continuation.resume(Result.Error(task.exception!!))
+                        }
+                    }else{
+                        missionToComplete -= 1
+                        Log.d("JJ_work","weekly event mission $missionToComplete")
+                        if(missionToComplete == 0){
+                            continuation.resume(Result.Success(true))
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    override suspend fun updateMonthlyEvents(user: User?, eventList: List<Event>): Result<Boolean> = suspendCoroutine{continuation->
+        if(user == null || eventList.isEmpty()){
+            continuation.resume(Result.Fail(getString(R.string.no_internet)))
+        }else{
+            var missionToComplete = eventList.size + 1
+            Log.d("JJ_work","monthly mission $missionToComplete")
+            db.collection(USER).document(requireNotNull(user.id)).update(ACCU_KM, user.accumulatedKm?.monthlyUpdate(),
+                ACCU_HOUR, user.accumulatedHour?.monthlyUpdate()).addOnCompleteListener{ task ->
+                if(!task.isSuccessful){
+                    when(task.exception){
+                        null -> continuation.resume(Result.Fail(getString(R.string.not_here)))
+                        else -> continuation.resume(Result.Error(task.exception!!))
+                    }
+                }else{
+                    missionToComplete -= 1
+                    Log.d("JJ_work","monthly user mission $missionToComplete")
+                    if(missionToComplete == 0){
+                        continuation.resume(Result.Success(true))
+                    }
+                }
+            }
+
+            for(event in eventList){
+                val isBasedOnHr: Boolean = event.target?.hour != null
+                val friend = event.member.find { it.id == user.id}
+                val newList: List<MissionFQ> = if(isBasedOnHr) friend?.accomplishFQ?.plus((user.accumulatedHour?.monthly ?: 0f).toMissionFQ()) ?: listOf()
+                else friend?.accomplishFQ?.plus((user.accumulatedKm?.monthly ?: 0f).toMissionFQ()) ?: listOf()
+
+                db.collection(EVENT).document(requireNotNull(event.id)).update(
+                    MEMBER, FieldValue.arrayRemove(friend), MEMBER, FieldValue.arrayUnion(user.toFriend(newList as MutableList<MissionFQ>))).addOnCompleteListener{ task ->
+                    if(!task.isSuccessful){
+                        when(task.exception){
+                            null -> continuation.resume(Result.Fail(getString(R.string.not_here)))
+                            else -> continuation.resume(Result.Error(task.exception!!))
+                        }
+                    }else{
+                        missionToComplete -= 1
+                        Log.d("JJ_work","monthly event mission $missionToComplete")
+                        if(missionToComplete == 0){
+                            continuation.resume(Result.Success(true))
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     //google map Api Zone
 
     override suspend fun drawPath(
@@ -955,5 +1099,6 @@ object WalkableRemoteDataSource: WalkableDataSource{
             Result.Error(e)
         }
     }
+
 
 }

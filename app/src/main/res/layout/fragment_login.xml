@@ -111,6 +111,43 @@
             android:letterSpacing="0.15"
             tools:visibility="gone" />
 
+        <TextView
+            android:id="@+id/credit_freepik"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:textColor="@color/primaryColor"
+            android:text="@string/freepik"
+            android:gravity="center"
+            android:padding="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:fontFamily="@font/noto_sans"
+            android:textSize="12sp"
+            android:letterSpacing="0.15"
+            />
+
+        <TextView
+            android:id="@+id/credit_icon_geek"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:textColor="@color/primaryColor"
+            android:text="@string/icon_geek_26"
+            android:gravity="center"
+            android:padding="8dp"
+            app:layout_constraintBottom_toTopOf="@+id/credit_freepik"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:fontFamily="@font/noto_sans"
+            android:textSize="12sp"
+            android:letterSpacing="0.15"
+            />
+
         <ProgressBar
             android:id="@+id/progress_login"
             android:layout_width="20dp"
