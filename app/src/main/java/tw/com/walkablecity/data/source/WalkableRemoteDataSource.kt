@@ -699,7 +699,7 @@ object WalkableRemoteDataSource: WalkableDataSource{
     }
 
     override suspend fun getUserChallenges(user: User): Result<List<Event>> = suspendCoroutine{continuation->
-        db.collection(EVENT).whereArrayContains("member",user.toFriend()).whereGreaterThanOrEqualTo("endDate",now()).get().addOnCompleteListener { task->
+        db.collection(EVENT).whereGreaterThanOrEqualTo("endDate",now()).get().addOnCompleteListener { task->
             if(task.isSuccessful){
                 val list = mutableListOf<Event>()
                 for(document in task.result!!){
@@ -707,7 +707,7 @@ object WalkableRemoteDataSource: WalkableDataSource{
                     val event = document.toObject(Event::class.java).apply {
 
                     }
-                    list.add(event)
+                    if(event.member.find { it.id == user.id } != null) list.add(event)
                 }
                 continuation.resume(Result.Success(list))
             }else{

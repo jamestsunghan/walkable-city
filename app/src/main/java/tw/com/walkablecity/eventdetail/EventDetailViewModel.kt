@@ -16,6 +16,9 @@ import tw.com.walkablecity.Util.lessThenTenPadStart
 import tw.com.walkablecity.WalkableApp
 import tw.com.walkablecity.data.*
 import tw.com.walkablecity.data.source.WalkableRepository
+import tw.com.walkablecity.ext.toNewInstance
+import java.text.SimpleDateFormat
+import java.util.*
 
 class EventDetailViewModel(private val walkableRepository: WalkableRepository, val event: Event) : ViewModel() {
 
@@ -75,10 +78,13 @@ class EventDetailViewModel(private val walkableRepository: WalkableRepository, v
     private val viewModelJob = Job()
     private val coroutineScope = CoroutineScope(Dispatchers.Main + viewModelJob)
 
+    val listOfList = MutableLiveData<List<FriendListWrapper>>()
+
     override fun onCleared() {
         super.onCleared()
         viewModelJob.cancel()
         timer.cancel()
+
     }
 
     init{
@@ -88,6 +94,35 @@ class EventDetailViewModel(private val walkableRepository: WalkableRepository, v
         getTimerStart(countDownTime)
 
 //        checkEventStarted(eventIsStarted)
+
+        val hostMember = event.member.find{ it.idCustom == event.host}
+
+
+        for(item in requireNotNull(hostMember).accomplishFQ){
+            val time = SimpleDateFormat("yyyyMMdd", Locale.TAIWAN).format(item.date?.seconds?.times(1000))
+            val frequencyMember = event.member.filter{friend->
+                friend.accomplishFQ.find{mission->
+                    val friendTime = SimpleDateFormat("yyyyMMdd", Locale.TAIWAN).format(mission.date?.seconds?.times(1000))
+                    friendTime == time
+                } != null
+            }
+
+            val friendList = frequencyMember.map{
+                it.toNewInstance()
+            }
+
+            val listToAdd: List<Friend> =  friendList.onEach {
+                it.accomplish = it.accomplishFQ.find{mission->
+                    val friendTime = SimpleDateFormat("yyyyMMdd", Locale.TAIWAN).format(mission.date?.seconds?.times(1000))
+                    friendTime == time}?.accomplish
+            }
+
+            Log.d("JJ_listToAdd", "list to add $listToAdd")
+            val wrapper = FriendListWrapper(listToAdd.sortedByDescending { it.accomplish })
+            listOfList.value = (listOfList.value ?: mutableListOf()).plus(wrapper) as MutableList<FriendListWrapper>
+
+
+        }
 
     }
 

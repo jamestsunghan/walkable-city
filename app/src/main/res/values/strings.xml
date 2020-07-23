@@ -317,5 +317,9 @@
     <string name="freepik">Icons made by FreePik from Flaticon</string>
     <string name="icon_geek_26">Icons made by Icongeek26 from Flaticon</string>
 
+    <string name="day_number">第%d天</string>
+    <string name="week_number">第%d週</string>
+    <string name="month_number">第%d個月</string>
+
 
 </resources>

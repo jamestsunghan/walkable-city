@@ -281,6 +281,18 @@ fun Accumulation.monthlyUpdate(): Accumulation{
     )
 }
 
+fun Friend.toNewInstance(): Friend{
+    return Friend(
+        id = id,
+        idCustom = idCustom,
+        name = name,
+        picture = picture,
+        email = email,
+        accomplish =  accomplish,
+        accomplishFQ =  accomplishFQ
+    )
+}
+
 fun List<User>.toWalkerItem(): List<WalkerItem>{
     return when(this.size > 3){
          true  ->{

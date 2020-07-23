@@ -6,17 +6,19 @@ import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.view.marginEnd
-import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.*
 import tw.com.walkablecity.R
 import tw.com.walkablecity.UserManager
 import tw.com.walkablecity.Util
 import tw.com.walkablecity.WalkableApp
 import tw.com.walkablecity.data.Friend
+import tw.com.walkablecity.data.FriendListWrapper
+import tw.com.walkablecity.data.MissionFQ
 import tw.com.walkablecity.databinding.ItemEventDetailBoardBinding
 import tw.com.walkablecity.databinding.ItemMemberEventDetailBinding
 import tw.com.walkablecity.ext.toFriend
+import java.text.SimpleDateFormat
+import java.util.*
 
 class MemberAdapter(val viewModel: EventDetailViewModel): ListAdapter<MemberItem, RecyclerView.ViewHolder>(DiffCallback) {
 
@@ -27,7 +29,12 @@ class MemberAdapter(val viewModel: EventDetailViewModel): ListAdapter<MemberItem
                 setStrokeWidth(20f)
             }
             binding.viewModel = viewModel
+
             binding.total = viewModel.circleList.value?.sum()?.times(100)
+            binding.recyclerFq.adapter = FrequencyAdapter(viewModel)
+            binding.recyclerFq.onFlingListener = null
+            PagerSnapHelper().attachToRecyclerView(binding.recyclerFq)
+
         }
     }
 
@@ -73,7 +80,6 @@ class MemberAdapter(val viewModel: EventDetailViewModel): ListAdapter<MemberItem
         }
         private const val ITEM_VIEW_TYPE_BOARD     = 0x00
         private const val ITEM_VIEW_TYPE_MEMBER    = 0x01
-        private const val PROGRESS_WIDTH           = 180
     }
 
     override fun getItemViewType(position: Int): Int {

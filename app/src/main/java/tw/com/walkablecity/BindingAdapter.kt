@@ -41,6 +41,8 @@ import tw.com.walkablecity.data.*
 import tw.com.walkablecity.detail.CommentAdapter
 import tw.com.walkablecity.detail.ImageUrlAdapter
 import tw.com.walkablecity.event.item.EventItemAdapter
+import tw.com.walkablecity.eventdetail.FrequencyAdapter
+import tw.com.walkablecity.eventdetail.FrequencyFriendAdapter
 import tw.com.walkablecity.eventdetail.MemberAdapter
 import tw.com.walkablecity.ext.saveToInternalStorage
 import tw.com.walkablecity.ext.shareCacheDirBitmap
@@ -126,6 +128,30 @@ fun bindFriends(view: RecyclerView, list: List<Friend>?){
             when(this){
                 is AddFriend2EventAdapter -> submitList(item)
                 is AddListAdapter -> submitList(item)
+                is FrequencyFriendAdapter -> submitList(item)
+            }
+        }
+    }
+}
+
+@BindingAdapter("friendwrapper")
+fun bindFriendLists(view: RecyclerView, array: Array<Friend>?){
+    val list = array?.toList()
+    list?.let{item->
+        view.adapter.apply {
+            when(this){
+                is FrequencyFriendAdapter -> submitList(item)
+            }
+        }
+    }
+}
+
+@BindingAdapter("fqlist")
+fun bindListOfList(view: RecyclerView, list: List<FriendListWrapper>?){
+    list?.let{item->
+        view.adapter.apply {
+            when(this){
+                is FrequencyAdapter -> submitList(item)
             }
         }
     }
