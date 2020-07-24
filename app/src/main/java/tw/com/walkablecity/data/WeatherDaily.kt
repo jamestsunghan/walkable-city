@@ -20,6 +20,6 @@ data class WeatherDaily (
     @Json(name = "wind_deg")val windDeg: Float? = null,
     val weather: List<WeatherItem> = listOf(),
     val pop: Float? = null,
-    val rain: Rain? = null,
+    val rain: Float? = null,
     val uvi: Float? = null
 ): Parcelable

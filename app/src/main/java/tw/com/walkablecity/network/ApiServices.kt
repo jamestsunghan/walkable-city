@@ -67,7 +67,7 @@ interface GoogleApiServices{
 
 
 object WalkableApi{
-    val retrofitService: GoogleApiServices by lazy { retrofitWeather.create(GoogleApiServices::class.java) }
+    val retrofitService: GoogleApiServices by lazy { retrofit.create(GoogleApiServices::class.java) }
 }
 
 interface OpenWeatherServices{
@@ -83,5 +83,5 @@ interface OpenWeatherServices{
 }
 
 object WeatherApi{
-    val retrofitServices: OpenWeatherServices by lazy { retrofit.create(OpenWeatherServices::class.java)}
+    val retrofitServices: OpenWeatherServices by lazy { retrofitWeather.create(OpenWeatherServices::class.java)}
 }
