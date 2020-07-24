@@ -329,6 +329,12 @@
     <string name="after_meal_walk">吃飽散步囉！</string>
     <string name="after_meal_talk">您已經%d天沒有出門散步了歐，來場探索城市的小旅行吧！</string>
     <string name="first_walk">吃飽喝足，一起出門散個步吧！</string>
+    <string name="today_uvi">本日紫外線指數｜</string>
+    <string name="uvi_very_strong">極強　%.2f</string>
+    <string name="uvi_strong">強　%.2f</string>
+    <string name="uvi_medium">中等　%.2f</string>
+    <string name="uvi_weak">弱　%.2f</string>
+    <string name="uvi_very_weak">微弱　%.2f</string>
 
 
 </resources>

@@ -90,21 +90,45 @@ class WeatherWorker(appContext: Context, params: WorkerParameters): CoroutineWor
                         Log.d("JJ_weather", "hour date $itemDate & today date $todayDate")
                         itemDate == todayDate
                 }
-
+                val currentUvi = weather?.current?.uvi
+                val text = StringBuilder()
+                when {
+                    currentUvi == null -> {
+                        Log.d("JJ","no uvi for today")
+                    }
+                    currentUvi > 10 -> {
+                        text.append(getString(R.string.today_uvi) + String.format(getString(R.string.uvi_very_strong), currentUvi)).append("\n")
+                    }
+                    currentUvi > 7 -> {
+                        text.append(getString(R.string.today_uvi) + String.format(getString(R.string.uvi_strong), currentUvi)).append("\n")
+                    }
+                    currentUvi > 5 -> {
+                        text.append(getString(R.string.today_uvi) + String.format(getString(R.string.uvi_medium), currentUvi)).append("\n")
+                    }
+                    currentUvi > 3 -> {
+                        text.append(getString(R.string.today_uvi) + String.format(getString(R.string.uvi_weak), currentUvi)).append("\n")
+                    }
+                    else -> {
+                        text.append(getString(R.string.today_uvi) + String.format(getString(R.string.uvi_very_weak), currentUvi)).append("\n")
+                    }
+                }
                 val contentText = if(hourWalkable.isNullOrEmpty()){
                     if(weather?.hourly?.any {
                             it.feelsLike!! > 35f
                         } == true){
-                        getString(R.string.good_weather_content_hot)
+                        StringBuilder().append(getString(R.string.good_weather_content_hot))
+
+                        text.toString()
                     }
                     else{
-                        getString(R.string.good_weather_content_cold)
+                        StringBuilder().append(getString(R.string.good_weather_content_cold))
+                        text.toString()
                     }
                 }else{
-                    val text = StringBuilder().append(getString(R.string.good_weather_hour))
+                    text.append(getString(R.string.good_weather_hour))
                     for(item in hourWalkable){
                         val hrDisplay = SimpleDateFormat("HH:mm", Locale.TAIWAN).format(item.dt?.times(1000))
-                        text.append(hrDisplay).append(getString(R.string.feels_like)).append(item.feelsLike)
+                        text.append(hrDisplay).append(getString(R.string.feels_like)).append(item.feelsLike).append("\n")
                         Log.d("JJ_weather", "weather hour $hrDisplay feels like ${item.feelsLike} Celsius ")
 
                     }
@@ -116,7 +140,7 @@ class WeatherWorker(appContext: Context, params: WorkerParameters): CoroutineWor
                     .setSmallIcon(R.drawable.footprints)
                     .setContentTitle(getString(R.string.good_weather_hour))
                     .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                    .setContentText(contentText)
+                    .setStyle(NotificationCompat.BigTextStyle().bigText(contentText))
 
                 with(NotificationManagerCompat.from(applicationContext)){
                     notify(NOTIFY_ID, builder.build())
