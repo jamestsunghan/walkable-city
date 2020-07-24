@@ -13,7 +13,6 @@ import retrofit2.HttpException
 import tw.com.walkablecity.WalkableApp
 import tw.com.walkablecity.data.EventType
 import tw.com.walkablecity.data.FrequencyType
-import tw.com.walkablecity.data.Result
 import tw.com.walkablecity.data.User
 import tw.com.walkablecity.data.source.WalkableRepository
 import java.util.*

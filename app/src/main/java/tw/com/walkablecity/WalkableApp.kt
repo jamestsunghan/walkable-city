@@ -16,6 +16,7 @@ import kotlinx.coroutines.launch
 import tw.com.walkablecity.data.source.DefaultWalkableRepository
 import tw.com.walkablecity.data.source.WalkableRemoteDataSource
 import tw.com.walkablecity.work.DailyWorker
+import tw.com.walkablecity.work.MealWorker
 import tw.com.walkablecity.work.WeatherWorker
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -31,6 +32,9 @@ class WalkableApp: Application(){
         var instance: WalkableApp by Delegates.notNull()
         val constraintsWeather = Constraints.Builder()
             .setRequiredNetworkType(NetworkType.UNMETERED).build()
+        val constraintsMeal = Constraints.Builder()
+            .setRequiredNetworkType(NetworkType.UNMETERED).build()
+
         val constraints = Constraints.Builder()
             .setRequiredNetworkType(NetworkType.UNMETERED)
             .setRequiresCharging(true)
@@ -108,6 +112,33 @@ class WalkableApp: Application(){
         }
 
 
+    }
+
+    fun notifyAfterMeal(activate: Boolean){
+        val currentDate = Calendar.getInstance()
+        val dueDate = Calendar.getInstance().apply{
+            set(Calendar.HOUR_OF_DAY, 19)
+            set(Calendar.MINUTE, 30)
+            set(Calendar.SECOND, 0)
+        }
+
+        if(dueDate.before(currentDate)){
+            dueDate.add(Calendar.HOUR_OF_DAY, 24)
+        }
+
+        val timeDiff = dueDate.timeInMillis - currentDate.timeInMillis
+
+
+        val mealRequest = OneTimeWorkRequestBuilder<MealWorker>()
+            .setConstraints(constraintsMeal)
+            .setInitialDelay(timeDiff, TimeUnit.MILLISECONDS)
+            .build()
+        val workManager = WorkManager.getInstance(this)
+        if(activate){
+            workManager.enqueue(mealRequest)
+        }else{
+            workManager.cancelWorkById(mealRequest.id)
+        }
     }
 
 

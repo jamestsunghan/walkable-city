@@ -139,6 +139,25 @@ object WalkableRemoteDataSource: WalkableDataSource{
         }
     }
 
+    override suspend fun getUserLatestWalk(userId: String): Result<Walk?> = suspendCoroutine{continuation->
+        db.collection(USER).document(userId).collection(WALKS).orderBy("startTime").limit(1).get().addOnCompleteListener {task->
+            if(task.isSuccessful){
+
+                if(task.result == null || task.result!!.isEmpty) continuation.resume(Result.Success(null))
+                else continuation.resume(Result.Success(task.result!!.toObjects(Walk::class.java)[0]))
+
+            }else{
+                when(val exception = task.exception) {
+                    null -> continuation.resume(Result.Fail(getString(R.string.not_here)))
+                    else -> {
+                        Log.d("JJ_fire","[${this::class.simpleName}] Error getting documents. ${exception.message}")
+                        continuation.resume(Result.Error(exception))
+                    }
+                }
+            }
+        }
+    }
+
     override suspend fun checkFriendAdded(idCustom: String, userId: String): Result<Boolean> = suspendCoroutine{ continuation->
         db.collection(USER).document(userId).collection(FRIENDS).whereEqualTo(ID_CUSTOM,idCustom).get().addOnCompleteListener {task->
             if(task.isSuccessful){
@@ -1071,9 +1090,9 @@ object WalkableRemoteDataSource: WalkableDataSource{
     }
 
     override suspend fun updateMealNotification(activate: Boolean, userId: String): Result<Boolean> = suspendCoroutine{continuation->
-        db.collection(USER).document(userId).update(WEATHER, activate).addOnCompleteListener {task->
+        db.collection(USER).document(userId).update(MEAL, activate).addOnCompleteListener {task->
             if(task.isSuccessful){
-                continuation.resume(Result.Success(true))
+                continuation.resume(Result.Success(activate))
             }else{
                 task.exception?.let{
                     Log.d("JJ_fire","[${this::class.simpleName}] Error getting documents. ${it.message}")

@@ -321,10 +321,14 @@
     <string name="week_number">第%d週</string>
     <string name="month_number">第%d個月</string>
 
-    <string name="good_weather_hour">本日好天氣時段</string>
+    <string name="good_weather_hour">本日好天氣</string>
     <string name="good_weather_content_hot">本日氣候炎熱，出門散步記得注意防曬歐！</string>
     <string name="good_weather_content_cold">本日氣侯寒冷，出門散步記得注意保暖歐！</string>
     <string name="feels_like">體感溫度</string>
+
+    <string name="after_meal_walk">吃飽散步囉！</string>
+    <string name="after_meal_talk">您已經%d天沒有出門散步了歐，來場探索城市的小旅行吧！</string>
+    <string name="first_walk">吃飽喝足，一起出門散個步吧！</string>
 
 
 </resources>

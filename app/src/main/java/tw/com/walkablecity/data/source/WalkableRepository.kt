@@ -52,6 +52,7 @@ interface WalkableRepository {
     suspend fun getUserFriendSimple(userId:String): Result<List<Friend>>
     suspend fun getUserFriends(userId: String): Result<List<User>>
     suspend fun getUserWalks(userId: String): Result<List<Walk>>
+    suspend fun getUserLatestWalk(userId: String): Result<Walk?>
 
 
     suspend fun getMemberWalkDistance(eventStartTime: Timestamp, memberId: String): Result<Float>

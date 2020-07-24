@@ -42,12 +42,12 @@ class SettingsFragment : Fragment() {
         binding.goodWeatherSwitch.isChecked = UserManager.user?.weather ?: false
         binding.afterMealSwitch.isChecked = UserManager.user?.meal ?: false
 
-        binding.afterMealSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
-            viewModel.afterMealSwitch(isChecked)
+        binding.afterMealSwitch.setOnClickListener {
+            viewModel.updateMealNotification(binding.afterMealSwitch.isChecked, requireNotNull(UserManager.user?.id))
         }
 
-        binding.goodWeatherSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
-            viewModel.goodWeatherSwitchOn(isChecked)
+        binding.afterMealSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
+            viewModel.afterMealSwitch(isChecked)
         }
 
         binding.goodWeatherSwitch.setOnClickListener {
@@ -55,6 +55,12 @@ class SettingsFragment : Fragment() {
             if(binding.goodWeatherSwitch.isChecked) checkPermission(binding.goodWeatherSwitch.isChecked)
             else viewModel.updateWeatherNotification(binding.goodWeatherSwitch.isChecked, requireNotNull(UserManager.user?.id))
         }
+
+        binding.goodWeatherSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
+            viewModel.goodWeatherSwitchOn(isChecked)
+        }
+
+
 
         binding.viewModel = viewModel
 
@@ -65,6 +71,15 @@ class SettingsFragment : Fragment() {
                 WalkableApp.instance.getWeather(isActivated)
                 binding.goodWeatherSwitch.isChecked = isActivated
                 UserManager.user?.weather = isActivated
+            }
+        })
+
+        viewModel.mealActivated.observe(viewLifecycleOwner, Observer{
+            it?.let{isActivated->
+                WalkableApp.instance.notifyAfterMeal(isActivated)
+                binding.afterMealSwitch.isChecked = isActivated
+                UserManager.user?.meal = isActivated
+
             }
         })
 
@@ -90,33 +105,33 @@ class SettingsFragment : Fragment() {
         viewModel.currentLocation.observe(viewLifecycleOwner, Observer{
             it?.let{
                 binding.goodWeatherSwitch.isChecked = true
-                viewModel.getWeather(it)
+//                viewModel.getWeather(it)
             }
         })
 
-        viewModel.weatherResult.observe(viewLifecycleOwner, Observer{
-            it?.let{weather->
-                Log.d("JJ_weather", "weather result $weather ")
-                val today = Calendar.getInstance()
-                val hourWalkable = weather.hourly.filter{item->
-                    item.feelsLike ?: 50f < 35f && item.feelsLike ?: 0f > 15f
-                }
+//        viewModel.weatherResult.observe(viewLifecycleOwner, Observer{
+//            it?.let{weather->
+//                Log.d("JJ_weather", "weather result $weather ")
+//                val today = Calendar.getInstance()
+//                val hourWalkable = weather.hourly.filter{item->
+//                    item.feelsLike ?: 50f < 35f && item.feelsLike ?: 0f > 15f
+//                }
 //                    .filter{item->
 //                        val itemDate = SimpleDateFormat("dd", Locale.TAIWAN).format(item.dt?.times(1000))
 //                        val todayDate = lessThenTenPadStart(today.get(Calendar.DAY_OF_MONTH).toLong())
 //                        Log.d("JJ_weather", "hour date $itemDate & today date $todayDate")
 //                        itemDate == todayDate
 //                }
-                for(item in weather.hourly){
-                    val hrDisplay = SimpleDateFormat("MM-dd HH:mm", Locale.TAIWAN).format(item.dt?.times(1000))
-                    Log.d("JJ_weather", "weather hour $hrDisplay feels like ${item.feelsLike} Celsius ")
-
-                }
-                val hourDisplay = weather.hourly.map{hour->
-                    SimpleDateFormat("hh:mm", Locale.TAIWAN).format(hour.dt)
-                }
-            }
-        })
+//                for(item in hourWalkable){
+//                    val hrDisplay = SimpleDateFormat("MM-dd HH:mm", Locale.TAIWAN).format(item.dt?.times(1000))
+//                    Log.d("JJ_weather", "weather hour $hrDisplay feels like ${item.feelsLike} Celsius ")
+//
+//                }
+//                val hourDisplay = weather.hourly.map{hour->
+//                    SimpleDateFormat("hh:mm", Locale.TAIWAN).format(hour.dt)
+//                }
+//            }
+//        })
 
 
 
@@ -137,7 +152,7 @@ class SettingsFragment : Fragment() {
             )
         ){
             viewModel.permissionGranted()
-            viewModel.clientCurrentLocation()
+            viewModel.updateWeatherNotification(true, requireNotNull(UserManager.user?.id))
         }else{
             if(!shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)){
                 viewModel.permissionDeniedForever()
