@@ -16,6 +16,7 @@ import kotlinx.coroutines.launch
 import tw.com.walkablecity.data.source.DefaultWalkableRepository
 import tw.com.walkablecity.data.source.WalkableRemoteDataSource
 import tw.com.walkablecity.work.DailyWorker
+import tw.com.walkablecity.work.WeatherWorker
 import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.properties.Delegates
@@ -28,6 +29,8 @@ class WalkableApp: Application(){
 
     companion object {
         var instance: WalkableApp by Delegates.notNull()
+        val constraintsWeather = Constraints.Builder()
+            .setRequiredNetworkType(NetworkType.UNMETERED).build()
         val constraints = Constraints.Builder()
             .setRequiredNetworkType(NetworkType.UNMETERED)
             .setRequiresCharging(true)
@@ -75,6 +78,35 @@ class WalkableApp: Application(){
             .build()
 
         WorkManager.getInstance(this).enqueue(dailyRequest)
+
+    }
+
+    fun getWeather(activate: Boolean){
+        val currentDate = Calendar.getInstance()
+        val dueDate = Calendar.getInstance().apply{
+            set(Calendar.HOUR_OF_DAY, 9)
+            set(Calendar.MINUTE, 0)
+            set(Calendar.SECOND, 0)
+        }
+
+        if(dueDate.before(currentDate)){
+            dueDate.add(Calendar.HOUR_OF_DAY, 24)
+        }
+
+        val timeDiff = dueDate.timeInMillis - currentDate.timeInMillis
+
+
+        val weatherRequest = OneTimeWorkRequestBuilder<WeatherWorker>()
+            .setConstraints(constraints)
+            .setInitialDelay(timeDiff, TimeUnit.MILLISECONDS)
+            .build()
+        val workManager = WorkManager.getInstance(this)
+        if(activate){
+            workManager.enqueue(weatherRequest)
+        }else{
+            workManager.cancelWorkById(weatherRequest.id)
+        }
+
 
     }
 

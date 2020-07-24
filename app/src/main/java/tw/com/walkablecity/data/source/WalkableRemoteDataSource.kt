@@ -51,6 +51,8 @@ object WalkableRemoteDataSource: WalkableDataSource{
     private const val ID_CUSTOM = "idCustom"
     private const val ACCU_HOUR = "accumulatedHour"
     private const val ACCU_KM = "accumulatedKm"
+    private const val WEATHER = "weather"
+    private const val MEAL = "meal"
     private val fusedLocationClient = FusedLocationProviderClient(WalkableApp.instance)
     private val auth = Firebase.auth
 
@@ -1048,6 +1050,40 @@ object WalkableRemoteDataSource: WalkableDataSource{
                     }
                 }
             }
+        }
+    }
+
+    override suspend fun updateWeatherNotification(activate: Boolean, userId: String): Result<Boolean> = suspendCoroutine{continuation->
+        db.collection(USER).document(userId).update(WEATHER, activate).addOnCompleteListener {task->
+            if(task.isSuccessful){
+                continuation.resume(Result.Success(activate))
+            }else{
+                task.exception?.let{
+                    Log.d("JJ_fire","[${this::class.simpleName}] Error getting documents. ${it.message}")
+                    continuation.resume(Result.Error(it))
+                    return@addOnCompleteListener
+                }
+                continuation.resume(Result.Fail(getString(R.string.not_here)))
+
+            }
+
+        }
+    }
+
+    override suspend fun updateMealNotification(activate: Boolean, userId: String): Result<Boolean> = suspendCoroutine{continuation->
+        db.collection(USER).document(userId).update(WEATHER, activate).addOnCompleteListener {task->
+            if(task.isSuccessful){
+                continuation.resume(Result.Success(true))
+            }else{
+                task.exception?.let{
+                    Log.d("JJ_fire","[${this::class.simpleName}] Error getting documents. ${it.message}")
+                    continuation.resume(Result.Error(it))
+                    return@addOnCompleteListener
+                }
+                continuation.resume(Result.Fail(getString(R.string.not_here)))
+
+            }
+
         }
     }
 

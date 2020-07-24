@@ -13,15 +13,19 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.work.WorkManager
 
 import tw.com.walkablecity.R
 import tw.com.walkablecity.UserManager
 import tw.com.walkablecity.Util
+import tw.com.walkablecity.Util.lessThenTenPadStart
 import tw.com.walkablecity.Util.makeShortToast
 import tw.com.walkablecity.WalkableApp
 import tw.com.walkablecity.databinding.FragmentSettingsBinding
 import tw.com.walkablecity.ext.getVMFactory
 import tw.com.walkablecity.home.HomeFragment
+import java.text.SimpleDateFormat
+import java.util.*
 
 class SettingsFragment : Fragment() {
 
@@ -35,6 +39,8 @@ class SettingsFragment : Fragment() {
         val binding: FragmentSettingsBinding = DataBindingUtil
             .inflate(inflater, R.layout.fragment_settings, container, false)
         binding.lifecycleOwner = this
+        binding.goodWeatherSwitch.isChecked = UserManager.user?.weather ?: false
+        binding.afterMealSwitch.isChecked = UserManager.user?.meal ?: false
 
         binding.afterMealSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
             viewModel.afterMealSwitch(isChecked)
@@ -45,12 +51,22 @@ class SettingsFragment : Fragment() {
         }
 
         binding.goodWeatherSwitch.setOnClickListener {
-            checkPermission()
+            Log.d("JJ_weather", "good weather checked ${binding.goodWeatherSwitch.isChecked}")
+            if(binding.goodWeatherSwitch.isChecked) checkPermission(binding.goodWeatherSwitch.isChecked)
+            else viewModel.updateWeatherNotification(binding.goodWeatherSwitch.isChecked, requireNotNull(UserManager.user?.id))
         }
 
         binding.viewModel = viewModel
 
         binding.user = UserManager.user
+
+        viewModel.weatherActivated.observe(viewLifecycleOwner, Observer{
+            it?.let{isActivated->
+                WalkableApp.instance.getWeather(isActivated)
+                binding.goodWeatherSwitch.isChecked = isActivated
+                UserManager.user?.weather = isActivated
+            }
+        })
 
         viewModel.notifyAfterMeal.observe(viewLifecycleOwner, Observer {
             it?.let{isChecked->
@@ -61,6 +77,7 @@ class SettingsFragment : Fragment() {
 
         viewModel.notifyGoodWeather.observe(viewLifecycleOwner, Observer {
             it?.let{isChecked->
+
                 if(isChecked){
                     makeShortToast(R.string.good_weather_on)
                 }
@@ -78,8 +95,26 @@ class SettingsFragment : Fragment() {
         })
 
         viewModel.weatherResult.observe(viewLifecycleOwner, Observer{
-            it?.let{
-                Log.d("JJ_weather", "weather result $it ")
+            it?.let{weather->
+                Log.d("JJ_weather", "weather result $weather ")
+                val today = Calendar.getInstance()
+                val hourWalkable = weather.hourly.filter{item->
+                    item.feelsLike ?: 50f < 35f && item.feelsLike ?: 0f > 15f
+                }
+//                    .filter{item->
+//                        val itemDate = SimpleDateFormat("dd", Locale.TAIWAN).format(item.dt?.times(1000))
+//                        val todayDate = lessThenTenPadStart(today.get(Calendar.DAY_OF_MONTH).toLong())
+//                        Log.d("JJ_weather", "hour date $itemDate & today date $todayDate")
+//                        itemDate == todayDate
+//                }
+                for(item in weather.hourly){
+                    val hrDisplay = SimpleDateFormat("MM-dd HH:mm", Locale.TAIWAN).format(item.dt?.times(1000))
+                    Log.d("JJ_weather", "weather hour $hrDisplay feels like ${item.feelsLike} Celsius ")
+
+                }
+                val hourDisplay = weather.hourly.map{hour->
+                    SimpleDateFormat("hh:mm", Locale.TAIWAN).format(hour.dt)
+                }
             }
         })
 
@@ -113,13 +148,13 @@ class SettingsFragment : Fragment() {
 
     }
 
-    fun checkPermission(){
+    fun checkPermission(activate: Boolean){
         if(ContextCompat.checkSelfPermission(
                 WalkableApp.instance,
                 Manifest.permission.ACCESS_FINE_LOCATION
             ) == PackageManager.PERMISSION_GRANTED){
             viewModel.permissionGranted()
-            viewModel.clientCurrentLocation()
+            viewModel.updateWeatherNotification(activate, requireNotNull(UserManager.user?.id))
         }else{
             if(!shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)){
                 viewModel.permissionDeniedForever()

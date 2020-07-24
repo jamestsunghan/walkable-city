@@ -191,4 +191,12 @@ class DefaultWalkableRepository(private val remote: WalkableDataSource): Walkabl
     override suspend fun getWeather(currentLocation: LatLng): Result<WeatherResult> {
         return remote.getWeather(currentLocation)
     }
+
+    override suspend fun updateWeatherNotification(activate: Boolean, userId: String): Result<Boolean> {
+        return remote.updateWeatherNotification(activate, userId)
+    }
+
+    override suspend fun updateMealNotification(activate: Boolean, userId: String): Result<Boolean> {
+        return remote.updateMealNotification(activate, userId)
+    }
 }

@@ -9,7 +9,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import tw.com.walkablecity.R
+import tw.com.walkablecity.UserManager
 import tw.com.walkablecity.Util
+import tw.com.walkablecity.Util.getString
 import tw.com.walkablecity.data.LoadStatus
 import tw.com.walkablecity.data.Result
 import tw.com.walkablecity.data.WeatherResult
@@ -24,10 +26,10 @@ class SettingsViewModel(val walkableRepository: WalkableRepository) : ViewModel(
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> get() = _error
 
-    private val _notifyAfterMeal = MutableLiveData<Boolean>(false)
+    private val _notifyAfterMeal = MutableLiveData<Boolean>(UserManager.user?.meal)
     val notifyAfterMeal: LiveData<Boolean> get() = _notifyAfterMeal
 
-    private val _notifyGoodWeather = MutableLiveData<Boolean>(false)
+    private val _notifyGoodWeather = MutableLiveData<Boolean>(UserManager.user?.weather)
     val notifyGoodWeather: LiveData<Boolean> get() = _notifyGoodWeather
 
     private val _currentLocation = MutableLiveData<LatLng>()
@@ -35,6 +37,12 @@ class SettingsViewModel(val walkableRepository: WalkableRepository) : ViewModel(
 
     private val _weatherResult = MutableLiveData<WeatherResult>()
     val weatherResult: LiveData<WeatherResult> get() = _weatherResult
+
+    private val _weatherActivated = MutableLiveData<Boolean>()
+    val weatherActivated: LiveData<Boolean> get() = _weatherActivated
+
+    private val _mealActivated = MutableLiveData<Boolean>()
+    val mealActivated: LiveData<Boolean> get() = _mealActivated
 
     private val _permissionDenied =  MutableLiveData<Boolean>(false)
     val permissionDenied: LiveData<Boolean> get() = _permissionDenied
@@ -139,6 +147,77 @@ class SettingsViewModel(val walkableRepository: WalkableRepository) : ViewModel(
 
 
     }
+
+    fun updateWeatherNotification(activate: Boolean, userId: String){
+        _status.value = LoadStatus.LOADING
+
+        coroutineScope.launch {
+
+            val result = walkableRepository.updateWeatherNotification(activate, userId)
+
+            _weatherActivated.value = when(result){
+
+                is Result.Success ->{
+                    _error.value = null
+                    _status.value = LoadStatus.DONE
+                    result.data
+                }
+                is Result.Fail ->{
+                    _error.value = result.error
+                    _status.value = LoadStatus.ERROR
+                    false
+                }
+                is Result.Error ->{
+                    _error.value = result.exception.toString()
+                    _status.value = LoadStatus.ERROR
+                    false
+                }
+                else ->{
+                    _error.value = getString(R.string.not_here)
+                    _status.value = LoadStatus.ERROR
+                    false
+                }
+            }
+
+
+        }
+    }
+
+    fun updateMealNotification(activate: Boolean, userId: String){
+        _status.value = LoadStatus.LOADING
+
+        coroutineScope.launch {
+
+            val result = walkableRepository.updateMealNotification(activate, userId)
+
+            _mealActivated.value = when(result){
+
+                is Result.Success ->{
+                    _error.value = null
+                    _status.value = LoadStatus.DONE
+                    result.data
+                }
+                is Result.Fail ->{
+                    _error.value = result.error
+                    _status.value = LoadStatus.ERROR
+                    false
+                }
+                is Result.Error ->{
+                    _error.value = result.exception.toString()
+                    _status.value = LoadStatus.ERROR
+                    false
+                }
+                else ->{
+                    _error.value = getString(R.string.not_here)
+                    _status.value = LoadStatus.ERROR
+                    false
+                }
+            }
+
+
+        }
+    }
+
 
 
 

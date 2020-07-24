@@ -13,5 +13,7 @@ data class User (
     val accumulatedKm: Accumulation? = null,
     val accumulatedHour: Accumulation? = null,
     val friends: List<Friend> = listOf(),
-    val walks: List<Walk> = listOf()
+    val walks: List<Walk> = listOf(),
+    var weather: Boolean = false,
+    var meal: Boolean = false
 ): Parcelable
