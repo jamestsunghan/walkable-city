@@ -25,6 +25,7 @@ import tw.com.walkablecity.WalkableApp
 import tw.com.walkablecity.data.*
 import tw.com.walkablecity.ext.*
 import tw.com.walkablecity.network.WalkableApi
+import tw.com.walkablecity.network.WeatherApi
 import java.io.ByteArrayOutputStream
 import java.lang.Exception
 import kotlin.coroutines.resume
@@ -1100,5 +1101,22 @@ object WalkableRemoteDataSource: WalkableDataSource{
         }
     }
 
+    override suspend fun getWeather(currentLocation: LatLng): Result<WeatherResult> {
+        if(!isInternetConnected()){
+            return Result.Fail(getString(R.string.no_internet))
+        }
 
+        return try{
+            val result = WeatherApi.retrofitServices.getWeather(lat = currentLocation.latitude, lon = currentLocation.longitude)
+
+            result.error?.let{
+                return Result.Fail(it)
+            }
+
+            Result.Success(result)
+        }catch(e: Exception){
+            Log.d("JJ","[${this::class.simpleName}] exception=${e.message}")
+            Result.Error(e)
+        }
+    }
 }

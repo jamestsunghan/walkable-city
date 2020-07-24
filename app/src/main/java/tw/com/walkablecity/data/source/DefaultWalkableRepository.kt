@@ -187,4 +187,8 @@ class DefaultWalkableRepository(private val remote: WalkableDataSource): Walkabl
     override suspend fun updateMonthlyEvents(user: User?, eventList: List<Event>): Result<Boolean> {
         return remote.updateMonthlyEvents(user, eventList)
     }
+
+    override suspend fun getWeather(currentLocation: LatLng): Result<WeatherResult> {
+        return remote.getWeather(currentLocation)
+    }
 }

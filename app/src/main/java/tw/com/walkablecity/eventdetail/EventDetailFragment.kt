@@ -47,6 +47,10 @@ class EventDetailFragment : Fragment() {
 
         binding.friend = UserManager.user?.toFriend()
 
+        binding.isAdded = viewModel.event.member.find{
+            it.id == UserManager.user?.id
+        }!= null
+
         val adapter = MemberAdapter(viewModel)
         binding.recyclerMember.adapter = adapter
 

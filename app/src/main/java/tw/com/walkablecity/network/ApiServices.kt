@@ -13,11 +13,14 @@ import retrofit2.http.Query
 import tw.com.walkablecity.BuildConfig
 import tw.com.walkablecity.R
 import tw.com.walkablecity.Util
+import tw.com.walkablecity.Util.getString
 import tw.com.walkablecity.data.DirectionResult
 import tw.com.walkablecity.data.MapImageResult
+import tw.com.walkablecity.data.WeatherResult
 
 
 private const val BASE_URL = "https://maps.googleapis.com/maps/api/"
+private const val BASE_URL_WEATHER = "https://api.openweathermap.org/data/2.5/"
 
 
 private val moshi = Moshi.Builder()
@@ -32,6 +35,12 @@ private val client = OkHttpClient.Builder()
 private val retrofit = Retrofit.Builder()
     .addConverterFactory(MoshiConverterFactory.create(moshi))
     .baseUrl(BASE_URL)
+    .client(client)
+    .build()
+
+private val retrofitWeather = Retrofit.Builder()
+    .addConverterFactory(MoshiConverterFactory.create(moshi))
+    .baseUrl(BASE_URL_WEATHER)
     .client(client)
     .build()
 
@@ -50,12 +59,29 @@ interface GoogleApiServices{
     suspend fun getImage(
         @Query("center")center: String,
         @Query("zoom")zoom: String,
-        @Query("key")key: String = Util.getString(R.string.google_api_key),
+        @Query("key")key: String = getString(R.string.google_api_key),
         @Query("path")path: String,
         @Query("size")size: String = "400x400"
     ): MapImageResult
 }
 
+
 object WalkableApi{
-    val retrofitService: GoogleApiServices by lazy { retrofit.create(GoogleApiServices::class.java) }
+    val retrofitService: GoogleApiServices by lazy { retrofitWeather.create(GoogleApiServices::class.java) }
+}
+
+interface OpenWeatherServices{
+
+    @GET("onecall")
+    suspend fun getWeather(
+        @Query("lat")lat: Double,
+        @Query("lon")lon: Double,
+        @Query("appid")appKey: String = getString(R.string.open_weather_key),
+        @Query("party")part: String = "hourly",
+        @Query("units")unit: String = "metric"
+    ): WeatherResult
+}
+
+object WeatherApi{
+    val retrofitServices: OpenWeatherServices by lazy { retrofit.create(OpenWeatherServices::class.java)}
 }

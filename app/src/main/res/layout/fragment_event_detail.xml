@@ -8,6 +8,7 @@
         <variable name="timerText" type="String" />
         <variable name="user" type="tw.com.walkablecity.data.User" />
         <variable name="friend" type="tw.com.walkablecity.data.Friend" />
+        <variable name="isAdded" type="Boolean" />
         <import type="android.view.View"/>
         <import type="tw.com.walkablecity.data.LoadStatus"/>
     </data>
@@ -63,7 +64,7 @@
             android:letterSpacing="0.15"
             android:onClick="@{() -> viewModel.joinPublicEvent()}"
             android:padding="8dp"
-            android:visibility="@{viewModel.event.public == true ? (viewModel.event.member.contains(friend) ? View.GONE : View.VISIBLE) : View.GONE}"
+            android:visibility="@{viewModel.event.public == true ? (isAdded ? View.GONE : View.VISIBLE) : View.GONE}"
             android:background="@drawable/bg_walker_prepare"
             android:backgroundTint="@color/red_heart_c73e3a"
             android:text="@string/join_event"

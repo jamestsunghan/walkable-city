@@ -35,6 +35,10 @@ class FrequencyFriendAdapter(private val viewModel: EventDetailViewModel): ListA
         }
     }
 
+    override fun getItemCount(): Int {
+        return 3
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FriendViewHolder {
         return FriendViewHolder(ItemEventDetailFrequencyFriendBinding
             .inflate(LayoutInflater.from(parent.context), parent, false))

@@ -63,4 +63,7 @@ interface WalkableDataSource {
     suspend fun updateDailyEvents(user: User?, eventList: List<Event>): Result<Boolean>
     suspend fun updateWeeklyEvents(user: User?, eventList: List<Event>): Result<Boolean>
     suspend fun updateMonthlyEvents(user: User?, eventList: List<Event>): Result<Boolean>
+
+    suspend fun getWeather(currentLocation: LatLng): Result<WeatherResult>
+
 }

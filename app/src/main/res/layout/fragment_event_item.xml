@@ -33,135 +33,200 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
-
-
-        <TextView
+        <com.google.android.material.card.MaterialCardView
             android:id="@+id/button_frequency"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/bg_event_filter"
-            android:backgroundTint="@color/event_frequency"
-            android:fontFamily="@font/noto_sans"
-            android:gravity="center"
+            app:layout_constraintTop_toBottomOf="@+id/filter_title"
+            app:layout_constraintStart_toStartOf="parent"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginStart="16dp"
-            android:letterSpacing="0.15"
-            android:onClick="@{() -> viewModel.filterSwitch(EventType.FREQUENCY)}"
-            android:paddingStart="8dp"
-            android:paddingTop="4dp"
-            android:paddingEnd="8dp"
-            android:paddingBottom="4dp"
-            android:text="@string/filter_frequency"
-            android:textSize="12sp"
-            app:layout_constraintTop_toBottomOf="@+id/filter_title"
-            app:layout_constraintStart_toStartOf="parent" />
+            >
 
-        <TextView
+            <TextView
+                android:id="@+id/button_frequency_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/event_frequency"
+                android:fontFamily="@font/noto_sans"
+                android:gravity="center"
+                android:letterSpacing="0.15"
+                android:onClick="@{() -> viewModel.filterSwitch(EventType.FREQUENCY)}"
+                android:paddingStart="8dp"
+                android:paddingTop="4dp"
+                android:paddingEnd="8dp"
+                android:paddingBottom="4dp"
+                android:text="@string/filter_frequency"
+                android:textSize="12sp" />
+
+
+        </com.google.android.material.card.MaterialCardView>
+
+
+        <com.google.android.material.card.MaterialCardView
             android:id="@+id/button_distance_group"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/bg_event_filter"
-            android:backgroundTint="@color/event_distance_group"
-            android:fontFamily="@font/noto_sans"
-            android:gravity="center"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/filter_title"
             android:layout_marginTop="8dp"
             android:layout_marginStart="8dp"
-            android:letterSpacing="0.15"
-            android:onClick="@{() -> viewModel.filterSwitch(EventType.DISTANCE_GROUP)}"
-            android:paddingStart="8dp"
-            android:paddingTop="4dp"
-            android:paddingEnd="8dp"
-            android:paddingBottom="4dp"
-            android:text="@string/filter_distance_group"
-            android:textSize="12sp"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/filter_title" />
+            app:cardCornerRadius="8dp"
+            app:cardElevation="8dp">
 
-        <TextView
+            <TextView
+                android:id="@+id/button_distance_group_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/event_distance_group"
+                android:fontFamily="@font/noto_sans"
+                android:gravity="center"
+                android:letterSpacing="0.15"
+                android:onClick="@{() -> viewModel.filterSwitch(EventType.DISTANCE_GROUP)}"
+                android:paddingStart="8dp"
+                android:paddingTop="4dp"
+                android:paddingEnd="8dp"
+                android:paddingBottom="4dp"
+                android:text="@string/filter_distance_group"
+                android:textSize="12sp"
+                />
+
+
+        </com.google.android.material.card.MaterialCardView>
+
+
+        <com.google.android.material.card.MaterialCardView
             android:id="@+id/button_distance_race"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/bg_event_filter"
-            android:backgroundTint="@color/event_distance_race"
-            android:fontFamily="@font/noto_sans"
-            android:gravity="center"
+            app:layout_constraintTop_toBottomOf="@+id/button_distance_group"
+            app:layout_constraintStart_toEndOf="@+id/button_frequency"
             android:layout_marginTop="8dp"
             android:layout_marginStart="8dp"
-            android:letterSpacing="0.15"
-            android:onClick="@{() -> viewModel.filterSwitch(EventType.DISTANCE_RACE)}"
-            android:paddingStart="8dp"
-            android:paddingTop="4dp"
-            android:paddingEnd="8dp"
-            android:paddingBottom="4dp"
-            android:text="@string/filter_distance_race"
-            android:textSize="12sp"
-            app:layout_constraintTop_toBottomOf="@+id/button_distance_group"
-            app:layout_constraintStart_toEndOf="@+id/button_frequency" />
+            app:cardCornerRadius="8dp"
+            app:cardElevation="8dp">
 
-        <TextView
+            <TextView
+                android:id="@+id/button_distance_race_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_event_filter"
+                android:backgroundTint="@color/event_distance_race"
+                android:fontFamily="@font/noto_sans"
+                android:gravity="center"
+
+                android:letterSpacing="0.15"
+                android:onClick="@{() -> viewModel.filterSwitch(EventType.DISTANCE_RACE)}"
+                android:paddingStart="8dp"
+                android:paddingTop="4dp"
+                android:paddingEnd="8dp"
+                android:paddingBottom="4dp"
+                android:text="@string/filter_distance_race"
+                android:textSize="12sp"
+                 />
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
             android:id="@+id/button_hour_group"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/bg_event_filter"
-            android:backgroundTint="@color/event_hour_group"
-            android:fontFamily="@font/noto_sans"
-            android:gravity="center"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/button_distance_group"
             android:layout_marginTop="8dp"
             android:layout_marginStart="8dp"
-            android:letterSpacing="0.15"
-            android:onClick="@{() -> viewModel.filterSwitch(EventType.HOUR_GROUP)}"
-            android:paddingStart="8dp"
-            android:paddingTop="4dp"
-            android:paddingEnd="8dp"
-            android:paddingBottom="4dp"
-            android:text="@string/filter_hour_group"
-            android:textSize="12sp"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/button_distance_group" />
+            app:cardCornerRadius="8dp"
+            app:cardElevation="8dp">
 
-        <TextView
+            <TextView
+                android:id="@+id/button_hour_group_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/event_hour_group"
+                android:fontFamily="@font/noto_sans"
+                android:gravity="center"
+                android:letterSpacing="0.15"
+                android:onClick="@{() -> viewModel.filterSwitch(EventType.HOUR_GROUP)}"
+                android:paddingStart="8dp"
+                android:paddingTop="4dp"
+                android:paddingEnd="8dp"
+                android:paddingBottom="4dp"
+                android:text="@string/filter_hour_group"
+                android:textSize="12sp"
+                />
+
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
             android:id="@+id/button_hour_race"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/bg_event_filter"
-            android:backgroundTint="@color/event_hour_race"
-            android:fontFamily="@font/noto_sans"
-            android:gravity="center"
+            app:layout_constraintTop_toBottomOf="@+id/button_hour_group"
+            app:layout_constraintStart_toEndOf="@+id/button_distance_race"
             android:layout_marginTop="8dp"
             android:layout_marginStart="8dp"
-            android:letterSpacing="0.15"
-            android:onClick="@{() -> viewModel.filterSwitch(EventType.HOUR_RACE)}"
-            android:paddingStart="8dp"
-            android:paddingTop="4dp"
-            android:paddingEnd="8dp"
-            android:paddingBottom="4dp"
-            android:text="@string/filter_hour_race"
-            android:textSize="12sp"
-            app:layout_constraintTop_toBottomOf="@+id/button_hour_group"
-            app:layout_constraintStart_toEndOf="@+id/button_distance_race" />
+            app:cardCornerRadius="8dp"
+            app:cardElevation="8dp">
 
-        <TextView
+
+
+            <TextView
+                android:id="@+id/button_hour_race_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/event_hour_race"
+                android:fontFamily="@font/noto_sans"
+                android:gravity="center"
+                android:letterSpacing="0.15"
+                android:onClick="@{() -> viewModel.filterSwitch(EventType.HOUR_RACE)}"
+                android:paddingStart="8dp"
+                android:paddingTop="4dp"
+                android:paddingEnd="8dp"
+                android:paddingBottom="4dp"
+                android:text="@string/filter_hour_race"
+                android:textSize="12sp"
+                />
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
             android:id="@+id/filter_empty"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="16dp"
-            android:background="@drawable/bg_event_filter"
-            android:fontFamily="@font/noto_sans"
-            android:gravity="center"
-            android:letterSpacing="0.15"
-            android:onClick="@{() -> viewModel.seeAllEvent()}"
-            android:paddingStart="8dp"
-            android:paddingTop="4dp"
-            android:paddingEnd="8dp"
-            android:paddingBottom="4dp"
-            android:text="@string/event_all"
-            android:textSize="12sp"
             app:layout_constraintBottom_toBottomOf="@+id/button_hour_race"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toEndOf="@+id/button_hour_race"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:cardElevation="4dp"
+            app:cardCornerRadius="8dp">
+
+            <TextView
+                android:id="@+id/filter_empty_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:fontFamily="@font/noto_sans"
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:letterSpacing="0.15"
+                android:onClick="@{() -> viewModel.seeAllEvent()}"
+                android:paddingStart="8dp"
+                android:paddingTop="4dp"
+                android:paddingEnd="8dp"
+                android:paddingBottom="4dp"
+                android:text="@string/event_all"
+                android:textSize="12sp"
+                />
+
+        </com.google.android.material.card.MaterialCardView>
+
+
 
 
 
