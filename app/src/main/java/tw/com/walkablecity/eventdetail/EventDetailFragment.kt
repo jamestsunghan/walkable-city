@@ -50,19 +50,19 @@ class EventDetailFragment : Fragment() {
         val adapter = MemberAdapter(viewModel)
         binding.recyclerMember.adapter = adapter
 
-        binding.recyclerMember.addOnItemTouchListener(object: RecyclerView.OnItemTouchListener{
-            override fun onTouchEvent(rv: RecyclerView, e: MotionEvent) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            }
-
-            override fun onInterceptTouchEvent(rv: RecyclerView, e: MotionEvent): Boolean {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            }
-
-            override fun onRequestDisallowInterceptTouchEvent(disallowIntercept: Boolean) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            }
-        })
+//        binding.recyclerMember.addOnItemTouchListener(object: RecyclerView.OnItemTouchListener{
+//            override fun onTouchEvent(rv: RecyclerView, e: MotionEvent) {
+//                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+//            }
+//
+//            override fun onInterceptTouchEvent(rv: RecyclerView, e: MotionEvent): Boolean {
+//                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+//            }
+//
+//            override fun onRequestDisallowInterceptTouchEvent(disallowIntercept: Boolean) {
+//                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+//            }
+//        })
 
         binding.maybeLater.setOnClickListener {
             findNavController().navigateUp()

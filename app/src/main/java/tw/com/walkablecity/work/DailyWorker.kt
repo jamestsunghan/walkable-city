@@ -80,8 +80,8 @@ class DailyWorker(appContext: Context, params: WorkerParameters): CoroutineWorke
                 }
 
                 val dueDate = Calendar.getInstance().apply{
-                    set(Calendar.HOUR_OF_DAY, 18)
-                    set(Calendar.MINUTE, 26)
+                    set(Calendar.HOUR_OF_DAY, 3)
+                    set(Calendar.MINUTE, 0)
                     set(Calendar.SECOND, 0)
                 }
 

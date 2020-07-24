@@ -57,8 +57,8 @@ class WalkableApp: Application(){
     private fun setupUpdateAndResetWork(){
         val currentDate = Calendar.getInstance()
         val dueDate = Calendar.getInstance().apply{
-            set(Calendar.HOUR_OF_DAY, 18)
-            set(Calendar.MINUTE, 10)
+            set(Calendar.HOUR_OF_DAY, 3)
+            set(Calendar.MINUTE, 0)
             set(Calendar.SECOND, 0)
         }
 

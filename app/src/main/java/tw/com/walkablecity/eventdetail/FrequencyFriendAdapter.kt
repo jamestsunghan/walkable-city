@@ -16,9 +16,10 @@ class FrequencyFriendAdapter(private val viewModel: EventDetailViewModel): ListA
         fun bind(friend: Friend, position: Int, viewModel: EventDetailViewModel){
             binding.friend = friend
             binding.position = position + 1
+            binding.isAccomplished = friend.accomplish ?: 0f >= (viewModel.event.target?.hour?.times(60*60)) ?: requireNotNull(viewModel.event.target?.distance)
             val accomplishDisplay = if(viewModel.event.target?.hour == null) String.format(getString(
-                R.string.walk_accumulate_km),friend.accomplish ?: 0f) else String.format(getString(
-                R.string.walk_accumulate_hours), friend.accomplish?.div(60*60) ?: 0f)
+                R.string.walker_km),friend.accomplish ?: 0f) else String.format(getString(
+                R.string.walker_hour), friend.accomplish?.div(60*60) ?: 0f)
             binding.display = accomplishDisplay
             binding.executePendingBindings()
         }

@@ -11,6 +11,7 @@ import tw.com.walkablecity.R
 import tw.com.walkablecity.UserManager
 import tw.com.walkablecity.Util
 import tw.com.walkablecity.WalkableApp
+import tw.com.walkablecity.data.EventType
 import tw.com.walkablecity.data.Friend
 import tw.com.walkablecity.data.FriendListWrapper
 import tw.com.walkablecity.data.MissionFQ
@@ -23,13 +24,19 @@ import java.util.*
 class MemberAdapter(val viewModel: EventDetailViewModel): ListAdapter<MemberItem, RecyclerView.ViewHolder>(DiffCallback) {
 
     class BoardViewHolder(private val binding: ItemEventDetailBoardBinding): RecyclerView.ViewHolder(binding.root){
-        fun bind(viewModel: EventDetailViewModel){
+        fun bind(viewModel: EventDetailViewModel, champ: Friend){
             binding.circleAccomplish.apply{
                 setCircleColor(Util.getColor(R.color.grey_transparent))
                 setStrokeWidth(20f)
             }
             binding.viewModel = viewModel
-
+            binding.champ = champ.apply {
+                accomplish = if(viewModel.event.type == EventType.HOUR_RACE){
+                    accomplish?.div(60*60) ?: 0f
+                } else{
+                    accomplish
+                }
+            }
             binding.total = viewModel.circleList.value?.sum()?.times(100)
             binding.recyclerFq.adapter = FrequencyAdapter(viewModel)
             binding.recyclerFq.onFlingListener = null
@@ -42,6 +49,7 @@ class MemberAdapter(val viewModel: EventDetailViewModel): ListAdapter<MemberItem
         fun bind(friend: Friend, viewModel: EventDetailViewModel, position: Int){
             binding.friend = friend
             binding.viewModel = viewModel
+            binding.isAccomplished = (friend.accomplish ?: 0f) >= (viewModel.event.target?.hour?.times(60*60) ?: requireNotNull(viewModel.event.target?.distance))
             binding.width = binding.friendBar.width
 //            binding.friendSeekBar.apply{
 //                max = viewModel.event.target?.distance?.times(1000)?.toInt() ?: requireNotNull(viewModel.event.target?.hour?.times(60*60)?.toInt())
@@ -101,7 +109,7 @@ class MemberAdapter(val viewModel: EventDetailViewModel): ListAdapter<MemberItem
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when(holder){
-            is BoardViewHolder ->holder.bind(viewModel)
+            is BoardViewHolder ->holder.bind(viewModel, (getItem(1) as MemberItem.Member).member)
             is MemberViewHolder ->holder.bind((getItem(position) as MemberItem.Member).member, viewModel, position)
         }
     }

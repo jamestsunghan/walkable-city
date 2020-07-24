@@ -8,6 +8,7 @@
         <variable name="viewModel" type="tw.com.walkablecity.eventdetail.EventDetailViewModel" />
         <variable name="position" type="Integer" />
         <variable name="width" type="Integer" />
+        <variable name="isAccomplished" type="Boolean" />
         <variable name="user" type="tw.com.walkablecity.data.Friend" />
 
     </data>
@@ -25,14 +26,15 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:cardElevation="2dp">
+            app:cardElevation="1dp">
 
             <TextView
                 android:id="@+id/badge_position"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:textColor="@color/primaryDarkColor"
                 android:gravity="center"
+                android:background="@{isAccomplished ? @color/gold : @color/white}"
+                android:textColor="@{isAccomplished ? @color/white : @color/primaryDarkColor }"
                 android:fontFamily="@font/noto_sans"
                 android:textSize="14dp"
                 android:text="@{String.valueOf(position)}" />

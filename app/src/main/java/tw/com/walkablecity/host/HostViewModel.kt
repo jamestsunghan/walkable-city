@@ -85,12 +85,12 @@ class HostViewModel(private val walkableRepository: WalkableRepository) : ViewMo
             it?.let{
                 if(value == null) value = EventTarget()
                 when(selectTypePosition.value){
-                    1 -> this.value?.distance = it.toFloat()
-                    2 -> this.value?.hour     = it.toFloat()
-                    3 -> this.value?.distance = it.toFloat()
-                    4 -> this.value?.distance = it.toFloat()
-                    5 -> this.value?.hour     = it.toFloat()
-                    6 -> this.value?.hour     = it.toFloat()
+                    1 -> this.value?.distance = if(it == "") null else it.toFloat()
+                    2 -> this.value?.hour     = if(it == "") null else it.toFloat()
+                    3 -> this.value?.distance = if(it == "") null else it.toFloat()
+                    4 -> this.value?.distance = if(it == "") null else it.toFloat()
+                    5 -> this.value?.hour     = if(it == "") null else it.toFloat()
+                    6 -> this.value?.hour     = if(it == "") null else it.toFloat()
                     else -> {}
                 }
                 value = this.value

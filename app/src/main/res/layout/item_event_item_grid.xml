@@ -9,104 +9,119 @@
         <import type="tw.com.walkablecity.data.EventType"/>
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/bg_event_grid"
-        app:eventType="@{event.type}"
-        android:layout_margin="8dp">
+        app:cardElevation="4dp"
+        android:layout_margin="8dp"
+        app:strokeColor="@{event.type.colorList[1]}"
+        app:strokeWidth="1dp"
+        app:cardCornerRadius="16dp">
 
-        <TextView
-            android:id="@+id/event_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:fontFamily="@font/noto_sans"
-            android:layout_marginTop="16dp"
-            android:text="@{event.title}"
-            android:maxLines="1"
-            android:gravity="center"
-            android:letterSpacing="0.15"
-            android:textColor="@color/primaryDarkColor"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="第一條路" />
-
-        <View
-            android:id="@+id/white_bg"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginTop="16dp"
-            android:background="@drawable/bg_bottom_half_rad"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/event_title"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            android:layout_height="match_parent"
+            android:background="@drawable/bg_event_grid"
+            app:eventType="@{event.type}">
 
-        <TextView
-            android:id="@+id/event_member_count"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:fontFamily="@font/noto_sans"
-            android:layout_marginTop="32dp"
-            android:text="@{String.format( @string/event_member_count , event.memberCount )}"
-            android:gravity="center"
-            android:letterSpacing="0.15"
-            android:textColor="@color/primaryDarkColor"
-            android:textSize="14sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/event_title"
-            tools:text="第一條路" />
+            <TextView
+                android:id="@+id/event_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:fontFamily="@font/noto_sans"
+                android:layout_marginTop="16dp"
+                android:text="@{event.title}"
+                android:maxLines="1"
+                android:gravity="center"
+                android:letterSpacing="0.15"
+                android:textColor="@color/primaryDarkColor"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="第一條路" />
 
-        <TextView
-            android:id="@+id/event_description"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:fontFamily="@font/noto_sans"
-            android:letterSpacing="0.15"
-            android:paddingStart="8dp"
-            android:paddingEnd="8dp"
-            android:text="@{event.description}"
-            android:textColor="@color/primaryDarkColor"
-            android:textSize="14sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/event_member_count"
-            tools:text="第一條路" />
+            <View
+                android:id="@+id/white_bg"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/bg_bottom_half_rad"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/event_title"
+                app:layout_constraintBottom_toBottomOf="parent"/>
 
-        <TextView
-            android:id="@+id/event_more_info"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:background="@drawable/bg_bottom_half_rad"
-            android:fontFamily="@font/noto_sans"
-            android:gravity="center"
-            android:letterSpacing="0.15"
-            android:padding="8dp"
-            android:text="@string/event_more_info"
-            android:textColor="@color/primaryDarkColor"
-            android:textSize="14sp"
-            android:onClick="@{() ->viewModel.navigateToEventDetail(event)}"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/event_description"
-            app:layout_constraintVertical_bias="1.0"
-            tools:text="第一條路" />
+            <TextView
+                android:id="@+id/event_member_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:fontFamily="@font/noto_sans"
+                android:layout_marginTop="32dp"
+                android:text="@{String.format( @string/event_member_count , event.memberCount )}"
+                android:gravity="center"
+                android:letterSpacing="0.15"
+                android:textColor="@color/primaryDarkColor"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/event_title"
+                tools:text="第一條路" />
+
+            <TextView
+                android:id="@+id/event_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:fontFamily="@font/noto_sans"
+                android:letterSpacing="0.15"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:text="@{event.description}"
+                android:textColor="@color/primaryDarkColor"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/event_member_count"
+                tools:text="第一條路" />
+
+            <TextView
+                android:id="@+id/event_more_info"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/bg_bottom_half_rad"
+                android:fontFamily="@font/noto_sans"
+                android:gravity="center"
+                android:letterSpacing="0.15"
+                android:padding="8dp"
+                android:text="@string/event_more_info"
+                android:textColor="@color/primaryDarkColor"
+                android:textSize="14sp"
+                android:onClick="@{() ->viewModel.navigateToEventDetail(event)}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/event_description"
+                app:layout_constraintVertical_bias="1.0"
+                tools:text="第一條路" />
 
 
 
 
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+
+    </com.google.android.material.card.MaterialCardView>
+
+
 </layout>
