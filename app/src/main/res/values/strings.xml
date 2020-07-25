@@ -336,5 +336,7 @@
     <string name="uvi_weak">弱　%.2f</string>
     <string name="uvi_very_weak">微弱　%.2f</string>
 
+    <string name="explore_walk_distance">走了%.2f公里</string>
+
 
 </resources>

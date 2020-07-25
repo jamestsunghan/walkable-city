@@ -4,13 +4,17 @@ package tw.com.walkablecity.profile.explore
 import android.Manifest
 import android.content.pm.PackageManager
 import android.content.res.Resources
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.util.Log
+import android.util.TypedValue
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.toBitmap
+import androidx.core.graphics.scale
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -19,14 +23,14 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MapStyleOptions
-import com.google.android.gms.maps.model.PolylineOptions
+import com.google.android.gms.maps.model.*
 
 import tw.com.walkablecity.R
 import tw.com.walkablecity.WalkableApp
 import tw.com.walkablecity.databinding.FragmentExploreBinding
+import tw.com.walkablecity.ext.getCroppedBitmap
 import tw.com.walkablecity.ext.getVMFactory
+import tw.com.walkablecity.ext.toDateString
 import tw.com.walkablecity.ext.toLatLngPoints
 import tw.com.walkablecity.home.HomeFragment
 
@@ -90,10 +94,21 @@ class ExploreFragment : Fragment(), OnMapReadyCallback {
 
 
                             map.addPolyline(PolylineOptions()
-                                .color(WalkableApp.instance.getColor(R.color.red_heart_c73e3a))
+                                .color(WalkableApp.instance.getColor(R.color.walk_path))
+                                .width(20f)
                                 .addAll(walk.waypoints.toLatLngPoints()))
-
+                            if(walk.waypoints.isNotEmpty()){
+                                val bitmapRealDimens = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 25f, WalkableApp.instance.resources.displayMetrics).toInt()
+                                val drawable = WalkableApp.instance.resources.getDrawable(R.drawable.placeholder, WalkableApp.instance.theme)
+                                val bitmap = drawable.toBitmap(bitmapRealDimens,bitmapRealDimens)
+                                map.addMarker(MarkerOptions()
+                                    .position(walk.waypoints.toLatLngPoints()[0])
+                                    .icon(BitmapDescriptorFactory.fromBitmap(bitmap.getCroppedBitmap()))
+                                    .title(walk.startTime?.toDateString())
+                                    .snippet(String.format(getString(R.string.explore_walk_distance),walk.distance)))
+                            }
                         }
+                        map.setInfoWindowAdapter(ExploreInfoWindowAdapter(walks, container))
                     }
                 }
 
