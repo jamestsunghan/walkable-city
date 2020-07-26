@@ -1,13 +1,16 @@
 package tw.com.walkablecity.search
 
 
+import android.graphics.Color
 import android.graphics.Typeface
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.EditText
 import android.widget.ImageView
 import androidx.databinding.DataBindingUtil
@@ -25,6 +28,7 @@ import com.google.android.libraries.places.widget.listener.PlaceSelectionListene
 import tw.com.walkablecity.R
 import tw.com.walkablecity.Util.makeShortToast
 import tw.com.walkablecity.WalkableApp
+import tw.com.walkablecity.bindWidthWithFloat
 import tw.com.walkablecity.databinding.FragmentSearchBinding
 import tw.com.walkablecity.ext.getVMFactory
 import tw.com.walkablecity.home.HomeFragmentDirections
@@ -50,11 +54,14 @@ class SearchFragment : DialogFragment() {
             .inflate(inflater, R.layout.fragment_search, container, false)
         binding.lifecycleOwner = this
 
-
-
-        binding.timerSlider.addOnChangeListener { slider, value, fromUser ->
-            viewModel.range.value = slider.values
-        }
+        binding.viewModel = viewModel
+        dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog?.window?.setLayout(TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP, 300f, WalkableApp.instance.resources.displayMetrics).toInt()
+            , WindowManager.LayoutParams.WRAP_CONTENT)
+//        binding.timerSlider.addOnChangeListener { slider, value, fromUser ->
+//            viewModel.range.value = slider.values
+//        }
 
         viewModel.range.observe(viewLifecycleOwner, Observer {
             it?.let{
@@ -66,20 +73,25 @@ class SearchFragment : DialogFragment() {
             it?.let{route->
                 if(route.waypoints.isEmpty()){
                     makeShortToast(R.string.no_route_fit_as_shortest)
-                }else{
-                    findNavController().navigate(SearchFragmentDirections.actionGlobalHomeFragment(route, viewModel.destination.value))
-
                 }
+                findNavController().navigate(SearchFragmentDirections.actionGlobalHomeFragment(route, viewModel.destination.value))
+
                 viewModel.searchComplete()
             }
         })
 
-        binding.viewModel = viewModel
+        viewModel.destination.observe(viewLifecycleOwner, Observer{
+            it?.let{
+                viewModel.getShortestTime(viewModel.currentLocation, it)
+            }
+        })
+
         autoCompleteFragment = childFragmentManager.findFragmentById(R.id.autocomplete_fragment) as AutocompleteSupportFragment
 
 
         autoCompleteFragment.apply {
-
+            this.view?.layoutParams?.width = TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP, 300f, WalkableApp.instance.resources.displayMetrics).toInt()
             val searchIcon = view?.findViewById<ImageView>(R.id.places_autocomplete_search_button)
             searchIcon?.setImageResource(R.drawable.map_search_24px)
 

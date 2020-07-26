@@ -7,10 +7,9 @@
     <data>
 
         <variable name="viewModel" type="tw.com.walkablecity.home.HomeViewModel" />
-
         <import type="tw.com.walkablecity.home.WalkerStatus" />
-
         <import type="android.view.View" />
+        <import type="tw.com.walkablecity.data.LoadStatus"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -213,6 +212,7 @@
                     android:fontFamily="@font/noto_sans"
                     android:gravity="center"
                     android:letterSpacing="0.15"
+                    android:textColor="@color/primaryDarkColor"
                     android:onClick="@{() -> viewModel.pauseResumeSwitch()}"
                     android:paddingStart="8dp"
                     android:paddingTop="4dp"
@@ -261,13 +261,26 @@
                     android:paddingTop="4dp"
                     android:paddingEnd="8dp"
                     android:paddingBottom="4dp"
+                    android:textColor="@color/primaryDarkColor"
                     android:text="@{viewModel.walkerStatus == WalkerStatus.PREPARE ? @string/start_walking : @string/end_walking}"
                     android:textSize="16sp"
+                    android:visibility="@{viewModel.loadStatus == LoadStatus.LOADING ? View.INVISIBLE : View.VISIBLE}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toEndOf="@+id/walking_divider"
                     tools:text="@string/start_walking" />
+
+                <ProgressBar
+                    android:id="@+id/progress_home"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:theme="@style/ProgressPrimaryTheme"
+                    android:visibility="@{viewModel.loadStatus == LoadStatus.LOADING ? View.VISIBLE : View.GONE}"
+                    app:layout_constraintBottom_toBottomOf="@+id/button_start_stop"
+                    app:layout_constraintEnd_toEndOf="@+id/button_start_stop"
+                    app:layout_constraintStart_toStartOf="@+id/button_start_stop"
+                    app:layout_constraintTop_toTopOf="@+id/button_start_stop" />
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>

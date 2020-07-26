@@ -4,14 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
-        <variable
-            name="viewModel"
-            type="tw.com.walkablecity.host.HostViewModel" />
-
+        <variable name="viewModel" type="tw.com.walkablecity.host.HostViewModel" />
         <import type="tw.com.walkablecity.data.EventType" />
-
         <import type="android.view.View" />
+        <import type="tw.com.walkablecity.data.LoadStatus"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -344,12 +340,23 @@
             android:onClick="@{() ->viewModel.createEvent()}"
             android:padding="8dp"
             android:text="@string/create_event"
-            android:textColor="@color/white"
+            android:textColor="@{viewModel.status == LoadStatus.LOADING ? @color/primaryDarkColor : @color/white }"
             android:textSize="14sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintVertical_bias="1.0" />
+
+        <ProgressBar
+            android:id="@+id/progress_login"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:theme="@style/ProgressDarkTheme"
+            android:visibility="@{viewModel.status == LoadStatus.LOADING ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="@+id/create_event"
+            app:layout_constraintEnd_toEndOf="@+id/create_event"
+            app:layout_constraintStart_toStartOf="@+id/create_event"
+            app:layout_constraintTop_toTopOf="@+id/create_event" />
 
 
 

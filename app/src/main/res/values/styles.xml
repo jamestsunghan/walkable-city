@@ -23,6 +23,10 @@
         <item name="colorAccent">@color/primaryDarkColor</item>
     </style>
 
+    <style name="ProgressDarkTheme" parent="Widget.AppCompat.ProgressBar">
+        <item name="colorAccent">@color/white</item>
+    </style>
+
     <style name="ProgressFavTheme" parent="Widget.AppCompat.ProgressBar">
         <item name="colorAccent">@color/red_heart_c73e3a</item>
     </style>

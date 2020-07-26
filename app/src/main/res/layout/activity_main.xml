@@ -19,7 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:background="@color/white"
-            android:visibility="@{viewModel.currentFragment == CurrentFragmentType.HOME || viewModel.currentFragment == CurrentFragmentType.SEARCH || viewModel.currentFragment == CurrentFragmentType.LOGIN || viewModel.currentFragment == CurrentFragmentType.EVENT_DETAIL ? View.GONE : View.VISIBLE}"
+            android:visibility="@{viewModel.currentFragment == CurrentFragmentType.HOME || viewModel.currentFragment == CurrentFragmentType.SEARCH || viewModel.currentFragment == CurrentFragmentType.LOGIN || viewModel.currentFragment == CurrentFragmentType.EVENT_DETAIL || viewModel.currentFragment == CurrentFragmentType.CREATE_ROUTE_DIALOG ? View.GONE : View.VISIBLE}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent">

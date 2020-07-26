@@ -37,7 +37,9 @@
     <string name="filter_snack">饞</string>
     <string name="filter_scenery">景</string>
     <string name="minute">分鐘</string>
+    <string name="about_minute">約%.1f分鐘</string>
     <string name="filter_time_title">步行時間</string>
+    <string name="shortest_time">最短時間</string>
     <string name="route_km">公里</string>
 
     <string name="send_filter">搜尋路線</string>
@@ -327,7 +329,7 @@
     <string name="feels_like">體感溫度</string>
 
     <string name="after_meal_walk">吃飽散步囉！</string>
-    <string name="after_meal_talk">您已經%d天沒有出門散步了歐，來場探索城市的小旅行吧！</string>
+    <string name="after_meal_talk">您已經%d天沒有出門散步了歐，\n來場探索城市的小旅行吧！</string>
     <string name="first_walk">吃飽喝足，一起出門散個步吧！</string>
     <string name="today_uvi">本日紫外線指數｜</string>
     <string name="uvi_very_strong">極強　%.2f</string>

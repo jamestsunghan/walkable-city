@@ -191,6 +191,8 @@ class HomeViewModel(val walkableRepository: WalkableRepository, val argument: Ro
 
     fun navigateToRatingComplete(){
         _navigateToRating.value = null
+        _walkerStatus.value = WalkerStatus.PREPARE
+
     }
 
     fun addPhotoPoint(url: String){
@@ -206,7 +208,7 @@ class HomeViewModel(val walkableRepository: WalkableRepository, val argument: Ro
             WalkerStatus.PREPARE -> startWalking()
             WalkerStatus.PAUSING -> stopWalking()
             WalkerStatus.WALKING -> stopWalking()
-            WalkerStatus.FINISH ->{}
+            WalkerStatus.FINISH  -> {}
         }
     }
 
@@ -215,7 +217,7 @@ class HomeViewModel(val walkableRepository: WalkableRepository, val argument: Ro
             WalkerStatus.PREPARE -> {}
             WalkerStatus.PAUSING -> resumeWalking()
             WalkerStatus.WALKING -> pauseWalking()
-            WalkerStatus.FINISH ->{}
+            WalkerStatus.FINISH  -> {}
         }
     }
 

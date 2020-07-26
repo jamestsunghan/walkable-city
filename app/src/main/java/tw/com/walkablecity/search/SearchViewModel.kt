@@ -2,6 +2,7 @@ package tw.com.walkablecity.search
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.CoroutineScope
@@ -32,6 +33,18 @@ class SearchViewModel(val walkableRepository: WalkableRepository, val currentLoc
     private val _destination = MutableLiveData<LatLng>()
     val destination: LiveData<LatLng> get() = _destination
 
+    private val _shortestTime = MutableLiveData<Int>(null)
+    val shortestTime: LiveData<Int> get() = _shortestTime
+
+
+    val shortestTimeText = Transformations.map(shortestTime){
+        if(it == null){
+            getString(R.string.no_direction_yet)
+        }else{
+            String.format(getString(R.string.about_minute), it.toFloat().div(60))
+        }
+    }
+
     private val _status = MutableLiveData<LoadStatus>()
     val status: LiveData<LoadStatus> get() = _status
 
@@ -40,6 +53,9 @@ class SearchViewModel(val walkableRepository: WalkableRepository, val currentLoc
 
     private val viewModelJob = Job()
     private val coroutineScope = CoroutineScope(Dispatchers.Main + viewModelJob)
+    init{
+//        getCurrentLocation()
+    }
 
     override fun onCleared() {
         super.onCleared()
@@ -54,6 +70,17 @@ class SearchViewModel(val walkableRepository: WalkableRepository, val currentLoc
         _filter.value = sorting
     }
 
+//    fun getCurrentLocation(){
+//        _status.value = LoadStatus.LOADING
+//
+//        coroutineScope.launch {
+//            val result = walkableRepository.getUserCurrentLocation()
+//
+//            _location.value =
+//
+//        }
+//    }
+
     fun searchRoute(){
         val selectedFilter = filter.value
         val selectedDestination = destination.value
@@ -64,6 +91,37 @@ class SearchViewModel(val walkableRepository: WalkableRepository, val currentLoc
         }else{
             matchRoute(selectedFilter, selectedDestination)
         }
+    }
+
+    fun getShortestTime(currentLocation: LatLng, destination: LatLng){
+        _status.value = LoadStatus.LOADING
+        coroutineScope.launch {
+            val result = walkableRepository.drawPath(currentLocation, destination, listOf())
+
+            _shortestTime.value = when(result){
+                is Result.Success ->{
+                    _error.value = null
+                    _status.value = LoadStatus.DONE
+                    result.data.routes[0].legs.map{it.duration?.value}.sumBy{ it ?: 0}
+                }
+                is Result.Fail ->{
+                    _error.value = null
+                    _status.value = LoadStatus.ERROR
+                    null
+                }
+                is Result.Error ->{
+                    _error.value = null
+                    _status.value = LoadStatus.ERROR
+                    null
+                }
+                else ->{
+                    _error.value = null
+                    _status.value = LoadStatus.ERROR
+                    null
+                }
+            }
+        }
+
     }
 
     private fun matchRoute(filter: RouteSorting, destination: LatLng){

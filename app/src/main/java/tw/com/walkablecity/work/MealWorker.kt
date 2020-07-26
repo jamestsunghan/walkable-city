@@ -77,7 +77,7 @@ class MealWorker(appContext: Context, params: WorkerParameters): CoroutineWorker
                     .setContentTitle(getString(R.string.after_meal_walk))
                     .setSmallIcon(R.drawable.footprints)
                     .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                    .setContentText(contentText)
+                    .setStyle(NotificationCompat.BigTextStyle().bigText(contentText))
 
                 with(NotificationManagerCompat.from(applicationContext)){
                     notify(NOTIFY_ID, builder.build())
