@@ -6,6 +6,8 @@
     <data>
         <variable name="viewModel" type="tw.com.walkablecity.profile.bestwalker.BestWalkersViewModel" />
         <import type="tw.com.walkablecity.data.AccumulationType"/>
+        <import type="tw.com.walkablecity.data.LoadStatus"/>
+        <import type="android.view.View"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -108,6 +110,17 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/weekly_ranking"
             app:walker="@{viewModel.sortList}" />
+
+        <ProgressBar
+            android:id="@+id/progress_search"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:theme="@style/ProgressPrimaryTheme"
+            android:visibility="@{viewModel.status == LoadStatus.LOADING ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

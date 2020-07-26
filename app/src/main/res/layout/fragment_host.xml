@@ -320,6 +320,24 @@
                     android:orientation="horizontal"
                     app:friendly="@{viewModel.addList}"/>
 
+                <TextView
+                    android:id="@+id/no_invite_friend"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginStart="16dp"
+                    android:fontFamily="@font/noto_sans"
+                    android:gravity="center"
+                    android:letterSpacing="0.15"
+                    android:text="@string/no_friend_invited"
+                    android:textColor="@color/primaryColor"
+                    android:textSize="20sp"
+                    android:visibility="@{viewModel.addList == null || viewModel.addList.size() == 0 ? View.VISIBLE : View.GONE}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/create_invite_friend" />
+
 
 
 
