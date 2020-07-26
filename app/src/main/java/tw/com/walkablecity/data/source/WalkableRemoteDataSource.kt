@@ -140,7 +140,7 @@ object WalkableRemoteDataSource: WalkableDataSource{
     }
 
     override suspend fun getUserLatestWalk(userId: String): Result<Walk?> = suspendCoroutine{continuation->
-        db.collection(USER).document(userId).collection(WALKS).orderBy("startTime").limit(1).get().addOnCompleteListener {task->
+        db.collection(USER).document(userId).collection(WALKS).orderBy("startTime", Query.Direction.DESCENDING).limit(1).get().addOnCompleteListener {task->
             if(task.isSuccessful){
 
                 if(task.result == null || task.result!!.isEmpty) continuation.resume(Result.Success(null))
