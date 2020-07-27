@@ -1,8 +1,12 @@
 package tw.com.walkablecity.detail
 
+import android.graphics.Rect
+import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.recyclerview.widget.LinearSnapHelper
+import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -10,6 +14,7 @@ import kotlinx.coroutines.launch
 import tw.com.walkablecity.R
 import tw.com.walkablecity.UserManager
 import tw.com.walkablecity.Util.getString
+import tw.com.walkablecity.Util.setDp
 import tw.com.walkablecity.data.*
 import tw.com.walkablecity.data.source.WalkableRepository
 
@@ -43,8 +48,24 @@ class DetailViewModel(val walkableRepository: WalkableRepository, val route: Rou
     private val _displayPhotos = MutableLiveData<List<String>>()
     val displayPhotos: LiveData<List<String>> get() = _displayPhotos
 
+    private val _snapPosition = MutableLiveData<Int>()
+    val snapPosition: LiveData<Int> get() = _snapPosition
+
     private val viewModelJob = Job()
     private val coroutineScope = CoroutineScope(Dispatchers.Main + viewModelJob)
+
+    val decoration = object : RecyclerView.ItemDecoration() {
+        override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
+            super.getItemOffsets(outRect, view, parent, state)
+
+            // Add top margin only for the first item to avoid double space between items
+            if (parent.getChildLayoutPosition(view) == 0) {
+                outRect.left = 0
+            } else {
+                outRect.left = setDp(16f).toInt()
+            }
+        }
+    }
 
 
     init{
@@ -66,6 +87,17 @@ class DetailViewModel(val walkableRepository: WalkableRepository, val route: Rou
 
     fun navigationComplete(){
         _natigateToRanking.value = false
+    }
+
+    fun onGalleryScrollChange(layoutManager: RecyclerView.LayoutManager?, linearSnapHelper: LinearSnapHelper){
+        val snapView = linearSnapHelper.findSnapView(layoutManager)
+        snapView?.let{
+            layoutManager?.getPosition(snapView)?.let{
+                if(it != snapPosition.value){
+                    _snapPosition.value = it
+                }
+            }
+        }
     }
 
     fun switchState(){

@@ -1,30 +1,33 @@
 package tw.com.walkablecity.eventdetail
 
+import android.content.Context
 import android.content.res.ColorStateList
 import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.view.marginEnd
+import androidx.lifecycle.Observer
+import androidx.lifecycle.findViewTreeLifecycleOwner
+import androidx.lifecycle.observe
 import androidx.recyclerview.widget.*
-import tw.com.walkablecity.R
-import tw.com.walkablecity.UserManager
-import tw.com.walkablecity.Util
-import tw.com.walkablecity.WalkableApp
+import tw.com.walkablecity.*
 import tw.com.walkablecity.data.EventType
 import tw.com.walkablecity.data.Friend
 import tw.com.walkablecity.data.FriendListWrapper
 import tw.com.walkablecity.data.MissionFQ
 import tw.com.walkablecity.databinding.ItemEventDetailBoardBinding
 import tw.com.walkablecity.databinding.ItemMemberEventDetailBinding
+import tw.com.walkablecity.detail.DetailCircleAdapter
 import tw.com.walkablecity.ext.toFriend
 import java.text.SimpleDateFormat
-import java.util.*
 
 class MemberAdapter(val viewModel: EventDetailViewModel): ListAdapter<MemberItem, RecyclerView.ViewHolder>(DiffCallback) {
 
+    private lateinit var context: Context
+
     class BoardViewHolder(private val binding: ItemEventDetailBoardBinding): RecyclerView.ViewHolder(binding.root){
-        fun bind(viewModel: EventDetailViewModel, champ: Friend){
+        fun bind(viewModel: EventDetailViewModel, champ: Friend, context: Context){
             binding.circleAccomplish.apply{
                 setCircleColor(Util.getColor(R.color.grey_transparent))
                 setStrokeWidth(20f)
@@ -39,8 +42,19 @@ class MemberAdapter(val viewModel: EventDetailViewModel): ListAdapter<MemberItem
             }
             binding.total = viewModel.circleList.value?.sum()?.times(100)
             binding.recyclerFq.adapter = FrequencyAdapter(viewModel)
+            binding.recyclerCircleFq.adapter = DetailCircleAdapter()
             binding.recyclerFq.onFlingListener = null
-            PagerSnapHelper().attachToRecyclerView(binding.recyclerFq)
+            val linearSnapHelper = LinearSnapHelper().apply{
+                attachToRecyclerView(binding.recyclerFq)
+            }
+
+            binding.recyclerFq.setOnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
+                viewModel.onGalleryScrollChange(binding.recyclerFq.layoutManager, linearSnapHelper)
+            }
+            viewModel.snapPosition.observe(context as MainActivity, Observer {
+                (binding.recyclerCircleFq.adapter as DetailCircleAdapter).selectedPosition.value = it
+            })
+
 
         }
     }
@@ -98,6 +112,7 @@ class MemberAdapter(val viewModel: EventDetailViewModel): ListAdapter<MemberItem
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        context = parent.context
         return when(viewType){
             ITEM_VIEW_TYPE_BOARD -> BoardViewHolder(ItemEventDetailBoardBinding
                 .inflate(LayoutInflater.from(parent.context), parent, false))
@@ -109,7 +124,7 @@ class MemberAdapter(val viewModel: EventDetailViewModel): ListAdapter<MemberItem
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when(holder){
-            is BoardViewHolder ->holder.bind(viewModel, (getItem(1) as MemberItem.Member).member)
+            is BoardViewHolder ->holder.bind(viewModel, (getItem(1) as MemberItem.Member).member, context)
             is MemberViewHolder ->holder.bind((getItem(position) as MemberItem.Member).member, viewModel, position)
         }
     }

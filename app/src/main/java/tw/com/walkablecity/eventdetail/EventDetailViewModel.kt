@@ -1,8 +1,12 @@
 package tw.com.walkablecity.eventdetail
 
+import android.graphics.Rect
 import android.os.CountDownTimer
 import android.util.Log
+import android.view.View
 import androidx.lifecycle.*
+import androidx.recyclerview.widget.LinearSnapHelper
+import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.Timestamp
 import com.google.firebase.Timestamp.now
 import kotlinx.coroutines.CoroutineScope
@@ -13,6 +17,7 @@ import tw.com.walkablecity.R
 import tw.com.walkablecity.UserManager
 import tw.com.walkablecity.Util.getString
 import tw.com.walkablecity.Util.lessThenTenPadStart
+import tw.com.walkablecity.Util.setDp
 import tw.com.walkablecity.WalkableApp
 import tw.com.walkablecity.data.*
 import tw.com.walkablecity.data.source.WalkableRepository
@@ -39,6 +44,9 @@ class EventDetailViewModel(private val walkableRepository: WalkableRepository, v
 
     private val _joinSuccess = MutableLiveData<Boolean>()
     val joinSuccess: LiveData<Boolean> get() = _joinSuccess
+
+    private val _snapPosition = MutableLiveData<Int>()
+    val snapPosition: LiveData<Int> get() = _snapPosition
 
     val currentCountDown = MutableLiveData<String>()
 
@@ -74,6 +82,19 @@ class EventDetailViewModel(private val walkableRepository: WalkableRepository, v
     }
 
     val listMemberId = event.member.map{ requireNotNull(it.id)}
+
+    val decoration = object : RecyclerView.ItemDecoration() {
+        override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
+            super.getItemOffsets(outRect, view, parent, state)
+
+            // Add top margin only for the first item to avoid double space between items
+            if (parent.getChildLayoutPosition(view) == 0) {
+                outRect.left = 0
+            } else {
+                outRect.left = setDp(16f).toInt()
+            }
+        }
+    }
 
     private val viewModelJob = Job()
     private val coroutineScope = CoroutineScope(Dispatchers.Main + viewModelJob)
@@ -136,6 +157,17 @@ class EventDetailViewModel(private val walkableRepository: WalkableRepository, v
         eventMember.value?.sortedBy { it.accomplish }?.reversed().apply{
             eventMember.value = this
 
+        }
+    }
+
+    fun onGalleryScrollChange(layoutManager: RecyclerView.LayoutManager?, linearSnapHelper: LinearSnapHelper){
+        val snapView = linearSnapHelper.findSnapView(layoutManager)
+        snapView?.let{
+            layoutManager?.getPosition(snapView)?.let{
+                if(it != snapPosition.value){
+                    _snapPosition.value = it
+                }
+            }
         }
     }
 

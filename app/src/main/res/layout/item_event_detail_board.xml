@@ -188,6 +188,23 @@
                     android:orientation="horizontal"
                     app:fqlist="@{viewModel.listOfList}"/>
 
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycler_circle_fq"
+                    android:layout_width="wrap_content"
+                    android:layout_height="8dp"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginBottom="16dp"
+                    android:visibility="@{viewModel.event.type == EventType.FREQUENCY ? View.VISIBLE : View.GONE}"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    android:orientation="horizontal"
+                    app:addDecoration="@{viewModel.decoration}"
+                    app:counting="@{viewModel.listOfList.size}"
+                    app:layout_constraintBottom_toBottomOf="@+id/recycler_fq"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"/>
+
 
 
 

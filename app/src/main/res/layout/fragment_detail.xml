@@ -44,6 +44,22 @@
                     android:orientation="horizontal"
                     app:routeImage="@{viewModel.displayPhotos}"/>
 
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycler_circle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="8dp"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginBottom="30dp"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    android:orientation="horizontal"
+                    app:addDecoration="@{viewModel.decoration}"
+                    app:counting="@{viewModel.displayPhotos.size}"
+                    app:layout_constraintBottom_toBottomOf="@+id/recycler_detail_url"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"/>
+
                 <View
                     android:id="@+id/walk_divider"
                     android:layout_width="1dp"

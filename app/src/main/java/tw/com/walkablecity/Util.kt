@@ -5,6 +5,7 @@ import android.content.pm.PackageManager
 import android.location.Location
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
+import android.util.TypedValue
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -100,6 +101,12 @@ object Util {
             }
         }
         return false
+    }
+
+    fun setDp(num: Float): Float{
+        return TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP
+            , num, WalkableApp.instance.resources.displayMetrics)
     }
 
 //    fun constructUrl(center: GeoPoint, zoom: Int, path: List<GeoPoint>): String{

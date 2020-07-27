@@ -37,8 +37,10 @@ import com.google.firebase.storage.ktx.storage
 import tw.com.walkablecity.Util.getColor
 import tw.com.walkablecity.Util.getString
 import tw.com.walkablecity.Util.lessThenTenPadStart
+import tw.com.walkablecity.Util.setDp
 import tw.com.walkablecity.data.*
 import tw.com.walkablecity.detail.CommentAdapter
+import tw.com.walkablecity.detail.DetailCircleAdapter
 import tw.com.walkablecity.detail.ImageUrlAdapter
 import tw.com.walkablecity.event.item.EventItemAdapter
 import tw.com.walkablecity.eventdetail.FrequencyAdapter
@@ -86,6 +88,43 @@ fun walkPausing(view: TextView, status: WalkerStatus) {
         }
     }
 }
+
+@BindingAdapter("counting")
+fun bindByCounts(view: RecyclerView, count: Int?){
+    count?.let{item->
+        Log.d("JJ_snap", "count $item")
+        view.adapter.apply {
+            when(this){
+                is DetailCircleAdapter -> submitCount(item)
+            }
+        }
+    }
+}
+
+@BindingAdapter("circleStatus")
+fun bindDetailCircleStatus(imgView: ImageView, isSelected: Boolean = false){
+    imgView.background = ShapeDrawable(object : Shape(){
+        override fun draw(canvas: Canvas, paint: Paint) {
+            paint.color = getColor(R.color.red_heart_c73e3a)
+            paint.isAntiAlias = true
+
+            if(isSelected){
+                paint.style = Paint.Style.FILL
+            }else{
+                paint.style = Paint.Style.STROKE
+                paint.strokeWidth = setDp(1f)
+            }
+
+            canvas.drawCircle(width/2, height/2, setDp(3f),paint)
+        }
+    })
+}
+
+@BindingAdapter("addDecoration")
+fun bindDecoration(recyclerView: RecyclerView, decoration: RecyclerView.ItemDecoration?) {
+    decoration?.let { recyclerView.addItemDecoration(it) }
+}
+
 
 @BindingAdapter("walker")
 fun bindBestWalkers(view: RecyclerView, list: List<User>?){

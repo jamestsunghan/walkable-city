@@ -2,6 +2,7 @@ package tw.com.walkablecity.detail
 
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -35,17 +36,29 @@ class DetailFragment : Fragment() {
 
         binding.recyclerComment.adapter = CommentAdapter()
         binding.recyclerDetailUrl.adapter = ImageUrlAdapter()
+        binding.recyclerCircle.adapter = DetailCircleAdapter()
 
         val linearSnapHelper = LinearSnapHelper().apply {
             attachToRecyclerView(binding.recyclerDetailUrl)
         }
 
-//        binding.recyclerDetailUrl.setOnScrollChangeListener { _, _, _, _, _ ->
-//            viewModel.onGalleryScrollChange(
-//                binding.recyclerDetailUrl.layoutManager,
-//                linearSnapHelper
-//            )
-//        }
+        binding.recyclerDetailUrl.setOnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
+            viewModel.onGalleryScrollChange(binding.recyclerDetailUrl.layoutManager, linearSnapHelper)
+        }
+
+        viewModel.displayPhotos.observe(viewLifecycleOwner, Observer{
+
+            binding.recyclerDetailUrl.scrollToPosition(0)
+
+
+            viewModel.snapPosition.observe(viewLifecycleOwner, Observer {
+                (binding.recyclerCircle.adapter as DetailCircleAdapter).selectedPosition.value = it
+                Log.d("JJ_snap", "snapPosition $it")
+            })
+
+        })
+
+
 
         viewModel.favoriteAdded.observe(viewLifecycleOwner, Observer{
             it?.let{

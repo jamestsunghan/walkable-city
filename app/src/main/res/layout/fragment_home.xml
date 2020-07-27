@@ -61,6 +61,8 @@
                 android:focusable="false"
                 android:fontFamily="@font/noto_sans"
                 android:hint="@string/search_destination"
+                android:textColor="@color/primaryDarkColor"
+                android:textColorHint="@color/primaryColor"
                 android:letterSpacing="0.15"
                 android:onClick="@{() -> viewModel.navigateToSearch()}" />
 
@@ -100,6 +102,7 @@
                 android:background="@color/white"
                 android:fontFamily="@font/noto_sans"
                 android:letterSpacing="0.15"
+                android:textColor="@color/primaryDarkColor"
                 android:paddingStart="8dp"
                 android:paddingTop="4dp"
                 android:paddingEnd="8dp"
