@@ -270,8 +270,12 @@ fun bindWidthWithFloat(view: TextView, input: Float?, width: Int, target: EventT
         if(width != 0){
 
             val layoutParams = view.layoutParams
-            layoutParams.width =
+            layoutParams.width = if(target.frequencyType == null){
                 input.times(width).div(target.distance ?: requireNotNull(target.hour)*3600).toInt()
+            }else{
+                input.times(width).div(target.distance ?: requireNotNull(target.hour)).toInt()
+            }
+
             view.layoutParams = layoutParams
         }
     }
@@ -280,8 +284,12 @@ fun bindWidthWithFloat(view: TextView, input: Float?, width: Int, target: EventT
 @BindingAdapter("progress", "targeting")
 fun bindTextWithFloat(view: TextView, input: Float?, target: EventTarget){
     input?.let{
-        val percentage =
+        val percentage = if(target.frequencyType == null){
             input.div(target.distance ?: requireNotNull(target.hour)*3600).times(100)
+        }else{
+            input.div(target.distance ?: requireNotNull(target.hour)).times(100)
+        }
+
         view.text = String.format(getString(R.string.accomplish_rate), percentage)
     }
 

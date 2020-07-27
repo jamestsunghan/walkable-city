@@ -35,7 +35,7 @@ class FavoriteAdapter(private val viewModel: FavoriteViewModel)
             Log.d("JJ","sortList ${route.ratingAvr.toSortList(viewModel.filter.value)} ratingAvr ${route.ratingAvr}")
             binding.characterSpinner.adapter = CharacterSpinnerAdapter(route.ratingAvr.toSortList(viewModel.filter.value))
             binding.route = route
-            binding.selectRoute.setOnClickListener {
+            binding.root.setOnClickListener {
                 viewModel.selectRoute.value = route
             }
             binding.executePendingBindings()

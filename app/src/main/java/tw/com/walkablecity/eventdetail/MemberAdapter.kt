@@ -80,8 +80,14 @@ class MemberAdapter(val viewModel: EventDetailViewModel): ListAdapter<MemberItem
             binding.guideline.setGuidelineEnd(progressWidth.toInt())
 
             binding.friendBarProgress.width =  friend.accomplish?.let{
-                it.times(progressWidth-binding.friendBar.marginEnd)
-                    .div(viewModel.event.target?.distance ?: requireNotNull(viewModel.event.target?.hour)*3600).toInt()
+                if(viewModel.event.target?.frequencyType == null){
+                    it.times(progressWidth-binding.friendBar.marginEnd)
+                        .div(viewModel.event.target?.distance ?: requireNotNull(viewModel.event.target?.hour)*3600).toInt()
+                }else{
+                    it.times(progressWidth-binding.friendBar.marginEnd)
+                        .div(viewModel.event.target.distance ?: requireNotNull(viewModel.event.target.hour)).toInt()
+                }
+                
             } ?: binding.friendBar.width
 
             binding.user = UserManager.user?.toFriend()
