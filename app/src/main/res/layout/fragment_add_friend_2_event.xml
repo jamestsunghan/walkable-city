@@ -10,6 +10,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/white"
         tools:context=".host.add2event.AddFriend2EventFragment">
 
         <com.google.android.material.textfield.TextInputLayout

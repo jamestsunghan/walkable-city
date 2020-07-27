@@ -6,6 +6,8 @@ import android.app.Activity.RESULT_OK
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.content.res.Configuration
+import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.hardware.camera2.CameraCharacteristics
@@ -84,6 +86,20 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationClick
         map = googleMap ?: return
         googleMap.setOnMyLocationButtonClickListener(this)
         googleMap.setOnMyLocationClickListener(this)
+        when(requireContext().resources.configuration.uiMode.and(Configuration.UI_MODE_NIGHT_MASK)){
+            Configuration.UI_MODE_NIGHT_YES ->{
+                try{
+                    val success = map.setMapStyle(MapStyleOptions
+                        .loadRawResourceStyle(requireContext(), R.raw.style_night_with_label))
+                    if(!success){
+                        Log.e("JJ_map","style parsing fail")
+                    }
+                }catch (e: Resources.NotFoundException){
+                    Log.e("JJ_map","Can't find style. Error: $e")
+                }
+            }
+        }
+
 
     }
 

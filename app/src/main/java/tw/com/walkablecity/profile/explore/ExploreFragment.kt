@@ -3,6 +3,7 @@ package tw.com.walkablecity.profile.explore
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.content.res.Configuration
 import android.content.res.Resources
 import android.graphics.BitmapFactory
 import android.os.Bundle
@@ -44,9 +45,16 @@ class ExploreFragment : Fragment(), OnMapReadyCallback {
 
     override fun onMapReady(googleMap: GoogleMap?) {
         map = googleMap ?: return
+        val mode = requireContext().resources.configuration.uiMode.and(Configuration.UI_MODE_NIGHT_MASK)
         try{
-            val success = map.setMapStyle(MapStyleOptions
-                .loadRawResourceStyle(requireContext(), R.raw.style_json))
+            val success = when(mode){
+                Configuration.UI_MODE_NIGHT_YES ->
+                    map.setMapStyle(MapStyleOptions
+                        .loadRawResourceStyle(requireContext(), R.raw.style_night_without_label))
+                else ->
+                    map.setMapStyle(MapStyleOptions
+                        .loadRawResourceStyle(requireContext(), R.raw.style_json))
+            }
             if(!success){
                 Log.e("JJ_map","style parsing fail")
             }

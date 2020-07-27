@@ -13,6 +13,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/white"
         tools:context=".host.HostFragment">
 
         <ScrollView
@@ -304,6 +305,7 @@
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     app:srcCompat="@drawable/add_friend_36"
+                    android:tint="@color/primaryDarkColor"
                     app:layout_constraintTop_toTopOf="@+id/create_invite_friend"
                     app:layout_constraintBottom_toBottomOf="@+id/create_invite_friend"
                     android:onClick="@{() -> viewModel.addSomeFriends()}"

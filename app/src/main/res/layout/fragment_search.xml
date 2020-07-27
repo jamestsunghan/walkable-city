@@ -21,6 +21,7 @@
             android:id="@+id/search_filter_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/white"
             tools:context=".search.SearchFragment">
 
             <!--        <com.google.android.material.textfield.TextInputLayout-->
@@ -230,6 +231,7 @@
                 android:minWidth="36dp"
                 android:minHeight="36dp"
                 android:text="@string/send_filter"
+                android:textColor="@color/white"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

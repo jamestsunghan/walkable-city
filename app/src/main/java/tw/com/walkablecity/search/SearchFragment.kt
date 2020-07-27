@@ -1,6 +1,7 @@
 package tw.com.walkablecity.search
 
 
+import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.Typeface
 import android.graphics.drawable.ColorDrawable
@@ -26,6 +27,7 @@ import com.google.android.libraries.places.widget.AutocompleteSupportFragment
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener
 
 import tw.com.walkablecity.R
+import tw.com.walkablecity.Util.getColor
 import tw.com.walkablecity.Util.makeShortToast
 import tw.com.walkablecity.WalkableApp
 import tw.com.walkablecity.bindWidthWithFloat
@@ -93,7 +95,10 @@ class SearchFragment : DialogFragment() {
             this.view?.layoutParams?.width = TypedValue.applyDimension(
                 TypedValue.COMPLEX_UNIT_DIP, 300f, WalkableApp.instance.resources.displayMetrics).toInt()
             val searchIcon = view?.findViewById<ImageView>(R.id.places_autocomplete_search_button)
-            searchIcon?.setImageResource(R.drawable.map_search_24px)
+            searchIcon?.apply{
+                setImageResource(R.drawable.map_search_24px)
+                imageTintList = ColorStateList.valueOf(getColor(R.color.primaryDarkColor))
+            }
 
             val searchBar = view?.findViewById<EditText>(R.id.places_autocomplete_search_input)
             searchBar.apply {
@@ -107,7 +112,10 @@ class SearchFragment : DialogFragment() {
 
 
             val dismissIcon = view?.findViewById<ImageView>(R.id.places_autocomplete_clear_button)
-            dismissIcon?.setImageResource(R.drawable.cancel_24px)
+            dismissIcon?.apply{
+                setImageResource(R.drawable.cancel_24px)
+                imageTintList = ColorStateList.valueOf(getColor(R.color.primaryDarkColor))
+            }
 
             setCountries("TW")
 

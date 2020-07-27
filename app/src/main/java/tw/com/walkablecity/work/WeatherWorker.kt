@@ -44,12 +44,12 @@ class WeatherWorker(appContext: Context, params: WorkerParameters): CoroutineWor
                 ) == PackageManager.PERMISSION_GRANTED){
 
                 val currentDate = Calendar.getInstance()
-
+                val random = (0..119).random()
 
                 val dueDate = Calendar.getInstance().apply{
-                    set(Calendar.HOUR_OF_DAY, 9)
-                    set(Calendar.MINUTE, 0)
-                    set(Calendar.SECOND, 0)
+                    set(Calendar.HOUR_OF_DAY, 8 + (random / 60))
+                    set(Calendar.MINUTE, random % 60)
+                    set(Calendar.SECOND, random % 60)
                 }
 
                 if(dueDate.before(currentDate)){
@@ -125,10 +125,11 @@ class WeatherWorker(appContext: Context, params: WorkerParameters): CoroutineWor
                         text.toString()
                     }
                 }else{
-                    text.append(getString(R.string.good_weather_hour))
+                    text.append(getString(R.string.good_weather_hour)).append("\n")
                     for(item in hourWalkable){
                         val hrDisplay = SimpleDateFormat("HH:mm", Locale.TAIWAN).format(item.dt?.times(1000))
-                        text.append(hrDisplay).append(getString(R.string.feels_like)).append(item.feelsLike).append("\n")
+                        text.append(hrDisplay).append(getString(R.string.feels_like)).append(item.feelsLike)
+                            .append(getString(R.string.rain_percentage)).append(String.format(getString(R.string.accomplish_rate), item.pop?.times(100))).append("\n")
                         Log.d("JJ_weather", "weather hour $hrDisplay feels like ${item.feelsLike} Celsius ")
 
                     }

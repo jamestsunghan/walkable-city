@@ -68,5 +68,6 @@ interface WalkableRepository {
     suspend fun updateWeatherNotification(activate: Boolean, userId: String): Result<Boolean>
     suspend fun updateMealNotification(activate: Boolean, userId: String): Result<Boolean>
 
-
+//    suspend fun uploadWeather(weatherResult: WeatherResult): Result<WeatherResult>
+//    suspend fun getWeatherFirestore(currentLocation: LatLng): Result<WeatherResult>
 }
