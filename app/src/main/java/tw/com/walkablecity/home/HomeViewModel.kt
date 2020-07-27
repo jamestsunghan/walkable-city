@@ -3,12 +3,14 @@ package tw.com.walkablecity.home
 
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
+import android.content.res.Configuration
 import android.hardware.Camera
 import android.hardware.camera2.CameraDevice
 import android.hardware.camera2.CameraManager
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
@@ -148,6 +150,10 @@ class HomeViewModel(val walkableRepository: WalkableRepository, val argument: Ro
                 super.onLocationAvailability(p0)
             }
         }
+    }
+
+    fun dayNightSwitch(){
+
     }
 
     fun permissionDeniedForever(){

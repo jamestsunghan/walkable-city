@@ -341,5 +341,7 @@
 
     <string name="explore_walk_distance">走了%.2f公里</string>
 
+    <string name="day_night_switch">切換日夜模式</string>
+
 
 </resources>

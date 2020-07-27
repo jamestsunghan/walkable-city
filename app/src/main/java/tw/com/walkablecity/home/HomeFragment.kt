@@ -22,7 +22,9 @@ import android.os.HandlerThread
 import android.provider.MediaStore
 import android.util.Log
 import android.view.*
+import android.view.animation.AnimationUtils
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.checkSelfPermission
@@ -91,6 +93,16 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationClick
                 try{
                     val success = map.setMapStyle(MapStyleOptions
                         .loadRawResourceStyle(requireContext(), R.raw.style_night_with_label))
+                    if(!success){
+                        Log.e("JJ_map","style parsing fail")
+                    }
+                }catch (e: Resources.NotFoundException){
+                    Log.e("JJ_map","Can't find style. Error: $e")
+                }
+            }
+            else ->{
+                try{
+                    val success = map.setMapStyle(MapStyleOptions("[]"))
                     if(!success){
                         Log.e("JJ_map","style parsing fail")
                     }
@@ -209,6 +221,18 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationClick
 //
 //            }
         }
+
+        binding.dayNightSwitch.setOnClickListener {
+            when(requireContext().resources.configuration.uiMode.and(Configuration.UI_MODE_NIGHT_MASK)){
+                Configuration.UI_MODE_NIGHT_YES ->{
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                }
+                else ->{
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                }
+            }
+        }
+
 
         viewModel.navigateToRating.observe(viewLifecycleOwner, Observer {
             it?.let{

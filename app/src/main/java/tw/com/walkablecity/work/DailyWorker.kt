@@ -60,7 +60,7 @@ class DailyWorker(appContext: Context, params: WorkerParameters): CoroutineWorke
                     else ->  false
                 }
 
-                if(currentDate.get(Calendar.DAY_OF_WEEK) == Calendar.THURSDAY){
+                if(currentDate.get(Calendar.DAY_OF_WEEK) == Calendar.MONDAY){
                     val weekly =  when(val result = repo.updateWeeklyEvents(user, eventWeekly)){
                         is tw.com.walkablecity.data.Result.Success ->{result.data }
                         is tw.com.walkablecity.data.Result.Fail ->{ false}
@@ -69,7 +69,7 @@ class DailyWorker(appContext: Context, params: WorkerParameters): CoroutineWorke
                     }
                 }
 
-                if(currentDate.get(Calendar.DAY_OF_MONTH) == 23){
+                if(currentDate.get(Calendar.DAY_OF_MONTH) == 1){
                     val monthly =  when(val result = repo.updateMonthlyEvents(user, eventMonthly)){
                         is tw.com.walkablecity.data.Result.Success ->{result.data }
                         is tw.com.walkablecity.data.Result.Fail ->{ false}
