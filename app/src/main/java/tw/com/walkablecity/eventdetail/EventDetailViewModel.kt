@@ -91,7 +91,7 @@ class EventDetailViewModel(private val walkableRepository: WalkableRepository, v
             if (parent.getChildLayoutPosition(view) == 0) {
                 outRect.left = 0
             } else {
-                outRect.left = setDp(16f).toInt()
+                outRect.left = setDp(8f).toInt()
             }
         }
     }

@@ -107,7 +107,7 @@ class ExploreFragment : Fragment(), OnMapReadyCallback {
                                 .addAll(walk.waypoints.toLatLngPoints()))
                             if(walk.waypoints.isNotEmpty()){
                                 val bitmapRealDimens = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 25f, WalkableApp.instance.resources.displayMetrics).toInt()
-                                val drawable = WalkableApp.instance.resources.getDrawable(R.mipmap.ic_launcher_foot, WalkableApp.instance.theme)
+                                val drawable = WalkableApp.instance.resources.getDrawable(R.mipmap.ic_launcher_foot_in_white, WalkableApp.instance.theme)
                                 val bitmap = drawable.toBitmap(bitmapRealDimens,bitmapRealDimens)
                                 map.addMarker(MarkerOptions()
                                     .position(walk.waypoints.toLatLngPoints()[0])
