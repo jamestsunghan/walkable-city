@@ -3,7 +3,6 @@ package tw.com.walkablecity.eventdetail
 
 import android.os.Bundle
 import android.os.CountDownTimer
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.MotionEvent
@@ -15,6 +14,7 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.Timestamp
+import tw.com.walkablecity.Logger
 
 import tw.com.walkablecity.R
 import tw.com.walkablecity.UserManager
@@ -81,11 +81,11 @@ class EventDetailFragment : Fragment() {
         viewModel.walkResult.observe(viewLifecycleOwner, Observer{
             it?.let{ list ->
 
-                Log.d("JJ", "list size ${list.size}")
-                Log.d("JJ", "list $list")
+                Logger.d("list size ${list.size}")
+                Logger.d("list $list")
                 viewModel.resultCount += 1
 
-                Log.d("JJ","count ${viewModel.resultCount}")
+                Logger.d("count ${viewModel.resultCount}")
 
 
                 if(viewModel.resultCount == viewModel.listMemberId.size) {
@@ -128,13 +128,13 @@ class EventDetailFragment : Fragment() {
 
 //        viewModel.timerText.observe(viewLifecycleOwner, Observer{
 //            it?.let{
-//                Log.d("JJ_time","time $it")
+//                Logger.d("JJ_time time $it")
 //                binding.timerText = it
 //            }
 //        })
         viewModel.listOfList.observe(viewLifecycleOwner, Observer{
             it?.let{
-                Log.d("JJ_list", "list of list ${it.size}")
+                Logger.d("JJ_list list of list ${it.size}")
             }
         })
 

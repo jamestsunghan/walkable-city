@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Walkable City</string>
+    <string name="app_name">散步城市</string>
     <string name="title_activity_maps">Walkable</string>
     <string name="home_title">散步城市</string>
     <string name="ranking_title">排名</string>

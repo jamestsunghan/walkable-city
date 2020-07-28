@@ -1,7 +1,6 @@
 package tw.com.walkablecity.work
 
 import android.content.Context
-import android.util.Log
 import androidx.work.CoroutineWorker
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
@@ -10,6 +9,7 @@ import com.google.firebase.Timestamp.now
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import retrofit2.HttpException
+import tw.com.walkablecity.Logger
 import tw.com.walkablecity.WalkableApp
 import tw.com.walkablecity.data.EventType
 import tw.com.walkablecity.data.FrequencyType
@@ -96,7 +96,7 @@ class DailyWorker(appContext: Context, params: WorkerParameters): CoroutineWorke
 
                 WorkManager.getInstance(applicationContext).enqueue(dailyRequest)
 
-                Log.d("JJ_work","I'm here!")
+                Logger.d("JJ_work I'm here!")
 
                 Result.success()
             }

@@ -4,18 +4,17 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
-import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.work.CoroutineWorker
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
-import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.Timestamp.now
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import retrofit2.HttpException
+import tw.com.walkablecity.Logger
 import tw.com.walkablecity.R
 import tw.com.walkablecity.Util
 import tw.com.walkablecity.Util.getString
@@ -85,7 +84,7 @@ class MealWorker(appContext: Context, params: WorkerParameters): CoroutineWorker
 
                 WorkManager.getInstance(applicationContext).enqueue(mealRequest)
 
-                Log.d("JJ_work","I'm here!")
+                Logger.d("JJ_work I'm here!")
 
 
 

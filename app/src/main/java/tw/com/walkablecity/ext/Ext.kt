@@ -5,12 +5,12 @@ import android.content.ContextWrapper
 import android.graphics.*
 import android.location.Location
 import android.net.Uri
-import android.util.Log
 import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.Timestamp
 import com.google.firebase.Timestamp.now
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.GeoPoint
+import tw.com.walkablecity.Logger
 import tw.com.walkablecity.R
 import tw.com.walkablecity.Util
 import tw.com.walkablecity.Util.getString
@@ -302,7 +302,7 @@ fun List<User>.toWalkerItem(): List<WalkerItem>{
          true  ->{
              val top3 = this.slice(0..2)
              val theRest = this.slice(3..lastIndex)
-             Log.d("JJ", "the rest ${theRest.size}")
+             Logger.d("the rest ${theRest.size}")
              listOf(top3).map{WalkerItem.Tops(it)} + this.map{WalkerItem.Walkers(it)}
          }
          false -> {

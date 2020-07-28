@@ -15,7 +15,6 @@ import tw.com.walkablecity.Util.getString
 import tw.com.walkablecity.data.LoadStatus
 import tw.com.walkablecity.data.Result
 import tw.com.walkablecity.data.Route
-import tw.com.walkablecity.data.RouteRating
 import tw.com.walkablecity.data.RouteSorting
 import tw.com.walkablecity.data.source.WalkableRepository
 import tw.com.walkablecity.ext.toLocation

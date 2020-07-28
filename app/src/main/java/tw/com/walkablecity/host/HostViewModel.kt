@@ -1,10 +1,11 @@
 package tw.com.walkablecity.host
 
-import android.util.Log
+
 import androidx.lifecycle.*
 import com.google.firebase.Timestamp
 import com.google.firebase.Timestamp.now
 import kotlinx.coroutines.*
+import tw.com.walkablecity.Logger
 import tw.com.walkablecity.R
 import tw.com.walkablecity.UserManager
 import tw.com.walkablecity.Util.dateToTimeStamp
@@ -115,11 +116,11 @@ class HostViewModel(private val walkableRepository: WalkableRepository) : ViewMo
 
         when(it){
             null -> {
-                Log.d("JJ", "date null")
+                Logger.d("date null")
                 null
             }
             else -> {
-                Log.d("JJ", "date $it")
+                Logger.d("date $it")
                 dateToTimeStamp(it)
             }
         }

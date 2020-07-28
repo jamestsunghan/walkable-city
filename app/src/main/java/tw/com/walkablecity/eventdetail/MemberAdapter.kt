@@ -2,7 +2,6 @@ package tw.com.walkablecity.eventdetail
 
 import android.content.Context
 import android.content.res.ColorStateList
-import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -72,7 +71,7 @@ class MemberAdapter(val viewModel: EventDetailViewModel): ListAdapter<MemberItem
 //                }else{
 //                    friend.accomplish?.times(1000)?.toInt() ?: 0
 //                }
-//                Log.d("JJ_seekbar","max $max progress $progress")
+//                Logger.d("JJ_seekbar max $max progress $progress")
 //                isActivated = false
 //                secondaryProgress = viewModel.typeColor
 //            }
@@ -91,8 +90,8 @@ class MemberAdapter(val viewModel: EventDetailViewModel): ListAdapter<MemberItem
             } ?: binding.friendBar.width
 
             binding.user = UserManager.user?.toFriend()
-//            Log.d("JJ","friend bar width ${binding.friendBar.width}")
-//            Log.d("JJ","friend bar progress width ${binding.friendBarProgress.width}")
+//            Logger.d(friend bar width ${binding.friendBar.width}")
+//            Logger.d("friend bar progress width ${binding.friendBarProgress.width}")
             binding.position = position
             binding.executePendingBindings()
         }

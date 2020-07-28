@@ -4,7 +4,6 @@ package tw.com.walkablecity.rating.item
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -23,10 +22,8 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.maps.model.PolylineOptions
+import tw.com.walkablecity.*
 
-import tw.com.walkablecity.R
-import tw.com.walkablecity.UserManager
-import tw.com.walkablecity.WalkableApp
 import tw.com.walkablecity.data.PhotoPoint
 import tw.com.walkablecity.data.Route
 import tw.com.walkablecity.data.Walk
@@ -41,7 +38,7 @@ class RatingItemFragment(private val type: RatingType, private val route: Route?
                          , private val walk: Walk, private val photoPoints: List<PhotoPoint>?) : Fragment(),
     OnMapReadyCallback, GoogleMap.SnapshotReadyCallback {
 
-    private lateinit var mapFragment: SupportMapFragment
+    private lateinit var mapFragment: WorkaroundMapFragment
     private lateinit var map: GoogleMap
 
     val viewModel: RatingItemViewModel by viewModels{
@@ -49,6 +46,7 @@ class RatingItemFragment(private val type: RatingType, private val route: Route?
 
     override fun onMapReady(googleMap: GoogleMap?) {
         map = googleMap ?: return
+
     }
 
     override fun onSnapshotReady(bitmap: Bitmap?) {
@@ -66,6 +64,11 @@ class RatingItemFragment(private val type: RatingType, private val route: Route?
         val binding: FragmentRatingItemBinding = DataBindingUtil
             .inflate(inflater, R.layout.fragment_rating_item, container, false)
 
+        mapFragment.setListener(object: WorkaroundMapFragment.OnTouchListener{
+            override fun onTouch() {
+                binding.ratingScroll.requestDisallowInterceptTouchEvent(true)
+            }
+        })
         binding.lifecycleOwner = this
 
         binding.viewModel = viewModel
@@ -93,7 +96,7 @@ class RatingItemFragment(private val type: RatingType, private val route: Route?
 
                         val points = route.photopoints
                         if(points.isNullOrEmpty()){
-                            Log.d("JJ_photo", "we don't have points this time")
+                            Logger.d("JJ_photo we don't have points this time")
                         }else{
                             for(item in points){
                                 val latLng = LatLng(requireNotNull(item.point).latitude, item.point.longitude)
@@ -123,7 +126,7 @@ class RatingItemFragment(private val type: RatingType, private val route: Route?
 
                     val points = photoPoints
                     if(points.isNullOrEmpty()){
-                       Log.d("JJ_photo", "we don't have points this time")
+                       Logger.d("JJ_photo we don't have points this time")
                     }else{
                         for(item in points){
                             val latLng = LatLng(requireNotNull(item.point).latitude, item.point.longitude)
@@ -174,7 +177,7 @@ class RatingItemFragment(private val type: RatingType, private val route: Route?
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mapFragment = SupportMapFragment().apply{
+        mapFragment = WorkaroundMapFragment().apply{
             getMapAsync( this@RatingItemFragment )
         }
     }

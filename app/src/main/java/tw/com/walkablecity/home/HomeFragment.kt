@@ -20,7 +20,6 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.HandlerThread
 import android.provider.MediaStore
-import android.util.Log
 import android.view.*
 import android.view.animation.AnimationUtils
 import android.widget.Toast
@@ -94,20 +93,20 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationClick
                     val success = map.setMapStyle(MapStyleOptions
                         .loadRawResourceStyle(requireContext(), R.raw.style_night_with_label))
                     if(!success){
-                        Log.e("JJ_map","style parsing fail")
+                        Logger.e("JJ_map style parsing fail")
                     }
                 }catch (e: Resources.NotFoundException){
-                    Log.e("JJ_map","Can't find style. Error: $e")
+                    Logger.e("JJ_map Can't find style. Error: $e")
                 }
             }
             else ->{
                 try{
                     val success = map.setMapStyle(MapStyleOptions("[]"))
                     if(!success){
-                        Log.e("JJ_map","style parsing fail")
+                        Logger.e("JJ_map style parsing fail")
                     }
                 }catch (e: Resources.NotFoundException){
-                    Log.e("JJ_map","Can't find style. Error: $e")
+                    Logger.e("JJ_map Can't find style. Error: $e")
                 }
             }
         }
@@ -258,13 +257,13 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationClick
 
         viewModel.route.observe(viewLifecycleOwner, Observer {
             it?.let{
-                Log.d("JJ", " route update $it")
+                Logger.d(" route update $it")
             }
         })
 
         viewModel.walkerDistance.observe(viewLifecycleOwner, Observer{
             it?.let{
-                Log.d("JJ","distance $it")
+                Logger.d("distance $it")
             }
         })
 
@@ -308,8 +307,8 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationClick
         viewModel.mapRoute.observe(viewLifecycleOwner, Observer{
             it?.let{
                 mapFragment.getMapAsync {map ->
-                    Log.d("JJ","direction result $it")
-                    Log.d("JJ","duration ${it.routes[0].legs.map{leg -> leg.distance}}")
+                    Logger.d("direction result $it")
+                    Logger.d("duration ${it.routes[0].legs.map{leg -> leg.distance}}")
 
                     map.addPolyline(PolylineOptions().color(getColor(R.color.secondaryLightColor)).addAll(PolyUtil.decode(it.routes[0].overviewPolyline?.points)))
                 }
@@ -342,14 +341,14 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationClick
                             })
 
 //                            stream?.close()
-                            Log.d("JJ_camera", "file path ${item.photo}")
+                            Logger.d("JJ_camera file path ${item.photo}")
                             markerMap.addMarker(MarkerOptions().position(latLng).icon(
                                 BitmapDescriptorFactory.fromBitmap(bitmap.getCroppedBitmap())))
                         }
 
                     }
                 }
-                Log.d("JJ_camera", "camera ")
+
             }
         })
 
@@ -434,7 +433,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationClick
                     null
                 }
 
-                Log.d("JJ_camera", "stream $photoFile")
+                Logger.d("JJ_camera stream $photoFile")
                 photoFile?.also {
                     val uri = FileProvider.getUriForFile(WalkableApp.instance, WalkableApp.instance.packageName + ".provider", File(pathName))
                     takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, uri)
@@ -485,7 +484,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationClick
             override fun onOpened(camera: CameraDevice) = continuation.resume(camera)
 
             override fun onDisconnected(camera: CameraDevice) {
-                Log.w("JJ_camera", "Camera $cameraId has been disconnected")
+                Logger.w("JJ_camera Camera $cameraId has been disconnected")
                 requireActivity().finish()
             }
 
@@ -499,7 +498,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationClick
                     else ->"Unknown"
                 }
                 val exception = RuntimeException("Camera $cameraId error: $error $message")
-                Log.e("JJ_camera", exception.message, exception)
+                Logger.e("JJ_camera" + exception.message + exception)
                 if(continuation.isActive) continuation.resumeWithException(exception)
             }
         }, handler)

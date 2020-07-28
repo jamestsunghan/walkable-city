@@ -3,7 +3,6 @@ package tw.com.walkablecity.login
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -18,6 +17,7 @@ import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import tw.com.walkablecity.Logger
 
 import tw.com.walkablecity.R
 import tw.com.walkablecity.UserManager
@@ -109,10 +109,10 @@ class LoginFragment : Fragment() {
             val task = GoogleSignIn.getSignedInAccountFromIntent(data)
             try{
                 val account =task.getResult(ApiException::class.java)!!
-                Log.d("JJ_fireAuth","fireAuth with google : ${account.id}")
+                Logger.d("JJ_fireAuth fireAuth with google : ${account.id}")
                 viewModel.signInWithGoogle(account.idToken)
             }catch (e: ApiException){
-                Log.w("JJ_fireAuth","fireAuth fail with google : $e")
+                Logger.w("JJ_fireAuth fireAuth fail with google : $e")
 //                updateUI(null)
             }
         }

@@ -8,7 +8,6 @@ import android.graphics.drawable.Drawable
 import android.graphics.drawable.ShapeDrawable
 import android.graphics.drawable.shapes.RectShape
 import android.graphics.drawable.shapes.Shape
-import android.util.Log
 import android.util.TypedValue
 import android.view.View
 import android.widget.EditText
@@ -92,7 +91,7 @@ fun walkPausing(view: TextView, status: WalkerStatus) {
 @BindingAdapter("counting")
 fun bindByCounts(view: RecyclerView, count: Int?){
     count?.let{item->
-        Log.d("JJ_snap", "count $item")
+        Logger.d("JJ_snap count $item")
         view.adapter.apply {
             when(this){
                 is DetailCircleAdapter -> submitCount(item)
@@ -447,7 +446,7 @@ fun glideImage(imageView: ImageView, url: String?){
     url?.let{
         val reference = Firebase.storage.reference.child(url)
 
-        Log.d("JJ_ref","reference $reference")
+        Logger.d("JJ_ref reference $reference")
 
         Glide.with(imageView.context)
             .load(reference).apply(

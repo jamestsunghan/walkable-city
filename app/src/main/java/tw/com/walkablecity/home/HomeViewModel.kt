@@ -9,7 +9,6 @@ import android.hardware.camera2.CameraDevice
 import android.hardware.camera2.CameraManager
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -22,6 +21,7 @@ import com.google.firebase.Timestamp
 import com.google.firebase.Timestamp.now
 import com.google.firebase.firestore.GeoPoint
 import kotlinx.coroutines.*
+import tw.com.walkablecity.Logger
 import tw.com.walkablecity.R
 import tw.com.walkablecity.UserManager
 import tw.com.walkablecity.Util.getColor
@@ -133,7 +133,7 @@ class HomeViewModel(val walkableRepository: WalkableRepository, val argument: Ro
 
     init{
         val date = SimpleDateFormat("yyyyMMddHHmmss", Locale.TAIWAN).format(now().seconds.times(1000)).toLong()
-        Log.d("JJ","date $date")
+        Logger.d("date $date")
 
         _walkerStatus.value = WalkerStatus.PREPARE
 //        clientCurrentLocation()
@@ -316,7 +316,7 @@ class HomeViewModel(val walkableRepository: WalkableRepository, val argument: Ro
     private fun startTimer(){
         runnable = Runnable{
             walkerTimer.value = walkerTimer.value?.plus(1)
-            Log.d("JJ","timer ${walkerTimer.value}")
+            Logger.d("timer ${walkerTimer.value}")
             handler.postDelayed(runnable, 1000)
         }
         handler.postDelayed(runnable, 1000)

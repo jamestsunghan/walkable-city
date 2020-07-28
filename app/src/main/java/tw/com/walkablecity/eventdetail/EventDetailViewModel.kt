@@ -2,7 +2,6 @@ package tw.com.walkablecity.eventdetail
 
 import android.graphics.Rect
 import android.os.CountDownTimer
-import android.util.Log
 import android.view.View
 import androidx.lifecycle.*
 import androidx.recyclerview.widget.LinearSnapHelper
@@ -13,6 +12,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import tw.com.walkablecity.Logger
 import tw.com.walkablecity.R
 import tw.com.walkablecity.UserManager
 import tw.com.walkablecity.Util.getString
@@ -109,7 +109,7 @@ class EventDetailViewModel(private val walkableRepository: WalkableRepository, v
     }
 
     init{
-        Log.d("JJ", "member list ${event.member}")
+        Logger.d("member list ${event.member}")
         getMemberWalkResult(requireNotNull(event.startDate), requireNotNull(event.target) ,listMemberId)
 
         getTimerStart(countDownTime)
@@ -138,7 +138,7 @@ class EventDetailViewModel(private val walkableRepository: WalkableRepository, v
                     friendTime == time}?.accomplish
             }
 
-            Log.d("JJ_listToAdd", "list to add $listToAdd")
+            Logger.d("JJ_listToAdd list to add $listToAdd")
             val wrapper = FriendListWrapper(listToAdd.sortedByDescending { it.accomplish })
             listOfList.value = (listOfList.value ?: mutableListOf()).plus(wrapper) as MutableList<FriendListWrapper>
 
@@ -174,7 +174,7 @@ class EventDetailViewModel(private val walkableRepository: WalkableRepository, v
     fun getTimerStart(time: Long){
 
         val lessThanADay = (time < ONE_DAY)
-        Log.d("JJ","less than a day: $lessThanADay")
+        Logger.d("less than a day: $lessThanADay")
         val timeUnit = if(lessThanADay) ONE_SECOND else ONE_DAY
         timer = object : CountDownTimer(time, timeUnit){
             override fun onFinish() {

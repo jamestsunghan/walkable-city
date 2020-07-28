@@ -1,12 +1,12 @@
 package tw.com.walkablecity.detail
 
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
+import tw.com.walkablecity.Logger
 import tw.com.walkablecity.MainActivity
 import tw.com.walkablecity.databinding.ItemDetailCircleBinding
 
@@ -22,7 +22,7 @@ class DetailCircleAdapter: RecyclerView.Adapter<DetailCircleAdapter.ImageViewHol
 
         fun bind(context: Context, selectedPosition: MutableLiveData<Int>){
             selectedPosition.observe(context as MainActivity, Observer{
-                Log.d("JJ_snap", "selectedPosition ${it ?: -1}")
+                Logger.d("JJ_snap selectedPosition ${it ?: -1}")
                 binding.isSelected = it == adapterPosition
                 binding.executePendingBindings()
             })

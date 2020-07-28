@@ -6,7 +6,6 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
-import android.util.Log
 import android.util.TypedValue
 import android.view.View
 import tw.com.walkablecity.Util.getColor
@@ -72,7 +71,7 @@ class CircleView(context: Context, attrs: AttributeSet): View(context, attrs) {
             startAngle = -90f
             for((listPosition, item) in rate.withIndex()){
                 paint.color = rateColor[listPosition % 3]
-                Log.d("JJ_circle","rate item $item")
+                Logger.d("JJ_circle rate item $item")
                 canvas.drawArc(cx.toFloat()- radius.toFloat(), cy.toFloat()-radius.toFloat()
                     , cx.toFloat() + radius.toFloat(), cy.toFloat() + radius.toFloat()
                     , startAngle, item.times(360f), false, paint )

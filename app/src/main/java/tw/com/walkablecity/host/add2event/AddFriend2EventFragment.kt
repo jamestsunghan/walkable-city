@@ -2,7 +2,6 @@ package tw.com.walkablecity.host.add2event
 
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +11,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
+import tw.com.walkablecity.Logger
 
 import tw.com.walkablecity.R
 import tw.com.walkablecity.databinding.FragmentAddFriend2EventBinding
@@ -48,14 +48,14 @@ class AddFriend2EventFragment : Fragment() {
 
         viewModel.friendList.observe(viewLifecycleOwner, Observer {
             it?.let{
-                Log.d("JJ", "friendlist $it")
+                Logger.d( "friendlist $it")
                 adapter.notifyDataSetChanged()
             }
         })
 
         viewModel.addList.observe(viewLifecycleOwner, Observer{
             it?.let{
-                Log.d("JJ","addList $it")
+                Logger.d("addList $it")
                 adapterAddList.notifyDataSetChanged()
             }
         })

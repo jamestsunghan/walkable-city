@@ -6,7 +6,6 @@ import android.graphics.Color
 import android.graphics.Typeface
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
@@ -25,16 +24,13 @@ import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.api.net.PlacesClient
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener
-
+import tw.com.walkablecity.Logger
 import tw.com.walkablecity.R
 import tw.com.walkablecity.Util.getColor
 import tw.com.walkablecity.Util.makeShortToast
 import tw.com.walkablecity.WalkableApp
-import tw.com.walkablecity.bindWidthWithFloat
 import tw.com.walkablecity.databinding.FragmentSearchBinding
 import tw.com.walkablecity.ext.getVMFactory
-import tw.com.walkablecity.home.HomeFragmentDirections
-import java.util.*
 
 class SearchFragment : DialogFragment() {
 
@@ -67,7 +63,7 @@ class SearchFragment : DialogFragment() {
 
         viewModel.range.observe(viewLifecycleOwner, Observer {
             it?.let{
-                Log.d("JJ", "list float $it")
+                Logger.d( "list float $it")
             }
         })
 
@@ -123,11 +119,11 @@ class SearchFragment : DialogFragment() {
             setOnPlaceSelectedListener(object : PlaceSelectionListener{
                 override fun onPlaceSelected(place: Place) {
                     viewModel.setDestination(place.latLng)
-                    Log.d("JJ", "Place: ${place.name}, ${place.id}, ${place.latLng}")
+                    Logger.d( "Place: ${place.name}, ${place.id}, ${place.latLng}")
                 }
 
                 override fun onError(status: Status) {
-                    Log.i("JJ", "An error occurred: $status")
+                    Logger.i( "An error occurred: $status")
                 }
             })
         }

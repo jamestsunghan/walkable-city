@@ -6,7 +6,6 @@ import android.app.NotificationManager
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
-import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
@@ -15,18 +14,12 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import com.google.android.gms.maps.model.LatLng
-import com.google.firebase.Timestamp
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
 import retrofit2.HttpException
+import tw.com.walkablecity.Logger
 import tw.com.walkablecity.R
 import tw.com.walkablecity.Util.getString
 import tw.com.walkablecity.Util.lessThenTenPadStart
 import tw.com.walkablecity.WalkableApp
-import tw.com.walkablecity.data.EventType
-import tw.com.walkablecity.data.FrequencyType
-import tw.com.walkablecity.data.User
-import tw.com.walkablecity.profile.settings.SettingsFragment
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -87,14 +80,14 @@ class WeatherWorker(appContext: Context, params: WorkerParameters): CoroutineWor
                     ?.filter{item->
                         val itemDate = SimpleDateFormat("dd", Locale.TAIWAN).format(item.dt?.times(1000))
                         val todayDate = lessThenTenPadStart(currentDate.get(Calendar.DAY_OF_MONTH).toLong())
-                        Log.d("JJ_weather", "hour date $itemDate & today date $todayDate")
+                        Logger.d("JJ_weather hour date $itemDate & today date $todayDate")
                         itemDate == todayDate
                 }
                 val currentUvi = weather?.current?.uvi
                 val text = StringBuilder()
                 when {
                     currentUvi == null -> {
-                        Log.d("JJ","no uvi for today")
+                        Logger.d("no uvi for today")
                     }
                     currentUvi > 10 -> {
                         text.append(getString(R.string.today_uvi) + String.format(getString(R.string.uvi_very_strong), currentUvi)).append("\n")
@@ -130,7 +123,7 @@ class WeatherWorker(appContext: Context, params: WorkerParameters): CoroutineWor
                         val hrDisplay = SimpleDateFormat("HH:mm", Locale.TAIWAN).format(item.dt?.times(1000))
                         text.append(hrDisplay).append(getString(R.string.feels_like)).append(item.feelsLike)
                             .append(getString(R.string.rain_percentage)).append(String.format(getString(R.string.accomplish_rate), item.pop?.times(100))).append("\n")
-                        Log.d("JJ_weather", "weather hour $hrDisplay feels like ${item.feelsLike} Celsius ")
+                        Logger.d("JJ_weather weather hour $hrDisplay feels like ${item.feelsLike} Celsius ")
 
                     }
                     text.toString()
@@ -149,7 +142,7 @@ class WeatherWorker(appContext: Context, params: WorkerParameters): CoroutineWor
 
                 WorkManager.getInstance(applicationContext).enqueue(dailyRequest)
 
-                Log.d("JJ_work","I'm here!")
+                Logger.d("JJ_work I'm here!")
 
                 Result.success()
 

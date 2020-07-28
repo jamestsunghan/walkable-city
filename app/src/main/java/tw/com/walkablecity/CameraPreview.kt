@@ -3,7 +3,6 @@ package tw.com.walkablecity
 import android.app.Activity
 import android.content.Context
 import android.util.AttributeSet
-import android.util.Log
 import android.view.SurfaceView
 import android.view.TextureView
 import java.io.File
@@ -41,7 +40,7 @@ class CameraPreview(context: Context, attrs: AttributeSet? = null, defStyle: Int
                 newHeight = (width / actualRatio).roundToInt()
             }
 
-            Log.d("JJ_camera", "Measured dimensions set: $newWidth x $newHeight")
+            Logger.d("JJ_camera Measured dimensions set: $newWidth x $newHeight")
             setMeasuredDimension(newWidth, newHeight)
         }
     }

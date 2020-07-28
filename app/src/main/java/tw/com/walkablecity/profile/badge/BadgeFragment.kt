@@ -3,7 +3,6 @@ package tw.com.walkablecity.profile.badge
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -15,6 +14,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import tw.com.walkablecity.Logger
 
 import tw.com.walkablecity.R
 import tw.com.walkablecity.UserManager
@@ -44,13 +44,13 @@ class BadgeFragment : Fragment() {
 
         viewModel.eventCount.observe(viewLifecycleOwner, Observer{
             it?.let{
-                Log.d("JJ", "eventCount $it")
+                Logger.d( "eventCount $it")
             }
         })
 
         viewModel.friendCount.observe(viewLifecycleOwner, Observer{
             it?.let{
-                Log.d("JJ", "friendCount $it")
+                Logger.d("friendCount $it")
             }
         })
 

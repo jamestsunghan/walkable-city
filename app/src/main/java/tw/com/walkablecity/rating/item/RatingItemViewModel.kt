@@ -1,7 +1,6 @@
 package tw.com.walkablecity.rating.item
 
 import android.graphics.Bitmap
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -10,6 +9,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import tw.com.walkablecity.Logger
 import tw.com.walkablecity.R
 import tw.com.walkablecity.UserManager
 import tw.com.walkablecity.Util.getString
@@ -341,18 +341,18 @@ class RatingItemViewModel(val walkableRepository: WalkableRepository, val select
                 is Result.Success ->{
                     _error.value = null
                     _status.value = LoadStatus.DONE
-                    Log.d("JJ","result success ${result.data}")
+                    Logger.d("result success ${result.data}")
                 }
                 is Result.Fail ->{
                     _error.value = result.error
                     _status.value = LoadStatus.ERROR
-                    Log.d("JJ","result fail ${result.error}")
+                    Logger.d("result fail ${result.error}")
 
                 }
                 is Result.Error ->{
                     _error.value = result.exception.toString()
                     _status.value = LoadStatus.ERROR
-                    Log.d("JJ","result error ${result.exception}")
+                    Logger.d("result error ${result.exception}")
 
                 }
                 else ->{

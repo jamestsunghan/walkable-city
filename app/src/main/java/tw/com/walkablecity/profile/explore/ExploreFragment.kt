@@ -7,7 +7,6 @@ import android.content.res.Configuration
 import android.content.res.Resources
 import android.graphics.BitmapFactory
 import android.os.Bundle
-import android.util.Log
 import android.util.TypedValue
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -25,6 +24,7 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
+import tw.com.walkablecity.Logger
 
 import tw.com.walkablecity.R
 import tw.com.walkablecity.WalkableApp
@@ -56,10 +56,10 @@ class ExploreFragment : Fragment(), OnMapReadyCallback {
                         .loadRawResourceStyle(requireContext(), R.raw.style_json))
             }
             if(!success){
-                Log.e("JJ_map","style parsing fail")
+                Logger.e("JJ_map style parsing fail")
             }
         }catch (e: Resources.NotFoundException){
-            Log.e("JJ_map","Can't find style. Error: $e")
+            Logger.e("JJ_map Can't find style. Error: $e")
         }
 
     }

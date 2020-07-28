@@ -9,7 +9,6 @@ import android.os.Build
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
-import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.google.android.gms.location.*
@@ -88,7 +87,7 @@ class WalkService: Service() {
                 notify(NOTIFICATION_ID, builder.build())
             }
             secondCount++
-            Log.d("Counting","Timer ticking at : $secondCount")
+            Logger.d("Counting Timer ticking at : $secondCount")
             handler.postDelayed(runnable, 1000)
         }
 
