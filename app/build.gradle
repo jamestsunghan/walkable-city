@@ -4,6 +4,7 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: "androidx.navigation.safeargs"
 apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.google.firebase.crashlytics'
 
 
 android {
@@ -76,6 +77,7 @@ dependencies {
     implementation "com.google.firebase:firebase-storage-ktx:19.1.1"
     implementation 'com.firebaseui:firebase-ui-storage:6.2.0'
 
+    implementation 'com.google.firebase:firebase-crashlytics:17.1.1'
 
     //Firestore
     implementation 'com.google.firebase:firebase-firestore-ktx'

@@ -87,7 +87,7 @@ class MemberAdapter(val viewModel: EventDetailViewModel): ListAdapter<MemberItem
                     it.times(progressWidth-binding.friendBar.marginEnd)
                         .div(viewModel.event.target.distance ?: requireNotNull(viewModel.event.target.hour)).toInt()
                 }
-                
+
             } ?: binding.friendBar.width
 
             binding.user = UserManager.user?.toFriend()

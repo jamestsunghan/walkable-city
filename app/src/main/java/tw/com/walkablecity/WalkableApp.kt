@@ -118,8 +118,8 @@ class WalkableApp: Application(){
     fun notifyAfterMeal(activate: Boolean){
         val currentDate = Calendar.getInstance()
         val dueDate = Calendar.getInstance().apply{
-            set(Calendar.HOUR_OF_DAY, 22)
-            set(Calendar.MINUTE, 50)
+            set(Calendar.HOUR_OF_DAY, 19)
+            set(Calendar.MINUTE, 30)
             set(Calendar.SECOND, 0)
         }
 
