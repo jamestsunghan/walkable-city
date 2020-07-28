@@ -1,16 +1,25 @@
 package tw.com.walkablecity.ext
 
+import android.content.Context
+import android.content.ContextWrapper
+import android.graphics.*
 import android.location.Location
-import android.util.Log
+import android.net.Uri
 import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.Timestamp
 import com.google.firebase.Timestamp.now
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.GeoPoint
+import tw.com.walkablecity.Logger
 import tw.com.walkablecity.R
 import tw.com.walkablecity.Util
 import tw.com.walkablecity.Util.getString
 import tw.com.walkablecity.data.*
+import tw.com.walkablecity.eventdetail.MemberItem
+import tw.com.walkablecity.profile.bestwalker.WalkerItem
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.HashMap
@@ -181,17 +190,22 @@ fun String.toComment(recommend: Int, userId: String): Comment{
     )
 }
 
-fun Walk.toRouteId(userId: String): String{
-    return "${userId}${this.startTime.toDateLong().times(100)}"
+fun Walk.toRouteId(userIdCustom: String): String{
+    return "${userIdCustom}${this.startTime?.toDateLong()?.times(100)}"
 }
 
 fun Timestamp.toDateLong(): Long{
     return SimpleDateFormat("yyyyMMddHHmmss", Locale.TAIWAN).format(this.seconds.times(1000)).toLong()
 }
 
-fun FirebaseUser.toSignInUser(): User{
+fun Timestamp.toDateString(): String{
+    return SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.TAIWAN).format(this.seconds.times(1000))
+}
+
+fun FirebaseUser.toSignInUser(idCustom: String?): User{
     return User(
         id = uid,
+        idCustom = idCustom,
         name = displayName,
         picture = photoUrl.toString(),
         email = email,
@@ -200,4 +214,141 @@ fun FirebaseUser.toSignInUser(): User{
         friends = listOf(),
         walks = listOf()
     )
+
+}
+
+fun User.toFriend(): Friend{
+    return Friend(
+        id = id,
+        idCustom = idCustom,
+        name = name,
+        picture = picture,
+        email = email
+    )
+}
+
+fun User.toFriend(accomplished: MutableList<MissionFQ>): Friend{
+    return Friend(
+        id = id,
+        idCustom = idCustom,
+        name = name,
+        picture = picture,
+        email = email,
+        accomplishFQ = accomplished
+    )
+}
+
+fun Accumulation.addNewWalk(input: Float): Accumulation{
+    return Accumulation(
+        daily   = daily   + input,
+        weekly  = weekly  + input,
+        monthly = monthly + input,
+        yearly  = yearly  + input,
+        total   = total   + input
+    )
+}
+
+fun Accumulation.dailyUpdate(): Accumulation{
+    return Accumulation(
+        daily   = 0f,
+        weekly  = weekly,
+        monthly = monthly,
+        yearly  = yearly,
+        total   = total
+    )
+}
+
+fun Accumulation.weeklyUpdate(): Accumulation{
+    return Accumulation(
+        daily   = 0f,
+        weekly  = 0f,
+        monthly = monthly,
+        yearly  = yearly,
+        total   = total
+    )
+}
+
+fun Float.toMissionFQ(): MissionFQ{
+    return MissionFQ(
+        date = Timestamp(now().seconds - (60*60*12), now().nanoseconds),
+        accomplish = this
+    )
+}
+
+fun Accumulation.monthlyUpdate(): Accumulation{
+    return Accumulation(
+        daily   = 0f,
+        weekly  = 0f,
+        monthly = 0f,
+        yearly  = yearly,
+        total   = total
+    )
+}
+
+fun Friend.toNewInstance(): Friend{
+    return Friend(
+        id = id,
+        idCustom = idCustom,
+        name = name,
+        picture = picture,
+        email = email,
+        accomplish =  accomplish,
+        accomplishFQ =  accomplishFQ
+    )
+}
+
+fun List<User>.toWalkerItem(): List<WalkerItem>{
+    return when(this.size > 3){
+         true  ->{
+             val top3 = this.slice(0..2)
+             val theRest = this.slice(3..lastIndex)
+             Logger.d("the rest ${theRest.size}")
+             listOf(top3).map{WalkerItem.Tops(it)} + this.map{WalkerItem.Walkers(it)}
+         }
+         false -> {
+             val theRest = this.slice(1..lastIndex)
+             listOf(WalkerItem.Tops(listOf(this[0]))) + theRest.map{WalkerItem.Walkers(it)}
+         }
+    }
+}
+
+fun List<Friend>.toMemberItem(): List<MemberItem>{
+    return listOf(MemberItem.Board) + this.map{MemberItem.Member(it)}
+}
+
+fun Bitmap.saveToInternalStorage(context: Context){
+
+
+    val file = File(context.cacheDir,"images")
+
+    try{
+        file.mkdir()
+        val stream = FileOutputStream("${file}/image.png")
+
+        this.compress(Bitmap.CompressFormat.PNG, 100, stream)
+
+        stream.flush()
+        stream.close()
+    }catch (e: IOException){
+        e.printStackTrace()
+    }
+
+}
+
+fun Bitmap.getCroppedBitmap(): Bitmap{
+    val output = Bitmap.createBitmap(this.width, this.height, Bitmap.Config.ARGB_8888)
+    val canvas = Canvas(output)
+
+    val color = 0xff424242
+    val paint = Paint()
+    val rect = Rect(0,0,this.width, this.height)
+
+    paint.isAntiAlias = true
+    canvas.drawARGB(0,0,0,0)
+    paint.color = color.toInt()
+    canvas.drawCircle((this.width / 2).toFloat(), (this.height / 2).toFloat(), (this.height / 2).toFloat(), paint)
+    paint.xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC_IN)
+    canvas.drawBitmap(this, rect, rect, paint)
+    return output
+
 }

@@ -4,6 +4,7 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: "androidx.navigation.safeargs"
 apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.google.firebase.crashlytics'
 
 
 android {
@@ -26,8 +27,13 @@ android {
 
     buildTypes {
         release {
+            buildConfigField("Boolean", "LOGGER_VISIABLE", "false")
+
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            buildConfigField("Boolean", "LOGGER_VISIABLE", "true")
         }
     }
     kotlinOptions {
@@ -76,6 +82,7 @@ dependencies {
     implementation "com.google.firebase:firebase-storage-ktx:19.1.1"
     implementation 'com.firebaseui:firebase-ui-storage:6.2.0'
 
+    implementation 'com.google.firebase:firebase-crashlytics:17.1.1'
 
     //Firestore
     implementation 'com.google.firebase:firebase-firestore-ktx'
@@ -87,6 +94,7 @@ dependencies {
     implementation 'com.google.android.gms:play-services-location:17.0.0'
     implementation 'com.google.android.gms:play-services-auth:18.0.0'
     implementation 'com.google.maps.android:maps-ktx:1.8.0'
+    implementation 'com.google.android.libraries.places:places:2.3.0'
 
     // Moshi
     implementation "com.squareup.moshi:moshi:$moshi_version"
@@ -108,6 +116,9 @@ dependencies {
     implementation 'com.google.maps.android:maps-utils-ktx:1.8.0'
 
     // Paging
-    implementation "androidx.paging:paging-runtime-ktx:$version_paging"
+    implementation "androidx.paging:paging-runtime-ktx:$paging_version"
 
+    //WorkManager
+    implementation "androidx.work:work-runtime-ktx:$work_version"
+    implementation 'com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava'
 }

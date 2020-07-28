@@ -1,20 +1,411 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <variable name="viewModel" type="tw.com.walkablecity.profile.ProfileViewModel" />
+
+        <variable
+            name="viewModel"
+            type="tw.com.walkablecity.profile.ProfileViewModel" />
+
+        <variable
+            name="user"
+            type="tw.com.walkablecity.data.User" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/white"
         tools:context=".profile.ProfileFragment">
 
-        <TextView
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/profile_head_zone"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="Hello" />
+            android:layout_height="wrap_content"
+            android:background="@color/secondaryLightColor"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/card_view_profile_image"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
+                android:contentDescription="Your profile image"
+                app:cardCornerRadius="30dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:id="@+id/profile_image"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:contentDescription="Your profile image"
+                    app:glide="@{user.picture}"
+                    tools:srcCompat="@drawable/placeholder" />
+            </androidx.cardview.widget.CardView>
+
+            <TextView
+                android:id="@+id/user_name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="21dp"
+                android:layout_marginEnd="16dp"
+                android:fontFamily="@font/noto_sans"
+                android:letterSpacing="0.15"
+                android:text="@{user.name}"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toTopOf="@+id/user_accumulated"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/card_view_profile_image"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="JJ" />
+
+            <TextView
+                android:id="@+id/user_accumulated"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="21dp"
+                android:fontFamily="@font/noto_sans"
+                android:letterSpacing="0.15"
+                android:text="@{ @string/walk_accumulate_title + String.format( @string/walk_accumulate_hours, user.accumulatedHour.total) + String.format(@string/walk_accumulate_km, user.accumulatedKm.total)}"
+                android:textColor="@color/white"
+                android:textSize="13sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/user_name"
+                app:layout_constraintStart_toStartOf="@+id/user_name"
+                app:layout_constraintTop_toBottomOf="@+id/user_name"
+                tools:text="累計｜0.12小時｜0.22公里｜" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/profile_head_zone">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/setting_zone"
+                    android:onClick="@{() -> viewModel.navigateToSetting()}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:background="@drawable/bg_profile_item"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/card_view_setting_icon"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginBottom="16dp"
+                        android:contentDescription="setting icon"
+                        app:cardCornerRadius="8dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <ImageView
+                            android:id="@+id/setting_icon"
+                            android:layout_width="36dp"
+                            android:layout_height="36dp"
+                            android:layout_gravity="center"
+                            android:tint="@color/primaryDarkColor"
+                            android:contentDescription="Your profile image"
+                            app:srcCompat="@drawable/settings_48"
+                            tools:srcCompat="@drawable/placeholder" />
+                    </androidx.cardview.widget.CardView>
+
+                    <TextView
+                        android:id="@+id/setting_title"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="21dp"
+                        android:layout_marginEnd="16dp"
+                        android:fontFamily="@font/noto_sans"
+                        android:letterSpacing="0.15"
+                        android:text="@string/setting_title"
+                        android:textColor="@color/secondaryColor"
+                        android:textSize="16sp"
+                        app:layout_constraintBottom_toTopOf="@+id/setting_description"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/card_view_setting_icon"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/setting_description"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginBottom="21dp"
+                        android:fontFamily="@font/noto_sans"
+                        android:letterSpacing="0.15"
+                        android:text="@string/setting_description"
+                        android:textColor="@color/secondaryLightColor"
+                        android:textSize="14sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="@+id/setting_title"
+                        app:layout_constraintStart_toStartOf="@+id/setting_title"
+                        app:layout_constraintTop_toBottomOf="@+id/setting_title" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/friend_zone"
+                    android:onClick="@{() -> viewModel.navigateToWalkers()}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:background="@drawable/bg_profile_item"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/setting_zone">
+
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/friend_icon_card"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginBottom="16dp"
+                        android:contentDescription="setting icon"
+                        app:cardCornerRadius="8dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <ImageView
+                            android:id="@+id/friend_icon"
+                            android:layout_width="36dp"
+                            android:layout_height="36dp"
+                            android:layout_gravity="center"
+                            android:tint="@color/primaryDarkColor"
+                            android:contentDescription="Your profile image"
+                            app:srcCompat="@drawable/friend_list_48"
+                            tools:srcCompat="@drawable/placeholder" />
+                    </androidx.cardview.widget.CardView>
+
+                    <TextView
+                        android:id="@+id/friend_title"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="21dp"
+                        android:layout_marginEnd="16dp"
+                        android:fontFamily="@font/noto_sans"
+                        android:letterSpacing="0.15"
+                        android:text="@string/best_walker_title"
+                        android:textColor="@color/secondaryColor"
+                        android:textSize="16sp"
+                        app:layout_constraintBottom_toTopOf="@+id/friend_description"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/friend_icon_card"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/friend_description"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginBottom="21dp"
+                        android:fontFamily="@font/noto_sans"
+                        android:letterSpacing="0.15"
+                        android:text="@string/friend_description"
+                        android:textColor="@color/secondaryLightColor"
+                        android:textSize="14sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="@+id/friend_title"
+                        app:layout_constraintStart_toStartOf="@+id/friend_title"
+                        app:layout_constraintTop_toBottomOf="@+id/friend_title" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/badge_zone"
+                    android:onClick="@{() -> viewModel.navigateToBadge()}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:background="@drawable/bg_profile_item"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/friend_zone">
+
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/badge_icon_card"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginBottom="16dp"
+                        android:contentDescription="setting icon"
+                        app:cardCornerRadius="8dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <ImageView
+                            android:id="@+id/badge_icon"
+                            android:layout_width="36dp"
+                            android:layout_height="36dp"
+                            android:layout_gravity="center"
+                            android:tint="@color/primaryDarkColor"
+                            android:contentDescription="Your profile image"
+                            app:srcCompat="@drawable/badge_48"
+                            tools:srcCompat="@drawable/placeholder" />
+                    </androidx.cardview.widget.CardView>
+
+                    <TextView
+                        android:id="@+id/badge_title"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="21dp"
+                        android:layout_marginEnd="16dp"
+                        android:fontFamily="@font/noto_sans"
+                        android:letterSpacing="0.15"
+                        android:text="@string/badge_title"
+                        android:textColor="@color/secondaryColor"
+                        android:textSize="16sp"
+                        app:layout_constraintBottom_toTopOf="@+id/badge_description"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/badge_icon_card"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/badge_description"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginBottom="21dp"
+                        android:fontFamily="@font/noto_sans"
+                        android:letterSpacing="0.15"
+                        android:text="@string/badge_description"
+                        android:textColor="@color/secondaryLightColor"
+                        android:textSize="14sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="@+id/badge_title"
+                        app:layout_constraintStart_toStartOf="@+id/badge_title"
+                        app:layout_constraintTop_toBottomOf="@+id/badge_title" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/explorer_zone"
+                    android:onClick="@{() -> viewModel.navigateToExplorer()}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginBottom="16dp"
+                    android:background="@drawable/bg_profile_item"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/badge_zone"
+                    app:layout_constraintBottom_toBottomOf="parent">
+
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/explorer_icon_card"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginBottom="16dp"
+                        android:contentDescription="explorer icon"
+                        app:cardCornerRadius="8dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <ImageView
+                            android:id="@+id/explorer_icon"
+                            android:layout_width="36dp"
+                            android:layout_height="36dp"
+                            android:layout_gravity="center"
+                            android:tint="@color/primaryDarkColor"
+                            android:contentDescription="Your explorer icon"
+                            app:srcCompat="@drawable/fosty_map_icon_48" />
+                    </androidx.cardview.widget.CardView>
+
+                    <TextView
+                        android:id="@+id/explorer_title"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="21dp"
+                        android:layout_marginEnd="16dp"
+                        android:fontFamily="@font/noto_sans"
+                        android:letterSpacing="0.15"
+                        android:text="@string/explore_title"
+                        android:textColor="@color/secondaryColor"
+                        android:textSize="16sp"
+                        app:layout_constraintBottom_toTopOf="@+id/explorer_description"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/explorer_icon_card"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/explorer_description"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginBottom="21dp"
+                        android:fontFamily="@font/noto_sans"
+                        android:letterSpacing="0.15"
+                        android:text="@string/explorer_description"
+                        android:textColor="@color/secondaryLightColor"
+                        android:textSize="14sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="@+id/explorer_title"
+                        app:layout_constraintStart_toStartOf="@+id/explorer_title"
+                        app:layout_constraintTop_toBottomOf="@+id/explorer_title" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </ScrollView>
+
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/create_event"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
+            android:onClick="@{() ->viewModel.addFriends()}"
+            android:scaleType="center"
+            app:backgroundTint="@color/secondaryLightColor"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:srcCompat="@drawable/add_friend_36"
+            app:tint="@color/white" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+        <variable name="friend" type="tw.com.walkablecity.data.Friend" />
+        <variable name="viewModel" type="tw.com.walkablecity.eventdetail.EventDetailViewModel" />
+        <variable name="position" type="Integer" />
+        <variable name="width" type="Integer" />
+        <variable name="isAccomplished" type="Boolean" />
+        <variable name="user" type="tw.com.walkablecity.data.Friend" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_view_position"
+            android:layout_marginStart="16dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            app:cardCornerRadius="40dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:cardElevation="1dp">
+
+            <TextView
+                android:id="@+id/badge_position"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:background="@{isAccomplished ? @color/gold : @color/white}"
+                android:textColor="@{isAccomplished ? @color/white : @color/primaryDarkColor }"
+                android:fontFamily="@font/noto_sans"
+                android:textSize="14dp"
+                android:text="@{String.valueOf(position)}" />
+        </com.google.android.material.card.MaterialCardView>
+
+        <TextView
+            android:id="@+id/friend_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:padding="8dp"
+            android:text="@{friend.name}"
+            android:textColor="@{friend.idCustom == user.idCustom ? @color/blue_2e5c6e : @color/primaryDarkColor }"
+            android:letterSpacing="0.15"
+            android:fontFamily="@font/noto_sans"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/guideline"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/card_view_position"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_end="180dp" />
+
+<!--        <SeekBar-->
+<!--            android:id="@+id/friend_seek_bar"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="10dp"-->
+<!--            android:splitTrack="false"-->
+<!--            android:thumbTint="@color/real_transparent"-->
+<!--            app:layout_constraintBottom_toBottomOf="@+id/friend_name"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toEndOf="@+id/guideline"-->
+<!--            />-->
+
+        <TextView
+            android:id="@+id/friend_bar"
+            android:layout_marginEnd="16dp"
+            android:layout_width="0dp"
+            android:layout_height="6dp"
+            android:background="@drawable/bg_walker_prepare"
+            android:backgroundTint="@color/grey_transparent"
+            app:layout_constraintBottom_toBottomOf="@+id/friend_name"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/guideline"
+            tools:layout_editor_absoluteY="60dp" />
+
+        <TextView
+            android:id="@+id/friend_bar_progress"
+            android:layout_width="0dp"
+            android:layout_height="6dp"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/bg_walker_prepare"
+            android:backgroundTint="@{viewModel.event.type.colorList[0]}"
+            app:layout_constraintBottom_toBottomOf="@+id/friend_name"
+            app:layout_constraintStart_toEndOf="@+id/guideline"
+             />
+
+        <TextView
+            android:id="@+id/friend_bar_progress_text"
+            android:layout_marginEnd="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:progress="@{friend.accomplish}"
+            app:targeting="@{viewModel.event.target}"
+            android:layout_marginStart="16dp"
+            android:textColor="@color/secondaryColor"
+            app:layout_constraintTop_toTopOf="@+id/friend_name"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/friend_bar" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

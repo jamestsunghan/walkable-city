@@ -1,22 +1,28 @@
 package tw.com.walkablecity
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.findNavController
 import com.google.android.gms.location.LocationServices
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.FirebaseApp
+import tw.com.walkablecity.addfriend.AddFriendFragmentDirections
 import tw.com.walkablecity.data.Walker
 import tw.com.walkablecity.databinding.ActivityMainBinding
 import tw.com.walkablecity.ext.getVMFactory
 import tw.com.walkablecity.home.WalkerStatus
+import tw.com.walkablecity.home.createroute.CreateRouteDialogFragmentDirections
+import tw.com.walkablecity.host.add2event.AddFriend2EventFragmentDirections
+import tw.com.walkablecity.rating.RatingFragmentDirections
 
 class MainActivity : AppCompatActivity() {
 
@@ -30,7 +36,7 @@ class MainActivity : AppCompatActivity() {
             R.id.home ->{
                 findNavController(R.id.nav_host_fragment).navigate(NavigationDirections.actionGlobalHomeFragment(
                     null
-                ))
+                ,null))
                 return@OnNavigationItemSelectedListener true
             }
             R.id.ranking ->{
@@ -54,15 +60,14 @@ class MainActivity : AppCompatActivity() {
     }
 
 
+    @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-
-
-
-
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         binding.lifecycleOwner = this
+
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 
         binding.viewModel = viewModel
 
@@ -98,15 +103,29 @@ class MainActivity : AppCompatActivity() {
 
                 R.id.eventDetailFragment -> CurrentFragmentType.EVENT_DETAIL
                 R.id.hostFragment -> CurrentFragmentType.HOST
+                R.id.loginFragment -> CurrentFragmentType.LOGIN
 
+                R.id.addFriendFragment -> CurrentFragmentType.ADD_FRIEND
+                R.id.addFriend2EventFragment  -> CurrentFragmentType.ADD_2_EVENT
+                R.id.createRouteDialogFragment -> CurrentFragmentType.CREATE_ROUTE_DIALOG
 
                 else -> viewModel.currentFragment.value
             }
-
 
 
         }
 
     }
 
+    override fun onBackPressed() {
+
+        when(viewModel.currentFragment.value){
+            CurrentFragmentType.RATING -> findNavController(R.id.nav_host_fragment).
+                navigate(RatingFragmentDirections.actionGlobalHomeFragment(null,null))
+            CurrentFragmentType.CREATE_ROUTE_DIALOG -> findNavController(R.id.nav_host_fragment).
+                navigate(CreateRouteDialogFragmentDirections.actionGlobalHomeFragment(null,null))
+
+            else -> super.onBackPressed()
+        }
+    }
 }

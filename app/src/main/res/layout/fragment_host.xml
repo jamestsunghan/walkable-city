@@ -4,19 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
-        <variable
-            name="viewModel"
-            type="tw.com.walkablecity.host.HostViewModel" />
-
+        <variable name="viewModel" type="tw.com.walkablecity.host.HostViewModel" />
         <import type="tw.com.walkablecity.data.EventType" />
-
         <import type="android.view.View" />
+        <import type="tw.com.walkablecity.data.LoadStatus"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/white"
         tools:context=".host.HostFragment">
 
         <ScrollView
@@ -304,35 +301,46 @@
                     app:layout_constraintStart_toStartOf="@+id/create_event_title"
                     app:layout_constraintTop_toBottomOf="@+id/edit_event_description" />
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/edit_invite_friend"
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    app:srcCompat="@drawable/add_friend_36"
+                    android:tint="@color/primaryDarkColor"
+                    app:layout_constraintTop_toTopOf="@+id/create_invite_friend"
+                    app:layout_constraintBottom_toBottomOf="@+id/create_invite_friend"
+                    android:onClick="@{() -> viewModel.addSomeFriends()}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginEnd="16dp"/>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycler_friend_adding"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="16dp"
-                    android:layout_marginBottom="16dp"
-                    android:background="@color/primaryLightColor"
-                    app:endIconDrawable="@drawable/ic_footprint"
-                    app:endIconMode="custom"
+                    app:layout_constraintTop_toBottomOf="@+id/create_invite_friend"
                     app:layout_constraintBottom_toBottomOf="parent"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    android:orientation="horizontal"
+                    app:friendly="@{viewModel.addList}"/>
+
+                <TextView
+                    android:id="@+id/no_invite_friend"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginStart="16dp"
+                    android:fontFamily="@font/noto_sans"
+                    android:gravity="center"
+                    android:letterSpacing="0.15"
+                    android:text="@string/no_friend_invited"
+                    android:textColor="@color/primaryColor"
+                    android:textSize="20sp"
+                    android:visibility="@{viewModel.addList == null || viewModel.addList.size() == 0 ? View.VISIBLE : View.GONE}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/create_invite_friend">
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/create_invite_friend" />
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textAppearance="@style/TextForEditTextLayout"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginEnd="16dp"
-                        android:background="@color/primaryLightColor"
-                        android:fontFamily="@font/noto_sans"
-                        android:hint="@string/inpun_friend_id"
-                        android:letterSpacing="0.15"
-                        android:text="@={viewModel.description}" />
 
-                </com.google.android.material.textfield.TextInputLayout>
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -352,12 +360,25 @@
             android:onClick="@{() ->viewModel.createEvent()}"
             android:padding="8dp"
             android:text="@string/create_event"
-            android:textColor="@color/white"
+            android:textColor="@{viewModel.status == LoadStatus.LOADING ? @color/primaryDarkColor : @color/white }"
             android:textSize="14sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintVertical_bias="1.0" />
+
+        <ProgressBar
+            android:id="@+id/progress_login"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:theme="@style/ProgressDarkTheme"
+            android:visibility="@{viewModel.status == LoadStatus.LOADING ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="@+id/create_event"
+            app:layout_constraintEnd_toEndOf="@+id/create_event"
+            app:layout_constraintStart_toStartOf="@+id/create_event"
+            app:layout_constraintTop_toTopOf="@+id/create_event" />
+
+
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

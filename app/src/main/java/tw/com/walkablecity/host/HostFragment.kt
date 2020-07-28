@@ -5,7 +5,6 @@ import android.app.DatePickerDialog
 import android.icu.util.Calendar
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -15,7 +14,9 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.navGraphViewModels
 import com.google.firebase.Timestamp.now
+import tw.com.walkablecity.Logger
 
 import tw.com.walkablecity.R
 import tw.com.walkablecity.Util
@@ -24,13 +25,18 @@ import tw.com.walkablecity.data.FrequencyType
 import tw.com.walkablecity.databinding.FragmentHostBinding
 import tw.com.walkablecity.ext.getVMFactory
 import tw.com.walkablecity.ext.toDateLong
+import tw.com.walkablecity.host.add2event.AddFriend2EventAdapter
+import tw.com.walkablecity.host.add2event.AddListAdapter
 import java.text.SimpleDateFormat
 import java.util.*
 
 class HostFragment : Fragment() {
 
 
-    private val viewModel: HostViewModel by viewModels{getVMFactory()}
+
+    private val viewModel: HostViewModel by navGraphViewModels(R.id.navigation2){
+        getVMFactory()
+    }
 
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreateView(
@@ -43,6 +49,7 @@ class HostFragment : Fragment() {
 
         binding.viewModel = viewModel
 
+        binding.recyclerFriendAdding.adapter = AddListAdapter()
 
         binding.eventTypeSpinner.adapter = EventTypeSpinnerAdapter(
             mutableListOf(
@@ -114,10 +121,10 @@ class HostFragment : Fragment() {
                 FrequencyType.MONTHLY ->{
                     val dateString = viewModel.startDateDisplay.value
                         ?: SimpleDateFormat("yyyy-MM-dd", Locale.TAIWAN).format(now().seconds.times(1000))
-                    Log.d("JJ_date", "dateString $dateString")
+                    Logger.d("JJ_date dateString $dateString")
 
                     val newString = Util.dateAddMonth(dateString) ?: dateString
-                    Log.d("JJ_date","newString $newString")
+                    Logger.d("JJ_date newString $newString")
                     Util.dateToTimeStamp(newString)?.seconds?.times(1000)
                         ?: now().seconds.times(1000).plus(THIRTY_DAYS)
                 }
@@ -130,7 +137,15 @@ class HostFragment : Fragment() {
 
         viewModel.startDate.observe(viewLifecycleOwner, Observer{
             it?.let{
-                Log.d("JJ","timestamp ${it.toDateLong()}")
+                Logger.d("timestamp ${it.toDateLong()}")
+            }
+        })
+
+        viewModel.navigateToAddFriends.observe(viewLifecycleOwner, Observer{
+            if(it){
+                findNavController().navigate(HostFragmentDirections
+                    .actionHostFragmentToAddFriend2EventFragment())
+                viewModel.addSomeFriendsComplete()
             }
         })
 
@@ -144,25 +159,25 @@ class HostFragment : Fragment() {
 
         viewModel.type.observe(viewLifecycleOwner, Observer{
             it?.let{
-                Log.d("JJ_type", "eventType selected ${it.title}")
+                Logger.d("JJ_type eventType selected ${it.title}")
             }
         })
 
         viewModel.frequencyType.observe(viewLifecycleOwner, Observer{
             it?.let{
-                Log.d("JJ_type", "FQType selected ${it.text}")
+                Logger.d("JJ_type FQType selected ${it.text}")
             }
         })
 
         viewModel.endDate.observe(viewLifecycleOwner, Observer{
             it?.let{
-                Log.d("JJ", "endDate ${it.toDateLong()}")
+                Logger.d( "endDate ${it.toDateLong()}")
             }
         })
 
         viewModel.target.observe(viewLifecycleOwner, Observer {
             it?.let{
-                Log.d("JJ_target", "target $it")
+                Logger.d("JJ_target target $it")
             }
         })
 

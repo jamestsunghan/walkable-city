@@ -1,20 +1,127 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
         <variable name="viewModel" type="tw.com.walkablecity.profile.bestwalker.BestWalkersViewModel" />
+        <import type="tw.com.walkablecity.data.AccumulationType"/>
+        <import type="tw.com.walkablecity.data.LoadStatus"/>
+        <import type="android.view.View"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/white"
         tools:context=".profile.bestwalker.BestWalkersFragment">
 
-        <TextView
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/weekly_ranking"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="16dp"
+            app:cardCornerRadius="8dp"
+            android:onClick="@{() -> viewModel.weekRanking()}"
+            app:cardElevation="2dp"
+            app:cardBackgroundColor="@{viewModel.accumulationType == AccumulationType.WEEKLY ? @color/primaryDarkColor : @color/white}"
+            app:layout_constraintEnd_toStartOf="@+id/monthly_ranking"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/weekly_ranking_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:fontFamily="@font/noto_sans"
+                android:gravity="center"
+                android:letterSpacing="0.15"
+                android:padding="4dp"
+                android:text="@string/week_ranking"
+                android:textColor="@{viewModel.accumulationType == AccumulationType.WEEKLY ? @color/white : @color/primaryDarkColor}"
+                android:textSize="14sp" />
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/monthly_ranking"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            app:cardCornerRadius="8dp"
+            android:onClick="@{() -> viewModel.monthRanking()}"
+            app:cardBackgroundColor="@{viewModel.accumulationType == AccumulationType.MONTHLY ? @color/primaryDarkColor : @color/white}"
+            app:cardElevation="2dp"
+            app:layout_constraintEnd_toStartOf="@+id/total_ranking"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/weekly_ranking"
+            app:layout_constraintTop_toTopOf="@+id/weekly_ranking">
+
+            <TextView
+                android:id="@+id/monthly_ranking_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/noto_sans"
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:letterSpacing="0.15"
+                android:textColor="@{viewModel.accumulationType == AccumulationType.MONTHLY ? @color/white : @color/primaryDarkColor}"
+                android:padding="4dp"
+                android:text="@string/month_ranking"
+                android:textSize="14sp" />
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/total_ranking"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            app:cardCornerRadius="8dp"
+            android:onClick="@{() -> viewModel.totalRanking()}"
+            app:cardElevation="2dp"
+            app:cardBackgroundColor="@{viewModel.accumulationType == AccumulationType.TOTAL ? @color/primaryDarkColor : @color/white}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/monthly_ranking"
+            app:layout_constraintTop_toTopOf="@+id/weekly_ranking">
+
+            <TextView
+                android:id="@+id/total_ranking_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/noto_sans"
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:letterSpacing="0.15"
+                android:padding="4dp"
+                android:text="@string/total_ranking"
+                android:textColor="@{viewModel.accumulationType == AccumulationType.TOTAL ? @color/white : @color/primaryDarkColor}"
+                android:textSize="14sp" />
+        </com.google.android.material.card.MaterialCardView>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_walker"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="Hello" />
+            android:layout_height="0dp"
+            android:layout_marginTop="16dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/weekly_ranking"
+            app:walker="@{viewModel.sortList}" />
+
+        <ProgressBar
+            android:id="@+id/progress_search"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:theme="@style/ProgressPrimaryTheme"
+            android:visibility="@{viewModel.status == LoadStatus.LOADING ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -16,13 +16,19 @@
         <action
             android:id="@+id/action_homeFragment_to_loadRouteFragment"
             app:destination="@id/loadRouteFragment" />
-        <action
-            android:id="@+id/action_homeFragment_to_ratingFragment"
-            app:destination="@id/ratingFragment" />
         <argument
             android:name="routeKey"
             app:argType="tw.com.walkablecity.data.Route"
             app:nullable="true" />
+        <argument
+            android:name="destinationKey"
+            app:argType="com.google.android.gms.maps.model.LatLng"
+            app:nullable="true" />
+        <action
+            android:id="@+id/action_homeFragment_to_createRouteDialogFragment"
+            app:destination="@id/createRouteDialogFragment"
+            app:popUpTo="@id/navigation"
+            app:popUpToInclusive="true" />
     </fragment>
 
     <fragment
@@ -45,7 +51,7 @@
         tools:layout="@layout/fragment_event">
         <action
             android:id="@+id/action_eventFragment_to_hostFragment"
-            app:destination="@id/hostFragment" />
+            app:destination="@id/navigation2" />
     </fragment>
 
 
@@ -84,7 +90,11 @@
         android:id="@+id/searchFragment"
         android:name="tw.com.walkablecity.search.SearchFragment"
         android:label="SearchFragment"
-        tools:layout="@layout/fragment_search"/>
+        tools:layout="@layout/fragment_search">
+        <argument
+            android:name="LatLngKey"
+            app:argType="com.google.android.gms.maps.model.LatLng" />
+    </dialog>
 
     <action
         android:id="@+id/action_global_rankingFragment"
@@ -124,6 +134,13 @@
         <argument
             android:name="walkKey"
             app:argType="tw.com.walkablecity.data.Walk" />
+        <argument
+            android:name="willCreateKey"
+            app:argType="boolean" />
+        <argument
+            android:name="photoPointsKey"
+            app:argType="tw.com.walkablecity.data.PhotoPoint[]"
+            app:nullable="true" />
     </fragment>
     <fragment
         android:id="@+id/detailFragment"
@@ -156,10 +173,6 @@
         android:name="tw.com.walkablecity.profile.explore.ExploreFragment"
         android:label="ExploreFragment" />
     <fragment
-        android:id="@+id/hostFragment"
-        android:name="tw.com.walkablecity.host.HostFragment"
-        android:label="HostFragment" />
-    <fragment
         android:id="@+id/eventDetailFragment"
         android:name="tw.com.walkablecity.eventdetail.EventDetailFragment"
         android:label="EventDetailFragment" >
@@ -171,6 +184,45 @@
     <fragment
         android:id="@+id/loginFragment"
         android:name="tw.com.walkablecity.login.LoginFragment"
-        android:label="LoginFragment" />
+        android:label="LoginFragment" /><action android:id="@+id/action_global_addFriendFragment" app:destination="@id/addFriendFragment"/>
+    <dialog
+        android:id="@+id/createRouteDialogFragment"
+        android:name="tw.com.walkablecity.home.createroute.CreateRouteDialogFragment"
+        android:label="CreateRouteDialogFragment" >
+        <argument
+            android:name="selectedRoute"
+            app:argType="tw.com.walkablecity.data.Route"
+            app:nullable="true" />
+        <argument
+            android:name="walkKey"
+            app:argType="tw.com.walkablecity.data.Walk" />
+        <action
+            android:id="@+id/action_createRouteDialogFragment_to_ratingFragment"
+            app:destination="@id/ratingFragment" />
+        <argument
+            android:name="photoPoints"
+            app:argType="tw.com.walkablecity.data.PhotoPoint[]"
+            app:nullable="true" />
+    </dialog>
+    <navigation
+        android:id="@+id/navigation2"
+        app:startDestination="@id/hostFragment" >
+        <fragment
+            android:id="@+id/hostFragment"
+            android:name="tw.com.walkablecity.host.HostFragment"
+            android:label="HostFragment">
+            <action
+                android:id="@+id/action_hostFragment_to_addFriend2EventFragment"
+                app:destination="@id/addFriend2EventFragment" />
+        </fragment>
+        <fragment
+            android:id="@+id/addFriend2EventFragment"
+            android:name="tw.com.walkablecity.host.add2event.AddFriend2EventFragment"
+            android:label="AddFriend2EventFragment">
+            <action
+                android:id="@+id/action_addFriend2EventFragment_to_hostFragment"
+                app:destination="@id/hostFragment" />
+        </fragment>
+    </navigation>
 
 </navigation>

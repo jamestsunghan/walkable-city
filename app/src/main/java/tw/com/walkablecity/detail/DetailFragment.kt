@@ -10,6 +10,8 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearSnapHelper
+import tw.com.walkablecity.Logger
 
 import tw.com.walkablecity.R
 import tw.com.walkablecity.databinding.FragmentDetailBinding
@@ -33,6 +35,30 @@ class DetailFragment : Fragment() {
         binding.favIcon.isSelected = false
 
         binding.recyclerComment.adapter = CommentAdapter()
+        binding.recyclerDetailUrl.adapter = ImageUrlAdapter()
+        binding.recyclerCircle.adapter = DetailCircleAdapter()
+
+        val linearSnapHelper = LinearSnapHelper().apply {
+            attachToRecyclerView(binding.recyclerDetailUrl)
+        }
+
+        binding.recyclerDetailUrl.setOnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
+            viewModel.onGalleryScrollChange(binding.recyclerDetailUrl.layoutManager, linearSnapHelper)
+        }
+
+        viewModel.displayPhotos.observe(viewLifecycleOwner, Observer{
+
+            binding.recyclerDetailUrl.scrollToPosition(0)
+
+
+            viewModel.snapPosition.observe(viewLifecycleOwner, Observer {
+                (binding.recyclerCircle.adapter as DetailCircleAdapter).selectedPosition.value = it
+                Logger.d("JJ_snap snapPosition $it")
+            })
+
+        })
+
+
 
         viewModel.favoriteAdded.observe(viewLifecycleOwner, Observer{
             it?.let{
@@ -46,6 +72,12 @@ class DetailFragment : Fragment() {
             if(it){
                 findNavController().navigateUp()
                 viewModel.navigationComplete()
+            }
+        })
+
+        viewModel.photoPoints.observe(viewLifecycleOwner, Observer{
+            it?.let{
+                viewModel.addMaptodisplayPhotos(it)
             }
         })
 

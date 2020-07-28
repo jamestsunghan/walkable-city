@@ -1,20 +1,863 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable name="viewModel" type="tw.com.walkablecity.profile.badge.BadgeViewModel" />
+
+        <variable name="user" type="tw.com.walkablecity.data.User" />
+        <variable name="activity" type="androidx.fragment.app.FragmentActivity" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".profile.badge.BadgeFragment">
+        android:layout_height="match_parent">
 
-        <TextView
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="Hello" />
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            tools:context=".profile.badge.BadgeFragment">
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_badge_hour_section"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="4dp"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/badge_hour_section"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="16dp"
+                        android:fontFamily="@font/noto_sans"
+                        android:letterSpacing="0.15"
+                        android:text="@string/badge_hour_section"
+                        android:textColor="@color/badge_hour"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ImageView
+                        android:id="@+id/badge_hour_0"
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="16dp"
+                        app:shareable="@{user.accumulatedHour.total > 0f}"
+                        app:send="@{activity}"
+                        app:layout_constraintEnd_toStartOf="@+id/badge_hour_1"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/badge_hour_section"
+                        app:srcCompat="@{user.accumulatedHour.total > 0f ? @drawable/badge_0_hour : @drawable/badge_question }"
+                        tools:layout_editor_absoluteY="0dp" />
+
+                    <TextView
+                        android:id="@+id/badge_hour_0_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:fontFamily="@font/noto_sans"
+                        android:letterSpacing="0.15"
+                        android:text="@string/badge_hour_0"
+                        android:textColor="@{user.accumulatedHour.total > 0f ? @color/badge_hour : @color/grey_transparent}"
+                        android:textSize="14sp"
+                        app:layout_constraintEnd_toEndOf="@+id/badge_hour_0"
+                        app:layout_constraintStart_toStartOf="@+id/badge_hour_0"
+                        app:layout_constraintTop_toBottomOf="@+id/badge_hour_0" />
+
+                    <ImageView
+                        android:id="@+id/badge_hour_1"
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
+                        android:layout_marginStart="16dp"
+                        app:shareable="@{user.accumulatedHour.total >= 1f}"
+                        app:send="@{activity}"
+                        app:layout_constraintEnd_toStartOf="@+id/badge_hour_5"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toEndOf="@+id/badge_hour_0"
+                        app:layout_constraintTop_toTopOf="@+id/badge_hour_0"
+                        app:srcCompat="@{user.accumulatedHour.total >= 1f ? @drawable/badge_1_hour : @drawable/badge_question }"
+                        tools:layout_editor_absoluteY="0dp" />
+
+                    <TextView
+                        android:id="@+id/badge_hour_1_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:fontFamily="@font/noto_sans"
+                        android:letterSpacing="0.15"
+                        android:text="@string/badge_hour_1"
+                        android:textColor="@{user.accumulatedHour.total >= 1f ? @color/badge_hour : @color/grey_transparent}"
+                        android:textSize="14sp"
+                        app:layout_constraintEnd_toEndOf="@+id/badge_hour_1"
+                        app:layout_constraintStart_toStartOf="@+id/badge_hour_1"
+                        app:layout_constraintTop_toBottomOf="@+id/badge_hour_1" />
+
+                    <ImageView
+                        android:id="@+id/badge_hour_5"
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        app:shareable="@{user.accumulatedHour.total >= 5f}"
+                        app:send="@{activity}"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toEndOf="@+id/badge_hour_1"
+                        app:layout_constraintTop_toTopOf="@+id/badge_hour_0"
+                        app:srcCompat="@{user.accumulatedHour.total >= 5f ? @drawable/badge_5_hour : @drawable/badge_question }" />
+
+                    <TextView
+                        android:id="@+id/badge_hour_5_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:fontFamily="@font/noto_sans"
+                        android:letterSpacing="0.15"
+                        android:text="@string/badge_hour_5"
+                        android:textColor="@{user.accumulatedHour.total >= 5f ? @color/badge_hour : @color/grey_transparent}"
+                        android:textSize="14sp"
+                        app:layout_constraintEnd_toEndOf="@+id/badge_hour_5"
+                        app:layout_constraintStart_toStartOf="@+id/badge_hour_5"
+                        app:layout_constraintTop_toBottomOf="@+id/badge_hour_5" />
+
+                    <ImageView
+                        android:id="@+id/badge_hour_10"
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="16dp"
+                        app:shareable="@{user.accumulatedHour.total >= 10f}"
+                        app:send="@{activity}"
+                        app:layout_constraintEnd_toStartOf="@+id/badge_hour_50"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/badge_hour_0_text"
+                        app:srcCompat="@{user.accumulatedHour.total >= 10f ? @drawable/badge_10_hour : @drawable/badge_question }"
+                        tools:layout_editor_absoluteY="0dp" />
+
+                    <TextView
+                        android:id="@+id/badge_hour_10_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="16dp"
+                        android:fontFamily="@font/noto_sans"
+                        android:letterSpacing="0.15"
+                        android:text="@string/badge_hour_10"
+                        android:textColor="@{user.accumulatedHour.total >= 10f ? @color/badge_hour : @color/grey_transparent}"
+                        android:textSize="14sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="@+id/badge_hour_10"
+                        app:layout_constraintStart_toStartOf="@+id/badge_hour_10"
+                        app:layout_constraintTop_toBottomOf="@+id/badge_hour_10" />
+
+                    <ImageView
+                        android:id="@+id/badge_hour_50"
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
+                        android:layout_marginStart="16dp"
+                        app:shareable="@{user.accumulatedHour.total >= 50f}"
+                        app:send="@{activity}"
+                        app:layout_constraintEnd_toStartOf="@+id/badge_hour_100"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toEndOf="@+id/badge_hour_10"
+                        app:layout_constraintTop_toTopOf="@+id/badge_hour_10"
+                        app:srcCompat="@{user.accumulatedHour.total >= 50f ? @drawable/badge_50_hour : @drawable/badge_question }"
+                        tools:layout_editor_absoluteY="0dp" />
+
+                    <TextView
+                        android:id="@+id/badge_hour_50_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:fontFamily="@font/noto_sans"
+                        android:letterSpacing="0.15"
+                        android:text="@string/badge_hour_50"
+                        android:textColor="@{user.accumulatedHour.total >= 50f ? @color/badge_hour : @color/grey_transparent}"
+                        android:textSize="14sp"
+                        app:layout_constraintEnd_toEndOf="@+id/badge_hour_50"
+                        app:layout_constraintStart_toStartOf="@+id/badge_hour_50"
+                        app:layout_constraintTop_toBottomOf="@+id/badge_hour_50" />
+
+                    <ImageView
+                        android:id="@+id/badge_hour_100"
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        app:shareable="@{user.accumulatedHour.total >= 100f}"
+                        app:send="@{activity}"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toEndOf="@+id/badge_hour_50"
+                        app:layout_constraintTop_toTopOf="@+id/badge_hour_10"
+                        app:srcCompat="@{user.accumulatedHour.total >= 100f ? @drawable/badge_100_hour : @drawable/badge_question }" />
+
+                    <TextView
+                        android:id="@+id/badge_hour_100_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:fontFamily="@font/noto_sans"
+                        android:letterSpacing="0.15"
+                        android:text="@string/badge_hour_100"
+                        android:textColor="@{user.accumulatedHour.total >= 100f ? @color/badge_hour : @color/grey_transparent}"
+                        android:textSize="14sp"
+                        app:layout_constraintEnd_toEndOf="@+id/badge_hour_100"
+                        app:layout_constraintStart_toStartOf="@+id/badge_hour_100"
+                        app:layout_constraintTop_toBottomOf="@+id/badge_hour_100" />
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_badge_km_section"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="4dp"
+                app:layout_constraintTop_toBottomOf="@+id/card_badge_hour_section">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/badge_km_section"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="16dp"
+                        android:fontFamily="@font/noto_sans"
+                        android:letterSpacing="0.15"
+                        android:text="@string/badge_km_section"
+                        android:textColor="@color/secondaryLightColor"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ImageView
+                        android:id="@+id/badge_km_0"
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="16dp"
+                        app:shareable="@{user.accumulatedKm.total > 0}"
+                        app:send="@{activity}"
+                        app:layout_constraintEnd_toStartOf="@+id/badge_km_3"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/badge_km_section"
+                        app:srcCompat="@{user.accumulatedKm.total > 0 ? @drawable/badge_0_distance : @drawable/badge_question }"
+                        tools:layout_editor_absoluteY="0dp" />
+
+                    <TextView
+                        android:id="@+id/badge_km_0_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:fontFamily="@font/noto_sans"
+                        android:letterSpacing="0.15"
+                        android:text="@string/badge_km_0"
+                        android:textColor="@{user.accumulatedKm.total > 0 ? @color/secondaryLightColor : @color/grey_transparent}"
+                        android:textSize="14sp"
+                        app:layout_constraintEnd_toEndOf="@+id/badge_km_0"
+                        app:layout_constraintStart_toStartOf="@+id/badge_km_0"
+                        app:layout_constraintTop_toBottomOf="@+id/badge_km_0" />
+
+                    <ImageView
+                        android:id="@+id/badge_km_3"
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
+                        android:layout_marginStart="16dp"
+                        app:shareable="@{user.accumulatedKm.total >= 3f}"
+                        app:send="@{activity}"
+                        app:layout_constraintEnd_toStartOf="@+id/badge_km_10"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toEndOf="@+id/badge_km_0"
+                        app:layout_constraintTop_toTopOf="@+id/badge_km_0"
+                        app:srcCompat="@{user.accumulatedKm.total >= 3f ? @drawable/badge_3_distance : @drawable/badge_question }"
+                        tools:layout_editor_absoluteY="0dp" />
+
+                    <TextView
+                        android:id="@+id/badge_km_3_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:fontFamily="@font/noto_sans"
+                        android:letterSpacing="0.15"
+                        android:text="@string/badge_km_3"
+                        android:textColor="@{user.accumulatedKm.total >= 3f ? @color/secondaryLightColor : @color/grey_transparent}"
+                        android:textSize="14sp"
+                        app:layout_constraintEnd_toEndOf="@+id/badge_km_3"
+                        app:layout_constraintStart_toStartOf="@+id/badge_km_3"
+                        app:layout_constraintTop_toBottomOf="@+id/badge_km_3" />
+
+                    <ImageView
+                        android:id="@+id/badge_km_10"
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        app:shareable="@{user.accumulatedKm.total >= 10f}"
+                        app:send="@{activity}"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toEndOf="@+id/badge_km_3"
+                        app:layout_constraintTop_toTopOf="@+id/badge_km_0"
+                        app:srcCompat="@{user.accumulatedKm.total >= 10f ? @drawable/badge_10_distance : @drawable/badge_question }" />
+
+                    <TextView
+                        android:id="@+id/badge_km_10_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:fontFamily="@font/noto_sans"
+                        android:letterSpacing="0.15"
+                        android:text="@string/badge_km_10"
+                        android:textColor="@{user.accumulatedKm.total >= 10f ? @color/secondaryLightColor : @color/grey_transparent}"
+                        android:textSize="14sp"
+                        app:layout_constraintEnd_toEndOf="@+id/badge_km_10"
+                        app:layout_constraintStart_toStartOf="@+id/badge_km_10"
+                        app:layout_constraintTop_toBottomOf="@+id/badge_km_10" />
+
+                    <ImageView
+                        android:id="@+id/badge_km_80"
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="16dp"
+                        app:shareable="@{user.accumulatedKm.total >= 80f}"
+                        app:send="@{activity}"
+                        app:layout_constraintEnd_toStartOf="@+id/badge_km_350"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/badge_km_0_text"
+                        app:srcCompat="@{user.accumulatedKm.total >= 80f ? @drawable/badge_80_distance : @drawable/badge_question }"
+                        tools:layout_editor_absoluteY="0dp" />
+
+                    <TextView
+                        android:id="@+id/badge_km_80_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="16dp"
+                        android:fontFamily="@font/noto_sans"
+                        android:letterSpacing="0.15"
+                        android:text="@string/badge_km_80"
+                        android:textColor="@{user.accumulatedKm.total >= 80f ? @color/secondaryLightColor : @color/grey_transparent}"
+                        android:textSize="14sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="@+id/badge_km_80"
+                        app:layout_constraintStart_toStartOf="@+id/badge_km_80"
+                        app:layout_constraintTop_toBottomOf="@+id/badge_km_80" />
+
+                    <ImageView
+                        android:id="@+id/badge_km_350"
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
+                        android:layout_marginStart="16dp"
+                        app:shareable="@{user.accumulatedKm.total >= 350f}"
+                        app:send="@{activity}"
+                        app:layout_constraintEnd_toStartOf="@+id/badge_km_1000"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toEndOf="@+id/badge_km_80"
+                        app:layout_constraintTop_toTopOf="@+id/badge_km_80"
+                        app:srcCompat="@{user.accumulatedKm.total >= 350f ? @drawable/badge_350_distance : @drawable/badge_question }"
+                        tools:layout_editor_absoluteY="0dp" />
+
+                    <TextView
+                        android:id="@+id/badge_km_350_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:fontFamily="@font/noto_sans"
+                        android:letterSpacing="0.15"
+                        android:text="@string/badge_km_350"
+                        android:textColor="@{user.accumulatedKm.total >= 350f ? @color/secondaryLightColor : @color/grey_transparent}"
+                        android:textSize="14sp"
+                        app:layout_constraintEnd_toEndOf="@+id/badge_km_350"
+                        app:layout_constraintStart_toStartOf="@+id/badge_km_350"
+                        app:layout_constraintTop_toBottomOf="@+id/badge_km_350" />
+
+                    <ImageView
+                        android:id="@+id/badge_km_1000"
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        app:shareable="@{user.accumulatedKm.total >= 1000f}"
+                        app:send="@{activity}"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toEndOf="@+id/badge_km_350"
+                        app:layout_constraintTop_toTopOf="@+id/badge_km_80"
+                        app:srcCompat="@{user.accumulatedKm.total >= 1000f ? @drawable/badge_1000_distance : @drawable/badge_question }" />
+
+                    <TextView
+                        android:id="@+id/badge_km_1000_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:fontFamily="@font/noto_sans"
+                        android:letterSpacing="0.15"
+                        android:text="@string/badge_km_1000"
+                        android:textColor="@{user.accumulatedKm.total >= 1000f ? @color/secondaryLightColor : @color/grey_transparent}"
+                        android:textSize="14sp"
+                        app:layout_constraintEnd_toEndOf="@+id/badge_km_1000"
+                        app:layout_constraintStart_toStartOf="@+id/badge_km_1000"
+                        app:layout_constraintTop_toBottomOf="@+id/badge_km_1000" />
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_badge_event_section"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="4dp"
+                app:layout_constraintTop_toBottomOf="@+id/card_badge_km_section">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/badge_event_section"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="16dp"
+                        android:fontFamily="@font/noto_sans"
+                        android:letterSpacing="0.15"
+                        android:text="@string/badge_event_section"
+                        android:textColor="@color/badge_event"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ImageView
+                        android:id="@+id/badge_event_0"
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="16dp"
+                        app:shareable="@{viewModel.eventCount > 0}"
+                        app:send="@{activity}"
+                        app:layout_constraintEnd_toStartOf="@+id/badge_event_3"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/badge_event_section"
+                        app:srcCompat="@{viewModel.eventCount > 0 ? @drawable/badge_one_love : @drawable/badge_question }"
+                        tools:layout_editor_absoluteY="0dp" />
+
+                    <TextView
+                        android:id="@+id/badge_event_0_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:fontFamily="@font/noto_sans"
+                        android:letterSpacing="0.15"
+                        android:text="@string/badge_event_0"
+                        android:textColor="@{viewModel.eventCount > 0 ? @color/badge_event : @color/grey_transparent}"
+                        android:textSize="14sp"
+                        app:layout_constraintEnd_toEndOf="@+id/badge_event_0"
+                        app:layout_constraintStart_toStartOf="@+id/badge_event_0"
+                        app:layout_constraintTop_toBottomOf="@+id/badge_event_0" />
+
+                    <ImageView
+                        android:id="@+id/badge_event_3"
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
+                        android:layout_marginStart="16dp"
+                        app:shareable="@{viewModel.eventCount >= 3}"
+                        app:send="@{activity}"
+                        app:layout_constraintEnd_toStartOf="@+id/badge_event_10"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toEndOf="@+id/badge_event_0"
+                        app:layout_constraintTop_toTopOf="@+id/badge_event_0"
+                        app:srcCompat="@{viewModel.eventCount >= 3 ? @drawable/badge_3_love : @drawable/badge_question }"
+                        tools:layout_editor_absoluteY="0dp" />
+
+                    <TextView
+                        android:id="@+id/badge_event_3_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:fontFamily="@font/noto_sans"
+                        android:letterSpacing="0.15"
+                        android:text="@string/badge_event_3"
+                        android:textColor="@{viewModel.eventCount >= 3 ? @color/badge_event : @color/grey_transparent}"
+                        android:textSize="14sp"
+                        app:layout_constraintEnd_toEndOf="@+id/badge_event_3"
+                        app:layout_constraintStart_toStartOf="@+id/badge_event_3"
+                        app:layout_constraintTop_toBottomOf="@+id/badge_event_3" />
+
+                    <ImageView
+                        android:id="@+id/badge_event_10"
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        app:shareable="@{viewModel.eventCount >= 10}"
+                        app:send="@{activity}"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toEndOf="@+id/badge_event_3"
+                        app:layout_constraintTop_toTopOf="@+id/badge_event_0"
+                        app:srcCompat="@{viewModel.eventCount >= 10 ? @drawable/badge_10_love : @drawable/badge_question }" />
+
+                    <TextView
+                        android:id="@+id/badge_event_10_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:fontFamily="@font/noto_sans"
+                        android:letterSpacing="0.15"
+                        android:text="@string/badge_event_10"
+                        android:textColor="@{viewModel.eventCount >= 10 ? @color/badge_event : @color/grey_transparent}"
+                        android:textSize="14sp"
+                        app:layout_constraintEnd_toEndOf="@+id/badge_event_10"
+                        app:layout_constraintStart_toStartOf="@+id/badge_event_10"
+                        app:layout_constraintTop_toBottomOf="@+id/badge_event_10" />
+
+                    <ImageView
+                        android:id="@+id/badge_event_25"
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="16dp"
+                        app:shareable="@{viewModel.eventCount >= 25}"
+                        app:send="@{activity}"
+                        app:layout_constraintEnd_toStartOf="@+id/badge_event_50"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/badge_event_0_text"
+                        app:srcCompat="@{viewModel.eventCount >= 25 ? @drawable/badge_25_love : @drawable/badge_question }"
+                        tools:layout_editor_absoluteY="0dp" />
+
+                    <TextView
+                        android:id="@+id/badge_event_25_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="16dp"
+                        android:fontFamily="@font/noto_sans"
+                        android:letterSpacing="0.15"
+                        android:text="@string/badge_event_25"
+                        android:textColor="@{viewModel.eventCount >= 25 ? @color/badge_event : @color/grey_transparent}"
+                        android:textSize="14sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="@+id/badge_event_25"
+                        app:layout_constraintStart_toStartOf="@+id/badge_event_25"
+                        app:layout_constraintTop_toBottomOf="@+id/badge_event_25" />
+
+                    <ImageView
+                        android:id="@+id/badge_event_50"
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
+                        android:layout_marginStart="16dp"
+                        app:shareable="@{viewModel.eventCount >= 50}"
+                        app:send="@{activity}"
+                        app:layout_constraintEnd_toStartOf="@+id/badge_event_100"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toEndOf="@+id/badge_event_25"
+                        app:layout_constraintTop_toTopOf="@+id/badge_event_25"
+                        app:srcCompat="@{viewModel.eventCount >= 50 ? @drawable/badge_50_love : @drawable/badge_question }"
+                        tools:layout_editor_absoluteY="0dp" />
+
+                    <TextView
+                        android:id="@+id/badge_event_50_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:fontFamily="@font/noto_sans"
+                        android:letterSpacing="0.15"
+                        android:text="@string/badge_event_50"
+                        android:textColor="@{viewModel.eventCount >= 50 ? @color/badge_event : @color/grey_transparent}"
+                        android:textSize="14sp"
+                        app:layout_constraintEnd_toEndOf="@+id/badge_event_50"
+                        app:layout_constraintStart_toStartOf="@+id/badge_event_50"
+                        app:layout_constraintTop_toBottomOf="@+id/badge_event_50" />
+
+                    <ImageView
+                        android:id="@+id/badge_event_100"
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        app:shareable="@{viewModel.eventCount >= 100}"
+                        app:send="@{activity}"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toEndOf="@+id/badge_event_50"
+                        app:layout_constraintTop_toTopOf="@+id/badge_event_25"
+                        app:srcCompat="@{viewModel.eventCount >= 100 ? @drawable/badge_100_love : @drawable/badge_question }" />
+
+                    <TextView
+                        android:id="@+id/badge_event_100_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:fontFamily="@font/noto_sans"
+                        android:letterSpacing="0.15"
+                        android:text="@string/badge_event_100"
+                        android:textColor="@{viewModel.eventCount >= 100 ? @color/badge_event : @color/grey_transparent}"
+                        android:textSize="14sp"
+                        app:layout_constraintEnd_toEndOf="@+id/badge_event_100"
+                        app:layout_constraintStart_toStartOf="@+id/badge_event_100"
+                        app:layout_constraintTop_toBottomOf="@+id/badge_event_100" />
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_badge_friend_section"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="4dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/card_badge_event_section">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/badge_friend_section"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="16dp"
+                        android:fontFamily="@font/noto_sans"
+                        android:letterSpacing="0.15"
+                        android:text="@string/badge_friend_section"
+                        android:textColor="@color/badge_friend"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ImageView
+                        android:id="@+id/badge_friend_0"
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="16dp"
+                        app:shareable="@{viewModel.friendCount > 0}"
+                        app:send="@{activity}"
+                        app:layout_constraintEnd_toStartOf="@+id/badge_friend_3"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/badge_friend_section"
+                        app:srcCompat="@{viewModel.friendCount > 0 ? @drawable/badge_0_friend : @drawable/badge_question }"
+                        tools:layout_editor_absoluteY="0dp" />
+
+                    <TextView
+                        android:id="@+id/badge_friend_0_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:fontFamily="@font/noto_sans"
+                        android:letterSpacing="0.15"
+                        android:text="@string/badge_friend_0"
+                        android:textColor="@{viewModel.friendCount > 0 ? @color/badge_friend : @color/grey_transparent}"
+                        android:textSize="14sp"
+                        app:layout_constraintEnd_toEndOf="@+id/badge_friend_0"
+                        app:layout_constraintStart_toStartOf="@+id/badge_friend_0"
+                        app:layout_constraintTop_toBottomOf="@+id/badge_friend_0" />
+
+                    <ImageView
+                        android:id="@+id/badge_friend_3"
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
+                        android:layout_marginStart="16dp"
+                        app:shareable="@{viewModel.friendCount >= 3}"
+                        app:send="@{activity}"
+                        app:layout_constraintEnd_toStartOf="@+id/badge_friend_10"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toEndOf="@+id/badge_friend_0"
+                        app:layout_constraintTop_toTopOf="@+id/badge_friend_0"
+                        app:srcCompat="@{viewModel.friendCount >= 3 ? @drawable/badge_3_friend : @drawable/badge_question }"
+                        tools:layout_editor_absoluteY="0dp" />
+
+                    <TextView
+                        android:id="@+id/badge_friend_3_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:fontFamily="@font/noto_sans"
+                        android:letterSpacing="0.15"
+                        android:text="@string/badge_friend_3"
+                        android:textColor="@{viewModel.friendCount >= 3 ? @color/badge_friend : @color/grey_transparent}"
+                        android:textSize="14sp"
+                        app:layout_constraintEnd_toEndOf="@+id/badge_friend_3"
+                        app:layout_constraintStart_toStartOf="@+id/badge_friend_3"
+                        app:layout_constraintTop_toBottomOf="@+id/badge_friend_3" />
+
+                    <ImageView
+                        android:id="@+id/badge_friend_10"
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        app:shareable="@{viewModel.friendCount >= 10}"
+                        app:send="@{activity}"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toEndOf="@+id/badge_friend_3"
+                        app:layout_constraintTop_toTopOf="@+id/badge_friend_0"
+                        app:srcCompat="@{viewModel.friendCount >= 10 ? @drawable/badge_10_friend : @drawable/badge_question }" />
+
+                    <TextView
+                        android:id="@+id/badge_friend_10_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:fontFamily="@font/noto_sans"
+                        android:letterSpacing="0.15"
+                        android:text="@string/badge_friend_10"
+                        android:textColor="@{viewModel.friendCount >= 10 ? @color/badge_friend : @color/grey_transparent}"
+                        android:textSize="14sp"
+                        app:layout_constraintEnd_toEndOf="@+id/badge_friend_10"
+                        app:layout_constraintStart_toStartOf="@+id/badge_friend_10"
+                        app:layout_constraintTop_toBottomOf="@+id/badge_friend_10" />
+
+                    <ImageView
+                        android:id="@+id/badge_friend_50"
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="16dp"
+                        app:shareable="@{viewModel.friendCount >= 50}"
+                        app:send="@{activity}"
+                        app:layout_constraintEnd_toStartOf="@+id/badge_friend_100"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/badge_friend_0_text"
+                        app:srcCompat="@{viewModel.friendCount >= 50 ? @drawable/badge_50_friend : @drawable/badge_question }"
+                        tools:layout_editor_absoluteY="0dp" />
+
+                    <TextView
+                        android:id="@+id/badge_friend_50_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="16dp"
+                        android:fontFamily="@font/noto_sans"
+                        android:letterSpacing="0.15"
+                        android:text="@string/badge_friend_50"
+                        android:textColor="@{viewModel.friendCount >= 50 ? @color/badge_friend : @color/grey_transparent}"
+                        android:textSize="14sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="@+id/badge_friend_50"
+                        app:layout_constraintStart_toStartOf="@+id/badge_friend_50"
+                        app:layout_constraintTop_toBottomOf="@+id/badge_friend_50" />
+
+                    <ImageView
+                        android:id="@+id/badge_friend_100"
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
+                        android:layout_marginStart="16dp"
+                        app:shareable="@{viewModel.friendCount >= 100}"
+                        app:send="@{activity}"
+                        app:layout_constraintEnd_toStartOf="@+id/badge_friend_300"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toEndOf="@+id/badge_friend_50"
+                        app:layout_constraintTop_toTopOf="@+id/badge_friend_50"
+                        app:srcCompat="@{viewModel.friendCount >= 100 ? @drawable/badge_100_friend : @drawable/badge_question }"
+                        tools:layout_editor_absoluteY="0dp" />
+
+                    <TextView
+                        android:id="@+id/badge_friend_100_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:fontFamily="@font/noto_sans"
+                        android:letterSpacing="0.15"
+                        android:text="@string/badge_friend_100"
+                        android:textColor="@{viewModel.friendCount >= 100 ? @color/badge_friend : @color/grey_transparent}"
+                        android:textSize="14sp"
+                        app:layout_constraintEnd_toEndOf="@+id/badge_friend_100"
+                        app:layout_constraintStart_toStartOf="@+id/badge_friend_100"
+                        app:layout_constraintTop_toBottomOf="@+id/badge_friend_100" />
+
+                    <ImageView
+                        android:id="@+id/badge_friend_300"
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        app:shareable="@{viewModel.friendCount >= 300}"
+                        app:send="@{activity}"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toEndOf="@+id/badge_friend_100"
+                        app:layout_constraintTop_toTopOf="@+id/badge_friend_50"
+                        app:srcCompat="@{viewModel.friendCount >= 300 ? @drawable/badge_300_friend : @drawable/badge_question }" />
+
+                    <TextView
+                        android:id="@+id/badge_friend_300_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:fontFamily="@font/noto_sans"
+                        android:letterSpacing="0.15"
+                        android:text="@string/badge_friend_300"
+                        android:textColor="@{viewModel.friendCount >= 300 ? @color/badge_friend : @color/grey_transparent}"
+                        android:textSize="14sp"
+                        app:layout_constraintEnd_toEndOf="@+id/badge_friend_300"
+                        app:layout_constraintStart_toStartOf="@+id/badge_friend_300"
+                        app:layout_constraintTop_toBottomOf="@+id/badge_friend_300" />
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            </com.google.android.material.card.MaterialCardView>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
+
+
 </layout>

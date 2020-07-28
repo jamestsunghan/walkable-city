@@ -10,6 +10,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/white"
         tools:context=".loadroute.LoadRouteFragment">
 
         <androidx.viewpager.widget.ViewPager
@@ -24,6 +25,7 @@
                 android:id="@+id/tabs_load_route"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
+                android:background="@color/white"
                 app:tabIndicator="@color/primaryColor"
                 app:tabTextAppearance="@style/TabForLoadTitle"
                 app:tabSelectedTextColor="@color/secondaryColor"

@@ -1,7 +1,7 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
+    <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/primaryColor</item>
         <item name="colorPrimaryDark">@color/primaryDarkColor</item>
@@ -17,6 +17,14 @@
 
     <style name="ProgressTheme" parent="Widget.AppCompat.ProgressBar">
         <item name="colorAccent">@color/black</item>
+    </style>
+
+    <style name="ProgressPrimaryTheme" parent="Widget.AppCompat.ProgressBar">
+        <item name="colorAccent">@color/primaryDarkColor</item>
+    </style>
+
+    <style name="ProgressDarkTheme" parent="Widget.AppCompat.ProgressBar">
+        <item name="colorAccent">@color/white</item>
     </style>
 
     <style name="ProgressFavTheme" parent="Widget.AppCompat.ProgressBar">

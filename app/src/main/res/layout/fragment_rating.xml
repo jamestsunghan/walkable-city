@@ -6,9 +6,10 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".loadroute.LoadRouteFragment">
+        android:background="@color/white"
+        tools:context=".rating.RatingFragment">
 
-        <androidx.viewpager.widget.ViewPager
+        <tw.com.walkablecity.CustomViewPager
             android:id="@+id/viewpager_rating"
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -20,11 +21,12 @@
                 android:id="@+id/tabs_rating"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
+                android:background="@color/white"
                 app:tabIndicator="@color/primaryColor"
                 app:tabTextAppearance="@style/TabForLoadTitle"
                 app:tabSelectedTextColor="@color/secondaryColor"
                 app:tabTextColor="@color/primaryColor"/>
-        </androidx.viewpager.widget.ViewPager>
+        </tw.com.walkablecity.CustomViewPager>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
