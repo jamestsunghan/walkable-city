@@ -3,6 +3,7 @@ package tw.com.walkablecity.home
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity.RESULT_OK
+import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -141,19 +142,12 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationClick
             viewModelInit.permissionDenied()
         }
 
-        if(isPermissionGranted(permissions,grantResults, Manifest.permission.CAMERA)){
-            viewModelInit.cameraPermissionGranted()
-            initializeCamera()
-        }else{
-            if(!shouldShowRequestPermissionRationale(Manifest.permission.CAMERA)){
-                viewModelInit.permissionDeniedForever()
-            }
-            viewModelInit.cameraPermissionDenied()
-        }
-
     }
 
-
+    override fun onStart() {
+        super.onStart()
+        checkPermission()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -189,21 +183,19 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationClick
             this.waypointsLatLng = this.waypoints.toLatLngPoints()
             this.waypoints = listOf()
         }
-
-        if(checkSelfPermission(WalkableApp.instance, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
-            viewModel.permissionGranted()
-            viewModel.clientCurrentLocation()
-        }else{
-            if(!shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)){
-                viewModel.permissionDeniedForever()
-            }
-            requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), REQUEST_LOCATION)
-//            requestPermission(requireActivity() as MainActivity, REQUEST_LOCATION
-//                , Manifest.permission.ACCESS_FINE_LOCATION,true)
-        }
+        checkPermission()
 
         binding.permissionDialogButton.setOnClickListener {
-            requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), REQUEST_LOCATION)
+            when(viewModel.dontAskAgain.value){
+                true ->{
+                    val intent = Intent()
+                        .setAction(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                        .setData(Uri.fromParts("package",requireContext().packageName, null))
+                    startActivity(intent)
+
+                }
+                else -> requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), REQUEST_LOCATION)
+            }
         }
 
         binding.takePicture.setOnClickListener {
@@ -275,6 +267,10 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationClick
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
 
+
+        viewModel.dontAskAgain.observe(viewLifecycleOwner, Observer{
+            Logger.d("dont ask again ${it ?: "null"}")
+        })
 
         /**
          * Manipulates the map once available.
@@ -503,6 +499,18 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationClick
             }
         }, handler)
 
+    }
+
+    fun checkPermission(){
+        if(checkSelfPermission(WalkableApp.instance, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+            viewModelInit.permissionGranted()
+            viewModelInit.clientCurrentLocation()
+        }else{
+            if(!shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)){
+                viewModelInit.permissionDeniedForever()
+            }
+            requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), REQUEST_LOCATION)
+        }
     }
 
 

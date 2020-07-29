@@ -27,6 +27,7 @@ import com.google.android.gms.maps.model.*
 import tw.com.walkablecity.Logger
 
 import tw.com.walkablecity.R
+import tw.com.walkablecity.Util
 import tw.com.walkablecity.WalkableApp
 import tw.com.walkablecity.databinding.FragmentExploreBinding
 import tw.com.walkablecity.ext.getCroppedBitmap
@@ -63,6 +64,32 @@ class ExploreFragment : Fragment(), OnMapReadyCallback {
         }
 
     }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if(!(requestCode == HomeFragment.REQUEST_LOCATION || requestCode == HomeFragment.REQUEST_CAMERA)) return
+        if(Util.isPermissionGranted(
+                permissions,
+                grantResults,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            )
+        ){
+            viewModel.permissionGranted()
+            viewModel.clientCurrentLocation()
+        }else{
+            if(!shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)){
+                viewModel.permissionDeniedForever()
+            }
+            viewModel.permissionDenied()
+        }
+
+    }
+
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

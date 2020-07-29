@@ -27,6 +27,10 @@
         <item name="colorAccent">@color/white</item>
     </style>
 
+    <style name="SpinnerTheme" parent="android:Widget.Spinner">
+        <item name="android:background">@drawable/bg_spinner</item>
+    </style>
+
     <style name="ProgressFavTheme" parent="Widget.AppCompat.ProgressBar">
         <item name="colorAccent">@color/red_heart_c73e3a</item>
     </style>

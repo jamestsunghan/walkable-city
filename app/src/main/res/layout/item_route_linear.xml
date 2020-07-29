@@ -33,7 +33,7 @@
             android:text="@{route.title}"
             android:letterSpacing="0.15"
             android:textColor="@color/primaryDarkColor"
-            android:textSize="20sp"
+            android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintStart_toEndOf="@+id/map_view"
             app:layout_constraintTop_toTopOf="@+id/map_view"
@@ -69,11 +69,17 @@
 
         <Spinner
             android:id="@+id/character_spinner"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:gravity="center"
             android:spinnerMode="dropdown"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/map_view"/>
+            android:popupBackground="@drawable/bg_walker_prepare"
+            android:background="@drawable/bg_spinner"
+            android:backgroundTint="@color/primaryDarkColor"
+            app:layout_constraintStart_toStartOf="@+id/select_route"
+            app:layout_constraintEnd_toEndOf="@+id/select_route"
+            app:layout_constraintTop_toTopOf="@+id/map_view"
+            app:layout_constraintBottom_toTopOf="@+id/select_route"/>
 
         <TextView
             android:id="@+id/select_route"

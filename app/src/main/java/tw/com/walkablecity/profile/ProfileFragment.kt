@@ -21,6 +21,9 @@ class ProfileFragment : Fragment() {
 
     private val viewModel: ProfileViewModel by viewModels{getVMFactory()}
 
+
+
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
