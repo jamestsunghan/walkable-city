@@ -304,9 +304,14 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationClick
             it?.let{
                 mapFragment.getMapAsync {map ->
                     Logger.d("direction result $it")
-                    Logger.d("duration ${it.routes[0].legs.map{leg -> leg.distance}}")
+                    if(it.routes.isNotEmpty()){
+                        Logger.d("duration ${it.routes[0].legs.map{leg -> leg.distance}}")
 
-                    map.addPolyline(PolylineOptions().color(getColor(R.color.secondaryLightColor)).addAll(PolyUtil.decode(it.routes[0].overviewPolyline?.points)))
+                        map.addPolyline(PolylineOptions()
+                            .color(getColor(R.color.secondaryLightColor))
+                            .addAll(PolyUtil.decode(it.routes[0].overviewPolyline?.points)))
+                    }
+
                 }
             }
         })

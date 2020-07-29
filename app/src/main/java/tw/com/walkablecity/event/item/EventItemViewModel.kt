@@ -68,6 +68,7 @@ class EventItemViewModel(val walkableRepository: WalkableRepository, val eventPa
         _eventList.value = eventAllList.value?.filter{
             it.type == sorting
         }
+        _filter.value = sorting
     }
 
     fun navigateToEventDetail(event: Event){
