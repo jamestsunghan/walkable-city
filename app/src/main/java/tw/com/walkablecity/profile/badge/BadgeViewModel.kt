@@ -1,7 +1,103 @@
 package tw.com.walkablecity.profile.badge
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import tw.com.walkablecity.R
+import tw.com.walkablecity.UserManager
+import tw.com.walkablecity.Util.getString
+import tw.com.walkablecity.data.LoadStatus
+import tw.com.walkablecity.data.Result
+import tw.com.walkablecity.data.User
+import tw.com.walkablecity.data.source.WalkableRepository
 
-class BadgeViewModel : ViewModel() {
-    // TODO: Implement the ViewModel
+class BadgeViewModel(val walkableRepository: WalkableRepository) : ViewModel() {
+    private val _status = MutableLiveData<LoadStatus>()
+    val status: LiveData<LoadStatus> get() = _status
+
+    private val _error = MutableLiveData<String>()
+    val error: LiveData<String> get() = _error
+
+    private val _friendCount = MutableLiveData<Int>()
+    val friendCount: LiveData<Int> get() = _friendCount
+
+    private val _eventCount = MutableLiveData<Int>()
+    val eventCount: LiveData<Int> get() = _eventCount
+
+    private val _shareThisBadge = MutableLiveData<Boolean>()
+
+    private val viewModelJob = Job()
+    private val coroutineScope = CoroutineScope(Dispatchers.Main + viewModelJob)
+
+    init{
+        UserManager.user?.let{
+            getFriendCount(requireNotNull(it.id))
+            getEventCount(it)
+        }
+
+    }
+
+    fun getFriendCount(userId: String){
+        coroutineScope.launch {
+            _status.value = LoadStatus.LOADING
+
+            when(val result = walkableRepository.getUserFriends(userId)){
+
+                is Result.Success ->{
+                    _error.value = null
+                    _status.value = LoadStatus.DONE
+                    _friendCount.value = result.data.size
+                }
+                is Result.Fail ->{
+                    _error.value = result.error
+                    _status.value = LoadStatus.ERROR
+                }
+                is Result.Error ->{
+                    _error.value = result.exception.toString()
+                    _status.value = LoadStatus.ERROR
+                }
+                else->{
+                    _error.value = getString(R.string.not_here)
+                    _status.value = LoadStatus.ERROR
+                }
+
+            }
+
+        }
+    }
+
+    fun getEventCount(user: User){
+        coroutineScope.launch {
+            _status.value = LoadStatus.LOADING
+
+            when(val result = walkableRepository.getUserParticipateEvent(user)){
+
+                is Result.Success ->{
+                    _error.value = null
+                    _status.value = LoadStatus.DONE
+                    _eventCount.value = result.data.size
+                }
+                is Result.Fail ->{
+                    _error.value = result.error
+                    _status.value = LoadStatus.ERROR
+                }
+                is Result.Error ->{
+                    _error.value = result.exception.toString()
+                    _status.value = LoadStatus.ERROR
+                }
+                else->{
+                    _error.value = getString(R.string.not_here)
+                    _status.value = LoadStatus.ERROR
+                }
+
+            }
+
+        }
+    }
+
+
 }

@@ -5,13 +5,10 @@
 
     <data>
 
-        <variable
-            name="viewModel"
-            type="tw.com.walkablecity.rating.item.RatingItemViewModel" />
-
+        <variable name="viewModel" type="tw.com.walkablecity.rating.item.RatingItemViewModel" />
         <import type="android.view.View" />
-
         <import type="tw.com.walkablecity.rating.RatingType" />
+        <import type="tw.com.walkablecity.data.LoadStatus"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -53,6 +50,15 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"/>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycler_photo_point"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="@+id/map"
+                    android:orientation="horizontal"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:photopts="@{viewModel.photos}" />
 
                 <View
                     android:id="@+id/walk_divider"
@@ -533,13 +539,24 @@
             android:paddingEnd="8dp"
             android:paddingBottom="4dp"
             android:text="@string/finish_rating"
-            android:textColor="@color/primaryDarkColor"
+            android:textColor="@{viewModel.status == LoadStatus.LOADING ? @color/white : @color/primaryDarkColor}"
             android:textSize="18sp"
             android:textStyle="bold"
             android:visibility="@{viewModel.sendRating == true ? View.GONE : View.VISIBLE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
+
+        <ProgressBar
+            android:id="@+id/progress_login"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:theme="@style/ProgressPrimaryTheme"
+            android:visibility="@{viewModel.status == LoadStatus.LOADING ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="@+id/send_rating"
+            app:layout_constraintEnd_toEndOf="@+id/send_rating"
+            app:layout_constraintStart_toStartOf="@+id/send_rating"
+            app:layout_constraintTop_toTopOf="@+id/send_rating" />
 
         <TextView
             android:id="@+id/no_more_route"

@@ -1,20 +1,22 @@
 package tw.com.walkablecity.detail
 
+import android.graphics.Rect
+import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.recyclerview.widget.LinearSnapHelper
+import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import tw.com.walkablecity.R
+import tw.com.walkablecity.UserManager
 import tw.com.walkablecity.Util.getString
-import tw.com.walkablecity.data.Comment
-import tw.com.walkablecity.data.LoadStatus
-import tw.com.walkablecity.data.Result
-import tw.com.walkablecity.data.Route
+import tw.com.walkablecity.Util.setDp
+import tw.com.walkablecity.data.*
 import tw.com.walkablecity.data.source.WalkableRepository
-import tw.com.walkablecity.userId
 
 class DetailViewModel(val walkableRepository: WalkableRepository, val route: Route) : ViewModel() {
 
@@ -36,16 +38,42 @@ class DetailViewModel(val walkableRepository: WalkableRepository, val route: Rou
     val commentList: LiveData<List<Comment>> get() = _commentList
 
     private val _favoriteAdded = MutableLiveData<Boolean>().apply{
-        value = route.followers.contains(userId)
+        value = route.followers.contains(requireNotNull(UserManager.user?.id))
     }
     val favoriteAdded: LiveData<Boolean> get() = _favoriteAdded
+
+    private val _photoPoints = MutableLiveData<List<PhotoPoint>>()
+    val photoPoints: LiveData<List<PhotoPoint>> get() = _photoPoints
+
+    private val _displayPhotos = MutableLiveData<List<String>>()
+    val displayPhotos: LiveData<List<String>> get() = _displayPhotos
+
+    private val _snapPosition = MutableLiveData<Int>()
+    val snapPosition: LiveData<Int> get() = _snapPosition
 
     private val viewModelJob = Job()
     private val coroutineScope = CoroutineScope(Dispatchers.Main + viewModelJob)
 
+    val decoration = object : RecyclerView.ItemDecoration() {
+        override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
+            super.getItemOffsets(outRect, view, parent, state)
+
+            // Add top margin only for the first item to avoid double space between items
+            if (parent.getChildLayoutPosition(view) == 0) {
+                outRect.left = 0
+            } else {
+                outRect.left = setDp(16f).toInt()
+            }
+        }
+    }
+
 
     init{
-        getComment(requireNotNull(route.id))
+        route.id?.let{
+
+            getComment(it)
+            downloadPhotoPoints(it)
+        }
     }
 
     override fun onCleared() {
@@ -61,11 +89,22 @@ class DetailViewModel(val walkableRepository: WalkableRepository, val route: Rou
         _natigateToRanking.value = false
     }
 
+    fun onGalleryScrollChange(layoutManager: RecyclerView.LayoutManager?, linearSnapHelper: LinearSnapHelper){
+        val snapView = linearSnapHelper.findSnapView(layoutManager)
+        snapView?.let{
+            layoutManager?.getPosition(snapView)?.let{
+                if(it != snapPosition.value){
+                    _snapPosition.value = it
+                }
+            }
+        }
+    }
+
     fun switchState(){
         when(favoriteAdded.value){
-            true -> removeUserFromFollowers(userId, route)
-            false -> addUserToFollowers(userId, route)
-            else -> addUserToFollowers(userId, route)
+            true -> removeUserFromFollowers(requireNotNull(UserManager.user?.id), route)
+            false -> addUserToFollowers(requireNotNull(UserManager.user?.id), route)
+            else -> addUserToFollowers(requireNotNull(UserManager.user?.id), route)
         }
     }
 
@@ -162,4 +201,48 @@ class DetailViewModel(val walkableRepository: WalkableRepository, val route: Rou
         }
 
     }
+
+    fun addMaptodisplayPhotos(list: List<PhotoPoint>){
+        _displayPhotos.value = listOf(requireNotNull(route.mapImage)) + list.map{ requireNotNull(it.photo) }
+    }
+
+    fun downloadPhotoPoints(routeId: String){
+
+        coroutineScope.launch {
+
+            _status.value = LoadStatus.LOADING
+
+            val result = walkableRepository.downloadPhotoPoints(routeId)
+
+            _photoPoints.value = when(result){
+
+                is Result.Success ->{
+                    _error.value = null
+                    _status.value = LoadStatus.ERROR
+                    result.data
+                }
+                is Result.Fail ->{
+                    _error.value = result.error
+                    _status.value = LoadStatus.ERROR
+                    null
+                }
+                is Result.Error ->{
+                    _error.value = result.exception.toString()
+                    _status.value = LoadStatus.ERROR
+                    null
+                }
+                else ->{
+                    _error.value = getString(R.string.not_here)
+                    _status.value = LoadStatus.ERROR
+                    null
+                }
+
+            }
+
+
+        }
+
+
+    }
+
 }

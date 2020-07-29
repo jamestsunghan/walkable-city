@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable name="friendList" type="tw.com.walkablecity.data.FriendListWrapper" />
+        <variable name="position" type="Integer" />
+        <variable name="viewModel" type="tw.com.walkablecity.eventdetail.EventDetailViewModel" />
+        <import type="tw.com.walkablecity.data.FrequencyType"/>
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/event_detail_fq_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/noto_sans"
+            android:gravity="center"
+            android:letterSpacing="0.15"
+            android:padding="8dp"
+            android:text="@{viewModel.event.target.frequencyType == FrequencyType.DAILY ? String.format( @string/day_number, position) : (viewModel.event.target.frequencyType == FrequencyType.WEEKLY ? String.format( @string/week_number, position) : String.format( @string/month_number, position))}"
+            android:textColor="@color/primaryDarkColor"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_fq"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_margin="16dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            android:orientation="vertical"
+            app:layout_constraintTop_toBottomOf="@+id/event_detail_fq_title"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:friendly="@{friendList.data}"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

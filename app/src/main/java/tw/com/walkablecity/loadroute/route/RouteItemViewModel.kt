@@ -1,6 +1,6 @@
 package tw.com.walkablecity.loadroute.route
 
-import android.util.Log
+
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -8,7 +8,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import tw.com.walkablecity.Logger
 import tw.com.walkablecity.R
+import tw.com.walkablecity.UserManager
 import tw.com.walkablecity.WalkableApp
 import tw.com.walkablecity.data.LoadStatus
 import tw.com.walkablecity.data.Result
@@ -17,7 +19,6 @@ import tw.com.walkablecity.data.RouteRating
 import tw.com.walkablecity.data.RouteSorting
 import tw.com.walkablecity.data.source.WalkableRepository
 import tw.com.walkablecity.loadroute.LoadRouteType
-import tw.com.walkablecity.userId
 
 class RouteItemViewModel( private val walkableRepository: WalkableRepository, val loadRouteType: LoadRouteType) : ViewModel() {
 
@@ -55,7 +56,7 @@ class RouteItemViewModel( private val walkableRepository: WalkableRepository, va
 
     init{
 
-        getRoutesByType(userId,loadRouteType)
+        getRoutesByType(requireNotNull(UserManager.user?.id),loadRouteType)
 
     }
 
@@ -121,8 +122,8 @@ class RouteItemViewModel( private val walkableRepository: WalkableRepository, va
             }
         }?.reversed() ?: listOf()
         adapter.notifyDataSetChanged()
-        Log.d("JJ","sortingList ${routeList.value?.map{it.title} ?: "null"}")
-        Log.d("JJ","sorting tranquility ${routeList.value?.map{it.ratingAvr?.coverage} ?: "null"}")
+        Logger.d("sortingList ${routeList.value?.map{it.title} ?: "null"}")
+        Logger.d("sorting tranquility ${routeList.value?.map{it.ratingAvr?.coverage} ?: "null"}")
     }
 
     fun setTimeFilter(range: List<Float>){

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="primaryColor">#a69b97</color>
+    <color name="primaryLightColor">#08192d</color>
+    <color name="primaryDarkColor">#d7ccc8</color>
+    <color name="secondaryColor">#33691e</color>
+    <color name="secondaryLightColor">#629749</color>
+    <color name="secondaryDarkColor">#629749</color>
+    <color name="primaryTextColor">#000000</color>
+    <color name="secondaryTextColor">#ffffff</color>
+
+
+    <color name="white">#08192d</color>
+    <color name="white_transparent">#770f2540</color>
+    <color name="real_transparent">#00ffffff</color>
+    <color name="black">#ffffff</color>
+
+    <color name="blue_2e5c6e">#2e5c6e</color>
+
+    <color name="bg_comment">#55d7ccc8</color>
+
+    <color name="red_heart_c73e3a">#c73e3a</color>
+
+    <color name="hexagon_fill">#99629749</color>
+
+    <color name="event_frequency">#55b19693</color>
+    <color name="event_frequency_darker">#99b19693</color>
+    <color name="event_frequency_darkest">#b19693</color>
+    <color name="event_distance_group">#55b5caa0</color>
+    <color name="event_distance_group_darker">#99b5caa0</color>
+    <color name="event_distance_group_darkest">#b5caa0</color>
+    <color name="event_distance_race">#5591ad70</color>
+    <color name="event_distance_race_darker">#9991ad70</color>
+    <color name="event_distance_race_darkest">#91ad70</color>
+    <color name="event_hour_group">#55a5dee4</color>
+    <color name="event_hour_group_darker">#99a5dee4</color>
+    <color name="event_hour_group_darkest">#a5dee4</color>
+    <color name="event_hour_race">#5566bab7</color>
+    <color name="event_hour_race_darker">#9966bab7</color>
+    <color name="event_hour_race_darkest">#66bab7</color>
+
+    <color name="bronze">#B35C37</color>
+    <color name="silver">#91989f</color>
+    <color name="gold">#efbb24</color>
+
+    <color name="grey_transparent">#33BDC0BA</color>
+
+    <color name="badge_hour">#E2943B</color>
+    <color name="badge_event">#EEA9A9</color>
+    <color name="badge_friend">#A5DEE4</color>
+
+    <color name="walk_path">#7db9de</color>
+</resources>

@@ -1,11 +1,12 @@
 package tw.com.walkablecity.favorite
 
-import android.util.Log
+
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import tw.com.walkablecity.Logger
 import tw.com.walkablecity.data.Route
 import tw.com.walkablecity.databinding.ItemFavoriteRouteFilterBinding
 import tw.com.walkablecity.databinding.ItemFavoriteRouteLinearBinding
@@ -32,10 +33,10 @@ class FavoriteAdapter(private val viewModel: FavoriteViewModel)
     class RouteViewHolder(private val binding: ItemFavoriteRouteLinearBinding): RecyclerView.ViewHolder(binding.root){
         fun bind(route: Route, viewModel: FavoriteViewModel){
 
-            Log.d("JJ","sortList ${route.ratingAvr.toSortList(viewModel.filter.value)} ratingAvr ${route.ratingAvr}")
+            Logger.d("sortList ${route.ratingAvr.toSortList(viewModel.filter.value)} ratingAvr ${route.ratingAvr}")
             binding.characterSpinner.adapter = CharacterSpinnerAdapter(route.ratingAvr.toSortList(viewModel.filter.value))
             binding.route = route
-            binding.selectRoute.setOnClickListener {
+            binding.root.setOnClickListener {
                 viewModel.selectRoute.value = route
             }
             binding.executePendingBindings()

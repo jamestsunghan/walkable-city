@@ -13,6 +13,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/white"
         tools:context=".detail.DetailFragment">
 
         <ScrollView
@@ -32,15 +33,32 @@
                 android:layout_height="wrap_content"
                 tools:context=".rating.RatingFragment">
 
-                <ImageView
-                    android:id="@+id/route_in_map"
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycler_detail_url"
                     android:layout_width="match_parent"
                     android:layout_height="250dp"
-                    android:scaleType="centerCrop"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:imageUrl="@{route.mapImage}" />
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    android:orientation="horizontal"
+                    app:routeImage="@{viewModel.displayPhotos}"/>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycler_circle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="8dp"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginBottom="30dp"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    android:orientation="horizontal"
+                    app:addDecoration="@{viewModel.decoration}"
+                    app:counting="@{viewModel.displayPhotos.size}"
+                    app:layout_constraintBottom_toBottomOf="@+id/recycler_detail_url"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"/>
 
                 <View
                     android:id="@+id/walk_divider"
@@ -69,7 +87,7 @@
                     android:textSize="16sp"
                     app:layout_constraintEnd_toEndOf="@+id/walk_divider"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/route_in_map" />
+                    app:layout_constraintTop_toBottomOf="@+id/recycler_detail_url" />
 
                 <TextView
                     android:id="@+id/walk_distance"
@@ -87,7 +105,7 @@
                     android:textSize="16sp"
                     app:layout_constraintEnd_toStartOf="@+id/fav_icon"
                     app:layout_constraintStart_toStartOf="@+id/walk_divider"
-                    app:layout_constraintTop_toBottomOf="@+id/route_in_map" />
+                    app:layout_constraintTop_toBottomOf="@+id/recycler_detail_url" />
 
                 <ImageView
                     android:id="@+id/fav_icon"
@@ -97,7 +115,7 @@
                     android:layout_marginEnd="16dp"
                     android:visibility="@{viewModel.favStatus == LoadStatus.LOADING ? View.INVISIBLE : View.VISIBLE}"
                     android:tint="@color/red_heart_c73e3a"
-                    app:layout_constraintTop_toBottomOf="@+id/route_in_map"
+                    app:layout_constraintTop_toBottomOf="@+id/recycler_detail_url"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:switch="@{viewModel.favoriteAdded}"
                     android:onClick="@{() -> viewModel.switchState()}"

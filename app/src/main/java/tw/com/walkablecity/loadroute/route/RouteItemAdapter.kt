@@ -1,11 +1,12 @@
 package tw.com.walkablecity.loadroute.route
 
-import android.util.Log
+
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import tw.com.walkablecity.Logger
 import tw.com.walkablecity.R
 import tw.com.walkablecity.Util
 import tw.com.walkablecity.data.Route
@@ -33,7 +34,7 @@ class RouteItemAdapter(private val viewModel: RouteItemViewModel): ListAdapter<R
     class RouteViewHolder(private val binding: ItemRouteLinearBinding): RecyclerView.ViewHolder(binding.root){
         fun bind(route: Route, viewModel: RouteItemViewModel){
 
-            Log.d("JJ","sortList ${route.ratingAvr.toSortList(viewModel.filter.value)} ratingAvr ${route.ratingAvr}")
+            Logger.d("sortList ${route.ratingAvr.toSortList(viewModel.filter.value)} ratingAvr ${route.ratingAvr}")
             binding.characterSpinner.adapter = CharacterSpinnerAdapter(route.ratingAvr.toSortList(viewModel.filter.value))
             binding.route = route
             binding.selectRoute.setOnClickListener {

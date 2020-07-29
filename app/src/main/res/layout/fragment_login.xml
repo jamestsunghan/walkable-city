@@ -8,31 +8,157 @@
         <variable
             name="viewModel"
             type="tw.com.walkablecity.login.LoginViewModel" />
+        <import type="tw.com.walkablecity.data.LoadStatus"/>
+        <import type="android.view.View"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/white"
         tools:context=".login.LoginFragment">
 
-        <com.google.android.gms.common.SignInButton
-            android:id="@+id/signInButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="visible"
+        <ImageView
+            android:id="@+id/walk_icon"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:tint="@color/primaryDarkColor"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.45"
+            app:srcCompat="@drawable/ic_footprint" />
+
+        <TextView
+            android:id="@+id/walk_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/noto_sans"
+            android:gravity="center"
+            android:letterSpacing="0.15"
+            android:paddingStart="8dp"
+            android:paddingTop="4dp"
+            android:paddingEnd="8dp"
+            android:paddingBottom="4dp"
+            android:textColor="@color/primaryDarkColor"
+            android:text="@string/walkable_city"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="@+id/walk_icon"
+            app:layout_constraintStart_toStartOf="@+id/walk_icon"
+            app:layout_constraintTop_toBottomOf="@+id/walk_icon"
+            android:layout_marginTop="16dp" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/edit_login_id"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginEnd="32dp"
+            android:visibility="@{viewModel.status == LoadStatus.LOADING || viewModel.firebaseUser == null ? View.INVISIBLE : View.VISIBLE}"
+            android:background="@color/primaryLightColor"
+            app:endIconDrawable="@drawable/map_search_24px"
+            app:endIconMode="custom"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/walk_title"
+            app:startIconDrawable="@drawable/ic_footprint">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:text="@={viewModel.idCustom}"
+                android:background="@color/primaryLightColor"
+                android:fontFamily="@font/noto_sans"
+                android:hint="@string/input_custom_id"
+                android:letterSpacing="0.15" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.gms.common.SignInButton
+            android:id="@+id/signInButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:visibility="@{viewModel.status == LoadStatus.LOADING || viewModel.firebaseUser != null ? View.GONE : View.VISIBLE}"
+            app:layout_constraintTop_toBottomOf="@+id/edit_login_id"
+            app:layout_constraintEnd_toEndOf="@+id/edit_login_id"
+            app:layout_constraintStart_toStartOf="@+id/edit_login_id"
             tools:visibility="gone" />
 
         <TextView
-            android:id="@+id/user_test"
+            android:id="@+id/getInButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/bg_walker_prepare"
+            android:backgroundTint="@color/primaryDarkColor"
+            android:textColor="@color/white"
+            android:text="@string/enter_walkable"
+            android:gravity="center"
+            android:padding="8dp"
+            android:visibility="@{viewModel.status == LoadStatus.LOADING || viewModel.firebaseUser == null ? View.GONE : View.VISIBLE}"
+            app:layout_constraintTop_toBottomOf="@+id/edit_login_id"
+            app:layout_constraintEnd_toEndOf="@+id/edit_login_id"
+            app:layout_constraintStart_toStartOf="@+id/edit_login_id"
+            android:fontFamily="@font/noto_sans"
+            android:textSize="16sp"
+            android:letterSpacing="0.15"
+            tools:visibility="gone" />
+
+        <TextView
+            android:id="@+id/credit_freepik"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginBottom="8dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:textColor="@color/primaryColor"
+            android:text="@string/freepik"
+            android:gravity="center"
+            android:padding="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/signInButton"/>
+            app:layout_constraintStart_toStartOf="parent"
+            android:fontFamily="@font/noto_sans"
+            android:textSize="12sp"
+            android:letterSpacing="0.15"
+            />
+
+        <TextView
+            android:id="@+id/credit_icon_geek"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:textColor="@color/primaryColor"
+            android:text="@string/icon_geek_26"
+            android:gravity="center"
+            android:padding="8dp"
+            app:layout_constraintBottom_toTopOf="@+id/credit_freepik"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:fontFamily="@font/noto_sans"
+            android:textSize="12sp"
+            android:letterSpacing="0.15"
+            />
+
+        <ProgressBar
+            android:id="@+id/progress_login"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:theme="@style/ProgressPrimaryTheme"
+            android:visibility="@{viewModel.status == LoadStatus.LOADING ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="@+id/edit_login_id"
+            app:layout_constraintEnd_toEndOf="@+id/edit_login_id"
+            app:layout_constraintStart_toStartOf="@+id/edit_login_id"
+            app:layout_constraintTop_toTopOf="@+id/edit_login_id" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

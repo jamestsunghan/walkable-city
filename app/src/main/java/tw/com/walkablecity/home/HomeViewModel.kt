@@ -1,8 +1,15 @@
 package tw.com.walkablecity.home
 
+
+import android.annotation.SuppressLint
+import android.content.pm.PackageManager
+import android.content.res.Configuration
+import android.hardware.Camera
+import android.hardware.camera2.CameraDevice
+import android.hardware.camera2.CameraManager
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
@@ -13,30 +20,45 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.Timestamp
 import com.google.firebase.Timestamp.now
 import com.google.firebase.firestore.GeoPoint
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
+import tw.com.walkablecity.Logger
 import tw.com.walkablecity.R
+import tw.com.walkablecity.UserManager
 import tw.com.walkablecity.Util.getColor
 import tw.com.walkablecity.Util.getString
 import tw.com.walkablecity.WalkableApp
 import tw.com.walkablecity.data.*
 import tw.com.walkablecity.data.source.WalkableRepository
 import tw.com.walkablecity.ext.toDistance
+import tw.com.walkablecity.ext.toGeoPoint
+import java.lang.Exception
+import java.lang.Runnable
 import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.coroutines.resume
 
-class HomeViewModel(val walkableRepository: WalkableRepository, val argument: Route?): ViewModel(){
+class HomeViewModel(val walkableRepository: WalkableRepository, val argument: Route?, val destination: LatLng?): ViewModel(){
 
     companion object{
         const val UPDATE_INTERVAL_IN_MILLISECONDS = 5000L
         const val FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS = UPDATE_INTERVAL_IN_MILLISECONDS / 2
     }
 
+    val waypointLatLng = MutableLiveData<List<LatLng>>()
+
+    private val _permissionDenied =  MutableLiveData<Boolean>(false)
+    val permissionDenied: LiveData<Boolean> get() = _permissionDenied
+
+    private val _cameraPermissionDenied =  MutableLiveData<Boolean>(false)
+    val cameraPermissionDenied: LiveData<Boolean> get() = _cameraPermissionDenied
+
     private val fusedLocationClient = FusedLocationProviderClient(WalkableApp.instance)
 
     private val _checkPermission = MutableLiveData<Boolean>(false)
     val checkPermission: LiveData<Boolean> get() = _checkPermission
+
+    private val _dontAskAgain = MutableLiveData<Boolean>(false)
+    val dontAskAgain: LiveData<Boolean> get() = _dontAskAgain
 
     private val _navigateToLoad = MutableLiveData<Boolean>()
     val navigateToLoad: LiveData<Boolean> get() = _navigateToLoad
@@ -50,9 +72,6 @@ class HomeViewModel(val walkableRepository: WalkableRepository, val argument: Ro
     private val _walkerStatus = MutableLiveData<WalkerStatus>()
     val walkerStatus: LiveData<WalkerStatus> get() = _walkerStatus
 
-
-
-
     private val _loadStatus = MutableLiveData<LoadStatus>()
     val loadStatus: LiveData<LoadStatus> get() = _loadStatus
 
@@ -62,12 +81,14 @@ class HomeViewModel(val walkableRepository: WalkableRepository, val argument: Ro
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> get() = _error
 
+    private val _photoPoints = MutableLiveData<MutableList<PhotoPoint>>(mutableListOf())
+    val photopoints: LiveData<MutableList<PhotoPoint>> get() = _photoPoints
+
 
 
     val startTime = MutableLiveData<Timestamp>()
 
     val duration = MutableLiveData<Long>()
-
 
     val endTime = MutableLiveData<Timestamp>()
 
@@ -100,6 +121,8 @@ class HomeViewModel(val walkableRepository: WalkableRepository, val argument: Ro
     }
     private var locationCallback: LocationCallback
 
+    val cameraClicked = MutableLiveData<Boolean>(false)
+
     private val viewModelJob = Job()
     private val coroutineScope = CoroutineScope(Dispatchers.Main + viewModelJob)
 
@@ -109,11 +132,11 @@ class HomeViewModel(val walkableRepository: WalkableRepository, val argument: Ro
     }
 
     init{
-        val date = SimpleDateFormat("yyyyMMddHHmmss").format(now().seconds.times(1000)).toLong()
-        Log.d("JJ","date $date")
+        val date = SimpleDateFormat("yyyyMMddHHmmss", Locale.TAIWAN).format(now().seconds.times(1000)).toLong()
+        Logger.d("date $date")
 
         _walkerStatus.value = WalkerStatus.PREPARE
-        clientCurrentLocation()
+//        clientCurrentLocation()
         locationCallback = object: LocationCallback(){
             override fun onLocationResult(p0: LocationResult?) {
                 super.onLocationResult(p0)
@@ -127,6 +150,30 @@ class HomeViewModel(val walkableRepository: WalkableRepository, val argument: Ro
                 super.onLocationAvailability(p0)
             }
         }
+    }
+
+    fun dayNightSwitch(){
+
+    }
+
+    fun permissionDeniedForever(){
+        _dontAskAgain.value = true
+    }
+
+    fun permissionDenied(){
+        _permissionDenied.value = true
+    }
+
+    fun permissionGranted(){
+        _permissionDenied.value = false
+    }
+
+    fun cameraPermissionDenied(){
+        _cameraPermissionDenied.value = true
+    }
+
+    fun cameraPermissionGranted(){
+        _cameraPermissionDenied.value = false
     }
 
     fun navigateToLoad(){
@@ -150,14 +197,24 @@ class HomeViewModel(val walkableRepository: WalkableRepository, val argument: Ro
 
     fun navigateToRatingComplete(){
         _navigateToRating.value = null
+        _walkerStatus.value = WalkerStatus.PREPARE
+
+    }
+
+    fun addPhotoPoint(url: String){
+        val photoPoint = PhotoPoint(
+            point = trackPoints.value?.last()?.toGeoPoint() ?: requireNotNull(currentLocation.value).toGeoPoint(),
+            photo = url
+        )
+        _photoPoints.value = photopoints.value?.plus(photoPoint) as MutableList<PhotoPoint>
     }
 
     fun startStopSwitch(){
         when(walkerStatus.value){
-            WalkerStatus.PREPARE -> checkBeforeWalking()
+            WalkerStatus.PREPARE -> startWalking()
             WalkerStatus.PAUSING -> stopWalking()
             WalkerStatus.WALKING -> stopWalking()
-            WalkerStatus.FINISH ->{}
+            WalkerStatus.FINISH  -> {}
         }
     }
 
@@ -166,7 +223,7 @@ class HomeViewModel(val walkableRepository: WalkableRepository, val argument: Ro
             WalkerStatus.PREPARE -> {}
             WalkerStatus.PAUSING -> resumeWalking()
             WalkerStatus.WALKING -> pauseWalking()
-            WalkerStatus.FINISH ->{}
+            WalkerStatus.FINISH  -> {}
         }
     }
 
@@ -219,20 +276,53 @@ class HomeViewModel(val walkableRepository: WalkableRepository, val argument: Ro
             startTime = startTime.value as Timestamp,
             endTime = endTime.value as Timestamp,
             routeId = route.value?.id,
-            waypoints = trackPoints.value as List<LatLng>)
-        navigateToRating(walk)
+            waypoints = trackPoints.value?.map{it.toGeoPoint()} as List<GeoPoint>)
+        updateWalk(walk)
+    }
+
+    private fun updateWalk(walk: Walk){
+
+        coroutineScope.launch {
+
+            _loadStatus.value = LoadStatus.LOADING
+
+            val result = walkableRepository.updateWalks(walk, requireNotNull(UserManager.user))
+
+            when(result){
+                is Result.Success->{
+                    _error.value = null
+                    _loadStatus.value = LoadStatus.DONE
+                    navigateToRating(walk)
+                }
+                is Result.Fail ->{
+                    _error.value = result.error
+                    _loadStatus.value = LoadStatus.ERROR
+                    navigateToRating(walk)
+                }
+                is Result.Error ->{
+                    _error.value = result.exception.toString()
+                    _loadStatus.value = LoadStatus.ERROR
+                    navigateToRating(walk)
+                }
+                else ->{
+                    _error.value = getString(R.string.not_here)
+                    _loadStatus.value = LoadStatus.ERROR
+                }
+            }
+
+        }
     }
 
     private fun startTimer(){
         runnable = Runnable{
             walkerTimer.value = walkerTimer.value?.plus(1)
-            Log.d("JJ","timer ${walkerTimer.value}")
+            Logger.d("timer ${walkerTimer.value}")
             handler.postDelayed(runnable, 1000)
         }
         handler.postDelayed(runnable, 1000)
     }
 
-    private fun clientCurrentLocation(){
+    fun clientCurrentLocation(){
 
         _loadStatus.value = LoadStatus.LOADING
 
@@ -280,13 +370,6 @@ class HomeViewModel(val walkableRepository: WalkableRepository, val argument: Ro
     }
 
 
-    private fun checkBeforeWalking(){
-        _checkPermission.value = true
-    }
-
-    fun checkPermissionComplete(){
-        _checkPermission.value = false
-    }
 
     fun drawPath(origin: LatLng, destination: LatLng, waypoints: List<LatLng>){
         coroutineScope.launch {
@@ -319,6 +402,11 @@ class HomeViewModel(val walkableRepository: WalkableRepository, val argument: Ro
             }
         }
     }
+
+    private fun checkCameraHardWare(): Boolean{
+        return WalkableApp.instance.packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)
+    }
+
 
 
 }

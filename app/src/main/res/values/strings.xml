@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Walkable City</string>
+    <string name="app_name">散步城市</string>
     <string name="title_activity_maps">Walkable</string>
     <string name="home_title">散步城市</string>
     <string name="ranking_title">排名</string>
@@ -9,10 +9,13 @@
     <string name="load_route">載入路線</string>
     <string name="detail_title">詳細資訊</string>
     <string name="rating_title">評分</string>
-    <string name="badge_title">徽章</string>
-    <string name="best_walker_title">散步榜</string>
-    <string name="setting_title">設定</string>
-    <string name="explore_title">行跡</string>
+    <string name="badge_title">散策徽章</string>
+    <string name="best_walker_title">散步好朋友</string>
+    <string name="setting_title">個人設定</string>
+    <string name="explore_title">行跡地圖</string>
+    <string name="add_friend_event_title">邀請好友</string>
+
+    <string name="enter_walkable">進入散步城市</string>
 
     <string name="start_walking">開始散步</string>
     <string name="end_walking">結束散步</string>
@@ -34,7 +37,9 @@
     <string name="filter_snack">饞</string>
     <string name="filter_scenery">景</string>
     <string name="minute">分鐘</string>
+    <string name="about_minute">約%.1f分鐘</string>
     <string name="filter_time_title">步行時間</string>
+    <string name="shortest_time">最短時間</string>
     <string name="route_km">公里</string>
 
     <string name="send_filter">搜尋路線</string>
@@ -97,6 +102,9 @@
 
     <string name="no_route_selected">您這次並未選擇載入路線</string>
     <string name="no_more_to_comment">您已評論完了歐</string>
+
+    <string name="no_permission">您並未開啟位置權限</string>
+    <string name="permission_again">開啟權限</string>
 
     <string name="not_complete_yet">路線項目尚未填寫完成</string>
 
@@ -174,6 +182,168 @@
 
     <string name="set_public">設定為公開</string>
 
+    <string name="walkable_city">散步城市</string>
+
+    <string name="input_custom_id">請輸入您的ID</string>
+    <string name="id_been_used">此id已被用過了歐</string>
+    <string name="no_search_id">未輸入ID</string>
+    <string name="add_friend">加入</string>
+    <string name="add_friend_title">加朋友</string>
+
+    <string name="input_friend_id">請輸入朋友的ID</string>
+    <string name="no_such_friend">該朋友不存在</string>
+
+    <string name="add_success">加入成功</string>
+    <string name="add_failed">加入失敗，請稍後再試</string>
+    <string name="already_friend">你們已經是朋友了歐</string>
+
+    <string name="walk_update_error">散步更新未完成</string>
+
+
+
+
+<!--    <profile page>-->
+    <string name="walk_accumulate_title">累計｜</string>
+    <string name="walk_accumulate_hours">%.2f小時｜</string>
+    <string name="walk_accumulate_km">%.2f公里｜</string>
+
+    <string name="setting_description">通知設定｜個人資訊</string>
+    <string name="badge_description">您值得更多的勳章</string>
+    <string name="explorer_description">用雙腳探索這個城市</string>
+    <string name="friend_description">一起在城市中散步的好朋友們</string>
+
+
+    <string name="event_detail_timer">距離結束時間｜</string>
+    <string name="event_detail_pre_timer">距離開始時間｜</string>
+    <string name="event_goal">目標｜</string>
+    <string name="event_group_goal">共同目標｜</string>
+    <string name="event_race_goal">競賽目標｜</string>
+
+    <string name="accomplish_rate">%.1f％</string>
+    <string name="no_destination_yet">尚未選擇目的地</string>
+    <string name="no_route_fit_as_shortest">附近無推薦路線，提供給您最短路徑</string>
+    <string name="days_left">%d天</string>
+
+    <string name="walker_km">%.2f公里</string>
+    <string name="walker_hour">%.2f小時</string>
+
+    <string name="daily_ranking">本日排行</string>
+    <string name="week_ranking">本週排行</string>
+    <string name="month_ranking">本月排行</string>
+    <string name="total_ranking">累計排行</string>
+
+    <string name="accumulate_daily">本日累計｜</string>
+    <string name="accumulate_weekly">本週累計｜</string>
+    <string name="accumulate_monthly">本月累計｜</string>
+    <string name="accumulate_yearly">今年累計｜</string>
+    <string name="accumulate_total">總累計｜</string>
+
+    <!--    <settings page>-->
+
+    <string name="user_profile">個人資料</string>
+    <string name="user_name">使用者</string>
+    <string name="user_id">ID</string>
+    <string name="user_email">Email</string>
+
+    <string name="walk_record">散步紀錄</string>
+    <string name="user_hour">散步小時</string>
+    <string name="user_km">散步距離</string>
+
+    <string name="today">本日</string>
+    <string name="this_week">本週</string>
+    <string name="this_month">本月</string>
+    <string name="this_year">今年</string>
+    <string name="total_walk">總計</string>
+
+    <string name="notification_settings">通知設定</string>
+    <string name="good_weather">好天氣</string>
+    <string name="good_weather_on">好天氣通知開啟</string>
+    <string name="good_weather_off">好天氣通知關閉</string>
+    <string name="after_meal">晚飯後</string>
+    <string name="after_meal_on">晚飯後通知開啟</string>
+    <string name="after_meal_off">晚飯後通知關閉</string>
+
+    <string name="empty_string"> </string>
+
+    <!--    <badge page>-->
+
+    <string name="badge_hour_section">散策時間</string>
+    <string name="badge_hour_0">開始散策</string>
+    <string name="badge_hour_1">半個時辰</string>
+    <string name="badge_hour_5">一晌午</string>
+    <string name="badge_hour_10">走了十小時</string>
+    <string name="badge_hour_50">持之以恆</string>
+    <string name="badge_hour_100">散策達人</string>
+
+
+    <string name="badge_km_section">散策旅程</string>
+    <string name="badge_km_0">起步走</string>
+    <string name="badge_km_3">走三千</string>
+    <string name="badge_km_10">十里桃花</string>
+    <string name="badge_km_80">兩次全馬</string>
+    <string name="badge_km_350">台北到高雄</string>
+    <string name="badge_km_1000">台灣繞一圈</string>
+
+    <string name="badge_event_section">散步趣</string>
+    <string name="badge_event_0">第一次</string>
+    <string name="badge_event_3">揪三次</string>
+    <string name="badge_event_10">揪十次</string>
+    <string name="badge_event_25">揪很多</string>
+    <string name="badge_event_50">說走揪走</string>
+    <string name="badge_event_100">揪走達人</string>
+
+    <string name="badge_friend_section">一起去散步</string>
+    <string name="badge_friend_0">請不要說不</string>
+    <string name="badge_friend_3">三人成群</string>
+    <string name="badge_friend_10">打個全場</string>
+    <string name="badge_friend_50">過了半百</string>
+    <string name="badge_friend_100">百人齊步</string>
+    <string name="badge_friend_300">三百步士</string>
+
+    <string name="share_badge">分享徽章到</string>
+    <string name="no_friend_invited">您尚未邀請任何好友歐</string>
+    <string name="join_event">加入活動</string>
+
+    <string name="invite_you">邀請您加入此活動</string>
+    <string name="maybe_later">稍後再說</string>
+    <string name="join_now">加入</string>
+
+    <string name="will_you_create_route">想為此次的散步創建一個分享路線嗎?</string>
+    <string name="will_create">好歐</string>
+    <string name="will_not_create">不用了</string>
+
+    <string name="recording">紀錄中</string>
+
+    <string name="accomplishment">完成度</string>
+
+    <string name="freepik">Icons made by FreePik from Flaticon</string>
+    <string name="icon_geek_26">Icons made by Icongeek26 from Flaticon</string>
+
+    <string name="day_number">第%d天</string>
+    <string name="week_number">第%d週</string>
+    <string name="month_number">第%d個月</string>
+
+    <string name="good_weather_hour">本日好天氣</string>
+    <string name="good_weather_content_hot">本日氣候炎熱，出門散步記得注意防曬歐！</string>
+    <string name="good_weather_content_cold">本日氣侯寒冷，出門散步記得注意保暖歐！</string>
+    <string name="feels_like">｜體感溫度</string>
+
+    <string name="after_meal_walk">吃飽散步囉！</string>
+    <string name="after_meal_talk">您已經%d天沒有出門散步了歐，\n來場探索城市的小旅行吧！</string>
+    <string name="first_walk">吃飽喝足，一起出門散個步吧！</string>
+    <string name="today_uvi">本日紫外線指數｜</string>
+    <string name="uvi_very_strong">極強　%.2f</string>
+    <string name="uvi_strong">強　%.2f</string>
+    <string name="uvi_medium">中等　%.2f</string>
+    <string name="uvi_weak">弱　%.2f</string>
+    <string name="uvi_very_weak">微弱　%.2f</string>
+    <string name="rain_percentage">｜降雨機率</string>
+
+    <string name="explore_walk_distance">走了%.2f公里</string>
+
+    <string name="day_night_switch">切換日夜模式</string>
+
+    <string name="no_historic_data">尚無歷史資料</string>
 
 
 </resources>

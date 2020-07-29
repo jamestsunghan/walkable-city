@@ -3,7 +3,6 @@ package tw.com.walkablecity.login
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -11,23 +10,22 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import tw.com.walkablecity.Logger
 
 import tw.com.walkablecity.R
 import tw.com.walkablecity.UserManager
+import tw.com.walkablecity.Util
+import tw.com.walkablecity.Util.makeShortToast
 import tw.com.walkablecity.databinding.FragmentLoginBinding
 import tw.com.walkablecity.ext.getVMFactory
 import tw.com.walkablecity.ext.toSignInUser
-import java.lang.StringBuilder
 
 class LoginFragment : Fragment() {
 
@@ -43,14 +41,13 @@ class LoginFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         auth = Firebase.auth
-        val account = GoogleSignIn.getLastSignedInAccount(requireContext())
+//        val account = GoogleSignIn.getLastSignedInAccount(requireContext())
 
+        val user = Firebase.auth.currentUser
+        user?.let{
+            viewModel.getUser(it.uid)
+        }
 
-    }
-
-    override fun onStart() {
-        super.onStart()
-        val currentUser = auth.currentUser
     }
 
     override fun onCreateView(
@@ -68,9 +65,28 @@ class LoginFragment : Fragment() {
             signIn()
         }
 
-        viewModel.firebaseUser.observe(viewLifecycleOwner, Observer{
+        viewModel.isCustomIdUsable.observe(viewLifecycleOwner, Observer{
             it?.let{
-                viewModel.addUser(it.toSignInUser())
+                if(it){
+                    viewModel.addUser(requireNotNull(viewModel.firebaseUser.value).toSignInUser(viewModel.idCustom.value))
+                }else{
+                    makeShortToast(R.string.id_been_used)
+                }
+                viewModel.resetCustomIdCheck()
+            }
+        })
+
+        viewModel.firebaseUser.observe(viewLifecycleOwner, Observer{
+            it?.let{user->
+                viewModel.getUser(user.uid)
+
+                binding.getInButton.setOnClickListener {
+
+                    if(viewModel.idCustom.value == null) makeShortToast(R.string.no_search_id)
+                    else {
+                        viewModel.checkUserCustomId(viewModel.idCustom.value as String)
+                    }
+                }
             }
         })
 
@@ -78,7 +94,7 @@ class LoginFragment : Fragment() {
         viewModel.user.observe(viewLifecycleOwner, Observer{
             it?.let{
                 UserManager.user = it
-                findNavController().navigate(LoginFragmentDirections.actionGlobalHomeFragment(null))
+                findNavController().navigate(LoginFragmentDirections.actionGlobalHomeFragment(null, null))
                 viewModel.navigateComplete()
             }
         })
@@ -93,10 +109,10 @@ class LoginFragment : Fragment() {
             val task = GoogleSignIn.getSignedInAccountFromIntent(data)
             try{
                 val account =task.getResult(ApiException::class.java)!!
-                Log.d("JJ_fireAuth","fireAuth with google : ${account.id}")
+                Logger.d("JJ_fireAuth fireAuth with google : ${account.id}")
                 viewModel.signInWithGoogle(account.idToken)
             }catch (e: ApiException){
-                Log.w("JJ_fireAuth","fireAuth fail with google : $e")
+                Logger.w("JJ_fireAuth fireAuth fail with google : $e")
 //                updateUI(null)
             }
         }

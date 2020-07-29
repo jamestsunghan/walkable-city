@@ -8,6 +8,6 @@ import kotlinx.android.parcel.RawValue
 @Parcelize
 data class PhotoPoint(
 
-    val point: @RawValue GeoPoint,
-    val photo: String
+    val point: @RawValue GeoPoint? = null,
+    val photo: String = ""
 ): Parcelable

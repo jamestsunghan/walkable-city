@@ -1,18 +1,20 @@
 package tw.com.walkablecity.host
 
-import android.util.Log
+
 import androidx.lifecycle.*
 import com.google.firebase.Timestamp
 import com.google.firebase.Timestamp.now
 import kotlinx.coroutines.*
+import tw.com.walkablecity.Logger
 import tw.com.walkablecity.R
+import tw.com.walkablecity.UserManager
 import tw.com.walkablecity.Util.dateToTimeStamp
 import tw.com.walkablecity.Util.getString
 import tw.com.walkablecity.Util.makeShortToast
 import tw.com.walkablecity.data.*
 import tw.com.walkablecity.data.source.WalkableRepository
 import tw.com.walkablecity.ext.toDateLong
-import tw.com.walkablecity.userId
+import tw.com.walkablecity.ext.toFriend
 
 class HostViewModel(private val walkableRepository: WalkableRepository) : ViewModel() {
 
@@ -20,7 +22,44 @@ class HostViewModel(private val walkableRepository: WalkableRepository) : ViewMo
     val title = MutableLiveData<String>()
     val description = MutableLiveData<String>()
     val isPublic = MutableLiveData<Boolean>(false)
-    val invited = MutableLiveData<List<String>>()
+
+    private val _friendList = MutableLiveData<List<Friend>>()
+    val friendList: LiveData<List<Friend>> get() = _friendList
+
+    val searchId = MutableLiveData<String>()
+
+    val friendListed = MediatorLiveData<List<Friend>?>().apply {
+        addSource(searchId){search ->
+            value = when(search){
+                null -> friendList.value
+                else -> {
+                    when(val friendList = friendList.value){
+                        null -> friendList
+                        else -> friendList.filter{friend->
+                            friend.name!!.startsWith(search)
+                        }
+                    }
+                }
+            }
+        }
+
+        addSource(friendList){list->
+            value = when(list){
+                null -> null
+                else -> {
+                    when(val search = searchId.value){
+                        null -> list
+                        else -> list.filter{friend->
+                            friend.name!!.startsWith(search)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private val _navigateToHost = MutableLiveData<List<Friend>>()
+    val navigateToHost: LiveData<List<Friend>> get() = _navigateToHost
 
     val selectFQPosition = MutableLiveData<Int>()
 
@@ -47,12 +86,12 @@ class HostViewModel(private val walkableRepository: WalkableRepository) : ViewMo
             it?.let{
                 if(value == null) value = EventTarget()
                 when(selectTypePosition.value){
-                    1 -> this.value?.distance = it.toFloat()
-                    2 -> this.value?.hour     = it.toFloat()
-                    3 -> this.value?.distance = it.toFloat()
-                    4 -> this.value?.distance = it.toFloat()
-                    5 -> this.value?.hour     = it.toFloat()
-                    6 -> this.value?.hour     = it.toFloat()
+                    1 -> this.value?.distance = if(it == "") null else it.toFloat()
+                    2 -> this.value?.hour     = if(it == "") null else it.toFloat()
+                    3 -> this.value?.distance = if(it == "") null else it.toFloat()
+                    4 -> this.value?.distance = if(it == "") null else it.toFloat()
+                    5 -> this.value?.hour     = if(it == "") null else it.toFloat()
+                    6 -> this.value?.hour     = if(it == "") null else it.toFloat()
                     else -> {}
                 }
                 value = this.value
@@ -77,11 +116,11 @@ class HostViewModel(private val walkableRepository: WalkableRepository) : ViewMo
 
         when(it){
             null -> {
-                Log.d("JJ", "date null")
+                Logger.d("date null")
                 null
             }
             else -> {
-                Log.d("JJ", "date $it")
+                Logger.d("date $it")
                 dateToTimeStamp(it)
             }
         }
@@ -122,12 +161,37 @@ class HostViewModel(private val walkableRepository: WalkableRepository) : ViewMo
     private val _navigateToEvents = MutableLiveData<Boolean>(false)
     val navigateToEvents: LiveData<Boolean> get() = _navigateToEvents
 
+    private val _navigateToAddFriends = MutableLiveData<Boolean>(false)
+    val navigateToAddFriends: LiveData<Boolean> get() = _navigateToAddFriends
+
     private val viewModelJob = Job()
     private val coroutineScope = CoroutineScope(Dispatchers.Main + viewModelJob)
+
+
+    private val _addList = MutableLiveData<List<Friend>>()
+//        .apply {
+//        value = friendOldList
+//    }
+    val addList: LiveData<List<Friend>> get() = _addList
 
     override fun onCleared() {
         super.onCleared()
         viewModelJob.cancel()
+    }
+
+
+    init{
+        UserManager.user?.id?.let{id->
+            getUserFriends(id)
+        }
+    }
+
+    fun addSomeFriends(){
+        _navigateToAddFriends.value = true
+    }
+
+    fun addSomeFriendsComplete(){
+        _navigateToAddFriends.value = false
     }
 
 
@@ -136,26 +200,26 @@ class HostViewModel(private val walkableRepository: WalkableRepository) : ViewMo
     }
 
     fun createEvent(){
-        invited.value = listOf("10056","10045")
-        if(title.value == null || description.value == null || isPublic.value == null || invited.value == null
-            || type.value == null ||( target.value?.hour == null &&  target.value?.distance == null)
+
+        if(title.value == null || description.value == null || isPublic.value == null || type.value == null
+            ||( target.value?.hour == null &&  target.value?.distance == null)
             || (frequencyType.value == null && type.value == EventType.FREQUENCY)
-            || startDate.value == null || endDate.value == null){
+            || startDate.value == null || endDate.value == null|| addList.value == null){
             makeShortToast(R.string.event_not_complete)
         }else{
             uploadEvent(
                 Event(
-                    id          = "${requireNotNull(type.value).prefix}${now().toDateLong()}${userId}",
+                    id          = "${requireNotNull(type.value).prefix}${now().toDateLong()}${UserManager.user?.idCustom}",
                     title       = title.value,
                     description = description.value,
-                    isPublic    = isPublic.value,
-                    host        = userId,
+                    public      = isPublic.value,
+                    host        = UserManager.user?.idCustom,
                     status      = eventStatus.value,
-                    invited     = requireNotNull(invited.value),
+                    invited     = addList.value?.map{ requireNotNull(it.id)} ?: listOf(),
                     startDate   = startDate.value,
                     endDate     = endDate.value,
                     memberCount = 1,
-                    member      = listOf(userId),
+                    member      = listOf(requireNotNull(UserManager.user).toFriend()),
                     type        = type.value,
                     target      = target.value
                 )
@@ -188,6 +252,74 @@ class HostViewModel(private val walkableRepository: WalkableRepository) : ViewMo
                     _error.value  = getString(R.string.not_here)
                     _status.value = LoadStatus.ERROR
                     false
+                }
+            }
+        }
+    }
+
+    fun addFriendToAddList(friend: Friend){
+        when(addList.value?.contains(friend)){
+            true ->{}
+            false ->{
+                _addList.value = (addList.value ?: listOf()).plus(friend)
+            }
+            null->{
+                _addList.value = (addList.value ?: listOf()).plus(friend)
+            }
+        }
+    }
+
+    fun removeFriendToAddList(friend: Friend){
+        when(addList.value?.contains(friend)){
+            true ->{
+                _addList.value = (addList.value ?: listOf(friend)).minus(friend)
+            }
+            false ->{ }
+            null->{}
+        }
+    }
+
+    fun friendSelected(){
+        if(addList.value == null){
+            makeShortToast(R.string.no_friend_invited)
+        }else
+
+            _navigateToHost.value = addList.value
+    }
+
+
+    fun friendSelectedComplete(){
+        _navigateToHost.value = null
+    }
+
+    fun getUserFriends(userId: String){
+
+        coroutineScope.launch {
+
+            _status.value = LoadStatus.LOADING
+
+            val result = walkableRepository.getUserFriendSimple(userId)
+
+            _friendList.value = when(result){
+                is Result.Success ->{
+                    _error.value = null
+                    _status.value = LoadStatus.DONE
+                    result.data
+                }
+                is Result.Fail ->{
+                    _error.value = result.error
+                    _status.value = LoadStatus.ERROR
+                    null
+                }
+                is Result.Error ->{
+                    _error.value = result.exception.toString()
+                    _status.value = LoadStatus.ERROR
+                    null
+                }
+                else ->{
+                    _error.value = getString(R.string.not_here)
+                    _status.value = LoadStatus.ERROR
+                    null
                 }
             }
         }
