@@ -11,12 +11,15 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.badge.BadgeDrawable
 import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
 import tw.com.walkablecity.Logger
 import tw.com.walkablecity.MainViewModel
 
 import tw.com.walkablecity.R
 import tw.com.walkablecity.UserManager
+import tw.com.walkablecity.Util.getColor
 import tw.com.walkablecity.databinding.FragmentEventBinding
 import tw.com.walkablecity.ext.getVMFactory
 
@@ -39,11 +42,29 @@ class EventFragment : Fragment() {
             .inflate(inflater, R.layout.fragment_event, container, false)
         binding.lifecycleOwner = this
 
-        binding.viewpagerEvent.let{ pager->
-            pager.adapter = EventAdapter(childFragmentManager)
-            pager.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(binding.tabsEvent))
-        }
+        binding.viewpagerEvent.adapter = EventAdapter2(requireActivity())
 
+        val mediator = TabLayoutMediator(binding.tabsEvent, binding.viewpagerEvent,
+            TabLayoutMediator.TabConfigurationStrategy { tab, position ->
+                tab.text = EventPageType.values()[position].title
+                if(position == 2){
+                    tab.orCreateBadge.apply {
+                        backgroundColor = getColor(R.color.red_heart_c73e3a)
+                        number = mainViewModel.invitation.value ?: 0
+                        isVisible = number > 0
+                        badgeGravity = BadgeDrawable.TOP_END
+                    }
+                }
+            })
+        mediator.attach()
+
+        mainViewModel.invitation.observe(viewLifecycleOwner, Observer{
+            it?.let{
+                binding.tabsEvent.getTabAt(2)?.orCreateBadge?.apply {
+                    number = it
+                }
+            }
+        })
 
         binding.viewModel = viewModel
 
@@ -54,11 +75,6 @@ class EventFragment : Fragment() {
             }
         })
 
-        val tab = binding.tabsEvent.getTabAt(0)
-        val badge = tab?.orCreateBadge
-        
-
-        Logger.d("does badge exist? ${badge ?: "null"} number ${badge?.number} ")
 
         return binding.root
     }
