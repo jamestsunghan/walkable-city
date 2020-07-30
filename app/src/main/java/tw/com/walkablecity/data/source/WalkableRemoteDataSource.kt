@@ -67,6 +67,7 @@ object WalkableRemoteDataSource: WalkableDataSource{
                 task.exception?.let{
                     Logger.d("JJ_fire [${this::class.simpleName}] Error getting documents. ${it.message}")
                     continuation.resume(Result.Error(it))
+                    return@addOnCompleteListener
                 }
                 continuation.resume(Result.Fail(WalkableApp.instance.getString(R.string.not_here)))
             }
@@ -92,6 +93,7 @@ object WalkableRemoteDataSource: WalkableDataSource{
                 task.exception?.let{
                     Logger.d("JJ_fire [${this::class.simpleName}] Error getting documents. ${it.message}")
                     continuation.resume(Result.Error(it))
+                    return@addOnCompleteListener
                 }
                 continuation.resume(Result.Fail(WalkableApp.instance.getString(R.string.not_here)))
             }
@@ -194,6 +196,7 @@ object WalkableRemoteDataSource: WalkableDataSource{
                 task.exception?.let{
                     Logger.d("JJ_fire [${this::class.simpleName}] Error getting documents. ${it.message}")
                     continuation.resume(Result.Error(it))
+                    return@addOnCompleteListener
                 }
                 continuation.resume(Result.Fail(WalkableApp.instance.getString(R.string.not_here)))
             }
@@ -215,6 +218,7 @@ object WalkableRemoteDataSource: WalkableDataSource{
                 task.exception?.let{
                     Logger.d("JJ_fire [${this::class.simpleName}] Error getting documents. ${it.message}")
                     continuation.resume(Result.Error(it))
+                    return@addOnCompleteListener
                 }
                 continuation.resume(Result.Fail(WalkableApp.instance.getString(R.string.not_here)))
             }
@@ -236,6 +240,7 @@ object WalkableRemoteDataSource: WalkableDataSource{
                 task.exception?.let{
                     Logger.d("JJ_fire [${this::class.simpleName}] Error getting documents. ${it.message}")
                     continuation.resume(Result.Error(it))
+                    return@addOnCompleteListener
                 }
                 continuation.resume(Result.Fail(WalkableApp.instance.getString(R.string.not_here)))
             }
@@ -251,6 +256,7 @@ object WalkableRemoteDataSource: WalkableDataSource{
                 task.exception?.let{
                     Logger.d("JJ_fire [${this::class.simpleName}] Error getting documents. ${it.message}")
                     continuation.resume(Result.Error(it))
+                    return@addOnCompleteListener
                 }
                 continuation.resume(Result.Fail(WalkableApp.instance.getString(R.string.not_here)))
             }
@@ -266,6 +272,7 @@ object WalkableRemoteDataSource: WalkableDataSource{
                 task.exception?.let{
                     Logger.d("JJ_fire [${this::class.simpleName}] Error getting documents. ${it.message}")
                     continuation.resume(Result.Error(it))
+                    return@addOnCompleteListener
                 }
                 continuation.resume(Result.Fail(WalkableApp.instance.getString(R.string.not_here)))
             }
@@ -283,6 +290,7 @@ object WalkableRemoteDataSource: WalkableDataSource{
                     task.exception?.let{
                         Logger.d("JJ_fire [${this::class.simpleName}] Error getting documents. ${it.message}")
                         continuation.resume(Result.Error(it))
+                        return@addOnCompleteListener
                     }
                     continuation.resume(Result.Fail(WalkableApp.instance.getString(R.string.not_here)))
                 }
@@ -298,6 +306,7 @@ object WalkableRemoteDataSource: WalkableDataSource{
                 task.exception?.let{
                     Logger.d("JJ_fire [${this::class.simpleName}] Error getting documents. ${it.message}")
                     continuation.resume(Result.Error(it))
+                    return@addOnCompleteListener
                 }
                 continuation.resume(Result.Fail(WalkableApp.instance.getString(R.string.not_here)))
             }

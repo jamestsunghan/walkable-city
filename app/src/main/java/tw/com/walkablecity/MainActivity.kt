@@ -25,6 +25,7 @@ import tw.com.walkablecity.ext.getVMFactory
 import tw.com.walkablecity.home.WalkerStatus
 import tw.com.walkablecity.home.createroute.CreateRouteDialogFragmentDirections
 import tw.com.walkablecity.host.add2event.AddFriend2EventFragmentDirections
+import tw.com.walkablecity.profile.badge.BadgeFragmentDirections
 import tw.com.walkablecity.rating.RatingFragmentDirections
 
 class MainActivity : AppCompatActivity() {
@@ -154,6 +155,8 @@ class MainActivity : AppCompatActivity() {
                 navigate(RatingFragmentDirections.actionGlobalHomeFragment(null,null))
             CurrentFragmentType.CREATE_ROUTE_DIALOG -> findNavController(R.id.nav_host_fragment).
                 navigate(CreateRouteDialogFragmentDirections.actionGlobalHomeFragment(null,null))
+            CurrentFragmentType.ADD_FRIEND -> findNavController(R.id.nav_host_fragment)
+                .navigate(AddFriendFragmentDirections.actionGlobalProfileFragment())
 
             else -> super.onBackPressed()
         }

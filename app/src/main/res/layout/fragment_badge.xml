@@ -335,7 +335,7 @@
                         android:layout_width="60dp"
                         android:layout_height="60dp"
                         app:srcCompat="@drawable/ic_new_badge"
-                        android:visibility="@{BadgeType.ACCU_KM.accuBadgeDisPlay(user.accumulatedHour.total, viewModel.accuKm, 1)  ? View.VISIBLE : View.GONE}"
+                        android:visibility="@{BadgeType.ACCU_KM.accuBadgeDisPlay(user.accumulatedKm.total, viewModel.accuKm, 1)  ? View.VISIBLE : View.GONE}"
                         app:layout_constraintEnd_toEndOf="@+id/badge_km_0"
                         app:layout_constraintTop_toTopOf="@+id/badge_km_0" />
 
@@ -372,7 +372,7 @@
                         android:layout_width="60dp"
                         android:layout_height="60dp"
                         app:srcCompat="@drawable/ic_new_badge"
-                        android:visibility="@{BadgeType.ACCU_KM.accuBadgeDisPlay(user.accumulatedHour.total, viewModel.accuKm, 2)  ? View.VISIBLE : View.GONE}"
+                        android:visibility="@{BadgeType.ACCU_KM.accuBadgeDisPlay(user.accumulatedKm.total, viewModel.accuKm, 2)  ? View.VISIBLE : View.GONE}"
                         app:layout_constraintEnd_toEndOf="@+id/badge_km_3"
                         app:layout_constraintTop_toTopOf="@+id/badge_km_3" />
 
@@ -409,7 +409,7 @@
                         android:layout_width="60dp"
                         android:layout_height="60dp"
                         app:srcCompat="@drawable/ic_new_badge"
-                        android:visibility="@{BadgeType.ACCU_KM.accuBadgeDisPlay(user.accumulatedHour.total, viewModel.accuKm, 3)  ? View.VISIBLE : View.GONE}"
+                        android:visibility="@{BadgeType.ACCU_KM.accuBadgeDisPlay(user.accumulatedKm.total, viewModel.accuKm, 3)  ? View.VISIBLE : View.GONE}"
                         app:layout_constraintEnd_toEndOf="@+id/badge_km_10"
                         app:layout_constraintTop_toTopOf="@+id/badge_km_10" />
 
@@ -447,7 +447,7 @@
                         android:layout_width="60dp"
                         android:layout_height="60dp"
                         app:srcCompat="@drawable/ic_new_badge"
-                        android:visibility="@{BadgeType.ACCU_KM.accuBadgeDisPlay(user.accumulatedHour.total, viewModel.accuKm, 4)  ? View.VISIBLE : View.GONE}"
+                        android:visibility="@{BadgeType.ACCU_KM.accuBadgeDisPlay(user.accumulatedKm.total, viewModel.accuKm, 4)  ? View.VISIBLE : View.GONE}"
                         app:layout_constraintEnd_toEndOf="@+id/badge_km_80"
                         app:layout_constraintTop_toTopOf="@+id/badge_km_80" />
 
@@ -486,7 +486,7 @@
                         android:layout_width="60dp"
                         android:layout_height="60dp"
                         app:srcCompat="@drawable/ic_new_badge"
-                        android:visibility="@{BadgeType.ACCU_KM.accuBadgeDisPlay(user.accumulatedHour.total, viewModel.accuKm, 5)  ? View.VISIBLE : View.GONE}"
+                        android:visibility="@{BadgeType.ACCU_KM.accuBadgeDisPlay(user.accumulatedKm.total, viewModel.accuKm, 5)  ? View.VISIBLE : View.GONE}"
                         app:layout_constraintEnd_toEndOf="@+id/badge_km_350"
                         app:layout_constraintTop_toTopOf="@+id/badge_km_350" />
 
@@ -523,7 +523,7 @@
                         android:layout_width="60dp"
                         android:layout_height="60dp"
                         app:srcCompat="@drawable/ic_new_badge"
-                        android:visibility="@{BadgeType.ACCU_KM.accuBadgeDisPlay(user.accumulatedHour.total, viewModel.accuHour, 6)  ? View.VISIBLE : View.GONE}"
+                        android:visibility="@{BadgeType.ACCU_KM.accuBadgeDisPlay(user.accumulatedKm.total, viewModel.accuHour, 6)  ? View.VISIBLE : View.GONE}"
                         app:layout_constraintEnd_toEndOf="@+id/badge_km_1000"
                         app:layout_constraintTop_toTopOf="@+id/badge_km_1000" />
 

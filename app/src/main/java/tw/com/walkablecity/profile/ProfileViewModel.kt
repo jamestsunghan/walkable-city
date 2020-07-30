@@ -3,6 +3,8 @@ package tw.com.walkablecity.profile
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import tw.com.walkablecity.Logger
+import tw.com.walkablecity.data.BadgeType
 import tw.com.walkablecity.data.source.WalkableRepository
 
 class ProfileViewModel(val walkableRepository: WalkableRepository) : ViewModel() {
@@ -21,6 +23,9 @@ class ProfileViewModel(val walkableRepository: WalkableRepository) : ViewModel()
 
     private val _navigateToBadge = MutableLiveData<Boolean>(false)
     val navigateToBadge: LiveData<Boolean> get() = _navigateToBadge
+
+    private val _upgrade = MutableLiveData<Int>()
+    val upgrade: LiveData<Int> get() = _upgrade
 
     fun addFriends(){
         _navigateToAddFriend.value = true
@@ -60,5 +65,10 @@ class ProfileViewModel(val walkableRepository: WalkableRepository) : ViewModel()
 
     fun navigateToExplorerComplete(){
         _navigateToExplorer.value = false
+    }
+
+    fun setUpgrade(new: Int, old: Int){
+        Logger.d("new $new old $old")
+        _upgrade.value = BadgeType.EVENT_COUNT.newCountBadgeCheck(new, old)
     }
 }

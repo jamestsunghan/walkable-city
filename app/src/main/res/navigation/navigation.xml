@@ -223,6 +223,6 @@
                 android:id="@+id/action_addFriend2EventFragment_to_hostFragment"
                 app:destination="@id/hostFragment" />
         </fragment>
-    </navigation>
+    </navigation><action android:id="@+id/action_global_badgeFragment" app:destination="@id/badgeFragment"/>
 
 </navigation>

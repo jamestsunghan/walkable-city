@@ -270,7 +270,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationClick
                     val dialog = AlertDialog.Builder(requireContext())
                         .setMessage("您有 $grade 個新徽章歐! 快到散步徽章看看!")
                         .setPositiveButton("前往") { dialog, which ->
-                            findNavController().navigate(HomeFragmentDirections.actionGlobalProfileFragment())
+                            findNavController().navigate(HomeFragmentDirections.actionGlobalBadgeFragment())
                         }.setNegativeButton("稍後再說"){dialog, which ->
                             dialog.cancel()
                         }

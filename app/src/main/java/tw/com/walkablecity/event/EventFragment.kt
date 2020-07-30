@@ -40,6 +40,7 @@ class EventFragment : Fragment() {
         val mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
         UserManager.user?.id?.let{
             mainViewModel.getInvitation(it)
+            mainViewModel.getUserEventCount(it)
         }
 
         val binding: FragmentEventBinding = DataBindingUtil
@@ -92,7 +93,7 @@ class EventFragment : Fragment() {
                     val dialog = AlertDialog.Builder(requireContext())
                         .setMessage("您有 $grade 個新徽章歐! 快到散步徽章看看!")
                         .setPositiveButton("前往") { dialog, which ->
-                            findNavController().navigate(EventFragmentDirections.actionGlobalProfileFragment())
+                            findNavController().navigate(EventFragmentDirections.actionGlobalBadgeFragment())
                         }.setNegativeButton("稍後再說"){dialog, which ->
                             dialog.cancel()
                         }
