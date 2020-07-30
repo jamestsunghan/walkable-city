@@ -5,6 +5,7 @@ import android.annotation.SuppressLint
 import android.app.Activity.RESULT_OK
 import android.content.ActivityNotFoundException
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Configuration
@@ -24,6 +25,7 @@ import android.provider.MediaStore
 import android.view.*
 import android.view.animation.AnimationUtils
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -251,17 +253,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationClick
             }
         })
 
-        viewModel.route.observe(viewLifecycleOwner, Observer {
-            it?.let{
-                Logger.d(" route update $it")
-            }
-        })
 
-        viewModel.walkerDistance.observe(viewLifecycleOwner, Observer{
-            it?.let{
-                Logger.d("distance $it")
-            }
-        })
 
         viewModel.error.observe(viewLifecycleOwner, Observer{
             it?.let{
@@ -269,12 +261,42 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationClick
             }
         })
 
+        viewModel.upgrade.observe(viewLifecycleOwner, Observer{
+            it?.let{grade->
+                Logger.d("let see some grade $grade")
+                if(grade > 0){
+                    val dialog = AlertDialog.Builder(requireContext())
+                        .setMessage("您有 $grade 個新徽章歐! 快到散步徽章看看!")
+                        .setPositiveButton("前往") { dialog, which ->
+                            findNavController().navigate(HomeFragmentDirections.actionGlobalProfileFragment())
+                        }.setNegativeButton("稍後再說"){dialog, which ->
+                            dialog.cancel()
+                        }
+                    dialog.show()
+                }
+            }
+        })
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
 
 
-        viewModel.dontAskAgain.observe(viewLifecycleOwner, Observer{
-            Logger.d("dont ask again ${it ?: "null"}")
-        })
+        //observe check area
+
+//        viewModel.dontAskAgain.observe(viewLifecycleOwner, Observer{
+//            Logger.d("dont ask again ${it ?: "null"}")
+//        })
+//
+//        viewModel.route.observe(viewLifecycleOwner, Observer {
+//            it?.let{
+//                Logger.d(" route update $it")
+//            }
+//        })
+//
+//        viewModel.walkerDistance.observe(viewLifecycleOwner, Observer{
+//            it?.let{
+//                Logger.d("distance $it")
+//            }
+//        })
 
         /**
          * Manipulates the map once available.

@@ -12,6 +12,7 @@ import androidx.core.app.ActivityCompat
 import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.GeoPoint
+import tw.com.walkablecity.data.BadgeType
 import tw.com.walkablecity.ext.toLocation
 import tw.com.walkablecity.ext.toQuery
 import tw.com.walkablecity.permission.RationaleDialog
@@ -113,7 +114,41 @@ object Util {
 //        return StringBuilder().append(MAP_BASE_URL).append("center=${center.toQuery()}").toString()
 //    }
 
+    fun putDataToSharedPreference(key: String, accumulated: Float? = null, count: Int? = null){
+        if(accumulated != null){
+            WalkableApp.instance.getSharedPreferences(key, Context.MODE_PRIVATE).edit()
+                .putFloat(key, accumulated)
+                .apply()
+        }
+        if(count != null){
+            WalkableApp.instance.getSharedPreferences(key, Context.MODE_PRIVATE).edit()
+                .putInt(key, count)
+                .apply()
+        }
+    }
+
+    fun getAccumulatedFromSharedPreference(key: String, userData: Float): Float{
+        val data = WalkableApp.instance.getSharedPreferences(key, Context.MODE_PRIVATE).getFloat(key, -1f)
+
+        return when{
+            data < 0f -> {
+                putDataToSharedPreference(key, userData)
+                WalkableApp.instance.getSharedPreferences(key, Context.MODE_PRIVATE).getFloat(key, -1f)
+            }
+            else ->data
+        }
+    }
+
+    fun getCountFromSharedPreference(key:String): Int{
+        return WalkableApp.instance.getSharedPreferences(key, Context.MODE_PRIVATE).getInt(key, -1)
+    }
 
 
+
+
+    const val ACCU_KM      = "accumulated_km"
+    const val ACCU_HOUR    = "accumulated_hour"
+    const val EVENT_COUNT  = "event_count"
+    const val FRIEND_COUNT = "friend_count"
 
 }
