@@ -120,7 +120,10 @@ class MainActivity : AppCompatActivity() {
                 R.id.rankingFragment -> CurrentFragmentType.RANKING
                 R.id.favoriteFragment -> CurrentFragmentType.FAVORITE
                 R.id.eventFragment -> CurrentFragmentType.EVENT
-                R.id.profileFragment -> CurrentFragmentType.PROFILE
+                R.id.profileFragment -> {
+                    binding.bottomNav.menu.getItem(4).isChecked = true
+                    CurrentFragmentType.PROFILE
+                }
 
                 R.id.loadRouteFragment -> CurrentFragmentType.LOAD_ROUTE
                 R.id.ratingFragment -> CurrentFragmentType.RATING
@@ -157,6 +160,8 @@ class MainActivity : AppCompatActivity() {
                 navigate(CreateRouteDialogFragmentDirections.actionGlobalHomeFragment(null,null))
             CurrentFragmentType.ADD_FRIEND -> findNavController(R.id.nav_host_fragment)
                 .navigate(AddFriendFragmentDirections.actionGlobalProfileFragment())
+            CurrentFragmentType.BADGE -> findNavController(R.id.nav_host_fragment)
+                .navigate(BadgeFragmentDirections.actionGlobalProfileFragment())
 
             else -> super.onBackPressed()
         }
