@@ -172,7 +172,7 @@
     <string name="create_event_description">活動敘述｜</string>
     <string name="create_description_hint">請描述活動</string>
     <string name="create_invite_friend">邀請好友｜</string>
-    <string name="inpun_friend_id">請輸入好友ID</string>
+    <string name="inputing_friend_id">請輸入好友&#032;ID</string>
 
     <string name="event_not_complete">尚未填寫完成歐</string>
 
@@ -190,7 +190,7 @@
     <string name="add_friend">加入</string>
     <string name="add_friend_title">加朋友</string>
 
-    <string name="input_friend_id">請輸入朋友的ID</string>
+    <string name="input_friend_id">請輸入朋友的&#032;ID</string>
     <string name="no_such_friend">該朋友不存在</string>
 
     <string name="add_success">加入成功</string>

@@ -82,4 +82,6 @@ class FavoriteAdapter(private val viewModel: FavoriteViewModel)
             is FilterViewHolder -> holder.bind(viewModel)
         }
     }
+
+
 }

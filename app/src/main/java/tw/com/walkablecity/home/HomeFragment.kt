@@ -76,8 +76,6 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationClick
     private lateinit var mapFragment: SupportMapFragment
     private lateinit var map: GoogleMap
 
-//    val mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
-
     companion object{
         const val REQUEST_LOCATION      = 0x00
         const val REQUEST_IMAGE_CAPTURE = 0x01
@@ -154,6 +152,12 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationClick
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+        val mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
+        UserManager.user?.id?.let{
+            mainViewModel.getInvitation(it)
+        }
+
         val binding: FragmentHomeBinding = DataBindingUtil
             .inflate(inflater,
                 R.layout.fragment_home, container, false)

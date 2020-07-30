@@ -11,8 +11,10 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
 import com.google.android.gms.location.LocationServices
+import com.google.android.material.badge.BadgeDrawable
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.FirebaseApp
 import tw.com.walkablecity.addfriend.AddFriendFragmentDirections
@@ -74,6 +76,21 @@ class MainActivity : AppCompatActivity() {
 
         setupNavController()
         setupBottomNav()
+        viewModel.invitation.observe(this, Observer{
+            it?.let{eventCount ->
+                addBadge(eventCount)
+            }
+        })
+
+    }
+
+    private fun addBadge(num: Int){
+        if(num>0){
+            binding.bottomNav.getOrCreateBadge(R.id.event).apply {
+                backgroundColor = getColor(R.color.secondaryDarkColor)
+                number = num
+            }
+        }
     }
 
     private fun setupBottomNav(){
