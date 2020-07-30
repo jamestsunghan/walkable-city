@@ -427,16 +427,7 @@ class HomeViewModel(val walkableRepository: WalkableRepository, val argument: Ro
         Logger.d("userHour $userHour accuHour $accuHour upgradeHour $upgradeHour")
         _upgrade.value = upgradeKm + upgradeHour
 
-
     }
 
-    fun newCountBadgeCheck(){
-        val eventCount = getCountFromSharedPreference(Util.EVENT_COUNT).apply {
-            if(this < 0f){
-                putDataToSharedPreference(Util.EVENT_COUNT)
-            }
-        }
-        val friendCount = getCountFromSharedPreference(Util.FRIEND_COUNT)
-    }
 
 }

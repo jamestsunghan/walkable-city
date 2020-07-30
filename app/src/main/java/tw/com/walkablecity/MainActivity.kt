@@ -18,6 +18,7 @@ import com.google.android.material.badge.BadgeDrawable
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.FirebaseApp
 import tw.com.walkablecity.addfriend.AddFriendFragmentDirections
+import tw.com.walkablecity.data.BadgeType
 import tw.com.walkablecity.data.Walker
 import tw.com.walkablecity.databinding.ActivityMainBinding
 import tw.com.walkablecity.ext.getVMFactory
@@ -79,6 +80,18 @@ class MainActivity : AppCompatActivity() {
         viewModel.invitation.observe(this, Observer{
             it?.let{eventCount ->
                 addBadge(eventCount)
+            }
+        })
+
+        viewModel.friendCount.observe(this, Observer{
+            it?.let{count->
+                Util.getCountFromSharedPreference(BadgeType.FRIEND_COUNT.key, count)
+            }
+        })
+
+        viewModel.eventCount.observe(this, Observer{
+            it?.let{count->
+                Util.getCountFromSharedPreference(BadgeType.EVENT_COUNT.key, count)
             }
         })
 

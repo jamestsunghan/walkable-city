@@ -525,11 +525,12 @@ fun setDrawableAndSendImageView(imageView: ImageView, drawable: Drawable, activi
     imageView.setOnClickListener {view->
         if(shareable){
             val bitmap = Bitmap.createBitmap(drawable.intrinsicWidth, drawable.intrinsicHeight, Bitmap.Config.ARGB_8888)
+            val bitmapScale = Bitmap.createScaledBitmap(bitmap, 120, 120, false)
             val canvas = Canvas(bitmap)
             drawable.setBounds(0,0,canvas.width, canvas.height)
             drawable.draw(canvas)
 
-            bitmap.saveToInternalStorage(WalkableApp.instance)
+            bitmapScale.saveToInternalStorage(WalkableApp.instance)
 
             activity.shareCacheDirBitmap()
         }

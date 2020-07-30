@@ -19,6 +19,8 @@ import tw.com.walkablecity.Logger
 import tw.com.walkablecity.R
 import tw.com.walkablecity.UserManager
 import tw.com.walkablecity.Util.makeShortToast
+import tw.com.walkablecity.Util.putDataToSharedPreference
+import tw.com.walkablecity.data.BadgeType
 import tw.com.walkablecity.databinding.FragmentBadgeBinding
 import tw.com.walkablecity.ext.getVMFactory
 
@@ -60,5 +62,19 @@ class BadgeFragment : Fragment() {
     override fun startActivityForResult(intent: Intent?, requestCode: Int) {
         super.startActivityForResult(intent, requestCode)
         val x = intent?.extras
+    }
+
+    override fun onDestroyView() {
+
+        putDataToSharedPreference(BadgeType.ACCU_HOUR.key, UserManager.user?.accumulatedHour?.total ?: 0f)
+        putDataToSharedPreference(BadgeType.ACCU_KM.key, UserManager.user?.accumulatedKm?.total ?: 0f)
+        viewModel.friendCount.value?.let{
+            putDataToSharedPreference(BadgeType.FRIEND_COUNT.key, count = it)
+        }
+        viewModel.eventCount.value?.let{
+            putDataToSharedPreference(BadgeType.EVENT_COUNT.key, count = it)
+        }
+
+        super.onDestroyView()
     }
 }

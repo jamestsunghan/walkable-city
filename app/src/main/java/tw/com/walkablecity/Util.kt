@@ -116,31 +116,49 @@ object Util {
 
     fun putDataToSharedPreference(key: String, accumulated: Float? = null, count: Int? = null){
         if(accumulated != null){
-            WalkableApp.instance.getSharedPreferences(key, Context.MODE_PRIVATE).edit()
+            WalkableApp.instance.getSharedPreferences(BADGE_DATA, Context.MODE_PRIVATE).edit()
                 .putFloat(key, accumulated)
                 .apply()
         }
         if(count != null){
-            WalkableApp.instance.getSharedPreferences(key, Context.MODE_PRIVATE).edit()
+            WalkableApp.instance.getSharedPreferences(BADGE_DATA, Context.MODE_PRIVATE).edit()
                 .putInt(key, count)
                 .apply()
         }
     }
 
     fun getAccumulatedFromSharedPreference(key: String, userData: Float): Float{
-        val data = WalkableApp.instance.getSharedPreferences(key, Context.MODE_PRIVATE).getFloat(key, -1f)
+        val data = WalkableApp.instance.getSharedPreferences(BADGE_DATA, Context.MODE_PRIVATE).getFloat(key, -1f)
 
         return when{
             data < 0f -> {
                 putDataToSharedPreference(key, userData)
-                WalkableApp.instance.getSharedPreferences(key, Context.MODE_PRIVATE).getFloat(key, -1f)
+                WalkableApp.instance.getSharedPreferences(BADGE_DATA, Context.MODE_PRIVATE).getFloat(key, -1f)
             }
             else ->data
         }
     }
 
-    fun getCountFromSharedPreference(key:String): Int{
-        return WalkableApp.instance.getSharedPreferences(key, Context.MODE_PRIVATE).getInt(key, -1)
+    fun getCountFromSharedPreference(key:String, userData: Int): Int{
+
+        val data = WalkableApp.instance.getSharedPreferences(BADGE_DATA, Context.MODE_PRIVATE).getInt(key, -1)
+
+
+        return when{
+            data < 0 ->{
+                putDataToSharedPreference(key, count = userData)
+                WalkableApp.instance.getSharedPreferences(BADGE_DATA, Context.MODE_PRIVATE).getInt(key, -1)
+            }
+            else -> data
+        }
+    }
+
+    fun getIntFromSP(key: String): Int{
+        return WalkableApp.instance.getSharedPreferences(BADGE_DATA, Context.MODE_PRIVATE).getInt(key, -1)
+    }
+
+    fun getFloatFromSP(key: String): Float{
+        return WalkableApp.instance.getSharedPreferences(BADGE_DATA, Context.MODE_PRIVATE).getFloat(key, -1f)
     }
 
 
@@ -150,5 +168,5 @@ object Util {
     const val ACCU_HOUR    = "accumulated_hour"
     const val EVENT_COUNT  = "event_count"
     const val FRIEND_COUNT = "friend_count"
-
+    const val BADGE_DATA   = "badge_data"
 }

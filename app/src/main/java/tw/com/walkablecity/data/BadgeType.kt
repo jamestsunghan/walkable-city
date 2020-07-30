@@ -33,6 +33,12 @@ enum class BadgeType(val key: String, val born: Int, val kid: Int, val elementar
     }
 
     fun newAccuBadgeCheck(new: Float, old: Float): Int = accuBadgeLevelCheck(new) - accuBadgeLevelCheck(old)
-    fun newCountBadgeCheck(new: Int, old: Int): Int = countBadgeLevelCheck(new) - countBadgeLevelCheck(old)
 
+    fun newCountBadgeCheck(new: Int, old: Int): Int = countBadgeLevelCheck(new) - countBadgeLevelCheck(old)
+    fun accuBadgeDisPlay(new: Float, old: Float, badgeLevel: Int): Boolean{
+        return badgeLevel <= accuBadgeLevelCheck(new) && badgeLevel > accuBadgeLevelCheck(old)
+    }
+    fun countBadgeDisplay(new: Int, old: Int, badgeLevel: Int): Boolean{
+        return badgeLevel <= countBadgeLevelCheck(new) && badgeLevel > countBadgeLevelCheck(old)
+    }
 }

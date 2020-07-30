@@ -33,6 +33,7 @@ interface WalkableDataSource {
 
 
     suspend fun getPopularEvents(): Result<List<Event>>
+    suspend fun getUserEvents(userId: String): Result<List<Event>>
     suspend fun getUserInvitation(userId: String): Result<List<Event>>
     suspend fun getUserChallenges(user: User): Result<List<Event>>
     suspend fun getUserParticipateEvent(user: User): Result<List<Event>>

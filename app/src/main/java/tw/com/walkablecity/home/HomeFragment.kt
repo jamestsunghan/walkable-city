@@ -158,6 +158,8 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationClick
         val mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
         UserManager.user?.id?.let{
             mainViewModel.getInvitation(it)
+            mainViewModel.getUserEventCount(it)
+            mainViewModel.getUserFriendCount(it)
         }
 
         val binding: FragmentHomeBinding = DataBindingUtil
