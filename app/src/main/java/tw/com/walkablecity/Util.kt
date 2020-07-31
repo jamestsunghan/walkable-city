@@ -156,6 +156,21 @@ object Util {
         return WalkableApp.instance.getSharedPreferences(BADGE_DATA, Context.MODE_PRIVATE).getFloat(key, -1f)
     }
 
+    fun showWalkDistroyDialog(context: Context): AlertDialog.Builder{
+        val icon = context.getDrawable(R.drawable.ic_footprint_solid)
+        icon?.setTint(getColor(R.color.primaryDarkColor))
+
+        val dialog = AlertDialog.Builder(context, R.style.AlertDialogStyle)
+            .setMessage(getString(R.string.destroy_walk_message))
+            .setIcon(icon)
+            .setTitle(getString(R.string.destroy_walk_title))
+            .setNegativeButton(getString(R.string.keep_walking)){dialogC, which ->
+                dialogC.cancel()
+            }
+
+        return dialog
+    }
+
     fun showBadgeDialog(grade: Int, context: Context, navController: NavController, directions: NavDirections): AlertDialog{
         val icon = context.getDrawable(R.drawable.ic_badge_solid)
         icon?.setTint(getColor(R.color.primaryDarkColor))

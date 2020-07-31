@@ -7,6 +7,8 @@ import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
+import android.view.animation.AnimationUtils
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatDelegate
@@ -101,6 +103,17 @@ class MainActivity : AppCompatActivity() {
                 Util.getCountFromSharedPreference(BadgeType.EVENT_COUNT.key, count)
             }
         })
+        var previousStatus:WalkerStatus? = null
+        viewModel.walkerStatus.observe(this, Observer{
+            it?.let{status ->
+                if(status == WalkerStatus.WALKING && previousStatus != WalkerStatus.PAUSING){
+                    binding.bottomNav.startAnimation(AnimationUtils.loadAnimation(this, R.anim.anim_slide_down))
+
+
+                }
+                previousStatus = status
+            }
+        })
 
     }
 
@@ -163,12 +176,28 @@ class MainActivity : AppCompatActivity() {
         when(viewModel.currentFragment.value){
             CurrentFragmentType.RATING -> findNavController(R.id.nav_host_fragment).
                 navigate(RatingFragmentDirections.actionGlobalHomeFragment(null,null))
+
             CurrentFragmentType.CREATE_ROUTE_DIALOG -> findNavController(R.id.nav_host_fragment).
                 navigate(CreateRouteDialogFragmentDirections.actionGlobalHomeFragment(null,null))
+
             CurrentFragmentType.ADD_FRIEND -> findNavController(R.id.nav_host_fragment)
                 .navigate(AddFriendFragmentDirections.actionGlobalProfileFragment())
+
             CurrentFragmentType.BADGE -> findNavController(R.id.nav_host_fragment)
                 .navigate(BadgeFragmentDirections.actionGlobalProfileFragment())
+
+            CurrentFragmentType.HOME ->{
+                if(viewModel.walkerStatus.value == WalkerStatus.WALKING || viewModel.walkerStatus.value == WalkerStatus.PAUSING){
+                    val dialog = Util.showWalkDistroyDialog(this)
+                        .setPositiveButton("確定") { dialogC, which ->
+                            super.onBackPressed()
+
+                        }.create()
+                    dialog.show()
+                }else{
+                    super.onBackPressed()
+                }
+            }
 
 
             else -> super.onBackPressed()

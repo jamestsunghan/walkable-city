@@ -174,6 +174,10 @@ class MainViewModel(val walkableRepository: WalkableRepository): ViewModel(){
         }
     }
 
+    fun walkStatusCheck(status: WalkerStatus){
+        _walkerStatus.value = status
+    }
+
     fun startWalking(){
         _walkerStatus.value = WalkerStatus.WALKING
 

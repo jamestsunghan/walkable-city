@@ -23,6 +23,7 @@ import android.os.Handler
 import android.os.HandlerThread
 import android.provider.MediaStore
 import android.view.*
+import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.ImageView
 import android.widget.Toast
@@ -55,12 +56,14 @@ import com.google.maps.android.ktx.addMarker
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
+import okhttp3.internal.wait
 import tw.com.walkablecity.*
 import tw.com.walkablecity.Util.getColor
 import tw.com.walkablecity.Util.isPermissionGranted
 import tw.com.walkablecity.Util.makeShortToast
 import tw.com.walkablecity.Util.requestPermission
 import tw.com.walkablecity.Util.showBadgeDialog
+import tw.com.walkablecity.Util.showWalkDistroyDialog
 import tw.com.walkablecity.data.Route
 import tw.com.walkablecity.databinding.FragmentHomeBinding
 import tw.com.walkablecity.ext.*
@@ -77,6 +80,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationClick
 
 
     lateinit var viewModelInit: HomeViewModel
+    lateinit var dialog: AlertDialog
 
     private lateinit var mapFragment: SupportMapFragment
     private lateinit var map: GoogleMap
@@ -165,6 +169,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationClick
             mainViewModel.getUserFriendCount(it)
         }
 
+
         val binding: FragmentHomeBinding = DataBindingUtil
             .inflate(inflater,
                 R.layout.fragment_home, container, false)
@@ -187,6 +192,14 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationClick
 
 
         viewModelInit = viewModel
+
+        dialog = showWalkDistroyDialog(requireContext()).setPositiveButton(getString(R.string.confirm)) { dialogC, which ->
+            dialogC.cancel()
+
+        }.setNegativeButton("留著好了"){dialogC, which ->
+            dialogC.cancel()
+            super.onResume()
+        }.create()
 
         binding.viewModel = viewModel
 
@@ -381,6 +394,22 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationClick
 
             }
         })
+        var previousStatus:WalkerStatus? = null
+        viewModel.walkerStatus.observe(viewLifecycleOwner, Observer{
+            it?.let{status->
+                mainViewModel.walkStatusCheck(status)
+                if(status == WalkerStatus.WALKING && previousStatus != WalkerStatus.PAUSING){
+
+                    binding.takePicture
+                        .startAnimation(AnimationUtils.loadAnimation(requireContext(), R.anim.anim_fade_in))
+
+                    binding.cardWalkZone
+                        .startAnimation(AnimationUtils.loadAnimation(requireContext(), R.anim.anim_silde_up))
+
+                }
+                previousStatus = status
+            }
+        })
 
         return binding.root
     }
@@ -420,7 +449,22 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationClick
 
     }
 
+    override fun onPause() {
 
+
+        super.onPause()
+    }
+
+    override fun onStop() {
+        super.onStop()
+
+    }
+
+    override fun onDestroyView() {
+
+        super.onDestroyView()
+
+    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
