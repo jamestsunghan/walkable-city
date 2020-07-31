@@ -24,6 +24,7 @@ import android.os.HandlerThread
 import android.provider.MediaStore
 import android.view.*
 import android.view.animation.AnimationUtils
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDelegate
@@ -59,9 +60,11 @@ import tw.com.walkablecity.Util.getColor
 import tw.com.walkablecity.Util.isPermissionGranted
 import tw.com.walkablecity.Util.makeShortToast
 import tw.com.walkablecity.Util.requestPermission
+import tw.com.walkablecity.Util.showBadgeDialog
 import tw.com.walkablecity.data.Route
 import tw.com.walkablecity.databinding.FragmentHomeBinding
 import tw.com.walkablecity.ext.*
+import tw.com.walkablecity.profile.ProfileFragmentDirections
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -268,14 +271,11 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationClick
                 Logger.d("let see some grade $grade")
                 if(grade > 0){
                     mainViewModel.addToBadgeTotal(grade, R.id.homeFragment)
-                    val dialog = AlertDialog.Builder(requireContext())
-                        .setMessage("您有 $grade 個新徽章歐! 快到散步徽章看看!")
-                        .setPositiveButton("前往") { dialog, which ->
-                            findNavController().navigate(HomeFragmentDirections.actionGlobalBadgeFragment())
-                        }.setNegativeButton("稍後再說"){dialog, which ->
-                            dialog.cancel()
-                        }
+                    val dialog = showBadgeDialog(grade, requireContext(), findNavController(),
+                        HomeFragmentDirections.actionGlobalBadgeFragment())
+
                     dialog.show()
+
                 }
             }
         })

@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
@@ -12,6 +13,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import tw.com.walkablecity.*
+import tw.com.walkablecity.Util.showBadgeDialog
 
 import tw.com.walkablecity.data.BadgeType
 import tw.com.walkablecity.databinding.FragmentProfileBinding
@@ -91,13 +93,9 @@ class ProfileFragment : Fragment() {
                 Logger.d("let see some grade $grade")
                 if(grade > 0){
                     mainViewModel.addToBadgeTotal(grade, R.id.profileFragment)
-                    val dialog = AlertDialog.Builder(requireContext())
-                        .setMessage("您有 $grade 個新徽章歐! 快到散步徽章看看!")
-                        .setPositiveButton("前往") { dialog, which ->
-                            findNavController().navigate(ProfileFragmentDirections.actionProfileFragmentToBadgeFragment())
-                        }.setNegativeButton("稍後再說"){dialog, which ->
-                            dialog.cancel()
-                        }
+                    val dialog = showBadgeDialog(grade, requireContext(), findNavController(),
+                        ProfileFragmentDirections.actionProfileFragmentToBadgeFragment())
+
                     dialog.show()
                 }
             }

@@ -346,4 +346,9 @@
     <string name="no_historic_data">尚無歷史資料</string>
 
 
+
+    <string name="badge_dialog_content">您有 %d 個新徽章歐！</string>
+    <string name="go_to">前往散策徽章看看</string>
+
+
 </resources>
