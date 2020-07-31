@@ -18,12 +18,14 @@ import com.google.android.material.badge.BadgeDrawable
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.FirebaseApp
 import tw.com.walkablecity.addfriend.AddFriendFragmentDirections
+import tw.com.walkablecity.data.BadgeType
 import tw.com.walkablecity.data.Walker
 import tw.com.walkablecity.databinding.ActivityMainBinding
 import tw.com.walkablecity.ext.getVMFactory
 import tw.com.walkablecity.home.WalkerStatus
 import tw.com.walkablecity.home.createroute.CreateRouteDialogFragmentDirections
 import tw.com.walkablecity.host.add2event.AddFriend2EventFragmentDirections
+import tw.com.walkablecity.profile.badge.BadgeFragmentDirections
 import tw.com.walkablecity.rating.RatingFragmentDirections
 
 class MainActivity : AppCompatActivity() {
@@ -78,19 +80,38 @@ class MainActivity : AppCompatActivity() {
         setupBottomNav()
         viewModel.invitation.observe(this, Observer{
             it?.let{eventCount ->
-                addBadge(eventCount)
+                addBadge(eventCount,R.id.event)
+            }
+        })
+
+        viewModel.badgeTotal.observe(this, Observer{
+            it?.let{badge->
+                addBadge(badge.sum(), R.id.profile)
+            }
+        })
+
+        viewModel.friendCount.observe(this, Observer{
+            it?.let{count->
+                Util.getCountFromSharedPreference(BadgeType.FRIEND_COUNT.key, count)
+            }
+        })
+
+        viewModel.eventCount.observe(this, Observer{
+            it?.let{count->
+                Util.getCountFromSharedPreference(BadgeType.EVENT_COUNT.key, count)
             }
         })
 
     }
 
-    private fun addBadge(num: Int){
-        if(num>0){
-            binding.bottomNav.getOrCreateBadge(R.id.event).apply {
-                backgroundColor = getColor(R.color.secondaryDarkColor)
-                number = num
-            }
+    private fun addBadge(num: Int, itemId: Int){
+
+        binding.bottomNav.getOrCreateBadge(itemId).apply {
+            backgroundColor = getColor(R.color.secondaryDarkColor)
+            number = num
+            isVisible = num > 0
         }
+
     }
 
     private fun setupBottomNav(){
@@ -106,7 +127,10 @@ class MainActivity : AppCompatActivity() {
                 R.id.rankingFragment -> CurrentFragmentType.RANKING
                 R.id.favoriteFragment -> CurrentFragmentType.FAVORITE
                 R.id.eventFragment -> CurrentFragmentType.EVENT
-                R.id.profileFragment -> CurrentFragmentType.PROFILE
+                R.id.profileFragment -> {
+                    binding.bottomNav.menu.getItem(4).isChecked = true
+                    CurrentFragmentType.PROFILE
+                }
 
                 R.id.loadRouteFragment -> CurrentFragmentType.LOAD_ROUTE
                 R.id.ratingFragment -> CurrentFragmentType.RATING
@@ -141,6 +165,11 @@ class MainActivity : AppCompatActivity() {
                 navigate(RatingFragmentDirections.actionGlobalHomeFragment(null,null))
             CurrentFragmentType.CREATE_ROUTE_DIALOG -> findNavController(R.id.nav_host_fragment).
                 navigate(CreateRouteDialogFragmentDirections.actionGlobalHomeFragment(null,null))
+            CurrentFragmentType.ADD_FRIEND -> findNavController(R.id.nav_host_fragment)
+                .navigate(AddFriendFragmentDirections.actionGlobalProfileFragment())
+            CurrentFragmentType.BADGE -> findNavController(R.id.nav_host_fragment)
+                .navigate(BadgeFragmentDirections.actionGlobalProfileFragment())
+
 
             else -> super.onBackPressed()
         }

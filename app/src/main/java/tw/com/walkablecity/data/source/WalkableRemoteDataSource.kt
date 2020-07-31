@@ -67,13 +67,40 @@ object WalkableRemoteDataSource: WalkableDataSource{
                 task.exception?.let{
                     Logger.d("JJ_fire [${this::class.simpleName}] Error getting documents. ${it.message}")
                     continuation.resume(Result.Error(it))
+                    return@addOnCompleteListener
                 }
                 continuation.resume(Result.Fail(WalkableApp.instance.getString(R.string.not_here)))
             }
         }
     }
 
-    override suspend fun getUserFriends(userId: String): Result<List<User>> = suspendCoroutine {continuation->
+    override suspend fun getUserEvents(userId: String): Result<List<Event>> = suspendCoroutine{continuation->
+        db.collection(EVENT).get().addOnCompleteListener {task->
+            if(task.isSuccessful){
+
+                if(task.result == null || task.result!!.isEmpty) continuation.resume(Result.Success(listOf()))
+                else {
+                    val list = task.result!!.toObjects(Event::class.java).filter{event->
+                        event.member.any{friend->
+                            friend.id == userId
+                        }
+                    }
+
+                    continuation.resume(Result.Success(list))
+                }
+
+            }else{
+                task.exception?.let{
+                    Logger.d("JJ_fire [${this::class.simpleName}] Error getting documents. ${it.message}")
+                    continuation.resume(Result.Error(it))
+                    return@addOnCompleteListener
+                }
+                continuation.resume(Result.Fail(WalkableApp.instance.getString(R.string.not_here)))
+            }
+        }
+    }
+
+    override suspend fun getUserFriends(userId: String): Result<List<User>> = suspendCoroutine { continuation->
         db.collection(USER).document(userId).collection(FRIENDS).get().continueWithTask {task->
             if(!task.isSuccessful){
                 when(val exception = task.exception) {
@@ -169,6 +196,7 @@ object WalkableRemoteDataSource: WalkableDataSource{
                 task.exception?.let{
                     Logger.d("JJ_fire [${this::class.simpleName}] Error getting documents. ${it.message}")
                     continuation.resume(Result.Error(it))
+                    return@addOnCompleteListener
                 }
                 continuation.resume(Result.Fail(WalkableApp.instance.getString(R.string.not_here)))
             }
@@ -190,6 +218,7 @@ object WalkableRemoteDataSource: WalkableDataSource{
                 task.exception?.let{
                     Logger.d("JJ_fire [${this::class.simpleName}] Error getting documents. ${it.message}")
                     continuation.resume(Result.Error(it))
+                    return@addOnCompleteListener
                 }
                 continuation.resume(Result.Fail(WalkableApp.instance.getString(R.string.not_here)))
             }
@@ -211,6 +240,7 @@ object WalkableRemoteDataSource: WalkableDataSource{
                 task.exception?.let{
                     Logger.d("JJ_fire [${this::class.simpleName}] Error getting documents. ${it.message}")
                     continuation.resume(Result.Error(it))
+                    return@addOnCompleteListener
                 }
                 continuation.resume(Result.Fail(WalkableApp.instance.getString(R.string.not_here)))
             }
@@ -226,6 +256,7 @@ object WalkableRemoteDataSource: WalkableDataSource{
                 task.exception?.let{
                     Logger.d("JJ_fire [${this::class.simpleName}] Error getting documents. ${it.message}")
                     continuation.resume(Result.Error(it))
+                    return@addOnCompleteListener
                 }
                 continuation.resume(Result.Fail(WalkableApp.instance.getString(R.string.not_here)))
             }
@@ -241,6 +272,7 @@ object WalkableRemoteDataSource: WalkableDataSource{
                 task.exception?.let{
                     Logger.d("JJ_fire [${this::class.simpleName}] Error getting documents. ${it.message}")
                     continuation.resume(Result.Error(it))
+                    return@addOnCompleteListener
                 }
                 continuation.resume(Result.Fail(WalkableApp.instance.getString(R.string.not_here)))
             }
@@ -258,6 +290,7 @@ object WalkableRemoteDataSource: WalkableDataSource{
                     task.exception?.let{
                         Logger.d("JJ_fire [${this::class.simpleName}] Error getting documents. ${it.message}")
                         continuation.resume(Result.Error(it))
+                        return@addOnCompleteListener
                     }
                     continuation.resume(Result.Fail(WalkableApp.instance.getString(R.string.not_here)))
                 }
@@ -273,6 +306,7 @@ object WalkableRemoteDataSource: WalkableDataSource{
                 task.exception?.let{
                     Logger.d("JJ_fire [${this::class.simpleName}] Error getting documents. ${it.message}")
                     continuation.resume(Result.Error(it))
+                    return@addOnCompleteListener
                 }
                 continuation.resume(Result.Fail(WalkableApp.instance.getString(R.string.not_here)))
             }

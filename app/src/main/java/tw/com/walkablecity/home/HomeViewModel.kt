@@ -21,12 +21,13 @@ import com.google.firebase.Timestamp
 import com.google.firebase.Timestamp.now
 import com.google.firebase.firestore.GeoPoint
 import kotlinx.coroutines.*
-import tw.com.walkablecity.Logger
+import tw.com.walkablecity.*
 import tw.com.walkablecity.R
-import tw.com.walkablecity.UserManager
+import tw.com.walkablecity.Util.getAccumulatedFromSharedPreference
 import tw.com.walkablecity.Util.getColor
+import tw.com.walkablecity.Util.getCountFromSharedPreference
 import tw.com.walkablecity.Util.getString
-import tw.com.walkablecity.WalkableApp
+import tw.com.walkablecity.Util.putDataToSharedPreference
 import tw.com.walkablecity.data.*
 import tw.com.walkablecity.data.source.WalkableRepository
 import tw.com.walkablecity.ext.toDistance
@@ -43,6 +44,9 @@ class HomeViewModel(val walkableRepository: WalkableRepository, val argument: Ro
         const val UPDATE_INTERVAL_IN_MILLISECONDS = 5000L
         const val FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS = UPDATE_INTERVAL_IN_MILLISECONDS / 2
     }
+
+    private val _upgrade = MutableLiveData<Int>()
+    val upgrade: LiveData<Int> get() = _upgrade
 
     val waypointLatLng = MutableLiveData<List<LatLng>>()
 
@@ -149,6 +153,9 @@ class HomeViewModel(val walkableRepository: WalkableRepository, val argument: Ro
             override fun onLocationAvailability(p0: LocationAvailability?) {
                 super.onLocationAvailability(p0)
             }
+        }
+        UserManager.user?.let{user->
+            newAccuBadgeCheck(user)
         }
     }
 
@@ -407,6 +414,20 @@ class HomeViewModel(val walkableRepository: WalkableRepository, val argument: Ro
         return WalkableApp.instance.packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)
     }
 
+    fun newAccuBadgeCheck(user: User){
+        val userKm = user.accumulatedKm?.total ?: 0f
+        val accuKm = getAccumulatedFromSharedPreference(BadgeType.ACCU_KM.key, userKm)
+        val upgradeKm = BadgeType.ACCU_KM.newAccuBadgeCheck(userKm, accuKm)
+
+
+        val userHour = user.accumulatedHour?.total ?: 0f
+        val accuHour = getAccumulatedFromSharedPreference(BadgeType.ACCU_HOUR.key, userHour)
+
+        val upgradeHour = BadgeType.ACCU_HOUR.newAccuBadgeCheck(userHour, accuHour)
+        Logger.d("userHour $userHour accuHour $accuHour upgradeHour $upgradeHour")
+        _upgrade.value = upgradeKm + upgradeHour
+
+    }
 
 
 }

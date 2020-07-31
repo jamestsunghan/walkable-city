@@ -93,6 +93,10 @@ class DefaultWalkableRepository(private val remote: WalkableDataSource): Walkabl
         return remote.getPopularEvents()
     }
 
+    override suspend fun getUserEvents(userId: String): Result<List<Event>> {
+        return remote.getUserEvents(userId)
+    }
+
     override suspend fun getUserChallenges(user: User): Result<List<Event>> {
         return remote.getUserChallenges(user)
     }

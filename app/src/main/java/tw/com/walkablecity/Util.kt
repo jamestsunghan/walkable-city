@@ -2,26 +2,22 @@ package tw.com.walkablecity
 
 import android.content.Context
 import android.content.pm.PackageManager
-import android.location.Location
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
 import android.util.TypedValue
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.navigation.NavController
+import androidx.navigation.NavDirections
 import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.Timestamp
-import com.google.firebase.firestore.GeoPoint
 import tw.com.walkablecity.ext.toLocation
-import tw.com.walkablecity.ext.toQuery
 import tw.com.walkablecity.permission.RationaleDialog
-import java.lang.StringBuilder
 import java.text.ParseException
 import java.text.SimpleDateFormat
-import java.time.format.DateTimeFormatter
 import java.util.*
-import kotlin.math.pow
-import kotlin.math.sqrt
 
 object Util {
 
@@ -113,7 +109,77 @@ object Util {
 //        return StringBuilder().append(MAP_BASE_URL).append("center=${center.toQuery()}").toString()
 //    }
 
+    fun putDataToSharedPreference(key: String, accumulated: Float? = null, count: Int? = null){
+        if(accumulated != null){
+            WalkableApp.instance.getSharedPreferences(BADGE_DATA, Context.MODE_PRIVATE).edit()
+                .putFloat(key, accumulated)
+                .apply()
+        }
+        if(count != null){
+            WalkableApp.instance.getSharedPreferences(BADGE_DATA, Context.MODE_PRIVATE).edit()
+                .putInt(key, count)
+                .apply()
+        }
+    }
+
+    fun getAccumulatedFromSharedPreference(key: String, userData: Float): Float{
+        val data = WalkableApp.instance.getSharedPreferences(BADGE_DATA, Context.MODE_PRIVATE).getFloat(key, -1f)
+
+        return when{
+            data < 0f -> {
+                putDataToSharedPreference(key, userData)
+                WalkableApp.instance.getSharedPreferences(BADGE_DATA, Context.MODE_PRIVATE).getFloat(key, -1f)
+            }
+            else ->data
+        }
+    }
+
+    fun getCountFromSharedPreference(key:String, userData: Int): Int{
+
+        val data = WalkableApp.instance.getSharedPreferences(BADGE_DATA, Context.MODE_PRIVATE).getInt(key, -1)
+
+
+        return when{
+            data < 0 ->{
+                putDataToSharedPreference(key, count = userData)
+                WalkableApp.instance.getSharedPreferences(BADGE_DATA, Context.MODE_PRIVATE).getInt(key, -1)
+            }
+            else -> data
+        }
+    }
+
+    fun getIntFromSP(key: String): Int{
+        return WalkableApp.instance.getSharedPreferences(BADGE_DATA, Context.MODE_PRIVATE).getInt(key, -1)
+    }
+
+    fun getFloatFromSP(key: String): Float{
+        return WalkableApp.instance.getSharedPreferences(BADGE_DATA, Context.MODE_PRIVATE).getFloat(key, -1f)
+    }
+
+    fun showBadgeDialog(grade: Int, context: Context, navController: NavController, directions: NavDirections): AlertDialog{
+        val icon = context.getDrawable(R.drawable.ic_badge_solid)
+        icon?.setTint(getColor(R.color.primaryDarkColor))
+
+        val dialog = AlertDialog.Builder(context, R.style.AlertDialogStyle)
+//            .setMessage(String.format(getString(R.string.badge_dialog_content), grade))
+            .setIcon(icon)
+            .setTitle(String.format(getString(R.string.badge_dialog_content), grade))
+            .setPositiveButton(getString(R.string.go_to)) { dialog, which ->
+                navController.navigate(directions)
+            }.setNegativeButton(getString(R.string.maybe_later)){dialog, which ->
+                dialog.cancel()
+            }
+
+        return dialog.create()
+
+    }
 
 
 
+
+    const val ACCU_KM      = "accumulated_km"
+    const val ACCU_HOUR    = "accumulated_hour"
+    const val EVENT_COUNT  = "event_count"
+    const val FRIEND_COUNT = "friend_count"
+    const val BADGE_DATA   = "badge_data"
 }

@@ -6,6 +6,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -14,14 +16,14 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.badge.BadgeDrawable
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
-import tw.com.walkablecity.Logger
-import tw.com.walkablecity.MainViewModel
+import tw.com.walkablecity.*
 
-import tw.com.walkablecity.R
-import tw.com.walkablecity.UserManager
 import tw.com.walkablecity.Util.getColor
+import tw.com.walkablecity.Util.getIntFromSP
+import tw.com.walkablecity.data.BadgeType
 import tw.com.walkablecity.databinding.FragmentEventBinding
 import tw.com.walkablecity.ext.getVMFactory
+import tw.com.walkablecity.home.HomeFragmentDirections
 
 class EventFragment : Fragment() {
 
@@ -36,6 +38,7 @@ class EventFragment : Fragment() {
         val mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
         UserManager.user?.id?.let{
             mainViewModel.getInvitation(it)
+            mainViewModel.getUserEventCount(it)
         }
 
         val binding: FragmentEventBinding = DataBindingUtil
@@ -72,6 +75,26 @@ class EventFragment : Fragment() {
             if(it){
                 findNavController().navigate(EventFragmentDirections.actionEventFragmentToHostFragment())
                 viewModel.navigateToHostComplete()
+            }
+        })
+
+        mainViewModel.eventCount.observe(viewLifecycleOwner, Observer{
+            it?.let{count->
+                viewModel.setUpgrade(count, getIntFromSP(BadgeType.EVENT_COUNT.key))
+            }
+        })
+
+        viewModel.upgrade.observe(viewLifecycleOwner, Observer{
+            it?.let{grade->
+                Logger.d("let see some grade $grade")
+                if(grade > 0){
+                    mainViewModel.addToBadgeTotal(grade, R.id.eventFragment)
+
+                    val dialog = Util.showBadgeDialog(grade, requireContext(), findNavController(),
+                        EventFragmentDirections.actionGlobalBadgeFragment())
+
+                    dialog.show()
+                }
             }
         })
 

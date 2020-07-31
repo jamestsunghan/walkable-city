@@ -49,5 +49,26 @@
         <item name="android:letterSpacing">0.15</item>
     </style>
 
+    <style name="AlertDialogStyle" parent="Theme.MaterialComponents.DayNight.Dialog.Alert">
+        <item name="colorPrimary">@color/primaryColor</item>
+        <item name="android:windowTitleStyle">@style/AlertDialogTitleText</item>
+        <item name="android:textColorPrimary">@color/primaryDarkColor</item>
+        <item name="android:fontFamily">@font/noto_sans</item>
+        <item name="android:letterSpacing">0.15</item>
+    </style>
+    
+    <style name="AlertDialogTitle" parent="Theme.MaterialComponents.DayNight.Dialog.Alert.Bridge">
+        <item name="android:textAppearance">@style/AlertDialogTitleText</item>
+    </style>
+
+    <style name="AlertDialogTitleText" parent="TextAppearance.MaterialComponents.Subtitle1">
+        <item name="android:textSize">18sp</item>
+        <item name="android:fontFamily">@font/noto_sans</item>
+        <item name="android:letterSpacing">0.15</item>
+    </style>
+
+    
+    
+
 
 </resources>
