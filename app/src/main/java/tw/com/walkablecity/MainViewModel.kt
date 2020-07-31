@@ -8,6 +8,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import tw.com.walkablecity.Util.getString
+import tw.com.walkablecity.data.BadgeUpgrade
 import tw.com.walkablecity.data.LoadStatus
 import tw.com.walkablecity.data.Result
 import tw.com.walkablecity.data.User
@@ -30,6 +31,9 @@ class MainViewModel(val walkableRepository: WalkableRepository): ViewModel(){
     private val _eventCount = MutableLiveData<Int>()
     val eventCount: LiveData<Int> get() = _eventCount
 
+    private val _badgeTotal = MutableLiveData<BadgeUpgrade>()
+    val badgeTotal: LiveData<BadgeUpgrade> get() = _badgeTotal
+
     private val _status = MutableLiveData<LoadStatus>()
     val status: LiveData<LoadStatus> get() = _status
 
@@ -42,6 +46,27 @@ class MainViewModel(val walkableRepository: WalkableRepository): ViewModel(){
     override fun onCleared() {
         super.onCleared()
         viewModelJob.cancel()
+    }
+
+    fun addToBadgeTotal(levelCount: Int, upgradeFrom: Int){
+        val upgrade = badgeTotal.value ?: BadgeUpgrade()
+        _badgeTotal.value =when(upgradeFrom){
+            R.id.homeFragment -> upgrade.apply {
+                home = levelCount
+            }
+            R.id.eventFragment -> upgrade.apply {
+                event = levelCount
+            }
+            R.id.profileFragment -> upgrade.apply {
+                friend = levelCount
+            }
+            else -> upgrade
+        }
+
+    }
+
+    fun resetBadgeTotal(){
+        _badgeTotal.value = BadgeUpgrade()
     }
 
     fun getInvitation(userId: String){

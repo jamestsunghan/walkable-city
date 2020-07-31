@@ -80,7 +80,13 @@ class MainActivity : AppCompatActivity() {
         setupBottomNav()
         viewModel.invitation.observe(this, Observer{
             it?.let{eventCount ->
-                addBadge(eventCount)
+                addBadge(eventCount,R.id.event)
+            }
+        })
+
+        viewModel.badgeTotal.observe(this, Observer{
+            it?.let{badge->
+                addBadge(badge.sum(), R.id.profile)
             }
         })
 
@@ -98,13 +104,14 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    private fun addBadge(num: Int){
-        if(num>0){
-            binding.bottomNav.getOrCreateBadge(R.id.event).apply {
-                backgroundColor = getColor(R.color.secondaryDarkColor)
-                number = num
-            }
+    private fun addBadge(num: Int, itemId: Int){
+
+        binding.bottomNav.getOrCreateBadge(itemId).apply {
+            backgroundColor = getColor(R.color.secondaryDarkColor)
+            number = num
+            isVisible = num > 0
         }
+
     }
 
     private fun setupBottomNav(){
@@ -162,6 +169,7 @@ class MainActivity : AppCompatActivity() {
                 .navigate(AddFriendFragmentDirections.actionGlobalProfileFragment())
             CurrentFragmentType.BADGE -> findNavController(R.id.nav_host_fragment)
                 .navigate(BadgeFragmentDirections.actionGlobalProfileFragment())
+
 
             else -> super.onBackPressed()
         }

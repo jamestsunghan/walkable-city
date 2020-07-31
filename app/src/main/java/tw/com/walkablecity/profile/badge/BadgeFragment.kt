@@ -15,6 +15,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import tw.com.walkablecity.Logger
+import tw.com.walkablecity.MainViewModel
 
 import tw.com.walkablecity.R
 import tw.com.walkablecity.UserManager
@@ -30,12 +31,19 @@ class BadgeFragment : Fragment() {
 
     private val viewModel: BadgeViewModel by viewModels{getVMFactory()}
 
+    lateinit var mainViewModel: MainViewModel
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+        mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
+
         val binding: FragmentBadgeBinding = DataBindingUtil
             .inflate(inflater, R.layout.fragment_badge, container, false)
+
+
         binding.lifecycleOwner = this
 
         binding.viewModel = viewModel
@@ -74,7 +82,7 @@ class BadgeFragment : Fragment() {
         viewModel.eventCount.value?.let{
             putDataToSharedPreference(BadgeType.EVENT_COUNT.key, count = it)
         }
-
+        mainViewModel.resetBadgeTotal()
         super.onDestroyView()
     }
 }

@@ -267,6 +267,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationClick
             it?.let{grade->
                 Logger.d("let see some grade $grade")
                 if(grade > 0){
+                    mainViewModel.addToBadgeTotal(grade, R.id.homeFragment)
                     val dialog = AlertDialog.Builder(requireContext())
                         .setMessage("您有 $grade 個新徽章歐! 快到散步徽章看看!")
                         .setPositiveButton("前往") { dialog, which ->
