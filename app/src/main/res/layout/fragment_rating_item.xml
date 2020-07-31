@@ -569,7 +569,7 @@
             android:paddingTop="4dp"
             android:paddingEnd="8dp"
             android:paddingBottom="4dp"
-            android:text="@{viewModel.selectedRoute == null ? @string/no_route_selected : @string/no_more_to_comment}"
+            android:text="@{viewModel.selectedRoute == null ? @string/no_route_selected : viewModel.type.willComment == false ? @string/not_create_walk : @string/no_more_to_comment}"
             android:textSize="16sp"
             android:visibility="@{viewModel.sendRating == true ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="parent"

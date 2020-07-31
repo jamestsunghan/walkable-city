@@ -20,6 +20,7 @@ import tw.com.walkablecity.*
 
 import tw.com.walkablecity.Util.getColor
 import tw.com.walkablecity.Util.getIntFromSP
+import tw.com.walkablecity.Util.showNoFriendDialog
 import tw.com.walkablecity.data.BadgeType
 import tw.com.walkablecity.databinding.FragmentEventBinding
 import tw.com.walkablecity.ext.getVMFactory
@@ -38,7 +39,7 @@ class EventFragment : Fragment() {
         val mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
         UserManager.user?.id?.let{
             mainViewModel.getInvitation(it)
-            mainViewModel.getUserEventCount(it)
+//            mainViewModel.getUserEventCount(it)
         }
 
         val binding: FragmentEventBinding = DataBindingUtil
@@ -70,6 +71,7 @@ class EventFragment : Fragment() {
         })
 
         binding.viewModel = viewModel
+        binding.mainViewModel = mainViewModel
 
         viewModel.navigateToHost.observe(viewLifecycleOwner, Observer{
             if(it){
@@ -91,10 +93,18 @@ class EventFragment : Fragment() {
                     mainViewModel.addToBadgeTotal(grade, R.id.eventFragment)
 
                     val dialog = Util.showBadgeDialog(grade, requireContext(), findNavController(),
-                        EventFragmentDirections.actionGlobalBadgeFragment())
+                        EventFragmentDirections.actionGlobalBadgeFragment(), getString(R.string.badge_dialog_event))
 
                     dialog.show()
                 }
+            }
+        })
+
+        viewModel.showNoFriendDialog.observe(viewLifecycleOwner, Observer{
+            if(it){
+                val dialog = showNoFriendDialog(requireContext(), findNavController()
+                    , EventFragmentDirections.actionGlobalAddFriendFragment())
+                dialog.show()
             }
         })
 

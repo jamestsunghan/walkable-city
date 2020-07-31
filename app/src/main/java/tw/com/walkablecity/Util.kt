@@ -171,15 +171,32 @@ object Util {
         return dialog
     }
 
-    fun showBadgeDialog(grade: Int, context: Context, navController: NavController, directions: NavDirections): AlertDialog{
+    fun showBadgeDialog(grade: Int, context: Context, navController: NavController, directions: NavDirections, content: String): AlertDialog{
         val icon = context.getDrawable(R.drawable.ic_badge_solid)
         icon?.setTint(getColor(R.color.primaryDarkColor))
 
         val dialog = AlertDialog.Builder(context, R.style.AlertDialogStyle)
 //            .setMessage(String.format(getString(R.string.badge_dialog_content), grade))
             .setIcon(icon)
-            .setTitle(String.format(getString(R.string.badge_dialog_content), grade))
+            .setTitle(String.format(content, grade))
             .setPositiveButton(getString(R.string.go_to)) { dialog, which ->
+                navController.navigate(directions)
+            }.setNegativeButton(getString(R.string.maybe_later)){dialog, which ->
+                dialog.cancel()
+            }
+
+        return dialog.create()
+
+    }
+
+    fun showNoFriendDialog(context: Context, navController: NavController, directions: NavDirections): AlertDialog{
+        val icon = context.getDrawable(R.drawable.ic_footprint_solid)
+        icon?.setTint(getColor(R.color.primaryDarkColor))
+
+        val dialog = AlertDialog.Builder(context, R.style.AlertDialogStyle)
+            .setIcon(icon)
+            .setTitle("您現在還沒有朋友歐")
+            .setPositiveButton("前去加朋友") { dialog, which ->
                 navController.navigate(directions)
             }.setNegativeButton(getString(R.string.maybe_later)){dialog, which ->
                 dialog.cancel()

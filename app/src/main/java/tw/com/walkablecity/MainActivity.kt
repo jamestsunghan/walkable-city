@@ -94,13 +94,15 @@ class MainActivity : AppCompatActivity() {
 
         viewModel.friendCount.observe(this, Observer{
             it?.let{count->
-                Util.getCountFromSharedPreference(BadgeType.FRIEND_COUNT.key, count)
+                val origin = Util.getCountFromSharedPreference(BadgeType.FRIEND_COUNT.key, count)
+                viewModel.addToBadgeTotal(BadgeType.FRIEND_COUNT.newCountBadgeCheck(count, origin), R.id.profileFragment)
             }
         })
 
         viewModel.eventCount.observe(this, Observer{
             it?.let{count->
-                Util.getCountFromSharedPreference(BadgeType.EVENT_COUNT.key, count)
+                val origin = Util.getCountFromSharedPreference(BadgeType.EVENT_COUNT.key, count)
+                viewModel.addToBadgeTotal(BadgeType.EVENT_COUNT.newCountBadgeCheck(count, origin), R.id.eventFragment)
             }
         })
         var previousStatus:WalkerStatus? = null

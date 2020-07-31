@@ -285,7 +285,8 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationClick
                 if(grade > 0){
                     mainViewModel.addToBadgeTotal(grade, R.id.homeFragment)
                     val dialog = showBadgeDialog(grade, requireContext(), findNavController(),
-                        HomeFragmentDirections.actionGlobalBadgeFragment())
+                        HomeFragmentDirections.actionGlobalBadgeFragment()
+                        , getString(R.string.badge_dialog_walk))
 
                     dialog.show()
 

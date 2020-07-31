@@ -69,6 +69,6 @@ class ProfileViewModel(val walkableRepository: WalkableRepository) : ViewModel()
 
     fun setUpgrade(new: Int, old: Int){
         Logger.d("new $new old $old")
-        _upgrade.value = BadgeType.EVENT_COUNT.newCountBadgeCheck(new, old)
+        _upgrade.value = BadgeType.FRIEND_COUNT.newCountBadgeCheck(new, old)
     }
 }

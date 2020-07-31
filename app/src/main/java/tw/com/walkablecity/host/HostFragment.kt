@@ -13,13 +13,12 @@ import androidx.annotation.RequiresApi
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
 import com.google.firebase.Timestamp.now
-import tw.com.walkablecity.Logger
+import tw.com.walkablecity.*
 
-import tw.com.walkablecity.R
-import tw.com.walkablecity.Util
 import tw.com.walkablecity.data.EventType
 import tw.com.walkablecity.data.FrequencyType
 import tw.com.walkablecity.databinding.FragmentHostBinding
@@ -43,6 +42,9 @@ class HostFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+        val mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
+
         val binding: FragmentHostBinding = DataBindingUtil
             .inflate(inflater, R.layout.fragment_host, container, false)
         binding.lifecycleOwner = this
@@ -152,6 +154,9 @@ class HostFragment : Fragment() {
 
         viewModel.navigateToEvents.observe(viewLifecycleOwner, Observer{
             if(it){
+                UserManager.user?.id?.let{id->
+                    mainViewModel.getUserEventCount(id)
+                }
                 findNavController().navigate(HostFragmentDirections.actionGlobalEventFragment())
                 viewModel.navigateToEventsComplete()
             }

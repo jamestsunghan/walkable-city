@@ -5,6 +5,7 @@
 
     <data>
         <variable name="viewModel" type="tw.com.walkablecity.event.EventViewModel" />
+        <variable name="mainViewModel" type="tw.com.walkablecity.MainViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -46,7 +47,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:srcCompat="@drawable/create_event_36"
-            android:onClick="@{() ->viewModel.navigateToHost()}"
+            android:onClick="@{() ->viewModel.navigateToHost(mainViewModel.friendCount)}"
             app:tint="@color/white" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

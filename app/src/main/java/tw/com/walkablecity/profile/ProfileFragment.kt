@@ -35,9 +35,11 @@ class ProfileFragment : Fragment() {
 
         val mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
 
-        UserManager.user?.id?.let{id->
-            mainViewModel.getUserFriendCount(id)
-        }
+//        UserManager.user?.id?.let{id->
+//            if(mainViewModel.friendCount.value == null){
+//                mainViewModel.getUserFriendCount(id)
+//            }
+//        }
 
         val binding: FragmentProfileBinding = DataBindingUtil
             .inflate(inflater, R.layout.fragment_profile, container, false)
@@ -94,7 +96,8 @@ class ProfileFragment : Fragment() {
                 if(grade > 0){
                     mainViewModel.addToBadgeTotal(grade, R.id.profileFragment)
                     val dialog = showBadgeDialog(grade, requireContext(), findNavController(),
-                        ProfileFragmentDirections.actionProfileFragmentToBadgeFragment())
+                        ProfileFragmentDirections.actionProfileFragmentToBadgeFragment()
+                        , getString(R.string.badge_dialog_friend))
 
                     dialog.show()
                 }

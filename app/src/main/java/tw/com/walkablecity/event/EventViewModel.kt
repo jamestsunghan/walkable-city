@@ -13,12 +13,21 @@ class EventViewModel(val walkableRepository: WalkableRepository) : ViewModel() {
     private val _navigateToHost = MutableLiveData<Boolean>(false)
     val navigateToHost: LiveData<Boolean> get() = _navigateToHost
 
+    private val _showNoFriendDialog = MutableLiveData<Boolean>(false)
+    val showNoFriendDialog: LiveData<Boolean> get() = _showNoFriendDialog
+
     private val _upgrade = MutableLiveData<Int>()
     val upgrade: LiveData<Int> get() = _upgrade
 
 
-    fun navigateToHost(){
-        _navigateToHost.value = true
+
+    fun navigateToHost(friendCount: Int){
+        if(friendCount >0){
+            _navigateToHost.value = true
+        }else{
+            _showNoFriendDialog.value = true
+        }
+
     }
 
     fun navigateToHostComplete(){
