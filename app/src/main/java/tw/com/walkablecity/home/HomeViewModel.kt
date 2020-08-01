@@ -159,8 +159,8 @@ class HomeViewModel(val walkableRepository: WalkableRepository, val argument: Ro
         }
     }
 
-    fun dayNightSwitch(){
-
+    fun addStartTrackPoint(latLng: LatLng){
+        trackPoints.value = trackPoints.value?.plus(latLng) as MutableList<LatLng>
     }
 
     fun permissionDeniedForever(){

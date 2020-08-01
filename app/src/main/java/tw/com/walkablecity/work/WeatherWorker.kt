@@ -23,6 +23,7 @@ import tw.com.walkablecity.WalkableApp
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
+import kotlin.math.abs
 
 class WeatherWorker(appContext: Context, params: WorkerParameters): CoroutineWorker(appContext, params) {
 
@@ -75,14 +76,16 @@ class WeatherWorker(appContext: Context, params: WorkerParameters): CoroutineWor
 //                }
 
                 val hourWalkable = weather?.hourly?.filter{item->
-                    item.feelsLike ?: 50f < 35f && item.feelsLike ?: 0f > 15f
+                    item.feelsLike ?: 50f < 35f && item.feelsLike ?: 0f > 15f && item.pop ?: 1f < 0.7
                 }
                     ?.filter{item->
                         val itemDate = SimpleDateFormat("dd", Locale.TAIWAN).format(item.dt?.times(1000))
                         val todayDate = lessThenTenPadStart(currentDate.get(Calendar.DAY_OF_MONTH).toLong())
                         Logger.d("JJ_weather hour date $itemDate & today date $todayDate")
                         itemDate == todayDate
-                }
+                }?.sortedBy {
+                        abs((it.feelsLike ?: 0f).minus(25) )
+                    }
                 val currentUvi = weather?.current?.uvi
                 val text = StringBuilder()
                 when {
@@ -126,6 +129,7 @@ class WeatherWorker(appContext: Context, params: WorkerParameters): CoroutineWor
                         Logger.d("JJ_weather weather hour $hrDisplay feels like ${item.feelsLike} Celsius ")
 
                     }
+                    Logger.d("today good weather ${text.toString()}")
                     text.toString()
                 }
 

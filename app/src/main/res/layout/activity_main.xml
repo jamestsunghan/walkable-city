@@ -61,7 +61,7 @@
             app:itemIconSize="36dp"
             app:itemIconTint="@drawable/bottom_nav_icon_selector"
             app:labelVisibilityMode="unlabeled"
-            android:visibility="@{viewModel.currentFragment == CurrentFragmentType.LOAD_ROUTE || viewModel.currentFragment == CurrentFragmentType.LOGIN || viewModel.currentFragment == CurrentFragmentType.ADD_2_EVENT || viewModel.currentFragment == CurrentFragmentType.BADGE || viewModel.walkerStatus == WalkerStatus.WALKING || viewModel.walkerStatus == WalkerStatus.PAUSING? View.GONE : View.VISIBLE }"
+            android:visibility="@{viewModel.currentFragment == CurrentFragmentType.LOAD_ROUTE || viewModel.currentFragment == CurrentFragmentType.LOGIN || viewModel.currentFragment == CurrentFragmentType.ADD_2_EVENT || viewModel.currentFragment == CurrentFragmentType.BADGE || viewModel.currentFragment == CurrentFragmentType.DETAIL || viewModel.walkerStatus == WalkerStatus.WALKING || viewModel.walkerStatus == WalkerStatus.PAUSING? View.GONE : View.VISIBLE }"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

@@ -54,6 +54,13 @@ class RouteItemFragment(private val loadRouteType: LoadRouteType) : Fragment() {
             }
         })
 
+        viewModel.navigateToDetail.observe(viewLifecycleOwner, Observer{
+            it?.let{
+                findNavController().navigate(LoadRouteFragmentDirections.actionGlobalDetailFragment(it))
+                viewModel.navigateToDetailComplete()
+            }
+        })
+
 
         return binding.root
     }

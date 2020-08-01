@@ -42,6 +42,10 @@ class RouteItemAdapter(private val viewModel: RouteItemViewModel): ListAdapter<R
                 viewModel.selectRoute.value = route
             }
 
+            binding.seeDetail.setOnClickListener {
+                viewModel.navigateToDetail(route)
+            }
+
             binding.executePendingBindings()
         }
     }

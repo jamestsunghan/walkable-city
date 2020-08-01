@@ -25,6 +25,9 @@ class DetailViewModel(val walkableRepository: WalkableRepository, val route: Rou
     private val _natigateToRanking = MutableLiveData<Boolean>(false)
     val navigatingToRanking: LiveData<Boolean> get() = _natigateToRanking
 
+    private val _navigateToHome = MutableLiveData<Route>()
+    val navigateToHome: LiveData<Route> get() = _navigateToHome
+
     private val _status = MutableLiveData<LoadStatus>()
     val status: LiveData<LoadStatus> get() = _status
 
@@ -79,6 +82,14 @@ class DetailViewModel(val walkableRepository: WalkableRepository, val route: Rou
     override fun onCleared() {
         super.onCleared()
         viewModelJob.cancel()
+    }
+
+    fun navigateToHome(route: Route){
+        _navigateToHome.value = route
+    }
+
+    fun navigateToHomeComplete(){
+        _navigateToHome.value = null
     }
 
     fun navigateToRanking(){

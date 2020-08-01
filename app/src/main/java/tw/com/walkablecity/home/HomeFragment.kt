@@ -324,22 +324,28 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationClick
          * it inside the SupportMapFragment. This method will only be triggered once the user has
          * installed Google Play services and returned to the app.
          */
-        viewModel.currentLocation.observe(viewLifecycleOwner, Observer {geoPoint ->
-            geoPoint?.let{
+        viewModel.currentLocation.observe(viewLifecycleOwner, Observer {
+            it?.let{latLng->
 
-                mapFragment.getMapAsync {
-                    val currentLocation = LatLng(geoPoint.latitude, geoPoint.longitude)
+                mapFragment.getMapAsync {map->
 
-                    it.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation,15f))
-                    it.uiSettings.isMyLocationButtonEnabled = true
-                    it.isMyLocationEnabled = true
+                    map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,15f))
+                    map.uiSettings.isMyLocationButtonEnabled = true
+                    map.isMyLocationEnabled = true
                     if(route!=null){
-                        viewModel.drawPath(currentLocation, destination ?: currentLocation, route.waypointsLatLng)
+                        viewModel.drawPath(latLng, destination ?: latLng, route.waypointsLatLng)
                     }
                 }
 
 
                 childFragmentManager.beginTransaction().replace(R.id.map, mapFragment).commit()
+            }
+        })
+
+        viewModel.startLocation.observe(viewLifecycleOwner, Observer{
+            it?.let{latLng->
+                Logger.d("start location $latLng")
+                viewModel.addStartTrackPoint(latLng)
             }
         })
 

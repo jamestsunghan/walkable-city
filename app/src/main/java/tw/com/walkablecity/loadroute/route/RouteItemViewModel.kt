@@ -50,6 +50,9 @@ class RouteItemViewModel( private val walkableRepository: WalkableRepository, va
     private val _sliderMax = MutableLiveData<Float>()
     val sliderMax: LiveData<Float> get() = _sliderMax
 
+    private val _navigateToDetail = MutableLiveData<Route>()
+    val navigateToDetail: LiveData<Route> get() = _navigateToDetail
+
     private val viewModelJob = Job()
     private val coroutineScope = CoroutineScope(Dispatchers.Main + viewModelJob)
 
@@ -112,23 +115,23 @@ class RouteItemViewModel( private val walkableRepository: WalkableRepository, va
         }
     }
 
-    fun routeSorting(sorting: RouteSorting, adapter: RouteItemAdapter){
-        _routeList.value = routeAllList.value?.sortedBy{
-
-            when(sorting){
-                RouteSorting.TRANQUILITY -> it.ratingAvr?.tranquility
-                RouteSorting.SCENERY -> it.ratingAvr?.scenery
-                RouteSorting.REST -> it.ratingAvr?.rest
-                RouteSorting.SNACK -> it.ratingAvr?.snack
-                RouteSorting.COVERAGE -> it.ratingAvr?.coverage
-                RouteSorting.VIBE -> it.ratingAvr?.vibe
-
-            }
-        }?.reversed() ?: listOf()
-        adapter.notifyDataSetChanged()
-        Logger.d("sortingList ${routeList.value?.map{it.title} ?: "null"}")
-        Logger.d("sorting tranquility ${routeList.value?.map{it.ratingAvr?.coverage} ?: "null"}")
-    }
+//    fun routeSorting(sorting: RouteSorting, adapter: RouteItemAdapter){
+//        _routeList.value = routeAllList.value?.sortedBy{
+//
+//            when(sorting){
+//                RouteSorting.TRANQUILITY -> it.ratingAvr?.tranquility
+//                RouteSorting.SCENERY -> it.ratingAvr?.scenery
+//                RouteSorting.REST -> it.ratingAvr?.rest
+//                RouteSorting.SNACK -> it.ratingAvr?.snack
+//                RouteSorting.COVERAGE -> it.ratingAvr?.coverage
+//                RouteSorting.VIBE -> it.ratingAvr?.vibe
+//
+//            }
+//        }?.reversed() ?: listOf()
+//        adapter.notifyDataSetChanged()
+//        Logger.d("sortingList ${routeList.value?.map{it.title} ?: "null"}")
+//        Logger.d("sorting tranquility ${routeList.value?.map{it.ratingAvr?.coverage} ?: "null"}")
+//    }
 
     fun setTimeFilter(range: List<Float>, max: Float){
         _sliderMax.value = max
@@ -137,6 +140,14 @@ class RouteItemViewModel( private val walkableRepository: WalkableRepository, va
 
     fun timeFilter(list: List<Float>, max: Float, sorting: RouteSorting?){
         _routeList.value = routeAllList.value?.timeFilter(list, max, sorting)
+    }
+
+    fun navigateToDetail(route: Route){
+        _navigateToDetail.value = route
+    }
+
+    fun navigateToDetailComplete(){
+        _navigateToDetail.value = null
     }
 
 }
