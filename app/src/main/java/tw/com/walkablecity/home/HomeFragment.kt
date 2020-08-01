@@ -80,7 +80,6 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationClick
 
 
     lateinit var viewModelInit: HomeViewModel
-    lateinit var dialog: AlertDialog
 
     private lateinit var mapFragment: SupportMapFragment
     private lateinit var map: GoogleMap
@@ -192,14 +191,6 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationClick
 
 
         viewModelInit = viewModel
-
-        dialog = showWalkDistroyDialog(requireContext()).setPositiveButton(getString(R.string.confirm)) { dialogC, which ->
-            dialogC.cancel()
-
-        }.setNegativeButton("留著好了"){dialogC, which ->
-            dialogC.cancel()
-            super.onResume()
-        }.create()
 
         binding.viewModel = viewModel
 
@@ -421,32 +412,6 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationClick
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-//        val viewFinder = view.findViewById<CameraPreview>(R.id.photo_booth)
-//        viewFinder.holder.addCallback(object : SurfaceHolder.Callback{
-//            override fun surfaceChanged(
-//                holder: SurfaceHolder?,
-//                format: Int,
-//                width: Int,
-//                height: Int
-//            ) {
-//                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-//            }
-//
-//            override fun surfaceDestroyed(holder: SurfaceHolder?) {
-//                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-//            }
-//
-//            override fun surfaceCreated(holder: SurfaceHolder?) {
-//                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-//            }
-//        })
-
-
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -456,40 +421,16 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationClick
 
     }
 
-    override fun onPause() {
-
-
-        super.onPause()
-    }
-
-    override fun onStop() {
-        super.onStop()
-
-    }
-
-    override fun onDestroyView() {
-
-        super.onDestroyView()
-
-    }
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-//            val imageBitmap = data?.extras?.get("data") as Bitmap
+
             val file = File(context?.cacheDir,"images")
             val pathName = "${file}/image${time.seconds}.jpg"
             val streamFile = File(pathName)
 
             val imageUri = FileProvider.getUriForFile(WalkableApp.instance, WalkableApp.instance.packageName + ".provider", streamFile)
             viewModelInit.addPhotoPoint(pathName)
-//            Glide.with(photo_booth.context)
-//                .load(imageUri).apply(
-//                    RequestOptions()
-//                        .placeholder(R.drawable.placeholder)
-//                        .error(R.drawable.placeholder)
-//                )
-//                .into(photo_booth)
             viewModelInit.cameraClicked.value = true
         }
     }

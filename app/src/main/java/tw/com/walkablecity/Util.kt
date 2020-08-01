@@ -15,6 +15,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.Timestamp
 import tw.com.walkablecity.ext.toLocation
 import tw.com.walkablecity.permission.RationaleDialog
+import java.lang.StringBuilder
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -123,12 +124,12 @@ object Util {
     }
 
     fun getAccumulatedFromSharedPreference(key: String, userData: Float): Float{
-        val data = WalkableApp.instance.getSharedPreferences(BADGE_DATA, Context.MODE_PRIVATE).getFloat(key, -1f)
+        val data = getFloatFromSP(key)
 
         return when{
             data < 0f -> {
                 putDataToSharedPreference(key, userData)
-                WalkableApp.instance.getSharedPreferences(BADGE_DATA, Context.MODE_PRIVATE).getFloat(key, -1f)
+                getFloatFromSP(key)
             }
             else ->data
         }
@@ -136,13 +137,13 @@ object Util {
 
     fun getCountFromSharedPreference(key:String, userData: Int): Int{
 
-        val data = WalkableApp.instance.getSharedPreferences(BADGE_DATA, Context.MODE_PRIVATE).getInt(key, -1)
+        val data = getIntFromSP(key)
 
 
         return when{
             data < 0 ->{
                 putDataToSharedPreference(key, count = userData)
-                WalkableApp.instance.getSharedPreferences(BADGE_DATA, Context.MODE_PRIVATE).getInt(key, -1)
+                getIntFromSP(key)
             }
             else -> data
         }
@@ -195,8 +196,8 @@ object Util {
 
         val dialog = AlertDialog.Builder(context, R.style.AlertDialogStyle)
             .setIcon(icon)
-            .setTitle("您現在還沒有朋友歐")
-            .setPositiveButton("前去加朋友") { dialog, which ->
+            .setTitle(getString(R.string.no_friend_for_now))
+            .setPositiveButton(getString(R.string.go_add_some_friend)) { dialog, which ->
                 navController.navigate(directions)
             }.setNegativeButton(getString(R.string.maybe_later)){dialog, which ->
                 dialog.cancel()
@@ -206,12 +207,14 @@ object Util {
 
     }
 
+    fun displaySliderValue(values: List<Float>, max: Float): String{
+        return StringBuilder()
+            .append(values.min()?.toInt()).append(" ~ ")
+            .append(
+                if(values.max() == max) "${max.toInt()}+"
+                else values.max()?.toInt()
+            ).toString()
+    }
 
-
-
-    const val ACCU_KM      = "accumulated_km"
-    const val ACCU_HOUR    = "accumulated_hour"
-    const val EVENT_COUNT  = "event_count"
-    const val FRIEND_COUNT = "friend_count"
     const val BADGE_DATA   = "badge_data"
 }

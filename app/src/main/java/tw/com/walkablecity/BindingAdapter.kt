@@ -414,6 +414,28 @@ fun walkerDistance(textView: TextView, status: WalkerStatus, mapRoute: GoogleRou
     }
 }
 
+@BindingAdapter("mapRouteTime")
+fun mapRouteTimeDisplay(textView: TextView, mapRoute: GoogleRoute? ){
+    mapRoute?.let{
+        var durationTotal = 0F
+        for(item in mapRoute.legs){
+            durationTotal += item.duration?.value?.toFloat() ?: 0F
+        }
+        textView.text = String.format(getString(R.string.approximate_time), durationTotal / 60)
+    }
+}
+
+@BindingAdapter("mapRouteDistance")
+fun mapRouteDistanceDisplay(textView: TextView, mapRoute: GoogleRoute? ){
+    mapRoute?.let{
+        var distanceTotal = 0F
+        for(item in mapRoute.legs){
+            distanceTotal += item.distance?.value?.toFloat() ?: 0F
+        }
+        textView.text = String.format(getString(R.string.approximate_length), distanceTotal / 1000)
+    }
+}
+
 
 @BindingAdapter("value")
 fun convertInt2Float(slider: Slider, input: Int){

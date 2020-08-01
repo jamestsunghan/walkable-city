@@ -24,6 +24,7 @@ import tw.com.walkablecity.data.BadgeType
 import tw.com.walkablecity.data.Walker
 import tw.com.walkablecity.databinding.ActivityMainBinding
 import tw.com.walkablecity.ext.getVMFactory
+import tw.com.walkablecity.home.HomeFragmentDirections
 import tw.com.walkablecity.home.WalkerStatus
 import tw.com.walkablecity.home.createroute.CreateRouteDialogFragmentDirections
 import tw.com.walkablecity.host.add2event.AddFriend2EventFragmentDirections
@@ -191,8 +192,9 @@ class MainActivity : AppCompatActivity() {
             CurrentFragmentType.HOME ->{
                 if(viewModel.walkerStatus.value == WalkerStatus.WALKING || viewModel.walkerStatus.value == WalkerStatus.PAUSING){
                     val dialog = Util.showWalkDistroyDialog(this)
-                        .setPositiveButton("確定") { dialogC, which ->
-                            super.onBackPressed()
+                        .setPositiveButton(getString(R.string.confirm)) { dialogC, which ->
+                            findNavController(R.id.nav_host_fragment).
+                                navigate(HomeFragmentDirections.actionGlobalHomeFragment(null,null))
 
                         }.create()
                     dialog.show()

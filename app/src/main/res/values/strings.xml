@@ -16,6 +16,8 @@
     <string name="add_friend_event_title">邀請好友</string>
 
     <string name="enter_walkable">進入散步城市</string>
+    <string name="load_other_route">載入其他路線</string>
+    <string name="route_loaded">已繪製路線資訊</string>
 
     <string name="start_walking">開始散步</string>
     <string name="end_walking">結束散步</string>
@@ -197,6 +199,10 @@
     <string name="add_success">加入成功</string>
     <string name="add_failed">加入失敗，請稍後再試</string>
     <string name="already_friend">你們已經是朋友了歐</string>
+
+
+    <string name="no_friend_for_now">您現在還沒有朋友歐</string>
+    <string name="go_add_some_friend">前去加朋友</string>
 
     <string name="walk_update_error">散步更新未完成</string>
 
