@@ -236,17 +236,7 @@ fun bindFriend(view: RecyclerView, list: List<Friend>?){
     }
 }
 
-//@BindingAdapter("memberItem")
-//fun bindMemberItem(view: RecyclerView, list: List<Friend>?){
-//    list?.let{
-//        view.adapter.apply {
-//            when(this){
-//                is MemberAdapter -> submitList(it)
-//
-//            }
-//        }
-//    }
-//}
+
 
 
 

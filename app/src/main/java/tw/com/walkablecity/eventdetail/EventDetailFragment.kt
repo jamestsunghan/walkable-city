@@ -78,6 +78,12 @@ class EventDetailFragment : Fragment() {
             }
         })
 
+//        viewModel.eventMember.observe(viewLifecycleOwner, Observer{
+//            it?.let{
+//                adapter.notifyDataSetChanged()
+//            }
+//        })
+
         viewModel.walkResult.observe(viewLifecycleOwner, Observer{
             it?.let{ list ->
 

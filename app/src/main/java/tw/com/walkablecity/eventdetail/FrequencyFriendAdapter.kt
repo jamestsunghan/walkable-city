@@ -35,8 +35,14 @@ class FrequencyFriendAdapter(private val viewModel: EventDetailViewModel): ListA
         }
     }
 
+
     override fun getItemCount(): Int {
-        return 3
+
+        return if(super.getItemCount() > 3 ){
+            3
+        } else{
+            super.getItemCount()
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FriendViewHolder {

@@ -48,6 +48,8 @@ class EventDetailViewModel(private val walkableRepository: WalkableRepository, v
     private val _snapPosition = MutableLiveData<Int>()
     val snapPosition: LiveData<Int> get() = _snapPosition
 
+
+
     val currentCountDown = MutableLiveData<String>()
 
     var eventIsStarted = requireNotNull(event.startDate?.seconds) < now().seconds
@@ -66,7 +68,10 @@ class EventDetailViewModel(private val walkableRepository: WalkableRepository, v
         value = event.member
     }
 
-
+    val champ = Transformations.map(eventMember){
+        if(it.isNotEmpty()) it[0]
+        else null
+    }
     var resultCount = 0
 
     private val _walkResultSingle = MutableLiveData<Float>()
