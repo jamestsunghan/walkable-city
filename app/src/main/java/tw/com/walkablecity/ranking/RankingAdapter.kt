@@ -6,12 +6,14 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import tw.com.walkablecity.Logger
+import tw.com.walkablecity.Util.displaySliderValue
 import tw.com.walkablecity.data.Route
 import tw.com.walkablecity.databinding.ItemRankingFilterBinding
 import tw.com.walkablecity.databinding.ItemRankingLinearBinding
 import tw.com.walkablecity.ext.toSortList
 import tw.com.walkablecity.loadroute.route.CharacterSpinnerAdapter
 import tw.com.walkablecity.loadroute.route.RouteItem
+import java.lang.StringBuilder
 
 
 class RankingAdapter(private val viewModel: RankingViewModel)
@@ -23,8 +25,14 @@ class RankingAdapter(private val viewModel: RankingViewModel)
         fun bind(viewModel: RankingViewModel){
 
             binding.viewModel = viewModel
+            binding.minuteText = displaySliderValue(binding.timeSlider.values, binding.timeSlider.valueTo)
+
             binding.timeSlider.addOnChangeListener { slider, value, fromUser ->
-                viewModel.setTimeFilter(slider.values)
+                viewModel.setTimeFilter(slider.values, slider.valueTo)
+                viewModel.timeFilter(slider.values, slider.valueTo, viewModel.filter.value)
+
+                binding.minuteText = displaySliderValue(slider.values, slider.valueTo)
+
             }
             binding.executePendingBindings()
         }

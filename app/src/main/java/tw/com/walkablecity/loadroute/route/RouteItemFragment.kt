@@ -40,7 +40,9 @@ class RouteItemFragment(private val loadRouteType: LoadRouteType) : Fragment() {
         viewModel.filter.observe(viewLifecycleOwner, Observer {
             it?.let{
                 Logger.d("route sorting ${it.text}")
-                viewModel.routeSorting(it, adapter)
+                viewModel.timeFilter(viewModel.routeTime.value ?: listOf(Float.MIN_VALUE, Float.MAX_VALUE)
+                    , viewModel.sliderMax.value ?: Float.MAX_VALUE, it)
+                adapter.notifyDataSetChanged()
             }
         })
 
@@ -52,11 +54,13 @@ class RouteItemFragment(private val loadRouteType: LoadRouteType) : Fragment() {
             }
         })
 
-        viewModel.routeTime.observe(viewLifecycleOwner, Observer {
+        viewModel.navigateToDetail.observe(viewLifecycleOwner, Observer{
             it?.let{
-                viewModel.timeFilter(it)
+                findNavController().navigate(LoadRouteFragmentDirections.actionGlobalDetailFragment(it))
+                viewModel.navigateToDetailComplete()
             }
         })
+
 
         return binding.root
     }

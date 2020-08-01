@@ -3,7 +3,9 @@ package tw.com.walkablecity.home
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity.RESULT_OK
+import android.content.ActivityNotFoundException
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Configuration
@@ -21,8 +23,11 @@ import android.os.Handler
 import android.os.HandlerThread
 import android.provider.MediaStore
 import android.view.*
+import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import android.widget.ImageView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -51,14 +56,18 @@ import com.google.maps.android.ktx.addMarker
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
+import okhttp3.internal.wait
 import tw.com.walkablecity.*
 import tw.com.walkablecity.Util.getColor
 import tw.com.walkablecity.Util.isPermissionGranted
 import tw.com.walkablecity.Util.makeShortToast
 import tw.com.walkablecity.Util.requestPermission
+import tw.com.walkablecity.Util.showBadgeDialog
+import tw.com.walkablecity.Util.showWalkDistroyDialog
 import tw.com.walkablecity.data.Route
 import tw.com.walkablecity.databinding.FragmentHomeBinding
 import tw.com.walkablecity.ext.*
+import tw.com.walkablecity.profile.ProfileFragmentDirections
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -74,8 +83,6 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationClick
 
     private lateinit var mapFragment: SupportMapFragment
     private lateinit var map: GoogleMap
-
-//    val mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
 
     companion object{
         const val REQUEST_LOCATION      = 0x00
@@ -141,25 +148,27 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationClick
             viewModelInit.permissionDenied()
         }
 
-        if(isPermissionGranted(permissions,grantResults, Manifest.permission.CAMERA)){
-            viewModelInit.cameraPermissionGranted()
-            initializeCamera()
-        }else{
-            if(!shouldShowRequestPermissionRationale(Manifest.permission.CAMERA)){
-                viewModelInit.permissionDeniedForever()
-            }
-            viewModelInit.cameraPermissionDenied()
-        }
-
     }
 
-
+    override fun onStart() {
+        super.onStart()
+        checkPermission()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+        val mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
+        UserManager.user?.id?.let{
+            mainViewModel.getInvitation(it)
+            mainViewModel.getUserEventCount(it)
+            mainViewModel.getUserFriendCount(it)
+        }
+
+
         val binding: FragmentHomeBinding = DataBindingUtil
             .inflate(inflater,
                 R.layout.fragment_home, container, false)
@@ -189,21 +198,19 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationClick
             this.waypointsLatLng = this.waypoints.toLatLngPoints()
             this.waypoints = listOf()
         }
-
-        if(checkSelfPermission(WalkableApp.instance, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
-            viewModel.permissionGranted()
-            viewModel.clientCurrentLocation()
-        }else{
-            if(!shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)){
-                viewModel.permissionDeniedForever()
-            }
-            requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), REQUEST_LOCATION)
-//            requestPermission(requireActivity() as MainActivity, REQUEST_LOCATION
-//                , Manifest.permission.ACCESS_FINE_LOCATION,true)
-        }
+        checkPermission()
 
         binding.permissionDialogButton.setOnClickListener {
-            requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), REQUEST_LOCATION)
+            when(viewModel.dontAskAgain.value){
+                true ->{
+                    val intent = Intent()
+                        .setAction(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                        .setData(Uri.fromParts("package",requireContext().packageName, null))
+                    startActivity(intent)
+
+                }
+                else -> requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), REQUEST_LOCATION)
+            }
         }
 
         binding.takePicture.setOnClickListener {
@@ -255,17 +262,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationClick
             }
         })
 
-        viewModel.route.observe(viewLifecycleOwner, Observer {
-            it?.let{
-                Logger.d(" route update $it")
-            }
-        })
 
-        viewModel.walkerDistance.observe(viewLifecycleOwner, Observer{
-            it?.let{
-                Logger.d("distance $it")
-            }
-        })
 
         viewModel.error.observe(viewLifecycleOwner, Observer{
             it?.let{
@@ -273,8 +270,41 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationClick
             }
         })
 
+        viewModel.upgrade.observe(viewLifecycleOwner, Observer{
+            it?.let{grade->
+                Logger.d("let see some grade $grade")
+                if(grade > 0){
+                    mainViewModel.addToBadgeTotal(grade, R.id.homeFragment)
+                    val dialog = showBadgeDialog(grade, requireContext(), findNavController(),
+                        HomeFragmentDirections.actionGlobalBadgeFragment()
+                        , getString(R.string.badge_dialog_walk))
+
+                    dialog.show()
+
+                }
+            }
+        })
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
 
+
+        //observe check area
+
+//        viewModel.dontAskAgain.observe(viewLifecycleOwner, Observer{
+//            Logger.d("dont ask again ${it ?: "null"}")
+//        })
+//
+//        viewModel.route.observe(viewLifecycleOwner, Observer {
+//            it?.let{
+//                Logger.d(" route update $it")
+//            }
+//        })
+//
+//        viewModel.walkerDistance.observe(viewLifecycleOwner, Observer{
+//            it?.let{
+//                Logger.d("distance $it")
+//            }
+//        })
 
         /**
          * Manipulates the map once available.
@@ -285,17 +315,16 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationClick
          * it inside the SupportMapFragment. This method will only be triggered once the user has
          * installed Google Play services and returned to the app.
          */
-        viewModel.currentLocation.observe(viewLifecycleOwner, Observer {geoPoint ->
-            geoPoint?.let{
+        viewModel.currentLocation.observe(viewLifecycleOwner, Observer {
+            it?.let{latLng->
 
-                mapFragment.getMapAsync {
-                    val currentLocation = LatLng(geoPoint.latitude, geoPoint.longitude)
+                mapFragment.getMapAsync {map->
 
-                    it.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation,15f))
-                    it.uiSettings.isMyLocationButtonEnabled = true
-                    it.isMyLocationEnabled = true
+                    map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,15f))
+                    map.uiSettings.isMyLocationButtonEnabled = true
+                    map.isMyLocationEnabled = true
                     if(route!=null){
-                        viewModel.drawPath(currentLocation, destination ?: currentLocation, route.waypointsLatLng)
+                        viewModel.drawPath(latLng, destination ?: latLng, route.waypointsLatLng)
                     }
                 }
 
@@ -304,13 +333,25 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationClick
             }
         })
 
+        viewModel.startLocation.observe(viewLifecycleOwner, Observer{
+            it?.let{latLng->
+                Logger.d("start location $latLng")
+                viewModel.addStartTrackPoint(latLng)
+            }
+        })
+
         viewModel.mapRoute.observe(viewLifecycleOwner, Observer{
             it?.let{
                 mapFragment.getMapAsync {map ->
                     Logger.d("direction result $it")
-                    Logger.d("duration ${it.routes[0].legs.map{leg -> leg.distance}}")
+                    if(it.routes.isNotEmpty()){
+                        Logger.d("duration ${it.routes[0].legs.map{leg -> leg.distance}}")
 
-                    map.addPolyline(PolylineOptions().color(getColor(R.color.secondaryLightColor)).addAll(PolyUtil.decode(it.routes[0].overviewPolyline?.points)))
+                        map.addPolyline(PolylineOptions()
+                            .color(getColor(R.color.secondaryLightColor))
+                            .addAll(PolyUtil.decode(it.routes[0].overviewPolyline?.points)))
+                    }
+
                 }
             }
         })
@@ -351,34 +392,24 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationClick
 
             }
         })
+        var previousStatus:WalkerStatus? = null
+        viewModel.walkerStatus.observe(viewLifecycleOwner, Observer{
+            it?.let{status->
+                mainViewModel.walkStatusCheck(status)
+                if(status == WalkerStatus.WALKING && previousStatus != WalkerStatus.PAUSING){
+
+                    binding.takePicture
+                        .startAnimation(AnimationUtils.loadAnimation(requireContext(), R.anim.anim_fade_in))
+
+                    binding.cardWalkZone
+                        .startAnimation(AnimationUtils.loadAnimation(requireContext(), R.anim.anim_silde_up))
+
+                }
+                previousStatus = status
+            }
+        })
 
         return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-//        val viewFinder = view.findViewById<CameraPreview>(R.id.photo_booth)
-//        viewFinder.holder.addCallback(object : SurfaceHolder.Callback{
-//            override fun surfaceChanged(
-//                holder: SurfaceHolder?,
-//                format: Int,
-//                width: Int,
-//                height: Int
-//            ) {
-//                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-//            }
-//
-//            override fun surfaceDestroyed(holder: SurfaceHolder?) {
-//                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-//            }
-//
-//            override fun surfaceCreated(holder: SurfaceHolder?) {
-//                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-//            }
-//        })
-
-
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -390,25 +421,16 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationClick
 
     }
 
-
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-//            val imageBitmap = data?.extras?.get("data") as Bitmap
+
             val file = File(context?.cacheDir,"images")
             val pathName = "${file}/image${time.seconds}.jpg"
             val streamFile = File(pathName)
 
             val imageUri = FileProvider.getUriForFile(WalkableApp.instance, WalkableApp.instance.packageName + ".provider", streamFile)
             viewModelInit.addPhotoPoint(pathName)
-//            Glide.with(photo_booth.context)
-//                .load(imageUri).apply(
-//                    RequestOptions()
-//                        .placeholder(R.drawable.placeholder)
-//                        .error(R.drawable.placeholder)
-//                )
-//                .into(photo_booth)
             viewModelInit.cameraClicked.value = true
         }
     }
@@ -503,6 +525,18 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationClick
             }
         }, handler)
 
+    }
+
+    fun checkPermission(){
+        if(checkSelfPermission(WalkableApp.instance, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+            viewModelInit.permissionGranted()
+            viewModelInit.clientCurrentLocation()
+        }else{
+            if(!shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)){
+                viewModelInit.permissionDeniedForever()
+            }
+            requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), REQUEST_LOCATION)
+        }
     }
 
 

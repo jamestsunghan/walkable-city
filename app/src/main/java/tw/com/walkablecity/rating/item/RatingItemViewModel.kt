@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.android.gms.maps.model.LatLng
+import com.google.firebase.firestore.GeoPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -18,6 +19,7 @@ import tw.com.walkablecity.data.*
 import tw.com.walkablecity.data.source.WalkableRepository
 import tw.com.walkablecity.ext.toComment
 import tw.com.walkablecity.ext.toGeoPoint
+import tw.com.walkablecity.ext.toLatLngPoints
 import tw.com.walkablecity.ext.toRouteId
 import tw.com.walkablecity.rating.RatingType
 import java.text.SimpleDateFormat
@@ -28,6 +30,10 @@ class RatingItemViewModel(val walkableRepository: WalkableRepository, val select
 
     val duration = MutableLiveData<Float>().apply{
         value = requireNotNull(walk.duration).toFloat().div(60)
+    }
+
+    val walkCreatePoints = MutableLiveData<List<LatLng>>().apply{
+        value = walk.waypoints.toLatLngPoints()
     }
 
 
@@ -102,12 +108,14 @@ class RatingItemViewModel(val walkableRepository: WalkableRepository, val select
                     downloadPhotoPoints(requireNotNull(selectedRoute.id))
                 }
             }
-
         }
+    }
 
-//        if(selectedRoute!= null){
-//            getImage(selectedRoute)
-//        }
+    fun setCreateFilter(range: List<Float>){
+        val min = range.min()?.toInt()
+        val max = range.max()?.toInt()?.plus(1)
+        walkCreatePoints.value = walk.waypoints.subList(min ?: 0, max ?: walk.waypoints.size)
+            .toLatLngPoints()
     }
 
     fun sendRouteRating(){
@@ -121,15 +129,19 @@ class RatingItemViewModel(val walkableRepository: WalkableRepository, val select
         )
 
         when(type){
-            RatingType.ROUTE ->updateRouteRating(ratingUpdate)
+            RatingType.ROUTE ->{
+                updateRouteRating(ratingUpdate, routeCommentContent.value, requireNotNull(UserManager.user?.id))
+            }
             RatingType.WALK -> {
-                if(routeTitle.value == null || routeDescription.value == null || routeCommentContent.value == null){
+                if(routeTitle.value == null || routeDescription.value == null || routeCommentContent.value == null || walkCreatePoints.value.isNullOrEmpty()){
                     makeShortToast(R.string.not_complete_yet)
                 }else{
                     createRoute(requireNotNull(routeTitle.value)
                         , requireNotNull(routeDescription.value)
                         , requireNotNull(imageUrl.value)
-                        , walk,ratingUpdate, requireNotNull(UserManager.user?.id), requireNotNull(routeCommentContent.value))
+                        , walk,ratingUpdate, requireNotNull(UserManager.user?.id)
+                        , requireNotNull(routeCommentContent.value)
+                        , requireNotNull(walkCreatePoints.value) )
                 }
             }
             else ->{}
@@ -137,12 +149,13 @@ class RatingItemViewModel(val walkableRepository: WalkableRepository, val select
 
     }
 
-    private fun updateRouteRating(ratingUpdate: RouteRating){
+    private fun updateRouteRating(ratingUpdate: RouteRating, commentContent: String?, userId: String){
 
         coroutineScope.launch {
-
+            val comment = commentContent?.toComment(4, userId)
             _status.value = LoadStatus.LOADING
-            _sendRating.value = when(val result = walkableRepository.updateRouteRating(ratingUpdate, selectedRoute as Route, requireNotNull(UserManager.user?.id))){
+            _sendRating.value = when(val result = walkableRepository.updateRouteRating(ratingUpdate, selectedRoute as Route
+                , requireNotNull(UserManager.user?.id), comment)){
                 is Result.Success ->{
                     _error.value = null
                     _status.value = LoadStatus.DONE
@@ -281,14 +294,14 @@ class RatingItemViewModel(val walkableRepository: WalkableRepository, val select
 
     private fun createRoute(title: String, description: String, imageUrl: String
                             , walk: Walk, rating: RouteRating, userId: String
-                            , commentContent: String){
+                            , commentContent: String, createPoints: List<LatLng>){
 
-        val waypoints = walk.waypoints.filterIndexed { index, latLng ->
+        val waypoints = createPoints.filterIndexed { index, latLng ->
             when {
-                walk.waypoints.size<=10 -> index == index
-                walk.waypoints.size<=18 -> index % 2 ==1
+                createPoints.size<=10 -> index == index
+                createPoints.size<=18 -> index % 2 ==1
                 else -> {
-                    val factor = walk.waypoints.size / 9
+                    val factor = createPoints.size / 9
                     index % factor ==1
                 }
             }
@@ -299,9 +312,9 @@ class RatingItemViewModel(val walkableRepository: WalkableRepository, val select
             mapImage = imageUrl,
             description = description,
             length = requireNotNull(walk.distance),
-            minutes = requireNotNull(walk.duration).toFloat().div(60),
+            minutes = requireNotNull(walk.duration).toFloat().div(60).times(createPoints.size).div(walk.waypoints.size),
             ratingAvr = rating,
-            waypoints = waypoints,
+            waypoints = waypoints.map{ it.toGeoPoint() },
             walkers = listOf(userId),
             comments = listOf(commentContent.toComment(4,userId))
         )

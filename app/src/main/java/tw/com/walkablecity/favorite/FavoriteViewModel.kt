@@ -16,6 +16,7 @@ import tw.com.walkablecity.data.Result
 import tw.com.walkablecity.data.Route
 import tw.com.walkablecity.data.RouteSorting
 import tw.com.walkablecity.data.source.WalkableRepository
+import tw.com.walkablecity.ext.timeFilter
 
 class FavoriteViewModel(val walkableRepository: WalkableRepository) : ViewModel() {
 
@@ -41,6 +42,9 @@ class FavoriteViewModel(val walkableRepository: WalkableRepository) : ViewModel(
 
     private val _routeTime = MutableLiveData<List<Float>>()
     val routeTime: LiveData<List<Float>> get() = _routeTime
+
+    private val _sliderMax = MutableLiveData<Float>()
+    val sliderMax: LiveData<Float> get() = _sliderMax
 
     private val viewModelJob = Job()
     private val coroutineScope = CoroutineScope(Dispatchers.Main + viewModelJob)
@@ -91,32 +95,12 @@ class FavoriteViewModel(val walkableRepository: WalkableRepository) : ViewModel(
         }
     }
 
-    fun routeSorting(sorting: RouteSorting, adapter: FavoriteAdapter){
-        _routeList.value = routeAllList.value?.sortedBy{
-
-            when(sorting){
-                RouteSorting.TRANQUILITY -> it.ratingAvr?.tranquility
-                RouteSorting.SCENERY -> it.ratingAvr?.scenery
-                RouteSorting.REST -> it.ratingAvr?.rest
-                RouteSorting.SNACK -> it.ratingAvr?.snack
-                RouteSorting.COVERAGE -> it.ratingAvr?.coverage
-                RouteSorting.VIBE -> it.ratingAvr?.vibe
-
-            }
-        }?.reversed() ?: listOf()
-        adapter.notifyDataSetChanged()
-        Logger.d("sortingList ${routeList.value?.map{it.title} ?: "null"}")
-        Logger.d("sorting tranquility ${routeList.value?.map{it.ratingAvr?.coverage} ?: "null"}")
-    }
-
-    fun setTimeFilter(range: List<Float>){
+    fun setTimeFilter(range: List<Float>, max: Float){
+        _sliderMax.value = max
         _routeTime.value = range
     }
 
-    fun timeFilter(list: List<Float>){
-        _routeList.value = routeAllList.value?.filter{
-            val range = list.sortedBy{it}
-            range[0] < it.minutes && it.minutes < range[1]
-        }
+    fun timeFilter(list: List<Float>, max: Float, sorting: RouteSorting?){
+        _routeList.value = routeAllList.value?.timeFilter(list, max, sorting)
     }
 }

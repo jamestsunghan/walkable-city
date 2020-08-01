@@ -115,6 +115,7 @@
 
 
         <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_walk_zone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -135,6 +136,68 @@
                 android:visibility="@{viewModel.walkerStatus == WalkerStatus.PREPARE ? View.VISIBLE : View.GONE}">
 
                 <TextView
+                    android:id="@+id/pre_route_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/noto_sans"
+                    android:textColor="@color/white"
+                    android:background="@color/primaryDarkColor"
+                    android:gravity="center"
+                    android:text="@string/route_loaded"
+                    android:layout_marginBottom="16dp"
+                    android:letterSpacing="0.15"
+                    android:paddingStart="8dp"
+                    android:paddingTop="4dp"
+                    android:paddingEnd="8dp"
+                    android:visibility="@{viewModel.mapRoute == null ? View.GONE : View.VISIBLE}"
+                    android:paddingBottom="4dp"
+                    android:textSize="14sp"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toTopOf="@+id/pre_walker_timer"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+                <TextView
+                    android:id="@+id/pre_walker_timer"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/noto_sans"
+                    android:layout_marginBottom="8dp"
+                    android:gravity="center"
+                    android:letterSpacing="0.15"
+                    android:paddingStart="8dp"
+                    android:paddingTop="4dp"
+                    android:paddingEnd="8dp"
+                    android:visibility="@{viewModel.mapRoute == null ? View.GONE : View.VISIBLE}"
+                    android:paddingBottom="4dp"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toTopOf="@+id/button_load_route"
+                    app:layout_constraintEnd_toEndOf="@+id/pre_walking_divider"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:mapRouteTime="@{ viewModel.mapRoute.routes[0] }" />
+
+                <TextView
+                    android:id="@+id/pre_walker_distance"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/noto_sans"
+                    android:gravity="center"
+                    android:letterSpacing="0.15"
+                    android:paddingStart="8dp"
+                    android:paddingTop="4dp"
+                    android:paddingEnd="8dp"
+                    android:paddingBottom="4dp"
+                    android:visibility="@{viewModel.mapRoute == null ? View.GONE : View.VISIBLE}"
+                    android:textStyle="bold"
+                    android:textSize="20sp"
+                    app:layout_constraintBaseline_toBaselineOf="@+id/pre_walker_timer"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/pre_walking_divider"
+                    app:mapRouteDistance="@{viewModel.mapRoute.routes[0]}"
+                    />
+
+                <TextView
                     android:id="@+id/button_load_route"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -147,7 +210,7 @@
                     android:paddingTop="16dp"
                     android:paddingEnd="8dp"
                     android:paddingBottom="16dp"
-                    android:text="@string/load_route"
+                    android:text="@{viewModel.mapRoute == null ? @string/load_route : @string/load_other_route}"
                     android:textColor="@color/primaryDarkColor"
                     android:textSize="16sp"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -406,7 +469,7 @@
             android:text="@string/permission_again"
             android:textColor="@color/white"
             android:textSize="16sp"
-            android:visibility="@{viewModel.permissionDenied &amp;&amp; !viewModel.dontAskAgain ? View.VISIBLE : View.GONE}"
+            android:visibility="@{viewModel.permissionDenied ? View.VISIBLE : View.GONE}"
             app:layout_constraintEnd_toEndOf="@+id/permission_denied"
             app:layout_constraintStart_toStartOf="@+id/permission_denied"
             app:layout_constraintTop_toBottomOf="@+id/permission_denied"

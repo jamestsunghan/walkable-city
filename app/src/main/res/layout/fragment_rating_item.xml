@@ -140,13 +140,11 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="16dp"
-                        android:valueFrom="1"
-                        android:valueTo="100"
+                        android:stepSize="1"
                         app:layout_constraintBottom_toBottomOf="@+id/parse_route_title"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/parse_route_title"
-                        app:layout_constraintTop_toTopOf="@id/parse_route_title"
-                        app:values="@array/initial_creator_slider_values" />
+                        app:layout_constraintTop_toTopOf="@id/parse_route_title" />
 
                     <TextView
                         android:id="@+id/route_title"
@@ -571,7 +569,7 @@
             android:paddingTop="4dp"
             android:paddingEnd="8dp"
             android:paddingBottom="4dp"
-            android:text="@{viewModel.selectedRoute == null ? @string/no_route_selected : @string/no_more_to_comment}"
+            android:text="@{viewModel.selectedRoute == null ? @string/no_route_selected : viewModel.type.willComment == false ? @string/not_create_walk : @string/no_more_to_comment}"
             android:textSize="16sp"
             android:visibility="@{viewModel.sendRating == true ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="parent"

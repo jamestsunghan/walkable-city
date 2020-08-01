@@ -1,6 +1,8 @@
 package tw.com.walkablecity.rating.item
 
 
+import android.content.res.Configuration
+import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
@@ -18,11 +20,9 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
-import com.google.android.gms.maps.model.PolylineOptions
+import com.google.android.gms.maps.model.*
 import tw.com.walkablecity.*
+import tw.com.walkablecity.Util.getColor
 
 import tw.com.walkablecity.data.PhotoPoint
 import tw.com.walkablecity.data.Route
@@ -40,12 +40,38 @@ class RatingItemFragment(private val type: RatingType, private val route: Route?
 
     private lateinit var mapFragment: WorkaroundMapFragment
     private lateinit var map: GoogleMap
+    private lateinit var polyliner: Polyline
+    private lateinit var polyline: Polyline
 
     val viewModel: RatingItemViewModel by viewModels{
         getVMFactory(route, walk , type, photoPoints)}
 
     override fun onMapReady(googleMap: GoogleMap?) {
         map = googleMap ?: return
+
+        when(requireContext().resources.configuration.uiMode.and(Configuration.UI_MODE_NIGHT_MASK)){
+            Configuration.UI_MODE_NIGHT_YES ->{
+                try{
+                    val success = map.setMapStyle(MapStyleOptions
+                        .loadRawResourceStyle(requireContext(), R.raw.style_night_with_label))
+                    if(!success){
+                        Logger.e("JJ_map style parsing fail")
+                    }
+                }catch (e: Resources.NotFoundException){
+                    Logger.e("JJ_map Can't find style. Error: $e")
+                }
+            }
+            else ->{
+                try{
+                    val success = map.setMapStyle(MapStyleOptions("[]"))
+                    if(!success){
+                        Logger.e("JJ_map style parsing fail")
+                    }
+                }catch (e: Resources.NotFoundException){
+                    Logger.e("JJ_map Can't find style. Error: $e")
+                }
+            }
+        }
 
     }
 
@@ -63,6 +89,15 @@ class RatingItemFragment(private val type: RatingType, private val route: Route?
 
         val binding: FragmentRatingItemBinding = DataBindingUtil
             .inflate(inflater, R.layout.fragment_rating_item, container, false)
+
+        binding.createRouteSlider.apply{
+            addOnChangeListener { slider, value, fromUser ->
+                viewModel.setCreateFilter(slider.values)
+            }
+            values = listOf(0.toFloat(), walk.waypoints.lastIndex.toFloat())
+            valueFrom = 0.toFloat()
+            valueTo = walk.waypoints.lastIndex.toFloat()
+        }
 
         mapFragment.setListener(object: WorkaroundMapFragment.OnTouchListener{
             override fun onTouch() {
@@ -119,16 +154,24 @@ class RatingItemFragment(private val type: RatingType, private val route: Route?
 
             }
             RatingType.WALK->{
+
+
                 mapFragment.getMapAsync {
 
+
+
                     it.moveCamera(CameraUpdateFactory.newLatLngZoom(walk.waypoints.toLatLngPoints()[0],15f))
-                    it.addPolyline(PolylineOptions().addAll(walk.waypoints.toLatLngPoints()))
+                    polyliner = it.addPolyline(PolylineOptions().color(getColor(R.color.grey_transparent))
+                        .addAll(walk.waypoints.toLatLngPoints()))
+                    polyline = map.addPolyline(PolylineOptions().addAll(walk.waypoints.toLatLngPoints()))
+
 
                     val points = photoPoints
                     if(points.isNullOrEmpty()){
                        Logger.d("JJ_photo we don't have points this time")
                     }else{
                         for(item in points){
+
                             val latLng = LatLng(requireNotNull(item.point).latitude, item.point.longitude)
                             val bitmap = BitmapFactory.decodeFile(item.photo, BitmapFactory.Options().apply {
                                 inSampleSize = 25
@@ -142,13 +185,30 @@ class RatingItemFragment(private val type: RatingType, private val route: Route?
 
                 }
 
+
+                viewModel.walkCreatePoints.observe(viewLifecycleOwner, Observer{
+                    it?.let{latLngs->
+                        mapFragment.getMapAsync {map->
+
+                            polyline.remove()
+                            polyline = map.addPolyline(PolylineOptions()
+                                .color(getColor(R.color.red_heart_c73e3a))
+                                .addAll(latLngs))
+
+                        }
+                    }
+                })
+
                 childFragmentManager.beginTransaction().replace(R.id.map, mapFragment).commit()
 
                 binding.sendRating.setOnClickListener {
+                    polyliner.remove()
                     map.snapshot(this)
                 }
 
             }
+
+
         }
 
         viewModel.imageUrl.observe(viewLifecycleOwner, Observer {

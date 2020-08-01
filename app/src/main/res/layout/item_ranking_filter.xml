@@ -5,6 +5,7 @@
 
     <data>
         <variable name="viewModel" type="tw.com.walkablecity.ranking.RankingViewModel" />
+        <variable name="minuteText" type="String" />
         <import type="tw.com.walkablecity.data.RouteSorting"/>
     </data>
 
@@ -28,6 +29,19 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="@+id/filter_coverage"
             app:layout_constraintTop_toTopOf="@+id/filter_coverage" />
+
+        <TextView
+            android:id="@+id/select_time_min"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:background="@color/primaryLightColor"
+            android:fontFamily="@font/noto_sans"
+            android:letterSpacing="0.15"
+            android:text="@{minuteText}"
+            android:textSize="16sp"
+            app:layout_constraintStart_toEndOf="@+id/select_time_title"
+            app:layout_constraintBaseline_toBaselineOf="@+id/select_time_title" />
 
 
         <TextView
@@ -156,8 +170,9 @@
             android:layout_height="wrap_content"
             android:stepSize="5"
             android:layout_marginStart="8dp"
-            android:valueFrom="5"
+            android:valueFrom="0"
             android:valueTo="40"
+            app:labelBehavior="gone"
             app:layout_constraintBottom_toBottomOf="@+id/filter_rest"
             app:layout_constraintEnd_toStartOf="@id/minute"
             app:layout_constraintStart_toStartOf="parent"

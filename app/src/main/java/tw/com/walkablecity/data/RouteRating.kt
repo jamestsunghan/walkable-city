@@ -11,4 +11,7 @@ data class RouteRating (
     val snack: Float= 0f,
     val tranquility: Float= 0f,
     val vibe: Float= 0f
-): Parcelable
+): Parcelable{
+    fun sum(): Float = coverage + rest + scenery + snack + tranquility + vibe
+    fun average(): Float = sum().div(6)
+}

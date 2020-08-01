@@ -66,6 +66,13 @@ class DetailFragment : Fragment() {
             }
         })
 
+        viewModel.navigateToHome.observe(viewLifecycleOwner, Observer{
+            it?.let{route->
+                findNavController().navigate(DetailFragmentDirections.actionGlobalHomeFragment(route, null))
+                viewModel.navigateToHomeComplete()
+            }
+        })
+
 
 
         viewModel.navigatingToRanking.observe(viewLifecycleOwner, Observer {

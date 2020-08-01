@@ -5,6 +5,7 @@
 
     <data>
         <variable name="viewModel" type="tw.com.walkablecity.event.EventViewModel" />
+        <variable name="mainViewModel" type="tw.com.walkablecity.MainViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -13,24 +14,27 @@
         android:background="@color/white"
         tools:context=".event.EventFragment">
 
-        <androidx.viewpager.widget.ViewPager
+        <com.google.android.material.tabs.TabLayout
+            app:layout_constraintTop_toTopOf="parent"
+            android:id="@+id/tabs_event"
+            android:layout_width="match_parent"
+            android:background="@color/white"
+            android:layout_height="48dp"
+            app:tabIndicator="@color/primaryColor"
+            app:tabTextAppearance="@style/TabForLoadTitle"
+            app:tabSelectedTextColor="@color/secondaryColor"
+            app:tabTextColor="@color/primaryColor"/>
+
+        <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/viewpager_event"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tabs_event"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
-            <com.google.android.material.tabs.TabLayout
-                android:id="@+id/tabs_event"
-                android:layout_width="match_parent"
-                android:background="@color/white"
-                android:layout_height="48dp"
-                app:tabIndicator="@color/primaryColor"
-                app:tabTextAppearance="@style/TabForLoadTitle"
-                app:tabSelectedTextColor="@color/secondaryColor"
-                app:tabTextColor="@color/primaryColor"/>
-        </androidx.viewpager.widget.ViewPager>
+
+        </androidx.viewpager2.widget.ViewPager2>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/create_event"
@@ -43,7 +47,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:srcCompat="@drawable/create_event_36"
-            android:onClick="@{() ->viewModel.navigateToHost()}"
+            android:onClick="@{() ->viewModel.navigateToHost(mainViewModel.friendCount)}"
             app:tint="@color/white" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

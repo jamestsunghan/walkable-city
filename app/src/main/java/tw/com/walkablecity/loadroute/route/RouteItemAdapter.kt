@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import tw.com.walkablecity.Logger
 import tw.com.walkablecity.R
 import tw.com.walkablecity.Util
+import tw.com.walkablecity.Util.displaySliderValue
 import tw.com.walkablecity.data.Route
 import tw.com.walkablecity.data.RouteRating
 import tw.com.walkablecity.data.RouteSorting
@@ -24,8 +25,15 @@ class RouteItemAdapter(private val viewModel: RouteItemViewModel): ListAdapter<R
         fun bind(viewModel: RouteItemViewModel){
 
             binding.viewModel = viewModel
+
+            binding.minuteText =
+                displaySliderValue(binding.timeSlider.values, binding.timeSlider.valueTo)
+
             binding.timeSlider.addOnChangeListener { slider, value, fromUser ->
-                viewModel.setTimeFilter(slider.values)
+                viewModel.setTimeFilter(slider.values, slider.valueTo)
+                viewModel.timeFilter(slider.values, slider.valueTo, viewModel.filter.value)
+
+                binding.minuteText = displaySliderValue(slider.values, slider.valueTo)
             }
             binding.executePendingBindings()
         }
@@ -37,9 +45,14 @@ class RouteItemAdapter(private val viewModel: RouteItemViewModel): ListAdapter<R
             Logger.d("sortList ${route.ratingAvr.toSortList(viewModel.filter.value)} ratingAvr ${route.ratingAvr}")
             binding.characterSpinner.adapter = CharacterSpinnerAdapter(route.ratingAvr.toSortList(viewModel.filter.value))
             binding.route = route
-            binding.selectRoute.setOnClickListener {
+            binding.root.setOnClickListener {
                 viewModel.selectRoute.value = route
             }
+
+            binding.seeDetail.setOnClickListener {
+                viewModel.navigateToDetail(route)
+            }
+
             binding.executePendingBindings()
         }
     }
