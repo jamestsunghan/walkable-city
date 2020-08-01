@@ -49,8 +49,8 @@ class DefaultWalkableRepository(private val remote: WalkableDataSource): Walkabl
         return remote.updateWalks(walk, user)
     }
 
-    override suspend fun updateRouteRating(rating: RouteRating, route: Route, userId: String): Result<Boolean> {
-        return remote.updateRouteRating(rating, route, userId)
+    override suspend fun updateRouteRating(rating: RouteRating, route: Route, userId: String, comment: Comment?): Result<Boolean> {
+        return remote.updateRouteRating(rating, route, userId, comment)
     }
 
     override suspend fun createRouteByUser(route: Route): Result<Boolean> {

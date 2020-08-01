@@ -24,7 +24,8 @@ class RankingAdapter(private val viewModel: RankingViewModel)
 
             binding.viewModel = viewModel
             binding.timeSlider.addOnChangeListener { slider, value, fromUser ->
-                viewModel.setTimeFilter(slider.values)
+                viewModel.setTimeFilter(slider.values, slider.valueTo)
+                viewModel.timeFilter(slider.values, slider.valueTo, viewModel.filter.value)
             }
             binding.executePendingBindings()
         }

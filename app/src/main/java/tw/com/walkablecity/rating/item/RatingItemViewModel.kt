@@ -108,12 +108,7 @@ class RatingItemViewModel(val walkableRepository: WalkableRepository, val select
                     downloadPhotoPoints(requireNotNull(selectedRoute.id))
                 }
             }
-
         }
-
-//        if(selectedRoute!= null){
-//            getImage(selectedRoute)
-//        }
     }
 
     fun setCreateFilter(range: List<Float>){
@@ -134,7 +129,9 @@ class RatingItemViewModel(val walkableRepository: WalkableRepository, val select
         )
 
         when(type){
-            RatingType.ROUTE ->updateRouteRating(ratingUpdate)
+            RatingType.ROUTE ->{
+                updateRouteRating(ratingUpdate, routeCommentContent.value, requireNotNull(UserManager.user?.id))
+            }
             RatingType.WALK -> {
                 if(routeTitle.value == null || routeDescription.value == null || routeCommentContent.value == null || walkCreatePoints.value.isNullOrEmpty()){
                     makeShortToast(R.string.not_complete_yet)
@@ -152,12 +149,13 @@ class RatingItemViewModel(val walkableRepository: WalkableRepository, val select
 
     }
 
-    private fun updateRouteRating(ratingUpdate: RouteRating){
+    private fun updateRouteRating(ratingUpdate: RouteRating, commentContent: String?, userId: String){
 
         coroutineScope.launch {
-
+            val comment = commentContent?.toComment(4, userId)
             _status.value = LoadStatus.LOADING
-            _sendRating.value = when(val result = walkableRepository.updateRouteRating(ratingUpdate, selectedRoute as Route, requireNotNull(UserManager.user?.id))){
+            _sendRating.value = when(val result = walkableRepository.updateRouteRating(ratingUpdate, selectedRoute as Route
+                , requireNotNull(UserManager.user?.id), comment)){
                 is Result.Success ->{
                     _error.value = null
                     _status.value = LoadStatus.DONE

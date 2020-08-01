@@ -38,7 +38,8 @@ class FavoriteFragment : Fragment() {
         viewModel.filter.observe(viewLifecycleOwner, Observer {
             it?.let{
                 Logger.d("route sorting ${it.text}")
-                viewModel.routeSorting(it, adapter)
+                viewModel.timeFilter(viewModel.routeTime.value ?: listOf(Float.MIN_VALUE, Float.MAX_VALUE), viewModel.sliderMax.value ?: Float.MAX_VALUE , it)
+                adapter.notifyDataSetChanged()
             }
         })
 
@@ -47,12 +48,6 @@ class FavoriteFragment : Fragment() {
 
                 findNavController().navigate(FavoriteFragmentDirections.actionGlobalDetailFragment(it))
                 viewModel.navigationComplete()
-            }
-        })
-
-        viewModel.routeTime.observe(viewLifecycleOwner, Observer {
-            it?.let{
-                viewModel.timeFilter(it)
             }
         })
 

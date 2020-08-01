@@ -18,6 +18,7 @@ import tw.com.walkablecity.data.Route
 import tw.com.walkablecity.data.RouteRating
 import tw.com.walkablecity.data.RouteSorting
 import tw.com.walkablecity.data.source.WalkableRepository
+import tw.com.walkablecity.ext.timeFilter
 import tw.com.walkablecity.loadroute.LoadRouteType
 
 class RouteItemViewModel( private val walkableRepository: WalkableRepository, val loadRouteType: LoadRouteType) : ViewModel() {
@@ -45,6 +46,9 @@ class RouteItemViewModel( private val walkableRepository: WalkableRepository, va
 
     private val _routeTime = MutableLiveData<List<Float>>()
     val routeTime: LiveData<List<Float>> get() = _routeTime
+
+    private val _sliderMax = MutableLiveData<Float>()
+    val sliderMax: LiveData<Float> get() = _sliderMax
 
     private val viewModelJob = Job()
     private val coroutineScope = CoroutineScope(Dispatchers.Main + viewModelJob)
@@ -126,15 +130,13 @@ class RouteItemViewModel( private val walkableRepository: WalkableRepository, va
         Logger.d("sorting tranquility ${routeList.value?.map{it.ratingAvr?.coverage} ?: "null"}")
     }
 
-    fun setTimeFilter(range: List<Float>){
+    fun setTimeFilter(range: List<Float>, max: Float){
+        _sliderMax.value = max
         _routeTime.value = range
     }
 
-    fun timeFilter(list: List<Float>){
-        _routeList.value = routeAllList.value?.filter{
-            val range = list.sortedBy{it}
-             range[0] < it.minutes && it.minutes < range[1]
-        }
+    fun timeFilter(list: List<Float>, max: Float, sorting: RouteSorting?){
+        _routeList.value = routeAllList.value?.timeFilter(list, max, sorting)
     }
 
 }

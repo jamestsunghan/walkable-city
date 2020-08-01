@@ -506,14 +506,14 @@ object WalkableRemoteDataSource: WalkableDataSource{
         }
     }
 
-    override suspend fun updateRouteRating(rating: RouteRating, route: Route, userId: String): Result<Boolean> = suspendCoroutine { continuation ->
+    override suspend fun updateRouteRating(rating: RouteRating, route: Route, userId: String, comment: Comment?): Result<Boolean> = suspendCoroutine { continuation ->
         val ratingToUpdate = rating.toHashMapInt()
         val walkersNew =
             if(route.walkers.contains(userId))route.walkers
             else route.walkers.plus(userId)
         val ratingAvrNew = route.ratingAvr?.addToAverage(rating, route) as RouteRating
         Logger.d("JJ_fire ratingAvr new $ratingAvrNew")
-        var missionToComplete = 2
+        var missionToComplete = 3
 
         db.collection(ROUTE).document(route.id.toString()).apply{
             update(RATINGAVR, ratingAvrNew.toHashMap(), WALKERS, walkersNew).addOnCompleteListener { task ->
@@ -540,6 +540,23 @@ object WalkableRemoteDataSource: WalkableDataSource{
                         return@addOnCompleteListener
                     }
                     continuation.resume(Result.Fail(WalkableApp.instance.getString(R.string.not_here)))
+                }
+            }
+            if(comment == null){
+                missionToComplete -= 1
+            }else{
+                collection(COMMENTS).add(comment).addOnCompleteListener {task->
+                    if(task.isSuccessful){
+                        missionToComplete -= 1
+                        if(missionToComplete == 0) continuation.resume(Result.Success(true))
+                    }else{
+                        task.exception?.let{
+                            Logger.d("JJ_fire [${this::class.simpleName}] Error getting documents. ${it.message}")
+                            continuation.resume(Result.Error(it))
+                            return@addOnCompleteListener
+                        }
+                        continuation.resume(Result.Fail(WalkableApp.instance.getString(R.string.not_here)))
+                    }
                 }
             }
         }

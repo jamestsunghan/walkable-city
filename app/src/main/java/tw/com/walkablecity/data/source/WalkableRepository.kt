@@ -19,7 +19,7 @@ interface WalkableRepository {
     suspend fun getUserCurrentLocation(): Result<LatLng>
 
     suspend fun updateWalks(walk: Walk, user: User): Result<Boolean>
-    suspend fun updateRouteRating(rating: RouteRating, route: Route, userId: String): Result<Boolean>
+    suspend fun updateRouteRating(rating: RouteRating, route: Route, userId: String, comment: Comment?): Result<Boolean>
     suspend fun createRouteByUser(route: Route): Result<Boolean>
     suspend fun uploadPhotoPoints(routeId: String, photoPoints: List<PhotoPoint>): Result<Boolean>
     suspend fun downloadPhotoPoints(routeId: String): Result<List<PhotoPoint>>
