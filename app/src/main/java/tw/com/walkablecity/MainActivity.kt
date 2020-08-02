@@ -102,6 +102,7 @@ class MainActivity : AppCompatActivity() {
 
         viewModel.eventCount.observe(this, Observer{
             it?.let{count->
+                Logger.d("event count from main activity")
                 val origin = Util.getCountFromSharedPreference(BadgeType.EVENT_COUNT.key, count)
                 viewModel.addToBadgeTotal(BadgeType.EVENT_COUNT.newCountBadgeCheck(count, origin), R.id.eventFragment)
             }

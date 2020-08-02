@@ -89,17 +89,18 @@ class ProfileFragment : Fragment() {
                 viewModel.setUpgrade(count, Util.getIntFromSP(BadgeType.FRIEND_COUNT.key))
             }
         })
-
+        var previousUpgrade = 0
         viewModel.upgrade.observe(viewLifecycleOwner, Observer {
             it?.let{grade->
                 Logger.d("let see some grade $grade")
-                if(grade > 0){
+                if(grade > previousUpgrade){
                     mainViewModel.addToBadgeTotal(grade, R.id.profileFragment)
                     val dialog = showBadgeDialog(grade, requireContext(), findNavController(),
                         ProfileFragmentDirections.actionProfileFragmentToBadgeFragment()
                         , getString(R.string.badge_dialog_friend))
 
                     dialog.show()
+                    previousUpgrade = grade
                 }
             }
         })

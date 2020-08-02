@@ -119,6 +119,7 @@ class EventDetailFragment : Fragment() {
 
                 if(it){
                     mainViewModel.getUserEventCount(requireNotNull(UserManager.user?.id))
+                    Logger.d("badge event dialog from detail")
                     findNavController().navigate(EventDetailFragmentDirections.actionGlobalEventFragment())
                 }
             }

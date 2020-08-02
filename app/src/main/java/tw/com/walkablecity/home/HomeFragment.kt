@@ -164,6 +164,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationClick
         val mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
         UserManager.user?.id?.let{
             mainViewModel.getInvitation(it)
+            Logger.d("badge event dialog from home")
             mainViewModel.getUserEventCount(it)
             mainViewModel.getUserFriendCount(it)
         }
@@ -269,17 +270,18 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationClick
                 Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
             }
         })
-
+        var previousUpgrade = 0
         viewModel.upgrade.observe(viewLifecycleOwner, Observer{
             it?.let{grade->
                 Logger.d("let see some grade $grade")
-                if(grade > 0){
+                if(grade > previousUpgrade){
                     mainViewModel.addToBadgeTotal(grade, R.id.homeFragment)
                     val dialog = showBadgeDialog(grade, requireContext(), findNavController(),
                         HomeFragmentDirections.actionGlobalBadgeFragment()
                         , getString(R.string.badge_dialog_walk))
 
                     dialog.show()
+                    previousUpgrade = grade
 
                 }
             }

@@ -172,7 +172,8 @@ object Util {
         return dialog
     }
 
-    fun showBadgeDialog(grade: Int, context: Context, navController: NavController, directions: NavDirections, content: String): AlertDialog{
+    fun showBadgeDialog(grade: Int, context: Context, navController: NavController, directions: NavDirections, content: String)
+            : AlertDialog.Builder{
         val icon = context.getDrawable(R.drawable.ic_badge_solid)
         icon?.setTint(getColor(R.color.primaryDarkColor))
 
@@ -186,7 +187,7 @@ object Util {
                 dialog.cancel()
             }
 
-        return dialog.create()
+        return dialog
 
     }
 
