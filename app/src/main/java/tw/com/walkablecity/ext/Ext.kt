@@ -23,6 +23,7 @@ import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.HashMap
+import kotlin.math.roundToInt
 
 fun RouteRating?.toSortList(filter: RouteSorting?): List<String>{
     return if(this == null){
@@ -50,7 +51,7 @@ fun RouteRating?.toSortList(filter: RouteSorting?): List<String>{
 
 
         originList.minus(headItem).plus(headItem).asReversed().map{
-            "${it.first} | ${it.second}"
+            "${it.first} | ${it.second.times(10).roundToInt().toFloat().div(10)}"
         }
 
     }
@@ -141,15 +142,15 @@ fun RouteRating.toHashMap(): HashMap<String, Float>{
     )
 }
 
-fun RouteRating.addToAverage(rating: RouteRating, route: Route): RouteRating{
+fun RouteRating.addToAverage(rating: RouteRating, route: Route, ratings: Int): RouteRating{
 
     return RouteRating(
-        coverage = this.coverage.toNewAverage(rating, route),
-        rest = this.rest.toNewAverage(rating, route),
-        snack = this.snack.toNewAverage(rating, route),
-        scenery = this.scenery.toNewAverage(rating, route),
-        tranquility = this.tranquility.toNewAverage(rating, route),
-        vibe = this.vibe.toNewAverage(rating, route)
+        coverage = this.coverage.toNewAverage(rating.coverage, route, ratings),
+        rest = this.rest.toNewAverage(rating.rest, route, ratings),
+        snack = this.snack.toNewAverage(rating.snack, route, ratings),
+        scenery = this.scenery.toNewAverage(rating.scenery, route, ratings),
+        tranquility = this.tranquility.toNewAverage(rating.tranquility, route, ratings),
+        vibe = this.vibe.toNewAverage(rating.vibe, route, ratings)
     )
 }
 
@@ -168,8 +169,8 @@ fun Route.toHashMap(): HashMap<String,Any?>{
     )
 }
 
-fun Float.toNewAverage(rating: RouteRating, route: Route): Float{
-    return this.times(route.walkers.size).plus(rating.coverage).div(route.walkers.size + 1)
+fun Float.toNewAverage(new: Float, route: Route, ratings: Int): Float{
+    return this.times(ratings).plus(new).div(ratings + 1)
 }
 
 fun Comment.toHashMap(): HashMap<String, Any?>{

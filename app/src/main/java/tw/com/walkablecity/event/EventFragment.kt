@@ -52,12 +52,17 @@ class EventFragment : Fragment() {
             TabLayoutMediator.TabConfigurationStrategy { tab, position ->
                 tab.text = EventPageType.values()[position].title
                 if(position == 2){
-                    tab.orCreateBadge.apply {
-                        backgroundColor = getColor(R.color.red_heart_c73e3a)
-                        number = mainViewModel.invitation.value ?: 0
-                        isVisible = number > 0
-                        badgeGravity = BadgeDrawable.TOP_END
-                    }
+                    mainViewModel.invitation.observe(viewLifecycleOwner, Observer{
+                        it?.let{
+                            tab.orCreateBadge.apply {
+                                backgroundColor = getColor(R.color.red_heart_c73e3a)
+                                number = it
+                                isVisible = it > 0
+                                badgeGravity = BadgeDrawable.TOP_END
+                            }
+                        }
+                    })
+
                 }
             })
         mediator.attach()
@@ -83,19 +88,21 @@ class EventFragment : Fragment() {
         mainViewModel.eventCount.observe(viewLifecycleOwner, Observer{
             it?.let{count->
                 viewModel.setUpgrade(count, getIntFromSP(BadgeType.EVENT_COUNT.key))
+
             }
         })
-
+        var previousUpgrade = 0
         viewModel.upgrade.observe(viewLifecycleOwner, Observer{
             it?.let{grade->
-                Logger.d("let see some grade $grade")
-                if(grade > 0){
+                Logger.d("let see some grade event $grade")
+                if(grade > previousUpgrade){
                     mainViewModel.addToBadgeTotal(grade, R.id.eventFragment)
 
                     val dialog = Util.showBadgeDialog(grade, requireContext(), findNavController(),
                         EventFragmentDirections.actionGlobalBadgeFragment(), getString(R.string.badge_dialog_event))
 
                     dialog.show()
+                    previousUpgrade = grade
                 }
             }
         })

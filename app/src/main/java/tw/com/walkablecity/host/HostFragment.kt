@@ -155,6 +155,7 @@ class HostFragment : Fragment() {
         viewModel.navigateToEvents.observe(viewLifecycleOwner, Observer{
             if(it){
                 UserManager.user?.id?.let{id->
+                    Logger.d("badge event dialog from host")
                     mainViewModel.getUserEventCount(id)
                 }
                 findNavController().navigate(HostFragmentDirections.actionGlobalEventFragment())

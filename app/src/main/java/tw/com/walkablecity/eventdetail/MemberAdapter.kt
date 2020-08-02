@@ -32,13 +32,20 @@ class MemberAdapter(val viewModel: EventDetailViewModel): ListAdapter<MemberItem
                 setStrokeWidth(20f)
             }
             binding.viewModel = viewModel
-            binding.champ = champ.apply {
-                accomplish = if(viewModel.event.type == EventType.HOUR_RACE){
-                    accomplish?.div(60*60) ?: 0f
-                } else{
-                    accomplish
+
+
+
+            viewModel.champ.observe(context as MainActivity, Observer{
+                it?.let{champion->
+                    binding.champ = champion
+                    binding.champAccomplished = if(viewModel.event.type == EventType.HOUR_RACE){
+                            champion.accomplish?.div(60*60) ?: 0f
+                        } else{
+                            champion.accomplish
+                        }
+
                 }
-            }
+            })
             binding.total = viewModel.circleList.value?.sum()?.times(100)
             binding.recyclerFq.adapter = FrequencyAdapter(viewModel)
             binding.recyclerCircleFq.adapter = DetailCircleAdapter()
@@ -103,7 +110,7 @@ class MemberAdapter(val viewModel: EventDetailViewModel): ListAdapter<MemberItem
         }
 
         override fun areContentsTheSame(oldItem: MemberItem, newItem: MemberItem): Boolean {
-            return oldItem.id == newItem.id
+            return oldItem == newItem
         }
         private const val ITEM_VIEW_TYPE_BOARD     = 0x00
         private const val ITEM_VIEW_TYPE_MEMBER    = 0x01

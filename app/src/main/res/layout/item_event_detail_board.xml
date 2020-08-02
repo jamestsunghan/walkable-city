@@ -7,6 +7,7 @@
         <variable name="viewModel" type="tw.com.walkablecity.eventdetail.EventDetailViewModel" />
         <variable name="total" type="Float" />
         <variable name="champ" type="tw.com.walkablecity.data.Friend" />
+        <variable name="champAccomplished" type="Float" />
         <import type="android.view.View"/>
         <import type="tw.com.walkablecity.data.EventType"/>
         <import type="androidx.constraintlayout.widget.ConstraintLayout.LayoutParams"/>
@@ -119,7 +120,7 @@
                         android:layout_marginBottom="21dp"
                         android:fontFamily="@font/noto_sans"
                         android:letterSpacing="0.15"
-                        android:text="@{String.format((viewModel.event.type == EventType.HOUR_RACE ? @string/walker_hour : @string/walker_km ), champ.accomplish)}"
+                        android:text="@{String.format((viewModel.event.type == EventType.HOUR_RACE ? @string/walker_hour : @string/walker_km ), champAccomplished)}"
                         android:textColor="@color/blue_2e5c6e"
                         android:textSize="14sp"
                         app:layout_constraintBottom_toBottomOf="parent"
