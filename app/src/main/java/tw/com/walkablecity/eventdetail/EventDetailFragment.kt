@@ -11,14 +11,12 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.Timestamp
-import tw.com.walkablecity.Logger
+import tw.com.walkablecity.*
 
-import tw.com.walkablecity.R
-import tw.com.walkablecity.UserManager
-import tw.com.walkablecity.Util
 import tw.com.walkablecity.Util.getColor
 import tw.com.walkablecity.Util.lessThenTenPadStart
 import tw.com.walkablecity.databinding.FragmentEventDetailBinding
@@ -35,6 +33,8 @@ class EventDetailFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+        val mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
 
         val binding: FragmentEventDetailBinding = DataBindingUtil
             .inflate(inflater, R.layout.fragment_event_detail, container, false)
@@ -118,6 +118,7 @@ class EventDetailFragment : Fragment() {
             it?.let{
 
                 if(it){
+                    mainViewModel.getUserEventCount(requireNotNull(UserManager.user?.id))
                     findNavController().navigate(EventDetailFragmentDirections.actionGlobalEventFragment())
                 }
             }

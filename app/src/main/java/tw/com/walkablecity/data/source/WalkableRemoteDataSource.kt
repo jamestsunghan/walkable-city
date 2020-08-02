@@ -511,12 +511,27 @@ object WalkableRemoteDataSource: WalkableDataSource{
         val walkersNew =
             if(route.walkers.contains(userId))route.walkers
             else route.walkers.plus(userId)
-        val ratingAvrNew = route.ratingAvr?.addToAverage(rating, route) as RouteRating
-        Logger.d("JJ_fire ratingAvr new $ratingAvrNew")
+
         var missionToComplete = 3
 
         db.collection(ROUTE).document(route.id.toString()).apply{
-            update(RATINGAVR, ratingAvrNew.toHashMap(), WALKERS, walkersNew).addOnCompleteListener { task ->
+
+            collection(RATINGS).get().continueWithTask { task->
+                if(!task.isSuccessful){
+                    if(task.exception !=null){
+                        continuation.resume(Result.Error(task.exception!!))
+                    }else{
+                        continuation.resume(Result.Fail(getString(R.string.not_here)))
+                    }
+                }
+                val ratingAvrNew = route.ratingAvr?.addToAverage(rating, route, task.result?.size() ?: 0) as RouteRating
+                Logger.d("JJ_fire ratingAvr new $ratingAvrNew")
+
+                update(RATINGAVR, ratingAvrNew.toHashMap(), WALKERS, walkersNew)
+            }
+
+
+            .addOnCompleteListener { task ->
                 if(task.isSuccessful){
                     missionToComplete -= 1
                     if(missionToComplete == 0) continuation.resume(Result.Success(true))

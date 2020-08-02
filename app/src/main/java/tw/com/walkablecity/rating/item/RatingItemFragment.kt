@@ -225,6 +225,30 @@ class RatingItemFragment(private val type: RatingType, private val route: Route?
             }
         })
 
+        viewModel.ratingCoverage.observe(viewLifecycleOwner, Observer{
+            it?.let{
+                Logger.d("coverage $it")
+            }
+        })
+
+        viewModel.ratingScenery.observe(viewLifecycleOwner, Observer{
+            it?.let{
+                Logger.d("scenery $it")
+            }
+        })
+
+        viewModel.ratingRest.observe(viewLifecycleOwner, Observer{
+            it?.let{
+                Logger.d("rest $it")
+            }
+        })
+
+        viewModel.ratingSnack.observe(viewLifecycleOwner, Observer{
+            it?.let{
+                Logger.d("snack $it")
+            }
+        })
+
 
 
 

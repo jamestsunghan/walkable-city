@@ -139,7 +139,10 @@ class MainActivity : AppCompatActivity() {
         findNavController(R.id.nav_host_fragment)
             .addOnDestinationChangedListener { controller, destination, arguments ->
             viewModel.currentFragment.value = when(controller.currentDestination?.id){
-                R.id.homeFragment -> CurrentFragmentType.HOME
+                R.id.homeFragment -> {
+                    binding.bottomNav.menu.getItem(0).isChecked = true
+                    CurrentFragmentType.HOME
+                }
                 R.id.rankingFragment -> CurrentFragmentType.RANKING
                 R.id.favoriteFragment -> CurrentFragmentType.FAVORITE
                 R.id.eventFragment -> CurrentFragmentType.EVENT
