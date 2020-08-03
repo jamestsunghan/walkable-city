@@ -1,4 +1,4 @@
-package tw.com.walkablecity
+package tw.com.walkablecity.util
 
 import android.R
 import android.content.Context

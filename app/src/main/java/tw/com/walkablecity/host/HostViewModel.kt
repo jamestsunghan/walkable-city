@@ -8,13 +8,11 @@ import kotlinx.coroutines.*
 import tw.com.walkablecity.Logger
 import tw.com.walkablecity.R
 import tw.com.walkablecity.UserManager
-import tw.com.walkablecity.Util.dateToTimeStamp
-import tw.com.walkablecity.Util.getString
-import tw.com.walkablecity.Util.makeShortToast
+import tw.com.walkablecity.util.Util.dateToTimeStamp
+import tw.com.walkablecity.util.Util.makeShortToast
 import tw.com.walkablecity.data.*
 import tw.com.walkablecity.data.source.WalkableRepository
 import tw.com.walkablecity.ext.toDateLong
-import tw.com.walkablecity.ext.toFriend
 
 class HostViewModel(private val walkableRepository: WalkableRepository) : ViewModel() {
 
@@ -169,9 +167,6 @@ class HostViewModel(private val walkableRepository: WalkableRepository) : ViewMo
 
 
     private val _addList = MutableLiveData<List<Friend>>()
-//        .apply {
-//        value = friendOldList
-//    }
     val addList: LiveData<List<Friend>> get() = _addList
 
     override fun onCleared() {
@@ -232,28 +227,10 @@ class HostViewModel(private val walkableRepository: WalkableRepository) : ViewMo
         coroutineScope.launch {
             _status.value = LoadStatus.LOADING
 
-            _navigateToEvents.value = when(val result = walkableRepository.createEvent(event)){
-                is Result.Success ->{
-                    _error.value  = null
-                    _status.value = LoadStatus.DONE
-                    result.data
-                }
-                is Result.Fail->{
-                    _error.value  = result.error
-                    _status.value = LoadStatus.ERROR
-                    false
-                }
-                is Result.Error->{
-                    _error.value  = result.exception.toString()
-                    _status.value = LoadStatus.ERROR
-                    false
-                }
-                else->{
-                    _error.value  = getString(R.string.not_here)
-                    _status.value = LoadStatus.ERROR
-                    false
-                }
-            }
+            val result = walkableRepository.createEvent(event)
+
+            _navigateToEvents.value = result.setLiveBoolean(_error, _status)
+
         }
     }
 
@@ -300,28 +277,8 @@ class HostViewModel(private val walkableRepository: WalkableRepository) : ViewMo
 
             val result = walkableRepository.getUserFriendSimple(userId)
 
-            _friendList.value = when(result){
-                is Result.Success ->{
-                    _error.value = null
-                    _status.value = LoadStatus.DONE
-                    result.data
-                }
-                is Result.Fail ->{
-                    _error.value = result.error
-                    _status.value = LoadStatus.ERROR
-                    null
-                }
-                is Result.Error ->{
-                    _error.value = result.exception.toString()
-                    _status.value = LoadStatus.ERROR
-                    null
-                }
-                else ->{
-                    _error.value = getString(R.string.not_here)
-                    _status.value = LoadStatus.ERROR
-                    null
-                }
-            }
+            _friendList.value = result.setLiveData(_error, _status)
+
         }
     }
 

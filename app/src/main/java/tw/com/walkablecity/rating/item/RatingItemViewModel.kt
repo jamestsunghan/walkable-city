@@ -5,7 +5,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.android.gms.maps.model.LatLng
-import com.google.firebase.firestore.GeoPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -13,20 +12,17 @@ import kotlinx.coroutines.launch
 import tw.com.walkablecity.Logger
 import tw.com.walkablecity.R
 import tw.com.walkablecity.UserManager
-import tw.com.walkablecity.Util.getString
-import tw.com.walkablecity.Util.makeShortToast
+import tw.com.walkablecity.util.Util.makeShortToast
 import tw.com.walkablecity.data.*
 import tw.com.walkablecity.data.source.WalkableRepository
 import tw.com.walkablecity.ext.toComment
 import tw.com.walkablecity.ext.toGeoPoint
 import tw.com.walkablecity.ext.toLatLngPoints
-import tw.com.walkablecity.ext.toRouteId
 import tw.com.walkablecity.rating.RatingType
-import java.text.SimpleDateFormat
 
 class RatingItemViewModel(val walkableRepository: WalkableRepository, val selectedRoute: Route?
                           , val walk: Walk, val type: RatingType?, val photoPoints: List<PhotoPoint>?) : ViewModel() {
-    val colorId = R.color.primaryColor
+
 
     val duration = MutableLiveData<Float>().apply{
         value = requireNotNull(walk.duration).toFloat().div(60)
@@ -152,31 +148,16 @@ class RatingItemViewModel(val walkableRepository: WalkableRepository, val select
     private fun updateRouteRating(ratingUpdate: RouteRating, commentContent: String?, userId: String){
 
         coroutineScope.launch {
+
             val comment = commentContent?.toComment(4, userId)
+
             _status.value = LoadStatus.LOADING
-            _sendRating.value = when(val result = walkableRepository.updateRouteRating(ratingUpdate, selectedRoute as Route
-                , requireNotNull(UserManager.user?.id), comment)){
-                is Result.Success ->{
-                    _error.value = null
-                    _status.value = LoadStatus.DONE
-                    true
-                }
-                is Result.Fail ->{
-                    _error.value = result.error
-                    _status.value = LoadStatus.ERROR
-                    false
-                }
-                is Result.Error ->{
-                    _error.value = result.exception.toString()
-                    _status.value = LoadStatus.ERROR
-                    false
-                }
-                else ->{
-                    _error.value = getString(R.string.not_here)
-                    _status.value = LoadStatus.ERROR
-                    false
-                }
-            }
+
+            val result = walkableRepository.updateRouteRating(ratingUpdate, selectedRoute as Route
+                , requireNotNull(UserManager.user?.id), comment)
+
+            _sendRating.value = result.setLiveBoolean(_error, _status)
+
         }
 
     }
@@ -187,28 +168,11 @@ class RatingItemViewModel(val walkableRepository: WalkableRepository, val select
         coroutineScope.launch {
 
             _status.value = LoadStatus.LOADING
-            _imageUrl.value = when(val result = walkableRepository.getRouteMapImageUrl(walk.toRouteId(userIdCustom), bitmap)){
-                is Result.Success ->{
-                    _error.value = null
-                    _status.value = LoadStatus.DONE
-                    result.data
-                }
-                is Result.Fail ->{
-                    _error.value = result.error
-                    _status.value = LoadStatus.ERROR
-                    null
-                }
-                is Result.Error ->{
-                    _error.value = result.exception.toString()
-                    _status.value = LoadStatus.ERROR
-                    null
-                }
-                else ->{
-                    _error.value = getString(R.string.not_here)
-                    _status.value = LoadStatus.ERROR
-                    null
-                }
-            }
+
+            val result = walkableRepository.getRouteMapImageUrl(walk.toRouteId(userIdCustom), bitmap)
+
+            _imageUrl.value = result.setLiveData(_error, _status)
+
         }
 
     }
@@ -223,31 +187,8 @@ class RatingItemViewModel(val walkableRepository: WalkableRepository, val select
 
             val result = walkableRepository.uploadPhotoPoints(walk.toRouteId(userId), list)
 
-            _uploadPointsSuccess.value = when(result){
-                is Result.Success ->{
-                    _error.value = null
-                    _status.value = LoadStatus.DONE
-                    result.data
-                }
-                is Result.Fail ->{
-                    _error.value = result.error
-                    _status.value = LoadStatus.ERROR
-                    null
-                }
-                is Result.Error ->{
-                    _error.value = result.exception.toString()
-                    _status.value = LoadStatus.ERROR
-                    null
-                }
-                else ->{
-                    _error.value = getString(R.string.not_here)
-                    _status.value = LoadStatus.ERROR
-                    null
-                }
+            _uploadPointsSuccess.value = result.setLiveData(_error, _status)
 
-
-
-            }
 
         }
     }
@@ -260,27 +201,8 @@ class RatingItemViewModel(val walkableRepository: WalkableRepository, val select
 
             val result = walkableRepository.downloadPhotoPoints(routeId)
 
-            when(result){
-                is Result.Success ->{
-                    _error.value = null
-                    _status.value = LoadStatus.DONE
-                    setPhotosValue(result.data)
-                }
-                is Result.Fail ->{
-                    _error.value = result.error
-                    _status.value = LoadStatus.ERROR
-                }
-                is Result.Error ->{
-                    _error.value = result.exception.toString()
-                    _status.value = LoadStatus.ERROR
-                }
-                else ->{
-                    _error.value = getString(R.string.not_here)
-                    _status.value = LoadStatus.ERROR
-                }
+            setPhotosValue(result.setLiveData(_error, _status))
 
-
-            }
         }
     }
 
@@ -318,67 +240,17 @@ class RatingItemViewModel(val walkableRepository: WalkableRepository, val select
             walkers = listOf(userId),
             comments = listOf(commentContent.toComment(4,userId))
         )
+
         coroutineScope.launch {
             _status.value = LoadStatus.LOADING
-            _sendRating.value = when(val result = walkableRepository.createRouteByUser(route)){
-                is Result.Success ->{
-                    _error.value = null
-                    _status.value = LoadStatus.DONE
-                    true
-                }
-                is Result.Fail ->{
-                    _error.value = result.error
-                    _status.value = LoadStatus.ERROR
-                    false
-                }
-                is Result.Error ->{
-                    _error.value = result.exception.toString()
-                    _status.value = LoadStatus.ERROR
-                    false
-                }
-                else ->{
-                    _error.value = getString(R.string.not_here)
-                    _status.value = LoadStatus.ERROR
-                    false
-                }
-            }
+
+            val result = walkableRepository.createRouteByUser(route)
+
+            _sendRating.value = result.setLiveBoolean(_error, _status)
+
 
         }
 
     }
-
-    fun getImage(route: Route){
-        coroutineScope.launch {
-            _status.value = LoadStatus.LOADING
-            when(val result = walkableRepository.getRouteMapImage(route.waypoints[0],14,route.waypoints)){
-                is Result.Success ->{
-                    _error.value = null
-                    _status.value = LoadStatus.DONE
-                    Logger.d("result success ${result.data}")
-                }
-                is Result.Fail ->{
-                    _error.value = result.error
-                    _status.value = LoadStatus.ERROR
-                    Logger.d("result fail ${result.error}")
-
-                }
-                is Result.Error ->{
-                    _error.value = result.exception.toString()
-                    _status.value = LoadStatus.ERROR
-                    Logger.d("result error ${result.exception}")
-
-                }
-                else ->{
-                    _error.value = getString(R.string.not_here)
-                    _status.value = LoadStatus.ERROR
-
-                }
-            }
-
-        }
-
-    }
-
-
 
 }

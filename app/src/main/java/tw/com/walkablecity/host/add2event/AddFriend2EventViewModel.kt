@@ -7,8 +7,8 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import tw.com.walkablecity.R
 import tw.com.walkablecity.UserManager
-import tw.com.walkablecity.Util.getString
-import tw.com.walkablecity.Util.makeShortToast
+import tw.com.walkablecity.util.Util.getString
+import tw.com.walkablecity.util.Util.makeShortToast
 import tw.com.walkablecity.data.Friend
 import tw.com.walkablecity.data.LoadStatus
 import tw.com.walkablecity.data.Result

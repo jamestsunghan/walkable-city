@@ -7,12 +7,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import tw.com.walkablecity.Logger
-import tw.com.walkablecity.R
-import tw.com.walkablecity.Util
-import tw.com.walkablecity.Util.displaySliderValue
+import tw.com.walkablecity.util.Util.displaySliderValue
 import tw.com.walkablecity.data.Route
-import tw.com.walkablecity.data.RouteRating
-import tw.com.walkablecity.data.RouteSorting
 import tw.com.walkablecity.databinding.ItemRouteFilterBinding
 import tw.com.walkablecity.databinding.ItemRouteLinearBinding
 import tw.com.walkablecity.ext.toSortList

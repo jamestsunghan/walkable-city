@@ -1,36 +1,20 @@
 package tw.com.walkablecity.home
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.app.Activity.RESULT_OK
-import android.content.ActivityNotFoundException
-import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.content.res.Resources
-import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.hardware.camera2.CameraCharacteristics
-import android.hardware.camera2.CameraDevice
-import android.hardware.camera2.CameraManager
-import android.hardware.camera2.CameraMetadata
 import android.location.Location
 import android.net.Uri
 import android.os.Bundle
-import android.os.Handler
-import android.os.HandlerThread
 import android.provider.MediaStore
 import android.view.*
-import android.view.animation.Animation
 import android.view.animation.AnimationUtils
-import android.widget.ImageView
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.checkSelfPermission
 import androidx.core.content.FileProvider
 import androidx.databinding.DataBindingUtil
@@ -38,12 +22,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
-import androidx.navigation.NavArgs
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
 
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -52,37 +31,26 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import com.google.firebase.Timestamp.now
 import com.google.maps.android.PolyUtil
-import com.google.maps.android.ktx.addMarker
-import kotlinx.android.synthetic.main.fragment_home.*
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.suspendCancellableCoroutine
-import okhttp3.internal.wait
 import tw.com.walkablecity.*
-import tw.com.walkablecity.Util.getColor
-import tw.com.walkablecity.Util.isPermissionGranted
-import tw.com.walkablecity.Util.makeShortToast
-import tw.com.walkablecity.Util.requestPermission
-import tw.com.walkablecity.Util.showBadgeDialog
-import tw.com.walkablecity.Util.showWalkDistroyDialog
-import tw.com.walkablecity.data.Route
+import tw.com.walkablecity.util.Util.getColor
+import tw.com.walkablecity.util.Util.isPermissionGranted
+import tw.com.walkablecity.util.Util.makeShortToast
+import tw.com.walkablecity.util.Util.showBadgeDialog
 import tw.com.walkablecity.databinding.FragmentHomeBinding
 import tw.com.walkablecity.ext.*
-import tw.com.walkablecity.profile.ProfileFragmentDirections
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
-import java.lang.RuntimeException
-import kotlin.coroutines.resume
-import kotlin.coroutines.resumeWithException
 
 class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationClickListener, GoogleMap.OnMyLocationButtonClickListener{
 
-
-
-    lateinit var viewModelInit: HomeViewModel
-
     private lateinit var mapFragment: SupportMapFragment
     private lateinit var map: GoogleMap
+
+    val viewModel: HomeViewModel by viewModels{
+        getVMFactory(HomeFragmentArgs.fromBundle(arguments as Bundle).routeKey
+            , HomeFragmentArgs.fromBundle(arguments as Bundle).destinationKey)
+    }
 
     companion object{
         const val REQUEST_LOCATION      = 0x00
@@ -139,13 +107,13 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationClick
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if(!(requestCode == REQUEST_LOCATION || requestCode == REQUEST_CAMERA)) return
         if(isPermissionGranted(permissions,grantResults, Manifest.permission.ACCESS_FINE_LOCATION)){
-            viewModelInit.permissionGranted()
-            viewModelInit.clientCurrentLocation()
+            viewModel.permissionGranted()
+            viewModel.clientCurrentLocation()
         }else{
             if(!shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)){
-                viewModelInit.permissionDeniedForever()
+                viewModel.permissionDeniedForever()
             }
-            viewModelInit.permissionDenied()
+            viewModel.permissionDenied()
         }
 
     }
@@ -176,26 +144,9 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationClick
         binding.lifecycleOwner = this
 
 
-        val route = if((arguments as Bundle).containsKey("routeKey")){
-            HomeFragmentArgs.fromBundle(arguments as Bundle).routeKey
-        }else{
-            null
-        }
-
-        val destination = if((arguments as Bundle).containsKey("destinationKey")){
-            HomeFragmentArgs.fromBundle(arguments as Bundle).destinationKey
-        }else{
-            null
-        }
-
-        val viewModel: HomeViewModel by viewModels{getVMFactory(route, destination)}
-
-
-        viewModelInit = viewModel
-
         binding.viewModel = viewModel
 
-        route?.apply {
+        viewModel.argument?.apply {
             this.waypointsLatLng = this.waypoints.toLatLngPoints()
             this.waypoints = listOf()
         }
@@ -216,17 +167,6 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationClick
 
         binding.takePicture.setOnClickListener {
             dispatchTakePictureIntent()
-
-//            if(checkSelfPermission(WalkableApp.instance, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED){
-//                viewModel.cameraPermissionGranted()
-//                initializeCamera()
-//            }else{
-//                if(!shouldShowRequestPermissionRationale(Manifest.permission.CAMERA)){
-////                    viewModel.permissionDeniedForever()
-//                }
-//                requestPermissions(arrayOf(Manifest.permission.CAMERA), REQUEST_CAMERA)
-//
-//            }
         }
 
         binding.dayNightSwitch.setOnClickListener {
@@ -325,8 +265,9 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationClick
                     map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,15f))
                     map.uiSettings.isMyLocationButtonEnabled = true
                     map.isMyLocationEnabled = true
+                    val route = viewModel.argument
                     if(route!=null){
-                        viewModel.drawPath(latLng, destination ?: latLng, route.waypointsLatLng)
+                        viewModel.drawPath(latLng, viewModel.destination ?: latLng, route.waypointsLatLng)
                     }
                 }
 
@@ -432,8 +373,8 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationClick
             val streamFile = File(pathName)
 
             val imageUri = FileProvider.getUriForFile(WalkableApp.instance, WalkableApp.instance.packageName + ".provider", streamFile)
-            viewModelInit.addPhotoPoint(pathName)
-            viewModelInit.cameraClicked.value = true
+            viewModel.addPhotoPoint(pathName)
+            viewModel.cameraClicked.value = true
         }
     }
 
@@ -468,74 +409,13 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationClick
         }
     }
 
-    private lateinit var camera: CameraDevice
-    private val cameraManager: CameraManager by lazy{
-        WalkableApp.instance.getSystemService(Context.CAMERA_SERVICE) as CameraManager
-    }
-    private val args: HomeFragmentArgs by navArgs()
-    private val cameraThread = HandlerThread("cameraThread").apply { start() }
-    private val cameraHandler = Handler(cameraThread.looper)
-    private val cameraIds = cameraManager.cameraIdList.filter{
-        val characteristics = cameraManager.getCameraCharacteristics(it)
-        val capabilities = characteristics.get(
-            CameraCharacteristics.REQUEST_AVAILABLE_CAPABILITIES
-        )
-        capabilities?.contains(
-            CameraMetadata.REQUEST_AVAILABLE_CAPABILITIES_BACKWARD_COMPATIBLE) ?: false
-
-    }.filter{id->
-        val characteristics = cameraManager.getCameraCharacteristics(id)
-        val orientation = lensOrientationString(characteristics.get(CameraCharacteristics.LENS_FACING)!!)
-        orientation == "Back"
-    }
-
-    /** Helper function used to convert a lens orientation enum into a human-readable string */
-    private fun lensOrientationString(value: Int) = when(value) {
-        CameraCharacteristics.LENS_FACING_BACK -> "Back"
-        CameraCharacteristics.LENS_FACING_FRONT -> "Front"
-        CameraCharacteristics.LENS_FACING_EXTERNAL -> "External"
-        else -> "Unknown"
-    }
-
-    fun initializeCamera() = lifecycleScope.launch {
-        camera = openCamera(cameraManager, cameraIds[0], cameraHandler)
-    }
-
-    @SuppressLint("MissingPermission")
-    private suspend fun openCamera(manager: CameraManager, cameraId: String, handler: Handler? = null)
-            : CameraDevice = suspendCancellableCoroutine{ continuation->
-        manager.openCamera(cameraId, object: CameraDevice.StateCallback(){
-            override fun onOpened(camera: CameraDevice) = continuation.resume(camera)
-
-            override fun onDisconnected(camera: CameraDevice) {
-                Logger.w("JJ_camera Camera $cameraId has been disconnected")
-                requireActivity().finish()
-            }
-
-            override fun onError(camera: CameraDevice, error: Int) {
-                val message = when(error){
-                    ERROR_CAMERA_DEVICE -> "Fatal ${camera}"
-                    ERROR_CAMERA_DISABLED ->"Device Policy"
-                    ERROR_CAMERA_IN_USE ->"Camera in use"
-                    ERROR_CAMERA_SERVICE ->"Fatal ${camera}"
-                    ERROR_MAX_CAMERAS_IN_USE ->"Maximum cameras in use"
-                    else ->"Unknown"
-                }
-                val exception = RuntimeException("Camera $cameraId error: $error $message")
-                Logger.e("JJ_camera" + exception.message + exception)
-                if(continuation.isActive) continuation.resumeWithException(exception)
-            }
-        }, handler)
-
-    }
-
-    fun checkPermission(){
+    private fun checkPermission(){
         if(checkSelfPermission(WalkableApp.instance, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
-            viewModelInit.permissionGranted()
-            viewModelInit.clientCurrentLocation()
+            viewModel.permissionGranted()
+            viewModel.clientCurrentLocation()
         }else{
             if(!shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)){
-                viewModelInit.permissionDeniedForever()
+                viewModel.permissionDeniedForever()
             }
             requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), REQUEST_LOCATION)
         }

@@ -7,11 +7,10 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import tw.com.walkablecity.Util.getString
+import tw.com.walkablecity.util.Util.getString
 import tw.com.walkablecity.data.BadgeUpgrade
 import tw.com.walkablecity.data.LoadStatus
 import tw.com.walkablecity.data.Result
-import tw.com.walkablecity.data.User
 import tw.com.walkablecity.data.source.WalkableRepository
 import tw.com.walkablecity.home.WalkerStatus
 
@@ -176,28 +175,6 @@ class MainViewModel(val walkableRepository: WalkableRepository): ViewModel(){
 
     fun walkStatusCheck(status: WalkerStatus){
         _walkerStatus.value = status
-    }
-
-    fun startWalking(){
-        _walkerStatus.value = WalkerStatus.WALKING
-
-        //timer start
-        //GPS recording
-    }
-
-    fun pauseWalking(){
-        _walkerStatus.value = WalkerStatus.PAUSING
-        //timer pause
-    }
-
-    fun resumeWalking(){
-        _walkerStatus.value = WalkerStatus.WALKING
-        //timer resume
-    }
-
-    fun stopWalking(){
-        _walkerStatus.value = WalkerStatus.FINISH
-
     }
 
 }

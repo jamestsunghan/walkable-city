@@ -1,25 +1,19 @@
 package tw.com.walkablecity.eventdetail
 
 import android.content.Context
-import android.content.res.ColorStateList
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.view.marginEnd
 import androidx.lifecycle.Observer
-import androidx.lifecycle.findViewTreeLifecycleOwner
-import androidx.lifecycle.observe
 import androidx.recyclerview.widget.*
 import tw.com.walkablecity.*
 import tw.com.walkablecity.data.EventType
 import tw.com.walkablecity.data.Friend
-import tw.com.walkablecity.data.FriendListWrapper
-import tw.com.walkablecity.data.MissionFQ
 import tw.com.walkablecity.databinding.ItemEventDetailBoardBinding
 import tw.com.walkablecity.databinding.ItemMemberEventDetailBinding
 import tw.com.walkablecity.detail.DetailCircleAdapter
-import tw.com.walkablecity.ext.toFriend
-import java.text.SimpleDateFormat
+import tw.com.walkablecity.util.Util
 
 class MemberAdapter(val viewModel: EventDetailViewModel): ListAdapter<MemberItem, RecyclerView.ViewHolder>(DiffCallback) {
 
@@ -32,8 +26,6 @@ class MemberAdapter(val viewModel: EventDetailViewModel): ListAdapter<MemberItem
                 setStrokeWidth(20f)
             }
             binding.viewModel = viewModel
-
-
 
             viewModel.champ.observe(context as MainActivity, Observer{
                 it?.let{champion->
@@ -54,7 +46,7 @@ class MemberAdapter(val viewModel: EventDetailViewModel): ListAdapter<MemberItem
                 attachToRecyclerView(binding.recyclerFq)
             }
 
-            binding.recyclerFq.setOnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
+            binding.recyclerFq.setOnScrollChangeListener { _, _, _, _, _ ->
                 viewModel.onGalleryScrollChange(binding.recyclerFq.layoutManager, linearSnapHelper)
             }
             viewModel.snapPosition.observe(context as MainActivity, Observer {
@@ -71,17 +63,7 @@ class MemberAdapter(val viewModel: EventDetailViewModel): ListAdapter<MemberItem
             binding.viewModel = viewModel
             binding.isAccomplished = (friend.accomplish ?: 0f) >= (viewModel.event.target?.hour?.times(60*60) ?: requireNotNull(viewModel.event.target?.distance))
             binding.width = binding.friendBar.width
-//            binding.friendSeekBar.apply{
-//                max = viewModel.event.target?.distance?.times(1000)?.toInt() ?: requireNotNull(viewModel.event.target?.hour?.times(60*60)?.toInt())
-//                progress = if(viewModel.event.target?.distance == null){
-//                    friend.accomplish?.toInt() ?: 0
-//                }else{
-//                    friend.accomplish?.times(1000)?.toInt() ?: 0
-//                }
-//                Logger.d("JJ_seekbar max $max progress $progress")
-//                isActivated = false
-//                secondaryProgress = viewModel.typeColor
-//            }
+
             val progressWidth = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 180f, WalkableApp.instance.resources.displayMetrics)
             binding.guideline.setGuidelineEnd(progressWidth.toInt())
 
@@ -97,8 +79,7 @@ class MemberAdapter(val viewModel: EventDetailViewModel): ListAdapter<MemberItem
             } ?: binding.friendBar.width
 
             binding.user = UserManager.user?.toFriend()
-//            Logger.d(friend bar width ${binding.friendBar.width}")
-//            Logger.d("friend bar progress width ${binding.friendBarProgress.width}")
+
             binding.position = position
             binding.executePendingBindings()
         }
@@ -117,7 +98,7 @@ class MemberAdapter(val viewModel: EventDetailViewModel): ListAdapter<MemberItem
     }
 
     override fun getItemViewType(position: Int): Int {
-        return when(val item = getItem(position)){
+        return when(getItem(position)){
             is MemberItem.Board -> ITEM_VIEW_TYPE_BOARD
             is MemberItem.Member -> ITEM_VIEW_TYPE_MEMBER
         }

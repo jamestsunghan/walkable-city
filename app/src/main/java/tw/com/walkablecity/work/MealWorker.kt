@@ -16,10 +16,9 @@ import com.google.firebase.ktx.Firebase
 import retrofit2.HttpException
 import tw.com.walkablecity.Logger
 import tw.com.walkablecity.R
-import tw.com.walkablecity.Util
-import tw.com.walkablecity.Util.getString
+import tw.com.walkablecity.util.Util
+import tw.com.walkablecity.util.Util.getString
 import tw.com.walkablecity.WalkableApp
-import tw.com.walkablecity.data.User
 import java.util.*
 import java.util.concurrent.TimeUnit
 

@@ -1,8 +1,8 @@
 package tw.com.walkablecity.data
 
 import tw.com.walkablecity.R
-import tw.com.walkablecity.Util.getColor
-import tw.com.walkablecity.Util.getString
+import tw.com.walkablecity.util.Util.getColor
+import tw.com.walkablecity.util.Util.getString
 
 enum class EventType(val title: String, val prefix: String, val colorList: List<Int>) {
     FREQUENCY(getString(R.string.filter_frequency), "FR"

@@ -6,7 +6,7 @@ import androidx.activity.result.contract.ActivityResultContract
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import tw.com.walkablecity.R
-import tw.com.walkablecity.Util.getString
+import tw.com.walkablecity.util.Util.getString
 
 
 class LoginActivityContract: ActivityResultContract<Int, Int?>() {

@@ -8,15 +8,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import tw.com.walkablecity.R
 import tw.com.walkablecity.UserManager
-import tw.com.walkablecity.Util
-import tw.com.walkablecity.Util.getString
 import tw.com.walkablecity.data.LoadStatus
-import tw.com.walkablecity.data.Result
-import tw.com.walkablecity.data.WeatherResult
 import tw.com.walkablecity.data.source.WalkableRepository
-import tw.com.walkablecity.home.WalkerStatus
 
 class SettingsViewModel(val walkableRepository: WalkableRepository) : ViewModel() {
 
@@ -34,9 +28,6 @@ class SettingsViewModel(val walkableRepository: WalkableRepository) : ViewModel(
 
     private val _currentLocation = MutableLiveData<LatLng>()
     val currentLocation: LiveData<LatLng> get() = _currentLocation
-
-    private val _weatherResult = MutableLiveData<WeatherResult>()
-    val weatherResult: LiveData<WeatherResult> get() = _weatherResult
 
     private val _weatherActivated = MutableLiveData<Boolean>()
     val weatherActivated: LiveData<Boolean> get() = _weatherActivated
@@ -78,76 +69,6 @@ class SettingsViewModel(val walkableRepository: WalkableRepository) : ViewModel(
         _permissionDenied.value = false
     }
 
-    fun clientCurrentLocation(){
-
-        _status.value = LoadStatus.LOADING
-
-        coroutineScope.launch {
-            val result = walkableRepository.getUserCurrentLocation()
-
-            _currentLocation.value = when(result){
-                is Result.Success->{
-                    _error.value = null
-                    _status.value = LoadStatus.DONE
-                    result.data
-                }
-                is Result.Fail ->{
-                    _error.value = result.error
-                    _status.value = LoadStatus.ERROR
-                    null
-                }
-                is Result.Error ->{
-                    _error.value = result.exception.toString()
-                    _status.value = LoadStatus.ERROR
-                    null
-                }
-                else ->{
-                    _error.value = Util.getString(R.string.not_here)
-                    _status.value = LoadStatus.ERROR
-                    null
-                }
-            }
-
-        }
-
-    }
-
-    fun getWeather(latLng: LatLng){
-
-        _status.value = LoadStatus.LOADING
-
-        coroutineScope.launch {
-            val result = walkableRepository.getWeather(latLng)
-
-            _weatherResult.value = when(result){
-                is Result.Success->{
-                    _error.value = null
-                    _status.value = LoadStatus.DONE
-                    result.data
-                }
-                is Result.Fail ->{
-                    _error.value = result.error
-                    _status.value = LoadStatus.ERROR
-                    null
-                }
-                is Result.Error ->{
-                    _error.value = result.exception.toString()
-                    _status.value = LoadStatus.ERROR
-                    null
-                }
-                else ->{
-                    _error.value = Util.getString(R.string.not_here)
-                    _status.value = LoadStatus.ERROR
-                    null
-                }
-            }
-
-        }
-
-
-
-    }
-
     fun updateWeatherNotification(activate: Boolean, userId: String){
         _status.value = LoadStatus.LOADING
 
@@ -155,29 +76,7 @@ class SettingsViewModel(val walkableRepository: WalkableRepository) : ViewModel(
 
             val result = walkableRepository.updateWeatherNotification(activate, userId)
 
-            _weatherActivated.value = when(result){
-
-                is Result.Success ->{
-                    _error.value = null
-                    _status.value = LoadStatus.DONE
-                    result.data
-                }
-                is Result.Fail ->{
-                    _error.value = result.error
-                    _status.value = LoadStatus.ERROR
-                    false
-                }
-                is Result.Error ->{
-                    _error.value = result.exception.toString()
-                    _status.value = LoadStatus.ERROR
-                    false
-                }
-                else ->{
-                    _error.value = getString(R.string.not_here)
-                    _status.value = LoadStatus.ERROR
-                    false
-                }
-            }
+            _weatherActivated.value = result.setLiveBoolean(_error, _status)
 
 
         }
@@ -190,35 +89,9 @@ class SettingsViewModel(val walkableRepository: WalkableRepository) : ViewModel(
 
             val result = walkableRepository.updateMealNotification(activate, userId)
 
-            _mealActivated.value = when(result){
-
-                is Result.Success ->{
-                    _error.value = null
-                    _status.value = LoadStatus.DONE
-                    result.data
-                }
-                is Result.Fail ->{
-                    _error.value = result.error
-                    _status.value = LoadStatus.ERROR
-                    false
-                }
-                is Result.Error ->{
-                    _error.value = result.exception.toString()
-                    _status.value = LoadStatus.ERROR
-                    false
-                }
-                else ->{
-                    _error.value = getString(R.string.not_here)
-                    _status.value = LoadStatus.ERROR
-                    false
-                }
-            }
-
+            _mealActivated.value = result.setLiveBoolean(_error, _status)
 
         }
     }
-
-
-
 
 }

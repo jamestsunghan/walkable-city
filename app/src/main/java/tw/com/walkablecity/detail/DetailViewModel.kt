@@ -13,8 +13,8 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import tw.com.walkablecity.R
 import tw.com.walkablecity.UserManager
-import tw.com.walkablecity.Util.getString
-import tw.com.walkablecity.Util.setDp
+import tw.com.walkablecity.util.Util.getString
+import tw.com.walkablecity.util.Util.setDp
 import tw.com.walkablecity.data.*
 import tw.com.walkablecity.data.source.WalkableRepository
 
@@ -124,28 +124,9 @@ class DetailViewModel(val walkableRepository: WalkableRepository, val route: Rou
         coroutineScope.launch {
             _favStatus.value = LoadStatus.LOADING
 
-            _favoriteAdded.value = when(val result = walkableRepository.addUserToFollowers(userId,route)){
-                is Result.Success ->{
-                    _error.value = null
-                    _favStatus.value = LoadStatus.DONE
-                    result.data
-                }
-                is Result.Fail ->{
-                    _error.value = result.error
-                    _favStatus.value = LoadStatus.ERROR
-                    null
-                }
-                is Result.Error ->{
-                    _error.value = result.exception.toString()
-                    _favStatus.value = LoadStatus.ERROR
-                    null
-                }
-                else ->{
-                    _error.value = getString(R.string.not_here)
-                    _favStatus.value = LoadStatus.ERROR
-                    null
-                }
-            }
+            val result = walkableRepository.addUserToFollowers(userId,route)
+
+            _favoriteAdded.value = result.setLiveData(_error, _status)
 
         }
 
@@ -155,28 +136,9 @@ class DetailViewModel(val walkableRepository: WalkableRepository, val route: Rou
         coroutineScope.launch {
             _favStatus.value = LoadStatus.LOADING
 
-            _favoriteAdded.value = when(val result = walkableRepository.removeUserFromFollowers(userId, route)){
-                is Result.Success ->{
-                    _error.value = null
-                    _favStatus.value = LoadStatus.DONE
-                    result.data
-                }
-                is Result.Fail ->{
-                    _error.value = result.error
-                    _favStatus.value = LoadStatus.ERROR
-                    null
-                }
-                is Result.Error ->{
-                    _error.value = result.exception.toString()
-                    _favStatus.value = LoadStatus.ERROR
-                    null
-                }
-                else ->{
-                    _error.value = getString(R.string.not_here)
-                    _favStatus.value = LoadStatus.ERROR
-                    null
-                }
-            }
+            val result = walkableRepository.removeUserFromFollowers(userId, route)
+
+            _favoriteAdded.value = result.setLiveData(_error, _status)
 
         }
     }
@@ -186,28 +148,9 @@ class DetailViewModel(val walkableRepository: WalkableRepository, val route: Rou
         coroutineScope.launch {
             _status.value = LoadStatus.LOADING
 
-            _commentList.value = when(val result = walkableRepository.getRouteComments(routeId)){
-                is Result.Success ->{
-                    _error.value = null
-                    _status.value = LoadStatus.DONE
-                    result.data
-                }
-                is Result.Fail ->{
-                    _error.value = result.error
-                    _status.value = LoadStatus.ERROR
-                    null
-                }
-                is Result.Error ->{
-                    _error.value = result.exception.toString()
-                    _status.value = LoadStatus.ERROR
-                    null
-                }
-                else ->{
-                    _error.value = getString(R.string.not_here)
-                    _status.value = LoadStatus.ERROR
-                    null
-                }
-            }
+            val result = walkableRepository.getRouteComments(routeId)
+
+            _commentList.value = result.setLiveData(_error, _status)
 
         }
 
@@ -225,30 +168,7 @@ class DetailViewModel(val walkableRepository: WalkableRepository, val route: Rou
 
             val result = walkableRepository.downloadPhotoPoints(routeId)
 
-            _photoPoints.value = when(result){
-
-                is Result.Success ->{
-                    _error.value = null
-                    _status.value = LoadStatus.ERROR
-                    result.data
-                }
-                is Result.Fail ->{
-                    _error.value = result.error
-                    _status.value = LoadStatus.ERROR
-                    null
-                }
-                is Result.Error ->{
-                    _error.value = result.exception.toString()
-                    _status.value = LoadStatus.ERROR
-                    null
-                }
-                else ->{
-                    _error.value = getString(R.string.not_here)
-                    _status.value = LoadStatus.ERROR
-                    null
-                }
-
-            }
+            _photoPoints.value = result.setLiveData(_error, _status)
 
 
         }

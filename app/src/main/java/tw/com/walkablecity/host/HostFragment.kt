@@ -11,7 +11,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -24,8 +23,9 @@ import tw.com.walkablecity.data.FrequencyType
 import tw.com.walkablecity.databinding.FragmentHostBinding
 import tw.com.walkablecity.ext.getVMFactory
 import tw.com.walkablecity.ext.toDateLong
-import tw.com.walkablecity.host.add2event.AddFriend2EventAdapter
 import tw.com.walkablecity.host.add2event.AddListAdapter
+import tw.com.walkablecity.util.Util
+import tw.com.walkablecity.util.Util.lessThenTenPadStart
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -86,7 +86,7 @@ class HostFragment : Fragment() {
 
 
                     viewModel.startDateDisplay.value =
-                        "${year}-${Util.lessThenTenPadStart((monthOfYear + 1).toLong())}-${Util.lessThenTenPadStart(dayOfMonth.toLong())}"
+                        "${year}-${lessThenTenPadStart((monthOfYear + 1).toLong())}-${lessThenTenPadStart(dayOfMonth.toLong())}"
 
                 },
                 year,
@@ -108,7 +108,7 @@ class HostFragment : Fragment() {
 
 
                     viewModel.endDateDisplay.value =
-                        "${year}-${Util.lessThenTenPadStart((monthOfYear + 1).toLong())}-${Util.lessThenTenPadStart(dayOfMonth.toLong())}"
+                        "${year}-${lessThenTenPadStart((monthOfYear + 1).toLong())}-${lessThenTenPadStart(dayOfMonth.toLong())}"
 
                 },
                 year,
@@ -163,29 +163,29 @@ class HostFragment : Fragment() {
             }
         })
 
-        viewModel.type.observe(viewLifecycleOwner, Observer{
-            it?.let{
-                Logger.d("JJ_type eventType selected ${it.title}")
-            }
-        })
-
-        viewModel.frequencyType.observe(viewLifecycleOwner, Observer{
-            it?.let{
-                Logger.d("JJ_type FQType selected ${it.text}")
-            }
-        })
-
-        viewModel.endDate.observe(viewLifecycleOwner, Observer{
-            it?.let{
-                Logger.d( "endDate ${it.toDateLong()}")
-            }
-        })
-
-        viewModel.target.observe(viewLifecycleOwner, Observer {
-            it?.let{
-                Logger.d("JJ_target target $it")
-            }
-        })
+//        viewModel.type.observe(viewLifecycleOwner, Observer{
+//            it?.let{
+//                Logger.d("JJ_type eventType selected ${it.title}")
+//            }
+//        })
+//
+//        viewModel.frequencyType.observe(viewLifecycleOwner, Observer{
+//            it?.let{
+//                Logger.d("JJ_type FQType selected ${it.text}")
+//            }
+//        })
+//
+//        viewModel.endDate.observe(viewLifecycleOwner, Observer{
+//            it?.let{
+//                Logger.d( "endDate ${it.toDateLong()}")
+//            }
+//        })
+//
+//        viewModel.target.observe(viewLifecycleOwner, Observer {
+//            it?.let{
+//                Logger.d("JJ_target target $it")
+//            }
+//        })
 
         return binding.root
     }

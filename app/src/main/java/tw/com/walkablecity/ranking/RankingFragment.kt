@@ -40,7 +40,7 @@ class RankingFragment : Fragment() {
             it?.let{
                 Logger.d("route sorting ${it.text}")
                 viewModel.timeFilter(viewModel.routeTime.value ?: listOf(Float.MIN_VALUE, Float.MAX_VALUE), viewModel.sliderMax.value ?: Float.MAX_VALUE, it)
-//                viewModel.routeSorting(it, adapter)
+
                 adapter.notifyDataSetChanged()
             }
         })
@@ -50,12 +50,6 @@ class RankingFragment : Fragment() {
 
                 findNavController().navigate(RankingFragmentDirections.actionGlobalDetailFragment(it))
                 viewModel.navigationComplete()
-            }
-        })
-
-        viewModel.routeTime.observe(viewLifecycleOwner, Observer {
-            it?.let{
-//                viewModel.timeFilter(it)
             }
         })
 

@@ -1,6 +1,5 @@
 package tw.com.walkablecity.network
 
-import com.google.android.gms.maps.model.LatLng
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import okhttp3.OkHttpClient
@@ -8,12 +7,10 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.GET
-import retrofit2.http.POST
 import retrofit2.http.Query
-import tw.com.walkablecity.BuildConfig
 import tw.com.walkablecity.R
-import tw.com.walkablecity.Util
-import tw.com.walkablecity.Util.getString
+import tw.com.walkablecity.util.Util
+import tw.com.walkablecity.util.Util.getString
 import tw.com.walkablecity.data.DirectionResult
 import tw.com.walkablecity.data.MapImageResult
 import tw.com.walkablecity.data.WeatherResult

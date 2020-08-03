@@ -8,10 +8,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import tw.com.walkablecity.R
-import tw.com.walkablecity.UserAvatarOutlineProvider
+import tw.com.walkablecity.util.UserAvatarOutlineProvider
 import tw.com.walkablecity.UserManager
-import tw.com.walkablecity.Util.getString
-import tw.com.walkablecity.Util.makeShortToast
+import tw.com.walkablecity.util.Util.getString
+import tw.com.walkablecity.util.Util.makeShortToast
 import tw.com.walkablecity.data.Friend
 import tw.com.walkablecity.data.LoadStatus
 import tw.com.walkablecity.data.Result
@@ -98,28 +98,9 @@ class AddFriendViewModel(val walkableRepository: WalkableRepository) : ViewModel
             _status.value = LoadStatus.LOADING
 
             val result = walkableRepository.checkFriendAdded(idCustom, requireNotNull(UserManager.user?.id))
-            _alreadyFriend.value = when(result){
-                is Result.Success ->{
-                    _error.value = null
-                    _status.value = LoadStatus.DONE
-                    result.data
-                }
-                is Result.Fail ->{
-                    _error.value = result.error
-                    _status.value = LoadStatus.ERROR
-                    null
-                }
-                is Result.Error ->{
-                    _error.value = result.exception.toString()
-                    _status.value = LoadStatus.ERROR
-                    null
-                }
-                else ->{
-                    _error.value = getString(R.string.not_here)
-                    _status.value = LoadStatus.ERROR
-                    null
-                }
-            }
+
+            _alreadyFriend.value = result.setLiveData(_error, _status)
+
         }
     }
 
@@ -128,28 +109,8 @@ class AddFriendViewModel(val walkableRepository: WalkableRepository) : ViewModel
             _status.value = LoadStatus.LOADING
 
             val result = walkableRepository.addFriend(friend, requireNotNull(UserManager.user))
-            _friendAdded.value = when(result){
-                is Result.Success ->{
-                    _error.value = null
-                    _status.value = LoadStatus.DONE
-                    result.data
-                }
-                is Result.Fail ->{
-                    _error.value = result.error
-                    _status.value = LoadStatus.ERROR
-                    null
-                }
-                is Result.Error ->{
-                    _error.value = result.exception.toString()
-                    _status.value = LoadStatus.ERROR
-                    null
-                }
-                else ->{
-                    _error.value = getString(R.string.not_here)
-                    _status.value = LoadStatus.ERROR
-                    null
-                }
-            }
+
+            _friendAdded.value = result.setLiveData(_error, _status)
         }
     }
 

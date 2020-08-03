@@ -4,14 +4,10 @@ package tw.com.walkablecity.profile.explore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.Marker
 import tw.com.walkablecity.Logger
-import tw.com.walkablecity.R
 import tw.com.walkablecity.UserManager
-import tw.com.walkablecity.Util.getString
-import tw.com.walkablecity.WalkableApp
 import tw.com.walkablecity.data.Walk
 import tw.com.walkablecity.databinding.InfoWindowExploreBinding
 import tw.com.walkablecity.ext.toDateString

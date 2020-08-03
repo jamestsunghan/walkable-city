@@ -90,7 +90,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/event_detail_goal" />
 
-<!--        <tw.com.walkablecity.CircleView-->
+<!--        <tw.com.walkablecity.util.CircleView-->
 <!--            android:id="@+id/circle_accomplish"-->
 <!--            android:layout_width="match_parent"-->
 <!--            app:strokeColor="@color/primaryColor"-->

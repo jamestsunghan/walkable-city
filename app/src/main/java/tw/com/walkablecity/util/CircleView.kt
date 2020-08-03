@@ -1,4 +1,4 @@
-package tw.com.walkablecity
+package tw.com.walkablecity.util
 
 import android.content.Context
 import android.graphics.Canvas
@@ -8,7 +8,10 @@ import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.View
-import tw.com.walkablecity.Util.getColor
+import tw.com.walkablecity.Logger
+import tw.com.walkablecity.R
+import tw.com.walkablecity.util.Util.getColor
+import tw.com.walkablecity.WalkableApp
 
 
 class CircleView(context: Context, attrs: AttributeSet): View(context, attrs) {
@@ -16,14 +19,18 @@ class CircleView(context: Context, attrs: AttributeSet): View(context, attrs) {
     companion object {
         private const val DEFAULT_CIRCLE_COLOR = Color.RED
     }
-    private val DEFAULT_STROKE_WIDTH = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 5f,WalkableApp.instance.resources.displayMetrics)
+    private val DEFAULT_STROKE_WIDTH = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 5f,
+        WalkableApp.instance.resources.displayMetrics)
 
     private val paint = Paint()
-    private var circleColor = DEFAULT_CIRCLE_COLOR
+    private var circleColor =
+        DEFAULT_CIRCLE_COLOR
     private var strokewidth = DEFAULT_STROKE_WIDTH
     private var rate = listOf<Float>()
     private var rateColor = listOf<Int>(
-        getColor(R.color.secondaryLightColor), getColor(R.color.secondaryColor), getColor(R.color.secondaryDarkColor)
+        getColor(R.color.secondaryLightColor), getColor(
+            R.color.secondaryColor
+        ), getColor(R.color.secondaryDarkColor)
     )
     private var startAngle = -90f
 
@@ -92,7 +99,8 @@ class CircleView(context: Context, attrs: AttributeSet): View(context, attrs) {
     }
 
     fun setStrokeWidth(strokeWidth: Float){
-        this.strokewidth = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, strokeWidth,WalkableApp.instance.resources.displayMetrics)
+        this.strokewidth = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, strokeWidth,
+            WalkableApp.instance.resources.displayMetrics)
         invalidate()
     }
 

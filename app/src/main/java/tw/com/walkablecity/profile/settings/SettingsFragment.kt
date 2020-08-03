@@ -12,16 +12,13 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.work.WorkManager
 import tw.com.walkablecity.*
 
-import tw.com.walkablecity.Util.lessThenTenPadStart
-import tw.com.walkablecity.Util.makeShortToast
+import tw.com.walkablecity.util.Util.makeShortToast
 import tw.com.walkablecity.databinding.FragmentSettingsBinding
 import tw.com.walkablecity.ext.getVMFactory
 import tw.com.walkablecity.home.HomeFragment
-import java.text.SimpleDateFormat
-import java.util.*
+import tw.com.walkablecity.util.Util
 
 class SettingsFragment : Fragment() {
 
@@ -32,14 +29,20 @@ class SettingsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
         val binding: FragmentSettingsBinding = DataBindingUtil
             .inflate(inflater, R.layout.fragment_settings, container, false)
+
         binding.lifecycleOwner = this
+
         binding.goodWeatherSwitch.isChecked = UserManager.user?.weather ?: false
+
         binding.afterMealSwitch.isChecked = UserManager.user?.meal ?: false
 
         binding.afterMealSwitch.setOnClickListener {
-            viewModel.updateMealNotification(binding.afterMealSwitch.isChecked, requireNotNull(UserManager.user?.id))
+            viewModel.updateMealNotification(
+                binding.afterMealSwitch.isChecked, requireNotNull(UserManager.user?.id)
+            )
         }
 
         binding.afterMealSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
@@ -48,15 +51,19 @@ class SettingsFragment : Fragment() {
 
         binding.goodWeatherSwitch.setOnClickListener {
             Logger.d("JJ_weather good weather checked ${binding.goodWeatherSwitch.isChecked}")
-            if(binding.goodWeatherSwitch.isChecked) checkPermission(binding.goodWeatherSwitch.isChecked)
-            else viewModel.updateWeatherNotification(binding.goodWeatherSwitch.isChecked, requireNotNull(UserManager.user?.id))
+            if(binding.goodWeatherSwitch.isChecked){
+                checkPermission(binding.goodWeatherSwitch.isChecked)
+            }
+            else{
+                viewModel.updateWeatherNotification(
+                    binding.goodWeatherSwitch.isChecked, requireNotNull(UserManager.user?.id)
+                )
+            }
         }
 
         binding.goodWeatherSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
             viewModel.goodWeatherSwitchOn(isChecked)
         }
-
-
 
         binding.viewModel = viewModel
 
@@ -101,33 +108,8 @@ class SettingsFragment : Fragment() {
         viewModel.currentLocation.observe(viewLifecycleOwner, Observer{
             it?.let{
                 binding.goodWeatherSwitch.isChecked = true
-//                viewModel.getWeather(it)
             }
         })
-
-//        viewModel.weatherResult.observe(viewLifecycleOwner, Observer{
-//            it?.let{weather->
-//                Log.d("JJ_weather", "weather result $weather ")
-//                val today = Calendar.getInstance()
-//                val hourWalkable = weather.hourly.filter{item->
-//                    item.feelsLike ?: 50f < 35f && item.feelsLike ?: 0f > 15f
-//                }
-//                    .filter{item->
-//                        val itemDate = SimpleDateFormat("dd", Locale.TAIWAN).format(item.dt?.times(1000))
-//                        val todayDate = lessThenTenPadStart(today.get(Calendar.DAY_OF_MONTH).toLong())
-//                        Log.d("JJ_weather", "hour date $itemDate & today date $todayDate")
-//                        itemDate == todayDate
-//                }
-//                for(item in hourWalkable){
-//                    val hrDisplay = SimpleDateFormat("MM-dd HH:mm", Locale.TAIWAN).format(item.dt?.times(1000))
-//                    Log.d("JJ_weather", "weather hour $hrDisplay feels like ${item.feelsLike} Celsius ")
-//
-//                }
-//                val hourDisplay = weather.hourly.map{hour->
-//                    SimpleDateFormat("hh:mm", Locale.TAIWAN).format(hour.dt)
-//                }
-//            }
-//        })
 
 
 
@@ -173,11 +155,7 @@ class SettingsFragment : Fragment() {
             requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
                 REQUEST_LOCATION
             )
-//            requestPermission(requireActivity() as MainActivity, REQUEST_LOCATION
-//                , Manifest.permission.ACCESS_FINE_LOCATION,true)
         }
-
-
 
     }
 

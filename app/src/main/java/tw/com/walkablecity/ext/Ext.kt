@@ -1,10 +1,8 @@
 package tw.com.walkablecity.ext
 
 import android.content.Context
-import android.content.ContextWrapper
 import android.graphics.*
 import android.location.Location
-import android.net.Uri
 import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.Timestamp
 import com.google.firebase.Timestamp.now
@@ -12,8 +10,8 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.GeoPoint
 import tw.com.walkablecity.Logger
 import tw.com.walkablecity.R
-import tw.com.walkablecity.Util
-import tw.com.walkablecity.Util.getString
+import tw.com.walkablecity.util.Util
+import tw.com.walkablecity.util.Util.getString
 import tw.com.walkablecity.data.*
 import tw.com.walkablecity.eventdetail.MemberItem
 import tw.com.walkablecity.profile.bestwalker.WalkerItem
@@ -39,16 +37,7 @@ fun RouteRating?.toSortList(filter: RouteSorting?): List<String>{
             Pair(getString(R.string.filter_vibe),this.vibe)).sortedBy {
             it.second
         }
-        val headItem: Pair<String,Float> = when(filter){
-            RouteSorting.VIBE-> originList.filter{it.first == getString(R.string.filter_vibe)}[0]
-            RouteSorting.COVERAGE-> originList.filter{it.first == getString(R.string.filter_coverage)}[0]
-            RouteSorting.SNACK -> originList.filter{it.first == getString(R.string.filter_snack)}[0]
-            RouteSorting.REST-> originList.filter{it.first == getString(R.string.filter_rest)}[0]
-            RouteSorting.SCENERY-> originList.filter{it.first == getString(R.string.filter_scenery)}[0]
-            RouteSorting.TRANQUILITY->originList.filter{it.first == getString(R.string.filter_tranquility)}[0]
-            null-> originList.last()
-        }
-
+        val headItem: Pair<String,Float> = originList.find{it.first == filter?.title} ?: originList.last()
 
         originList.minus(headItem).plus(headItem).asReversed().map{
             "${it.first} | ${it.second.times(10).roundToInt().toFloat().div(10)}"
@@ -120,66 +109,8 @@ fun GeoPoint.toQuery(): String{
     return "${this.latitude},${this.longitude}"
 }
 
-fun RouteRating.toHashMapInt(): HashMap<String, Int>{
-    return hashMapOf(
-        "coverage" to this.coverage.toInt(),
-        "vibe" to this.vibe.toInt(),
-        "snack" to this.snack.toInt(),
-        "scenery" to this.scenery.toInt(),
-        "rest" to this.rest.toInt(),
-        "tranquility" to this.tranquility.toInt()
-    )
-}
-
-fun RouteRating.toHashMap(): HashMap<String, Float>{
-    return hashMapOf(
-        "coverage" to this.coverage,
-        "vibe" to this.vibe,
-        "snack" to this.snack,
-        "scenery" to this.scenery,
-        "rest" to this.rest,
-        "tranquility" to this.tranquility
-    )
-}
-
-fun RouteRating.addToAverage(rating: RouteRating, route: Route, ratings: Int): RouteRating{
-
-    return RouteRating(
-        coverage = this.coverage.toNewAverage(rating.coverage, route, ratings),
-        rest = this.rest.toNewAverage(rating.rest, route, ratings),
-        snack = this.snack.toNewAverage(rating.snack, route, ratings),
-        scenery = this.scenery.toNewAverage(rating.scenery, route, ratings),
-        tranquility = this.tranquility.toNewAverage(rating.tranquility, route, ratings),
-        vibe = this.vibe.toNewAverage(rating.vibe, route, ratings)
-    )
-}
-
-fun Route.toHashMap(): HashMap<String,Any?>{
-    return hashMapOf(
-        "description" to this.description,
-        "followers" to this.followers,
-        "id" to this.id,
-        "length" to this.length,
-        "mapImage" to this.mapImage,
-        "minutes" to this.minutes,
-        "ratingAvr" to this.ratingAvr?.toHashMap(),
-        "title" to this.title,
-        "walkers" to this.walkers,
-        "waypoints" to this.waypoints
-    )
-}
-
 fun Float.toNewAverage(new: Float, route: Route, ratings: Int): Float{
     return this.times(ratings).plus(new).div(ratings + 1)
-}
-
-fun Comment.toHashMap(): HashMap<String, Any?>{
-    return hashMapOf(
-        "content" to this.content,
-        "createTime" to this.createTime,
-        "recommend" to this.recommend,
-        "userId" to this.userId
-    )
 }
 
 fun String.toComment(recommend: Int, userId: String): Comment{
@@ -189,10 +120,6 @@ fun String.toComment(recommend: Int, userId: String): Comment{
         recommend = recommend,
         userId = userId
     )
-}
-
-fun Walk.toRouteId(userIdCustom: String): String{
-    return "${userIdCustom}${this.startTime?.toDateLong()?.times(100)}"
 }
 
 fun Timestamp.toDateLong(): Long{
@@ -218,83 +145,10 @@ fun FirebaseUser.toSignInUser(idCustom: String?): User{
 
 }
 
-fun User.toFriend(): Friend{
-    return Friend(
-        id = id,
-        idCustom = idCustom,
-        name = name,
-        picture = picture,
-        email = email
-    )
-}
-
-fun User.toFriend(accomplished: MutableList<MissionFQ>): Friend{
-    return Friend(
-        id = id,
-        idCustom = idCustom,
-        name = name,
-        picture = picture,
-        email = email,
-        accomplishFQ = accomplished
-    )
-}
-
-fun Accumulation.addNewWalk(input: Float): Accumulation{
-    return Accumulation(
-        daily   = daily   + input,
-        weekly  = weekly  + input,
-        monthly = monthly + input,
-        yearly  = yearly  + input,
-        total   = total   + input
-    )
-}
-
-fun Accumulation.dailyUpdate(): Accumulation{
-    return Accumulation(
-        daily   = 0f,
-        weekly  = weekly,
-        monthly = monthly,
-        yearly  = yearly,
-        total   = total
-    )
-}
-
-fun Accumulation.weeklyUpdate(): Accumulation{
-    return Accumulation(
-        daily   = 0f,
-        weekly  = 0f,
-        monthly = monthly,
-        yearly  = yearly,
-        total   = total
-    )
-}
-
 fun Float.toMissionFQ(): MissionFQ{
     return MissionFQ(
         date = Timestamp(now().seconds - (60*60*12), now().nanoseconds),
         accomplish = this
-    )
-}
-
-fun Accumulation.monthlyUpdate(): Accumulation{
-    return Accumulation(
-        daily   = 0f,
-        weekly  = 0f,
-        monthly = 0f,
-        yearly  = yearly,
-        total   = total
-    )
-}
-
-fun Friend.toNewInstance(): Friend{
-    return Friend(
-        id = id,
-        idCustom = idCustom,
-        name = name,
-        picture = picture,
-        email = email,
-        accomplish =  accomplish,
-        accomplishFQ =  accomplishFQ
     )
 }
 

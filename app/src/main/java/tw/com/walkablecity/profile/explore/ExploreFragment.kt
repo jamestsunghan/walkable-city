@@ -5,7 +5,6 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.content.res.Resources
-import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.util.TypedValue
 import androidx.fragment.app.Fragment
@@ -14,11 +13,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
-import androidx.core.graphics.scale
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -27,7 +24,7 @@ import com.google.android.gms.maps.model.*
 import tw.com.walkablecity.Logger
 
 import tw.com.walkablecity.R
-import tw.com.walkablecity.Util
+import tw.com.walkablecity.util.Util
 import tw.com.walkablecity.WalkableApp
 import tw.com.walkablecity.databinding.FragmentExploreBinding
 import tw.com.walkablecity.ext.getCroppedBitmap
@@ -158,7 +155,6 @@ class ExploreFragment : Fragment(), OnMapReadyCallback {
                         map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,10f))
 
                         for(walk in walks){
-
 
                         map.addPolyline(PolylineOptions().color(WalkableApp.instance.getColor(R.color.red_heart_c73e3a))
                             .addAll(walk.waypoints.toLatLngPoints()))

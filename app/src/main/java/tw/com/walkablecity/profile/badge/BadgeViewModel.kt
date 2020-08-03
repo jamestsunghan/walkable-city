@@ -8,18 +8,14 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import tw.com.walkablecity.R
 import tw.com.walkablecity.UserManager
-import tw.com.walkablecity.Util
-import tw.com.walkablecity.Util.getAccumulatedFromSharedPreference
-import tw.com.walkablecity.Util.getCountFromSharedPreference
-import tw.com.walkablecity.Util.getString
+import tw.com.walkablecity.util.Util
+import tw.com.walkablecity.util.Util.getAccumulatedFromSharedPreference
 import tw.com.walkablecity.WalkableApp
 import tw.com.walkablecity.data.BadgeType
 import tw.com.walkablecity.data.LoadStatus
-import tw.com.walkablecity.data.Result
-import tw.com.walkablecity.data.User
 import tw.com.walkablecity.data.source.WalkableRepository
+import tw.com.walkablecity.util.Util.getIntFromSP
 
 class BadgeViewModel(val walkableRepository: WalkableRepository) : ViewModel() {
     private val _status = MutableLiveData<LoadStatus>()
@@ -34,18 +30,15 @@ class BadgeViewModel(val walkableRepository: WalkableRepository) : ViewModel() {
     private val _eventCount = MutableLiveData<Int>()
     val eventCount: LiveData<Int> get() = _eventCount
 
-    private val _shareThisBadge = MutableLiveData<Boolean>()
-
     val accuHour = getAccumulatedFromSharedPreference(BadgeType.ACCU_HOUR.key
         , UserManager.user?.accumulatedHour?.total ?: 0f)
 
     val accuKm = getAccumulatedFromSharedPreference(BadgeType.ACCU_KM.key
         , UserManager.user?.accumulatedKm?.total ?: 0f)
 
-    val sharedEventCount = WalkableApp.instance
-        .getSharedPreferences(Util.BADGE_DATA, Context.MODE_PRIVATE).getInt(BadgeType.EVENT_COUNT.key, -1)
-    val sharedFriendCount = WalkableApp.instance
-        .getSharedPreferences(Util.BADGE_DATA, Context.MODE_PRIVATE).getInt(BadgeType.FRIEND_COUNT.key, -1)
+    val sharedEventCount = getIntFromSP(BadgeType.EVENT_COUNT.key)
+
+    val sharedFriendCount = getIntFromSP(BadgeType.FRIEND_COUNT.key)
 
     private val viewModelJob = Job()
     private val coroutineScope = CoroutineScope(Dispatchers.Main + viewModelJob)
@@ -58,60 +51,26 @@ class BadgeViewModel(val walkableRepository: WalkableRepository) : ViewModel() {
 
     }
 
-    fun getFriendCount(userId: String){
+    private fun getFriendCount(userId: String){
         coroutineScope.launch {
+
             _status.value = LoadStatus.LOADING
 
-            when(val result = walkableRepository.getUserFriendSimple(userId)){
+            val result = walkableRepository.getUserFriendSimple(userId)
 
-                is Result.Success ->{
-                    _error.value = null
-                    _status.value = LoadStatus.DONE
-                    _friendCount.value = result.data.size
-                }
-                is Result.Fail ->{
-                    _error.value = result.error
-                    _status.value = LoadStatus.ERROR
-                }
-                is Result.Error ->{
-                    _error.value = result.exception.toString()
-                    _status.value = LoadStatus.ERROR
-                }
-                else->{
-                    _error.value = getString(R.string.not_here)
-                    _status.value = LoadStatus.ERROR
-                }
-
-            }
+            _friendCount.value = result.setLiveData(_error, _status)?.size
 
         }
     }
 
-    fun getEventCount(userId: String){
+    private fun getEventCount(userId: String){
         coroutineScope.launch {
+
             _status.value = LoadStatus.LOADING
 
-            when(val result = walkableRepository.getUserEvents(userId)){
+            val result = walkableRepository.getUserEvents(userId)
 
-                is Result.Success ->{
-                    _error.value = null
-                    _status.value = LoadStatus.DONE
-                    _eventCount.value = result.data.size
-                }
-                is Result.Fail ->{
-                    _error.value = result.error
-                    _status.value = LoadStatus.ERROR
-                }
-                is Result.Error ->{
-                    _error.value = result.exception.toString()
-                    _status.value = LoadStatus.ERROR
-                }
-                else->{
-                    _error.value = getString(R.string.not_here)
-                    _status.value = LoadStatus.ERROR
-                }
-
-            }
+            _eventCount.value = result.setLiveData(_error, _status)?.size
 
         }
     }

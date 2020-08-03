@@ -1,4 +1,4 @@
-package tw.com.walkablecity
+package tw.com.walkablecity.util
 
 import android.content.Context
 import android.content.pm.PackageManager
@@ -9,10 +9,15 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavController
 import androidx.navigation.NavDirections
 import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.Timestamp
+import tw.com.walkablecity.R
+import tw.com.walkablecity.WalkableApp
+import tw.com.walkablecity.data.LoadStatus
+import tw.com.walkablecity.data.Result
 import tw.com.walkablecity.ext.toLocation
 import tw.com.walkablecity.permission.RationaleDialog
 import java.lang.StringBuilder
@@ -21,8 +26,6 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 object Util {
-
-    private const val MAP_BASE_URL = "https://maps.googleapis.com/maps/api/staticmap?"
 
     fun isInternetConnected(): Boolean {
         val cm = WalkableApp.instance
@@ -40,7 +43,9 @@ object Util {
     }
 
     fun makeShortToast(resourceId: Int){
-        Toast.makeText(WalkableApp.instance, getString(resourceId),Toast.LENGTH_SHORT).show()
+        Toast.makeText(
+            WalkableApp.instance,
+            getString(resourceId),Toast.LENGTH_SHORT).show()
     }
 
     fun lessThenTenPadStart(time: Long): String{
@@ -63,14 +68,12 @@ object Util {
             val c = Calendar.getInstance()
             c.time = requireNotNull(SimpleDateFormat("yyyy-MM-dd", Locale.TAIWAN).parse(dateString))
             "${c.get(Calendar.YEAR)}" +
-                    "-${lessThenTenPadStart((c.get(Calendar.MONTH)+2).toLong())}" +
+                    "-${lessThenTenPadStart((c.get(Calendar.MONTH) + 2).toLong())}" +
                     "-${lessThenTenPadStart((c.get(Calendar.DAY_OF_MONTH).toLong()))}"
         }catch (e: ParseException){
             null
         }
     }
-
-
 
 
     fun calculateDistance(first: LatLng, second: LatLng): Float{
@@ -106,18 +109,16 @@ object Util {
             , num, WalkableApp.instance.resources.displayMetrics)
     }
 
-//    fun constructUrl(center: GeoPoint, zoom: Int, path: List<GeoPoint>): String{
-//        return StringBuilder().append(MAP_BASE_URL).append("center=${center.toQuery()}").toString()
-//    }
-
     fun putDataToSharedPreference(key: String, accumulated: Float? = null, count: Int? = null){
         if(accumulated != null){
-            WalkableApp.instance.getSharedPreferences(BADGE_DATA, Context.MODE_PRIVATE).edit()
+            WalkableApp.instance.getSharedPreferences(
+                BADGE_DATA, Context.MODE_PRIVATE).edit()
                 .putFloat(key, accumulated)
                 .apply()
         }
         if(count != null){
-            WalkableApp.instance.getSharedPreferences(BADGE_DATA, Context.MODE_PRIVATE).edit()
+            WalkableApp.instance.getSharedPreferences(
+                BADGE_DATA, Context.MODE_PRIVATE).edit()
                 .putInt(key, count)
                 .apply()
         }
@@ -150,26 +151,26 @@ object Util {
     }
 
     fun getIntFromSP(key: String): Int{
-        return WalkableApp.instance.getSharedPreferences(BADGE_DATA, Context.MODE_PRIVATE).getInt(key, -1)
+        return WalkableApp.instance.getSharedPreferences(
+            BADGE_DATA, Context.MODE_PRIVATE).getInt(key, -1)
     }
 
     fun getFloatFromSP(key: String): Float{
-        return WalkableApp.instance.getSharedPreferences(BADGE_DATA, Context.MODE_PRIVATE).getFloat(key, -1f)
+        return WalkableApp.instance.getSharedPreferences(
+            BADGE_DATA, Context.MODE_PRIVATE).getFloat(key, -1f)
     }
 
-    fun showWalkDistroyDialog(context: Context): AlertDialog.Builder{
+    fun showWalkDestroyDialog(context: Context): AlertDialog.Builder{
         val icon = context.getDrawable(R.drawable.ic_footprint_solid)
         icon?.setTint(getColor(R.color.primaryDarkColor))
 
-        val dialog = AlertDialog.Builder(context, R.style.AlertDialogStyle)
+        return AlertDialog.Builder(context, R.style.AlertDialogStyle)
             .setMessage(getString(R.string.destroy_walk_message))
             .setIcon(icon)
             .setTitle(getString(R.string.destroy_walk_title))
-            .setNegativeButton(getString(R.string.keep_walking)){dialogC, which ->
+            .setNegativeButton(getString(R.string.keep_walking)){ dialogC, _ ->
                 dialogC.cancel()
             }
-
-        return dialog
     }
 
     fun showBadgeDialog(grade: Int, context: Context, navController: NavController, directions: NavDirections, content: String)
@@ -177,34 +178,29 @@ object Util {
         val icon = context.getDrawable(R.drawable.ic_badge_solid)
         icon?.setTint(getColor(R.color.primaryDarkColor))
 
-        val dialog = AlertDialog.Builder(context, R.style.AlertDialogStyle)
-//            .setMessage(String.format(getString(R.string.badge_dialog_content), grade))
+        return AlertDialog.Builder(context, R.style.AlertDialogStyle)
             .setIcon(icon)
             .setTitle(String.format(content, grade))
-            .setPositiveButton(getString(R.string.go_to)) { dialog, which ->
+            .setPositiveButton(getString(R.string.go_to)) { _, _ ->
                 navController.navigate(directions)
-            }.setNegativeButton(getString(R.string.maybe_later)){dialog, which ->
+            }.setNegativeButton(getString(R.string.maybe_later)){ dialog, _ ->
                 dialog.cancel()
             }
-
-        return dialog
 
     }
 
-    fun showNoFriendDialog(context: Context, navController: NavController, directions: NavDirections): AlertDialog{
+    fun showNoFriendDialog(context: Context, navController: NavController, directions: NavDirections): AlertDialog.Builder{
         val icon = context.getDrawable(R.drawable.ic_footprint_solid)
         icon?.setTint(getColor(R.color.primaryDarkColor))
 
-        val dialog = AlertDialog.Builder(context, R.style.AlertDialogStyle)
+        return AlertDialog.Builder(context, R.style.AlertDialogStyle)
             .setIcon(icon)
             .setTitle(getString(R.string.no_friend_for_now))
-            .setPositiveButton(getString(R.string.go_add_some_friend)) { dialog, which ->
+            .setPositiveButton(getString(R.string.go_add_some_friend)) { _, _ ->
                 navController.navigate(directions)
-            }.setNegativeButton(getString(R.string.maybe_later)){dialog, which ->
+            }.setNegativeButton(getString(R.string.maybe_later)){ dialog, _ ->
                 dialog.cancel()
             }
-
-        return dialog.create()
 
     }
 

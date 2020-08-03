@@ -8,14 +8,10 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import tw.com.walkablecity.R
 import tw.com.walkablecity.UserManager
-import tw.com.walkablecity.Util.getString
 import tw.com.walkablecity.data.LoadStatus
-import tw.com.walkablecity.data.Result
 import tw.com.walkablecity.data.Walk
 import tw.com.walkablecity.data.source.WalkableRepository
-import tw.com.walkablecity.home.WalkerStatus
 
 class ExploreViewModel(val walkableRepository: WalkableRepository) : ViewModel() {
 
@@ -62,35 +58,15 @@ class ExploreViewModel(val walkableRepository: WalkableRepository) : ViewModel()
         _permissionDenied.value = false
     }
 
-    fun getUserWalks(userId: String){
+    private fun getUserWalks(userId: String){
 
         coroutineScope.launch {
             _status.value = LoadStatus.LOADING
 
             val result = walkableRepository.getUserWalks(userId)
 
-            _userWalks.value = when(result){
-                is Result.Success ->{
-                    _error.value = null
-                    _status.value = LoadStatus.DONE
-                    result.data
-                }
-                is Result.Fail ->{
-                    _error.value = result.error
-                    _status.value = LoadStatus.ERROR
-                    null
-                }
-                is Result.Error ->{
-                    _error.value = result.exception.toString()
-                    _status.value = LoadStatus.ERROR
-                    null
-                }
-                else->{
-                    _error.value = getString(R.string.not_here)
-                    _status.value = LoadStatus.ERROR
-                    null
-                }
-            }
+            _userWalks.value = result.setLiveData(_error, _status)
+
         }
     }
 
@@ -101,28 +77,7 @@ class ExploreViewModel(val walkableRepository: WalkableRepository) : ViewModel()
         coroutineScope.launch {
             val result = walkableRepository.getUserCurrentLocation()
 
-            currentLocation.value = when(result){
-                is Result.Success->{
-                    _error.value = null
-                    _status.value = LoadStatus.DONE
-                    result.data
-                }
-                is Result.Fail ->{
-                    _error.value = result.error
-                    _status.value = LoadStatus.ERROR
-                    null
-                }
-                is Result.Error ->{
-                    _error.value = result.exception.toString()
-                    _status.value = LoadStatus.ERROR
-                    null
-                }
-                else ->{
-                    _error.value = getString(R.string.not_here)
-                    _status.value = LoadStatus.ERROR
-                    null
-                }
-            }
+            currentLocation.value = result.setLiveData(_error, _status)
 
         }
 

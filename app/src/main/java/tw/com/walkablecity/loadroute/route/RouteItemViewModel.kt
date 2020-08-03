@@ -94,44 +94,11 @@ class RouteItemViewModel( private val walkableRepository: WalkableRepository, va
                     routesNearby
                 }
             }
-            when(result){
-                is Result.Success ->{
-                    _error.value = null
-                    _status.value = LoadStatus.DONE
 
-                    _routeAllList.value = result.data
-                    _routeList.value = routeAllList.value
-                }
-                is Result.Fail ->{
-                    _error.value = result.error
-                    _status.value = LoadStatus.ERROR
-                }
-                is Result.Error ->{
-                    _error.value = WalkableApp.instance.getString(R.string.not_here)
-                    _status.value = LoadStatus.ERROR
-                }
-
-            }
+            _routeAllList.value = result?.setLiveData(_error, _status)
+            _routeList.value = routeAllList.value
         }
     }
-
-//    fun routeSorting(sorting: RouteSorting, adapter: RouteItemAdapter){
-//        _routeList.value = routeAllList.value?.sortedBy{
-//
-//            when(sorting){
-//                RouteSorting.TRANQUILITY -> it.ratingAvr?.tranquility
-//                RouteSorting.SCENERY -> it.ratingAvr?.scenery
-//                RouteSorting.REST -> it.ratingAvr?.rest
-//                RouteSorting.SNACK -> it.ratingAvr?.snack
-//                RouteSorting.COVERAGE -> it.ratingAvr?.coverage
-//                RouteSorting.VIBE -> it.ratingAvr?.vibe
-//
-//            }
-//        }?.reversed() ?: listOf()
-//        adapter.notifyDataSetChanged()
-//        Logger.d("sortingList ${routeList.value?.map{it.title} ?: "null"}")
-//        Logger.d("sorting tranquility ${routeList.value?.map{it.ratingAvr?.coverage} ?: "null"}")
-//    }
 
     fun setTimeFilter(range: List<Float>, max: Float){
         _sliderMax.value = max

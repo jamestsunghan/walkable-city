@@ -1,7 +1,7 @@
 package tw.com.walkablecity.event
 
 import tw.com.walkablecity.R
-import tw.com.walkablecity.Util.getString
+import tw.com.walkablecity.util.Util.getString
 
 enum class EventPageType(val title: String, val empty: String) {
     CHALLENGING(getString(R.string.event_challenging_title), getString(R.string.event_empty_challenging)),

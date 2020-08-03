@@ -1,14 +1,13 @@
-package tw.com.walkablecity
+package tw.com.walkablecity.util
 
 import android.content.Context
 import android.graphics.Canvas
-import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Path
 import android.util.AttributeSet
-import android.util.TypedValue
 import android.view.View
-import tw.com.walkablecity.Util.getColor
+import tw.com.walkablecity.R
+import tw.com.walkablecity.util.Util.getColor
 
 class TriangleView(context: Context, attrs: AttributeSet): View(context, attrs) {
 

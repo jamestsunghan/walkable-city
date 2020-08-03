@@ -9,7 +9,7 @@
         android:background="@color/white"
         tools:context=".rating.RatingFragment">
 
-        <tw.com.walkablecity.CustomViewPager
+        <tw.com.walkablecity.util.CustomViewPager
             android:id="@+id/viewpager_rating"
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -26,7 +26,7 @@
                 app:tabTextAppearance="@style/TabForLoadTitle"
                 app:tabSelectedTextColor="@color/secondaryColor"
                 app:tabTextColor="@color/primaryColor"/>
-        </tw.com.walkablecity.CustomViewPager>
+        </tw.com.walkablecity.util.CustomViewPager>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -6,25 +6,22 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.badge.BadgeDrawable
-import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import tw.com.walkablecity.*
 
-import tw.com.walkablecity.Util.getColor
-import tw.com.walkablecity.Util.getIntFromSP
-import tw.com.walkablecity.Util.showNoFriendDialog
+import tw.com.walkablecity.util.Util.getColor
+import tw.com.walkablecity.util.Util.getIntFromSP
+import tw.com.walkablecity.util.Util.showNoFriendDialog
 import tw.com.walkablecity.data.BadgeType
 import tw.com.walkablecity.databinding.FragmentEventBinding
 import tw.com.walkablecity.ext.getVMFactory
-import tw.com.walkablecity.home.HomeFragmentDirections
+import tw.com.walkablecity.util.Util
 
 class EventFragment : Fragment() {
 
@@ -39,7 +36,6 @@ class EventFragment : Fragment() {
         val mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
         UserManager.user?.id?.let{
             mainViewModel.getInvitation(it)
-//            mainViewModel.getUserEventCount(it)
         }
 
         val binding: FragmentEventBinding = DataBindingUtil

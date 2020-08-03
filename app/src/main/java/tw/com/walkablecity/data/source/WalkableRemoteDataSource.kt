@@ -13,14 +13,13 @@ import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.GeoPoint
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.firestore.ktx.toObjects
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import tw.com.walkablecity.Logger
 import tw.com.walkablecity.R
 import tw.com.walkablecity.UserManager
-import tw.com.walkablecity.Util.getString
-import tw.com.walkablecity.Util.isInternetConnected
+import tw.com.walkablecity.util.Util.getString
+import tw.com.walkablecity.util.Util.isInternetConnected
 import tw.com.walkablecity.WalkableApp
 import tw.com.walkablecity.data.*
 import tw.com.walkablecity.ext.*

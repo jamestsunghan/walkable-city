@@ -2,10 +2,8 @@ package tw.com.walkablecity.eventdetail
 
 
 import android.os.Bundle
-import android.os.CountDownTimer
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
@@ -13,21 +11,18 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.RecyclerView
-import com.google.firebase.Timestamp
 import tw.com.walkablecity.*
 
-import tw.com.walkablecity.Util.getColor
-import tw.com.walkablecity.Util.lessThenTenPadStart
 import tw.com.walkablecity.databinding.FragmentEventDetailBinding
 import tw.com.walkablecity.ext.getVMFactory
-import tw.com.walkablecity.ext.toFriend
 
 class EventDetailFragment : Fragment() {
 
-
-
-    val viewModel: EventDetailViewModel by viewModels{getVMFactory(EventDetailFragmentArgs.fromBundle(requireArguments()).eventKey)}
+    val viewModel: EventDetailViewModel by viewModels {
+        getVMFactory(
+            EventDetailFragmentArgs.fromBundle(requireArguments()).eventKey
+        )
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -47,9 +42,9 @@ class EventDetailFragment : Fragment() {
 
         binding.friend = UserManager.user?.toFriend()
 
-        binding.isAdded = viewModel.event.member.find{
+        binding.isAdded = viewModel.event.member.find {
             it.id == UserManager.user?.id
-        }!= null
+        } != null
 
         val adapter = MemberAdapter(viewModel)
         binding.recyclerMember.adapter = adapter
@@ -72,20 +67,14 @@ class EventDetailFragment : Fragment() {
             findNavController().navigateUp()
         }
 
-        viewModel.walkResultSingle.observe(viewLifecycleOwner, Observer{
-            it?.let{
+        viewModel.walkResultSingle.observe(viewLifecycleOwner, Observer {
+            it?.let {
                 viewModel.addToWalkResult(it)
             }
         })
 
-//        viewModel.eventMember.observe(viewLifecycleOwner, Observer{
-//            it?.let{
-//                adapter.notifyDataSetChanged()
-//            }
-//        })
-
-        viewModel.walkResult.observe(viewLifecycleOwner, Observer{
-            it?.let{ list ->
+        viewModel.walkResult.observe(viewLifecycleOwner, Observer {
+            it?.let { list ->
 
                 Logger.d("list size ${list.size}")
                 Logger.d("list $list")
@@ -94,30 +83,37 @@ class EventDetailFragment : Fragment() {
                 Logger.d("count ${viewModel.resultCount}")
 
 
-                if(viewModel.resultCount == viewModel.listMemberId.size) {
+                if (viewModel.resultCount == viewModel.listMemberId.size) {
 
                     viewModel.eventMember.value?.mapIndexed { index, friend ->
                         requireNotNull(viewModel.eventMember.value)[index].accomplish = list[index]
                         friend
                     }
                     viewModel.sortByAccomplish()
-                    viewModel.circleList.value = list.sortedByDescending { f->f }.map{ fa-> fa.div(viewModel.event.target?.distance ?: requireNotNull(viewModel.event.target?.hour)*60*60) }
+                    viewModel.circleList.value = list.sortedByDescending { f -> f }.map { fa ->
+                        fa.div(
+                            viewModel.event.target?.distance
+                                ?: requireNotNull(viewModel.event.target?.hour) * 60 * 60
+                        )
+                    }
 //                    adapter.notifyDataSetChanged()
-                }else if(viewModel.resultCount > viewModel.listMemberId.size){
+                } else if (viewModel.resultCount > viewModel.listMemberId.size) {
                     viewModel.resultCount = 0
 //                    adapter.notifyDataSetChanged()
-                }else{
-                    viewModel.getMemberWalkResult(requireNotNull(viewModel.event.startDate)
-                        , requireNotNull(viewModel.event.target) ,viewModel.listMemberId)
+                } else {
+                    viewModel.getMemberWalkResult(
+                        requireNotNull(viewModel.event.startDate)
+                        , requireNotNull(viewModel.event.target), viewModel.listMemberId
+                    )
 
                 }
             }
         })
 
-        viewModel.joinSuccess.observe(viewLifecycleOwner, Observer{
-            it?.let{
+        viewModel.joinSuccess.observe(viewLifecycleOwner, Observer {
+            it?.let {
 
-                if(it){
+                if (it) {
                     mainViewModel.getUserEventCount(requireNotNull(UserManager.user?.id))
                     Logger.d("badge event dialog from detail")
                     findNavController().navigate(EventDetailFragmentDirections.actionGlobalEventFragment())
@@ -126,12 +122,10 @@ class EventDetailFragment : Fragment() {
         })
 
         viewModel.circleList.observe(viewLifecycleOwner, Observer {
-            it?.let{
+            it?.let {
                 adapter.notifyDataSetChanged()
             }
         })
-
-
 
 
 //        viewModel.timerText.observe(viewLifecycleOwner, Observer{
@@ -140,20 +134,13 @@ class EventDetailFragment : Fragment() {
 //                binding.timerText = it
 //            }
 //        })
-        viewModel.listOfList.observe(viewLifecycleOwner, Observer{
-            it?.let{
-                Logger.d("JJ_list list of list ${it.size}")
-            }
-        })
+//        viewModel.listOfList.observe(viewLifecycleOwner, Observer {
+//            it?.let {
+//                Logger.d("JJ_list list of list ${it.size}")
+//            }
+//        })
 
 
         return binding.root
-    }
-
-
-    companion object{
-        private const val DONE = 0L
-        private const val ONE_SECOND = 1000L
-        private const val ONE_DAY = 24 * 60 * 60 * ONE_SECOND
     }
 }

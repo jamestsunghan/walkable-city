@@ -9,7 +9,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import tw.com.walkablecity.R
 import tw.com.walkablecity.UserManager
-import tw.com.walkablecity.Util.getString
+import tw.com.walkablecity.util.Util.getString
 import tw.com.walkablecity.data.*
 import tw.com.walkablecity.data.source.WalkableRepository
 
@@ -68,32 +68,12 @@ class BestWalkersViewModel(private val walkableRepository: WalkableRepository) :
 
     fun getUserFriends(userId: String){
         coroutineScope.launch {
+
             _status.value = LoadStatus.LOADING
+
             val result = walkableRepository.getUserFriends(userId)
-            _userFriendList.value = when(result){
 
-                is Result.Success ->{
-                    _error.value = null
-                    _status.value = LoadStatus.ERROR
-                    result.data
-                }
-                is Result.Fail    ->{
-                    _error.value = result.error
-                    _status.value = LoadStatus.ERROR
-                    null
-                }
-                is Result.Error   ->{
-                    _error.value = result.exception.toString()
-                    _status.value = LoadStatus.ERROR
-                    null
-                }
-                else ->{
-                    _error.value = getString(R.string.not_here)
-                    _status.value = LoadStatus.ERROR
-                    null
-                }
-
-            }
+            _userFriendList.value = result.setLiveData(_error, _status)
 
         }
     }

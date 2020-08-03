@@ -17,8 +17,8 @@ import com.google.android.gms.maps.model.LatLng
 import retrofit2.HttpException
 import tw.com.walkablecity.Logger
 import tw.com.walkablecity.R
-import tw.com.walkablecity.Util.getString
-import tw.com.walkablecity.Util.lessThenTenPadStart
+import tw.com.walkablecity.util.Util.getString
+import tw.com.walkablecity.util.Util.lessThenTenPadStart
 import tw.com.walkablecity.WalkableApp
 import java.text.SimpleDateFormat
 import java.util.*

@@ -1,42 +1,32 @@
 package tw.com.walkablecity
 
 
-import android.app.Activity
-import android.content.Intent
 import android.graphics.*
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.ShapeDrawable
-import android.graphics.drawable.shapes.RectShape
 import android.graphics.drawable.shapes.Shape
 import android.util.TypedValue
 import android.view.View
-import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.app.ShareCompat
 import androidx.core.content.FileProvider
-import androidx.core.graphics.drawable.toBitmap
-import androidx.core.graphics.toPointF
 import androidx.core.net.toUri
-import androidx.core.view.drawToBitmap
 import androidx.databinding.BindingAdapter
-import androidx.databinding.BindingMethod
 import androidx.databinding.InverseBindingAdapter
 import androidx.databinding.InverseBindingListener
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import com.google.android.material.slider.RangeSlider
 import com.google.android.material.slider.Slider
 import com.google.firebase.Timestamp
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
-import tw.com.walkablecity.Util.getColor
-import tw.com.walkablecity.Util.getString
-import tw.com.walkablecity.Util.lessThenTenPadStart
-import tw.com.walkablecity.Util.setDp
+import tw.com.walkablecity.util.Util.getColor
+import tw.com.walkablecity.util.Util.getString
+import tw.com.walkablecity.util.Util.lessThenTenPadStart
+import tw.com.walkablecity.util.Util.setDp
 import tw.com.walkablecity.data.*
 import tw.com.walkablecity.detail.CommentAdapter
 import tw.com.walkablecity.detail.DetailCircleAdapter
@@ -59,12 +49,10 @@ import tw.com.walkablecity.profile.bestwalker.BestWalkersAdapter
 import tw.com.walkablecity.ranking.RankingAdapter
 import tw.com.walkablecity.rating.RatingType
 import tw.com.walkablecity.rating.item.RatingItemPhotoAdapter
-import java.io.ByteArrayOutputStream
+import tw.com.walkablecity.util.CircleView
+import tw.com.walkablecity.util.Util
 import java.io.File
-import java.math.BigDecimal
-import java.text.DecimalFormat
 import java.text.SimpleDateFormat
-import kotlin.math.roundToInt
 import kotlin.math.sqrt
 
 

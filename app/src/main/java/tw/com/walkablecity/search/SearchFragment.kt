@@ -26,8 +26,8 @@ import com.google.android.libraries.places.widget.AutocompleteSupportFragment
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener
 import tw.com.walkablecity.Logger
 import tw.com.walkablecity.R
-import tw.com.walkablecity.Util.getColor
-import tw.com.walkablecity.Util.makeShortToast
+import tw.com.walkablecity.util.Util.getColor
+import tw.com.walkablecity.util.Util.makeShortToast
 import tw.com.walkablecity.WalkableApp
 import tw.com.walkablecity.databinding.FragmentSearchBinding
 import tw.com.walkablecity.ext.getVMFactory

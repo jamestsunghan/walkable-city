@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import tw.com.walkablecity.R
-import tw.com.walkablecity.Util.getString
+import tw.com.walkablecity.util.Util.getString
 import tw.com.walkablecity.data.Friend
 import tw.com.walkablecity.databinding.ItemEventDetailFrequencyFriendBinding
 

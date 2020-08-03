@@ -28,17 +28,6 @@
             android:layout_height="match_parent"
             android:visibility="@{viewModel.permissionDenied ? View.GONE : View.VISIBLE}" />
 
-        <!--        <tw.com.walkablecity.CameraPreview-->
-        <!--            android:id="@+id/photo_booth"-->
-        <!--            android:layout_width="match_parent"-->
-        <!--            android:layout_height="250dp"-->
-        <!--            android:visibility="@{viewModel.cameraClicked ? View.VISIBLE : View.GONE}"-->
-        <!--            android:scaleType="centerCrop"-->
-        <!--            app:layout_constraintEnd_toEndOf="parent"-->
-        <!--            app:layout_constraintStart_toStartOf="parent"-->
-        <!--            app:layout_constraintTop_toTopOf="parent"-->
-        <!--            app:srcCompat="@drawable/placeholder" />-->
-
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/edit_search_route"
             android:layout_width="match_parent"

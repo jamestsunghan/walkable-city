@@ -1,4 +1,4 @@
-package tw.com.walkablecity
+package tw.com.walkablecity.util
 
 import android.content.Context
 import android.util.AttributeSet

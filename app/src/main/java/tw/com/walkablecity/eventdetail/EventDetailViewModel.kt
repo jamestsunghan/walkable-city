@@ -15,13 +15,11 @@ import kotlinx.coroutines.launch
 import tw.com.walkablecity.Logger
 import tw.com.walkablecity.R
 import tw.com.walkablecity.UserManager
-import tw.com.walkablecity.Util.getString
-import tw.com.walkablecity.Util.lessThenTenPadStart
-import tw.com.walkablecity.Util.setDp
-import tw.com.walkablecity.WalkableApp
+import tw.com.walkablecity.util.Util.getString
+import tw.com.walkablecity.util.Util.lessThenTenPadStart
+import tw.com.walkablecity.util.Util.setDp
 import tw.com.walkablecity.data.*
 import tw.com.walkablecity.data.source.WalkableRepository
-import tw.com.walkablecity.ext.toNewInstance
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -48,8 +46,6 @@ class EventDetailViewModel(private val walkableRepository: WalkableRepository, v
     private val _snapPosition = MutableLiveData<Int>()
     val snapPosition: LiveData<Int> get() = _snapPosition
 
-
-
     val currentCountDown = MutableLiveData<String>()
 
     var eventIsStarted = requireNotNull(event.startDate?.seconds) < now().seconds
@@ -60,9 +56,6 @@ class EventDetailViewModel(private val walkableRepository: WalkableRepository, v
         }else{
             (requireNotNull(event.startDate?.seconds) - now().seconds).times(ONE_SECOND)
         }
-
-
-
 
     val eventMember = MutableLiveData<List<Friend>>().apply{
         value = event.member
@@ -76,15 +69,6 @@ class EventDetailViewModel(private val walkableRepository: WalkableRepository, v
 
     private val _walkResultSingle = MutableLiveData<Float>()
     val walkResultSingle: LiveData<Float> get() = _walkResultSingle
-
-    val typeColor = when(event.type){
-        EventType.FREQUENCY -> WalkableApp.instance.resources.getColor(R.color.event_frequency, WalkableApp.instance.theme)
-        EventType.DISTANCE_GROUP -> WalkableApp.instance.resources.getColor(R.color.event_distance_group, WalkableApp.instance.theme)
-        EventType.DISTANCE_RACE -> WalkableApp.instance.resources.getColor(R.color.event_distance_race, WalkableApp.instance.theme)
-        EventType.HOUR_GROUP -> WalkableApp.instance.resources.getColor(R.color.event_hour_group, WalkableApp.instance.theme)
-        EventType.HOUR_RACE -> WalkableApp.instance.resources.getColor(R.color.event_hour_race, WalkableApp.instance.theme)
-        null -> WalkableApp.instance.resources.getColor(R.color.primaryColor, WalkableApp.instance.theme)
-    }
 
     val listMemberId = event.member.map{ requireNotNull(it.id)}
 
@@ -118,8 +102,6 @@ class EventDetailViewModel(private val walkableRepository: WalkableRepository, v
         getMemberWalkResult(requireNotNull(event.startDate), requireNotNull(event.target) ,listMemberId)
 
         getTimerStart(countDownTime)
-
-//        checkEventStarted(eventIsStarted)
 
         val hostMember = event.member.find{ it.idCustom == event.host}
 
@@ -245,28 +227,8 @@ class EventDetailViewModel(private val walkableRepository: WalkableRepository, v
 
             val result  = walkableRepository.joinEvent(requireNotNull(UserManager.user), event)
 
-            _joinSuccess.value = when(result){
-                is Result.Success ->{
-                    _error.value = null
-                    _status.value = LoadStatus.DONE
-                    result.data
-                }
-                is Result.Fail ->{
-                    _error.value = result.error
-                    _status.value = LoadStatus.ERROR
-                    null
-                }
-                is Result.Error ->{
-                    _error.value = result.exception.toString()
-                    _status.value = LoadStatus.ERROR
-                    null
-                }
-                else ->{
-                    _error.value = getString(R.string.not_here)
-                    _status.value = LoadStatus.ERROR
-                    null
-                }
-            }
+            _joinSuccess.value = result.setLiveData(_error, _status)
+
         }
     }
 
@@ -278,28 +240,7 @@ class EventDetailViewModel(private val walkableRepository: WalkableRepository, v
 
             val result  = walkableRepository.joinPublicEvent(requireNotNull(UserManager.user), event)
 
-            _joinSuccess.value = when(result){
-                is Result.Success ->{
-                    _error.value = null
-                    _status.value = LoadStatus.DONE
-                    result.data
-                }
-                is Result.Fail ->{
-                    _error.value = result.error
-                    _status.value = LoadStatus.ERROR
-                    null
-                }
-                is Result.Error ->{
-                    _error.value = result.exception.toString()
-                    _status.value = LoadStatus.ERROR
-                    null
-                }
-                else ->{
-                    _error.value = getString(R.string.not_here)
-                    _status.value = LoadStatus.ERROR
-                    null
-                }
-            }
+            _joinSuccess.value = result.setLiveData(_error, _status)
         }
     }
 
@@ -326,28 +267,7 @@ class EventDetailViewModel(private val walkableRepository: WalkableRepository, v
                 else ->null
             }
 
-            _walkResultSingle.value = when(result){
-                is Result.Success ->{
-                    _error.value = null
-                    _status.value = LoadStatus.DONE
-                    result.data
-                }
-                is Result.Fail ->{
-                    _error.value = result.error
-                    _status.value = LoadStatus.ERROR
-                    null
-                }
-                is Result.Error ->{
-                    _error.value = result.exception.toString()
-                    _status.value = LoadStatus.ERROR
-                    null
-                }
-                else ->{
-                    _error.value = getString(R.string.not_here)
-                    _status.value = LoadStatus.ERROR
-                    null
-                }
-            }
+            _walkResultSingle.value = result?.setLiveData(_error, _status)
 
         }
     }

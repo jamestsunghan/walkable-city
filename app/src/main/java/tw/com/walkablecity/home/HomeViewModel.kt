@@ -1,15 +1,9 @@
 package tw.com.walkablecity.home
 
 
-import android.annotation.SuppressLint
-import android.content.pm.PackageManager
-import android.content.res.Configuration
-import android.hardware.Camera
-import android.hardware.camera2.CameraDevice
-import android.hardware.camera2.CameraManager
+
 import android.os.Handler
 import android.os.Looper
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
@@ -23,20 +17,16 @@ import com.google.firebase.firestore.GeoPoint
 import kotlinx.coroutines.*
 import tw.com.walkablecity.*
 import tw.com.walkablecity.R
-import tw.com.walkablecity.Util.getAccumulatedFromSharedPreference
-import tw.com.walkablecity.Util.getColor
-import tw.com.walkablecity.Util.getCountFromSharedPreference
-import tw.com.walkablecity.Util.getString
-import tw.com.walkablecity.Util.putDataToSharedPreference
+import tw.com.walkablecity.util.Util.getAccumulatedFromSharedPreference
+import tw.com.walkablecity.util.Util.getColor
+import tw.com.walkablecity.util.Util.getString
 import tw.com.walkablecity.data.*
 import tw.com.walkablecity.data.source.WalkableRepository
 import tw.com.walkablecity.ext.toDistance
 import tw.com.walkablecity.ext.toGeoPoint
-import java.lang.Exception
 import java.lang.Runnable
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.coroutines.resume
 
 class HomeViewModel(val walkableRepository: WalkableRepository, val argument: Route?, val destination: LatLng?): ViewModel(){
 
@@ -48,18 +38,10 @@ class HomeViewModel(val walkableRepository: WalkableRepository, val argument: Ro
     private val _upgrade = MutableLiveData<Int>()
     val upgrade: LiveData<Int> get() = _upgrade
 
-    val waypointLatLng = MutableLiveData<List<LatLng>>()
-
     private val _permissionDenied =  MutableLiveData<Boolean>(false)
     val permissionDenied: LiveData<Boolean> get() = _permissionDenied
 
-    private val _cameraPermissionDenied =  MutableLiveData<Boolean>(false)
-    val cameraPermissionDenied: LiveData<Boolean> get() = _cameraPermissionDenied
-
     private val fusedLocationClient = FusedLocationProviderClient(WalkableApp.instance)
-
-    private val _checkPermission = MutableLiveData<Boolean>(false)
-    val checkPermission: LiveData<Boolean> get() = _checkPermission
 
     private val _dontAskAgain = MutableLiveData<Boolean>(false)
     val dontAskAgain: LiveData<Boolean> get() = _dontAskAgain
@@ -88,13 +70,11 @@ class HomeViewModel(val walkableRepository: WalkableRepository, val argument: Ro
     private val _photoPoints = MutableLiveData<MutableList<PhotoPoint>>(mutableListOf())
     val photopoints: LiveData<MutableList<PhotoPoint>> get() = _photoPoints
 
-
-
-    val startTime = MutableLiveData<Timestamp>()
+    private val startTime = MutableLiveData<Timestamp>()
 
     val duration = MutableLiveData<Long>()
 
-    val endTime = MutableLiveData<Timestamp>()
+    private val endTime = MutableLiveData<Timestamp>()
 
     val currentLocation = MutableLiveData<LatLng>()
     val startLocation = MutableLiveData<LatLng>()
@@ -173,14 +153,6 @@ class HomeViewModel(val walkableRepository: WalkableRepository, val argument: Ro
 
     fun permissionGranted(){
         _permissionDenied.value = false
-    }
-
-    fun cameraPermissionDenied(){
-        _cameraPermissionDenied.value = true
-    }
-
-    fun cameraPermissionGranted(){
-        _cameraPermissionDenied.value = false
     }
 
     fun navigateToLoad(){
@@ -293,9 +265,7 @@ class HomeViewModel(val walkableRepository: WalkableRepository, val argument: Ro
 
             _loadStatus.value = LoadStatus.LOADING
 
-            val result = walkableRepository.updateWalks(walk, requireNotNull(UserManager.user))
-
-            when(result){
+            when(val result = walkableRepository.updateWalks(walk, requireNotNull(UserManager.user))){
                 is Result.Success->{
                     _error.value = null
                     _loadStatus.value = LoadStatus.DONE
@@ -336,28 +306,8 @@ class HomeViewModel(val walkableRepository: WalkableRepository, val argument: Ro
         coroutineScope.launch {
             val result = walkableRepository.getUserCurrentLocation()
 
-            currentLocation.value = when(result){
-                is Result.Success->{
-                    _error.value = null
-                    _loadStatus.value = LoadStatus.DONE
-                    result.data
-                }
-                is Result.Fail ->{
-                    _error.value = result.error
-                    _loadStatus.value = LoadStatus.ERROR
-                    null
-                }
-                is Result.Error ->{
-                    _error.value = result.exception.toString()
-                    _loadStatus.value = LoadStatus.ERROR
-                    null
-                }
-                else ->{
-                    _error.value = getString(R.string.not_here)
-                    _loadStatus.value = LoadStatus.ERROR
-                    null
-                }
-            }
+            currentLocation.value = result.setLiveData(_error, _loadStatus)
+
             if(walkerStatus.value != WalkerStatus.PAUSING && result is Result.Success){
                 startLocation.value = currentLocation.value
             }
@@ -408,10 +358,6 @@ class HomeViewModel(val walkableRepository: WalkableRepository, val argument: Ro
                 }
             }
         }
-    }
-
-    private fun checkCameraHardWare(): Boolean{
-        return WalkableApp.instance.packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)
     }
 
     fun newAccuBadgeCheck(user: User){

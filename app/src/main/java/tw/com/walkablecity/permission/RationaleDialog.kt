@@ -8,7 +8,7 @@ import android.os.Bundle
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.DialogFragment
 import tw.com.walkablecity.R
-import tw.com.walkablecity.Util
+import tw.com.walkablecity.util.Util
 import tw.com.walkablecity.WalkableApp
 
 class RationaleDialog: DialogFragment() {

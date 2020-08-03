@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -16,10 +15,9 @@ import tw.com.walkablecity.MainViewModel
 
 import tw.com.walkablecity.R
 import tw.com.walkablecity.UserManager
-import tw.com.walkablecity.Util.makeShortToast
+import tw.com.walkablecity.util.Util.makeShortToast
 import tw.com.walkablecity.databinding.FragmentAddFriendBinding
 import tw.com.walkablecity.ext.getVMFactory
-import java.util.*
 
 class AddFriendFragment : Fragment() {
 

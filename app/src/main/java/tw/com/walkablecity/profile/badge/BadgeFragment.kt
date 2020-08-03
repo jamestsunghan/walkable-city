@@ -7,9 +7,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.Toast
-import androidx.databinding.BindingMethod
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -19,8 +16,7 @@ import tw.com.walkablecity.MainViewModel
 
 import tw.com.walkablecity.R
 import tw.com.walkablecity.UserManager
-import tw.com.walkablecity.Util.makeShortToast
-import tw.com.walkablecity.Util.putDataToSharedPreference
+import tw.com.walkablecity.util.Util.putDataToSharedPreference
 import tw.com.walkablecity.data.BadgeType
 import tw.com.walkablecity.databinding.FragmentBadgeBinding
 import tw.com.walkablecity.ext.getVMFactory
@@ -65,11 +61,6 @@ class BadgeFragment : Fragment() {
         })
 
         return binding.root
-    }
-
-    override fun startActivityForResult(intent: Intent?, requestCode: Int) {
-        super.startActivityForResult(intent, requestCode)
-        val x = intent?.extras
     }
 
     override fun onDestroyView() {

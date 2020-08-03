@@ -21,8 +21,7 @@ import tw.com.walkablecity.Logger
 
 import tw.com.walkablecity.R
 import tw.com.walkablecity.UserManager
-import tw.com.walkablecity.Util
-import tw.com.walkablecity.Util.makeShortToast
+import tw.com.walkablecity.util.Util.makeShortToast
 import tw.com.walkablecity.databinding.FragmentLoginBinding
 import tw.com.walkablecity.ext.getVMFactory
 import tw.com.walkablecity.ext.toSignInUser

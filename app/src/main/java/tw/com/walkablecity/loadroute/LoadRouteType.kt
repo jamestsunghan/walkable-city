@@ -2,7 +2,7 @@ package tw.com.walkablecity.loadroute
 
 
 import tw.com.walkablecity.R
-import tw.com.walkablecity.Util.getString
+import tw.com.walkablecity.util.Util.getString
 
 enum class LoadRouteType(val title: String, val emptyRoute: String) {
     NEARBY(getString(R.string.route_nearby_title), getString(R.string.no_route_nearby)),

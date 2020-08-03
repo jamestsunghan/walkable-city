@@ -130,7 +130,7 @@
                         tools:text="累計｜0.12小時｜0.22公里｜" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
-                <tw.com.walkablecity.CircleView
+                <tw.com.walkablecity.util.CircleView
                     android:id="@+id/circle_accomplish"
                     android:layout_width="match_parent"
                     app:strokeColor="@color/primaryColor"

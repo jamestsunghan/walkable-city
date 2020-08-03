@@ -10,7 +10,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.FileProvider
 import androidx.core.os.bundleOf
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.setFragmentResult
@@ -19,10 +18,9 @@ import androidx.lifecycle.Observer
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import tw.com.walkablecity.*
-import tw.com.walkablecity.Util.getColor
+import tw.com.walkablecity.util.Util.getColor
 
 import tw.com.walkablecity.data.PhotoPoint
 import tw.com.walkablecity.data.Route
@@ -32,7 +30,7 @@ import tw.com.walkablecity.ext.getCroppedBitmap
 import tw.com.walkablecity.ext.getVMFactory
 import tw.com.walkablecity.ext.toLatLngPoints
 import tw.com.walkablecity.rating.RatingType
-import java.io.File
+import tw.com.walkablecity.util.WorkaroundMapFragment
 
 class RatingItemFragment(private val type: RatingType, private val route: Route?
                          , private val walk: Walk, private val photoPoints: List<PhotoPoint>?) : Fragment(),

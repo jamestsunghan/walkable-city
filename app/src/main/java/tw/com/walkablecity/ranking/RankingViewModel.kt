@@ -20,10 +20,6 @@ import tw.com.walkablecity.ext.timeFilter
 
 class RankingViewModel(val walkableRepository: WalkableRepository) : ViewModel() {
 
-    private val _navigateToDetail = MutableLiveData<Route>()
-    val navigateToDetail: LiveData<Route>
-        get() = _navigateToDetail
-
 
     private val _routeAllList = MutableLiveData<List<Route>>()
     val routeAllList: LiveData<List<Route>>
@@ -64,15 +60,6 @@ class RankingViewModel(val walkableRepository: WalkableRepository) : ViewModel()
 
     }
 
-    fun navigateToDetail(route: Route){
-        _navigateToDetail.value = route
-    }
-
-
-    fun navigateToDetailComplete(){
-        _navigateToDetail.value = null
-    }
-
     fun navigationComplete(){
         selectRoute.value = null
         _filter.value = null
@@ -86,47 +73,14 @@ class RankingViewModel(val walkableRepository: WalkableRepository) : ViewModel()
         coroutineScope.launch {
 
             _status.value = LoadStatus.LOADING
+
             val result = walkableRepository.getAllRoute()
 
+            _routeAllList.value = result.setLiveData(_error, _status)
+            _routeList.value = routeAllList.value
 
-            when(result){
-                is Result.Success ->{
-                    _error.value = null
-                    _status.value = LoadStatus.DONE
-
-                    _routeAllList.value = result.data
-                    _routeList.value = routeAllList.value
-                }
-                is Result.Fail ->{
-                    _error.value = result.error
-                    _status.value = LoadStatus.ERROR
-                }
-                is Result.Error ->{
-                    _error.value = WalkableApp.instance.getString(R.string.not_here)
-                    _status.value = LoadStatus.ERROR
-                }
-
-            }
         }
     }
-
-//    fun routeSorting(sorting: RouteSorting, adapter: RankingAdapter){
-//        _routeList.value = routeAllList.value?.sortedByDescending{
-//
-//            when(sorting){
-//                RouteSorting.TRANQUILITY -> it.ratingAvr?.tranquility
-//                RouteSorting.SCENERY -> it.ratingAvr?.scenery
-//                RouteSorting.REST -> it.ratingAvr?.rest
-//                RouteSorting.SNACK -> it.ratingAvr?.snack
-//                RouteSorting.COVERAGE -> it.ratingAvr?.coverage
-//                RouteSorting.VIBE -> it.ratingAvr?.vibe
-//
-//            }
-//        } ?: listOf()
-//        adapter.notifyDataSetChanged()
-//        Logger.d("sortingList ${routeList.value?.map{it.title} ?: "null"}")
-//        Logger.d("sorting tranquility ${routeList.value?.map{it.ratingAvr?.coverage} ?: "null"}")
-//    }
 
     fun setTimeFilter(range: List<Float>,  max: Float){
         _routeTime.value = range

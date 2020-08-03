@@ -1,35 +1,25 @@
 package tw.com.walkablecity
 
-import android.Manifest
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.content.pm.ActivityInfo
-import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
 import android.view.animation.AnimationUtils
-import android.widget.Toast
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
-import com.google.android.gms.location.LocationServices
-import com.google.android.material.badge.BadgeDrawable
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.firebase.FirebaseApp
 import tw.com.walkablecity.addfriend.AddFriendFragmentDirections
 import tw.com.walkablecity.data.BadgeType
-import tw.com.walkablecity.data.Walker
 import tw.com.walkablecity.databinding.ActivityMainBinding
 import tw.com.walkablecity.ext.getVMFactory
 import tw.com.walkablecity.home.HomeFragmentDirections
 import tw.com.walkablecity.home.WalkerStatus
 import tw.com.walkablecity.home.createroute.CreateRouteDialogFragmentDirections
-import tw.com.walkablecity.host.add2event.AddFriend2EventFragmentDirections
 import tw.com.walkablecity.profile.badge.BadgeFragmentDirections
 import tw.com.walkablecity.rating.RatingFragmentDirections
+import tw.com.walkablecity.util.Util
 
 class MainActivity : AppCompatActivity() {
 
@@ -78,7 +68,6 @@ class MainActivity : AppCompatActivity() {
 
         binding.viewModel = viewModel
 
-
         setupNavController()
         setupBottomNav()
         viewModel.invitation.observe(this, Observer{
@@ -112,7 +101,6 @@ class MainActivity : AppCompatActivity() {
             it?.let{status ->
                 if(status == WalkerStatus.WALKING && previousStatus != WalkerStatus.PAUSING){
                     binding.bottomNav.startAnimation(AnimationUtils.loadAnimation(this, R.anim.anim_slide_down))
-
 
                 }
                 previousStatus = status
@@ -195,7 +183,7 @@ class MainActivity : AppCompatActivity() {
 
             CurrentFragmentType.HOME ->{
                 if(viewModel.walkerStatus.value == WalkerStatus.WALKING || viewModel.walkerStatus.value == WalkerStatus.PAUSING){
-                    val dialog = Util.showWalkDistroyDialog(this)
+                    val dialog = Util.showWalkDestroyDialog(this)
                         .setPositiveButton(getString(R.string.confirm)) { dialogC, which ->
                             findNavController(R.id.nav_host_fragment).
                                 navigate(HomeFragmentDirections.actionGlobalHomeFragment(null,null))

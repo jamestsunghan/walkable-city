@@ -91,7 +91,7 @@
 
     </com.google.android.material.card.MaterialCardView>
 
-        <tw.com.walkablecity.TriangleView
+        <tw.com.walkablecity.util.TriangleView
             android:id="@+id/triangle"
             android:layout_width="30dp"
             android:layout_height="20dp"

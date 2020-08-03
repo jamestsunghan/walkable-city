@@ -8,7 +8,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import tw.com.walkablecity.R
-import tw.com.walkablecity.Util.getString
+import tw.com.walkablecity.util.Util.getString
 import tw.com.walkablecity.WalkableApp
 import tw.com.walkablecity.data.LoadStatus
 import tw.com.walkablecity.data.Route
