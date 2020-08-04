@@ -11,43 +11,45 @@ import tw.com.walkablecity.R
 import tw.com.walkablecity.util.Util
 import tw.com.walkablecity.WalkableApp
 
-class RationaleDialog: DialogFragment() {
+class RationaleDialog : DialogFragment() {
     private var finishActivity = false
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
 
         val requestCode = arguments?.getInt(REQUEST_CODE) ?: 0
+
         finishActivity = arguments?.getBoolean(FINISH_CODE) ?: false
+
         return AlertDialog.Builder(WalkableApp.instance.applicationContext)
-            .setMessage(R.string.permission_rational_location).setPositiveButton(R.string.ok){dialog, which ->
+            .setMessage(R.string.permission_rational_location)
+            .setPositiveButton(R.string.ok) { _, _ ->
                 ActivityCompat.requestPermissions(
                     requireActivity(),
                     arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
                     requestCode
                 )
                 finishActivity = false
-            }.setNegativeButton(R.string.cancel,null).create()
+            }.setNegativeButton(R.string.cancel, null).create()
     }
 
     override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
-        if(finishActivity){
+        if (finishActivity) {
             Util.makeShortToast(R.string.permission_required_toast)
         }
     }
 
-    companion object{
+    companion object {
         private const val REQUEST_CODE = "requestCode"
         private const val FINISH_CODE = "finish"
 
-        fun newInstance(requestCode: Int,finishActivity: Boolean): RationaleDialog{
-            val arguments = Bundle().apply{
+        fun newInstance(requestCode: Int, finishActivity: Boolean): RationaleDialog {
+            val arguments = Bundle().apply {
                 putInt(REQUEST_CODE, requestCode)
-                putBoolean(FINISH_CODE,finishActivity)
+                putBoolean(FINISH_CODE, finishActivity)
             }
             return RationaleDialog().apply {
                 this.arguments = arguments
             }
         }
     }
-
 }

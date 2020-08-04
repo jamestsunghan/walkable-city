@@ -20,7 +20,7 @@ import tw.com.walkablecity.util.Util
 
 class ProfileFragment : Fragment() {
 
-    private val viewModel: ProfileViewModel by viewModels{getVMFactory()}
+    private val viewModel: ProfileViewModel by viewModels { getVMFactory() }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -31,61 +31,72 @@ class ProfileFragment : Fragment() {
 
         val binding: FragmentProfileBinding = DataBindingUtil
             .inflate(inflater, R.layout.fragment_profile, container, false)
+
         binding.lifecycleOwner = this
 
         binding.viewModel = viewModel
-        binding.user = UserManager.user
-        Logger.d( " accumulate hours ${UserManager.user?.accumulatedHour?.total}")
 
-        viewModel.navigateToAddFriend.observe(viewLifecycleOwner, Observer{
-            if(it){
-                findNavController().navigate(ProfileFragmentDirections.actionGlobalAddFriendFragment())
+        binding.user = UserManager.user
+
+        Logger.d(" accumulate hours ${UserManager.user?.accumulatedHour?.total}")
+
+        viewModel.navigateToAddFriend.observe(viewLifecycleOwner, Observer {
+            if (it) {
+                findNavController()
+                    .navigate(ProfileFragmentDirections.actionGlobalAddFriendFragment())
                 viewModel.navigateToAddFriendComplete()
             }
         })
 
-        viewModel.navigateToSetting.observe(viewLifecycleOwner, Observer{
-            if(it){
-                findNavController().navigate(ProfileFragmentDirections.actionProfileFragmentToSettingsFragment())
+        viewModel.navigateToSetting.observe(viewLifecycleOwner, Observer {
+            if (it) {
+                findNavController()
+                    .navigate(ProfileFragmentDirections.actionProfileFragmentToSettingsFragment())
                 viewModel.navigateToSettingComplete()
             }
         })
 
-        viewModel.navigateToWalkers.observe(viewLifecycleOwner, Observer{
-            if(it){
-                findNavController().navigate(ProfileFragmentDirections.actionProfileFragmentToBestWalkersFragment())
+        viewModel.navigateToWalkers.observe(viewLifecycleOwner, Observer {
+            if (it) {
+                findNavController()
+                    .navigate(ProfileFragmentDirections.actionProfileFragmentToBestWalkersFragment())
                 viewModel.navigateToWalkersComplete()
             }
         })
 
-        viewModel.navigateToBadge.observe(viewLifecycleOwner, Observer{
-            if(it){
-                findNavController().navigate(ProfileFragmentDirections.actionProfileFragmentToBadgeFragment())
+        viewModel.navigateToBadge.observe(viewLifecycleOwner, Observer {
+            if (it) {
+                findNavController()
+                    .navigate(ProfileFragmentDirections.actionProfileFragmentToBadgeFragment())
                 viewModel.navigateToBadgeComplete()
             }
         })
 
-        viewModel.navigateToExplorer.observe(viewLifecycleOwner, Observer{
-            if(it){
-                findNavController().navigate(ProfileFragmentDirections.actionProfileFragmentToExploreFragment())
+        viewModel.navigateToExplorer.observe(viewLifecycleOwner, Observer {
+            if (it) {
+                findNavController()
+                    .navigate(ProfileFragmentDirections.actionProfileFragmentToExploreFragment())
                 viewModel.navigateToExplorerComplete()
             }
         })
 
-        mainViewModel.friendCount.observe(viewLifecycleOwner, Observer{
-            it?.let{count->
+        mainViewModel.friendCount.observe(viewLifecycleOwner, Observer {
+            it?.let { count ->
                 viewModel.setUpgrade(count, Util.getIntFromSP(BadgeType.FRIEND_COUNT.key))
             }
         })
+
         var previousUpgrade = 0
         viewModel.upgrade.observe(viewLifecycleOwner, Observer {
-            it?.let{grade->
+            it?.let { grade ->
                 Logger.d("let see some grade $grade")
-                if(grade > previousUpgrade){
+                if (grade > previousUpgrade) {
                     mainViewModel.addToBadgeTotal(grade, R.id.profileFragment)
-                    val dialog = showBadgeDialog(grade, requireContext(), findNavController(),
+                    val dialog = showBadgeDialog(
+                        grade, requireContext(), findNavController(),
                         ProfileFragmentDirections.actionProfileFragmentToBadgeFragment()
-                        , getString(R.string.badge_dialog_friend))
+                        , getString(R.string.badge_dialog_friend)
+                    )
 
                     dialog.show()
                     previousUpgrade = grade
@@ -93,9 +104,6 @@ class ProfileFragment : Fragment() {
             }
         })
 
-
         return binding.root
     }
-
-
 }

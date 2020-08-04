@@ -24,8 +24,7 @@ import tw.com.walkablecity.ext.getVMFactory
 
 class BadgeFragment : Fragment() {
 
-
-    private val viewModel: BadgeViewModel by viewModels{getVMFactory()}
+    private val viewModel: BadgeViewModel by viewModels { getVMFactory() }
 
     lateinit var mainViewModel: MainViewModel
 
@@ -39,7 +38,6 @@ class BadgeFragment : Fragment() {
         val binding: FragmentBadgeBinding = DataBindingUtil
             .inflate(inflater, R.layout.fragment_badge, container, false)
 
-
         binding.lifecycleOwner = this
 
         binding.viewModel = viewModel
@@ -48,14 +46,14 @@ class BadgeFragment : Fragment() {
 
         binding.activity = requireActivity()
 
-        viewModel.eventCount.observe(viewLifecycleOwner, Observer{
-            it?.let{
-                Logger.d( "eventCount $it")
+        viewModel.eventCount.observe(viewLifecycleOwner, Observer {
+            it?.let {
+                Logger.d("eventCount $it")
             }
         })
 
-        viewModel.friendCount.observe(viewLifecycleOwner, Observer{
-            it?.let{
+        viewModel.friendCount.observe(viewLifecycleOwner, Observer {
+            it?.let {
                 Logger.d("friendCount $it")
             }
         })
@@ -65,15 +63,26 @@ class BadgeFragment : Fragment() {
 
     override fun onDestroyView() {
 
-        putDataToSharedPreference(BadgeType.ACCU_HOUR.key, UserManager.user?.accumulatedHour?.total ?: 0f)
-        putDataToSharedPreference(BadgeType.ACCU_KM.key, UserManager.user?.accumulatedKm?.total ?: 0f)
-        viewModel.friendCount.value?.let{
+        putDataToSharedPreference(
+            BadgeType.ACCU_HOUR.key,
+            UserManager.user?.accumulatedHour?.total ?: 0f
+        )
+
+        putDataToSharedPreference(
+            BadgeType.ACCU_KM.key,
+            UserManager.user?.accumulatedKm?.total ?: 0f
+        )
+
+        viewModel.friendCount.value?.let {
             putDataToSharedPreference(BadgeType.FRIEND_COUNT.key, count = it)
         }
-        viewModel.eventCount.value?.let{
+
+        viewModel.eventCount.value?.let {
             putDataToSharedPreference(BadgeType.EVENT_COUNT.key, count = it)
         }
+
         mainViewModel.resetBadgeTotal()
+
         super.onDestroyView()
     }
 }

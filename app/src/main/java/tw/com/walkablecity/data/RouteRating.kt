@@ -42,12 +42,23 @@ data class RouteRating (
     fun addToAverage(rating: RouteRating, route: Route, ratings: Int): RouteRating{
 
         return RouteRating(
-            coverage = this.coverage.toNewAverage(rating.coverage, route, ratings),
-            rest = this.rest.toNewAverage(rating.rest, route, ratings),
-            snack = this.snack.toNewAverage(rating.snack, route, ratings),
-            scenery = this.scenery.toNewAverage(rating.scenery, route, ratings),
+            coverage    = this.coverage.toNewAverage(rating.coverage, route, ratings),
+            rest        = this.rest.toNewAverage(rating.rest, route, ratings),
+            snack       = this.snack.toNewAverage(rating.snack, route, ratings),
+            scenery     = this.scenery.toNewAverage(rating.scenery, route, ratings),
             tranquility = this.tranquility.toNewAverage(rating.tranquility, route, ratings),
-            vibe = this.vibe.toNewAverage(rating.vibe, route, ratings)
+            vibe        = this.vibe.toNewAverage(rating.vibe, route, ratings)
         )
+    }
+
+    fun sortingBy(filter: RouteSorting): Float{
+        return when (filter) {
+            RouteSorting.SCENERY     -> scenery
+            RouteSorting.SNACK       -> snack
+            RouteSorting.REST        -> rest
+            RouteSorting.TRANQUILITY -> tranquility
+            RouteSorting.COVERAGE    -> coverage
+            RouteSorting.VIBE        -> vibe
+        }
     }
 }

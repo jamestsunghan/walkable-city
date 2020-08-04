@@ -22,8 +22,7 @@ import tw.com.walkablecity.util.Util
 
 class SettingsFragment : Fragment() {
 
-
-    private val viewModel: SettingsViewModel by viewModels{getVMFactory()}
+    private val viewModel: SettingsViewModel by viewModels { getVMFactory() }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -51,10 +50,9 @@ class SettingsFragment : Fragment() {
 
         binding.goodWeatherSwitch.setOnClickListener {
             Logger.d("JJ_weather good weather checked ${binding.goodWeatherSwitch.isChecked}")
-            if(binding.goodWeatherSwitch.isChecked){
+            if (binding.goodWeatherSwitch.isChecked) {
                 checkPermission(binding.goodWeatherSwitch.isChecked)
-            }
-            else{
+            } else {
                 viewModel.updateWeatherNotification(
                     binding.goodWeatherSwitch.isChecked, requireNotNull(UserManager.user?.id)
                 )
@@ -69,16 +67,16 @@ class SettingsFragment : Fragment() {
 
         binding.user = UserManager.user
 
-        viewModel.weatherActivated.observe(viewLifecycleOwner, Observer{
-            it?.let{isActivated->
+        viewModel.weatherActivated.observe(viewLifecycleOwner, Observer {
+            it?.let { isActivated ->
                 WalkableApp.instance.getWeather(isActivated)
                 binding.goodWeatherSwitch.isChecked = isActivated
                 UserManager.user?.weather = isActivated
             }
         })
 
-        viewModel.mealActivated.observe(viewLifecycleOwner, Observer{
-            it?.let{isActivated->
+        viewModel.mealActivated.observe(viewLifecycleOwner, Observer {
+            it?.let { isActivated ->
                 WalkableApp.instance.notifyAfterMeal(isActivated)
                 binding.afterMealSwitch.isChecked = isActivated
                 UserManager.user?.meal = isActivated
@@ -87,31 +85,28 @@ class SettingsFragment : Fragment() {
         })
 
         viewModel.notifyAfterMeal.observe(viewLifecycleOwner, Observer {
-            it?.let{isChecked->
-                if(isChecked) makeShortToast(R.string.after_meal_on)
+            it?.let { isChecked ->
+                if (isChecked) makeShortToast(R.string.after_meal_on)
                 else makeShortToast(R.string.after_meal_off)
             }
         })
 
         viewModel.notifyGoodWeather.observe(viewLifecycleOwner, Observer {
-            it?.let{isChecked->
+            it?.let { isChecked ->
 
-                if(isChecked){
+                if (isChecked) {
                     makeShortToast(R.string.good_weather_on)
-                }
-                else{
+                } else {
                     makeShortToast(R.string.good_weather_off)
                 }
             }
         })
 
-        viewModel.currentLocation.observe(viewLifecycleOwner, Observer{
-            it?.let{
+        viewModel.currentLocation.observe(viewLifecycleOwner, Observer {
+            it?.let {
                 binding.goodWeatherSwitch.isChecked = true
             }
         })
-
-
 
         return binding.root
     }
@@ -122,17 +117,17 @@ class SettingsFragment : Fragment() {
         grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if(requestCode != HomeFragment.REQUEST_LOCATION) return
-        if(Util.isPermissionGranted(
+        if (requestCode != HomeFragment.REQUEST_LOCATION) return
+        if (Util.isPermissionGranted(
                 permissions,
                 grantResults,
                 Manifest.permission.ACCESS_FINE_LOCATION
             )
-        ){
+        ) {
             viewModel.permissionGranted()
             viewModel.updateWeatherNotification(true, requireNotNull(UserManager.user?.id))
-        }else{
-            if(!shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)){
+        } else {
+            if (!shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
                 viewModel.permissionDeniedForever()
             }
             viewModel.permissionDenied()
@@ -141,26 +136,28 @@ class SettingsFragment : Fragment() {
 
     }
 
-    fun checkPermission(activate: Boolean){
-        if(ContextCompat.checkSelfPermission(
+    private fun checkPermission(activate: Boolean) {
+        if (ContextCompat.checkSelfPermission(
                 WalkableApp.instance,
                 Manifest.permission.ACCESS_FINE_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED){
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
             viewModel.permissionGranted()
             viewModel.updateWeatherNotification(activate, requireNotNull(UserManager.user?.id))
-        }else{
-            if(!shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)){
+        } else {
+            if (!shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
                 viewModel.permissionDeniedForever()
             }
-            requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+            requestPermissions(
+                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
                 REQUEST_LOCATION
             )
         }
 
     }
 
-    companion object{
-        const val REQUEST_LOCATION      = 0x00
+    companion object {
+        const val REQUEST_LOCATION = 0x00
     }
 
 }

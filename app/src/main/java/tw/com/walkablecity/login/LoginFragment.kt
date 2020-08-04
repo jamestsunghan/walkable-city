@@ -28,22 +28,19 @@ import tw.com.walkablecity.ext.toSignInUser
 
 class LoginFragment : Fragment() {
 
-
-    private val viewModel: LoginViewModel by viewModels{getVMFactory()}
+    private val viewModel: LoginViewModel by viewModels { getVMFactory() }
 
     private lateinit var auth: FirebaseAuth
+
     private lateinit var binding: FragmentLoginBinding
-
-
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         auth = Firebase.auth
-//        val account = GoogleSignIn.getLastSignedInAccount(requireContext())
 
         val user = Firebase.auth.currentUser
-        user?.let{
+        user?.let {
             viewModel.getUser(it.uid)
         }
 
@@ -56,6 +53,7 @@ class LoginFragment : Fragment() {
 
         binding = DataBindingUtil
             .inflate(inflater, R.layout.fragment_login, container, false)
+
         binding.lifecycleOwner = this
 
         binding.viewModel = viewModel
@@ -64,24 +62,28 @@ class LoginFragment : Fragment() {
             signIn()
         }
 
-        viewModel.isCustomIdUsable.observe(viewLifecycleOwner, Observer{
-            it?.let{
-                if(it){
-                    viewModel.addUser(requireNotNull(viewModel.firebaseUser.value).toSignInUser(viewModel.idCustom.value))
-                }else{
+        viewModel.isCustomIdUsable.observe(viewLifecycleOwner, Observer {
+            it?.let {
+                if (it) {
+                    viewModel.addUser(
+                        requireNotNull(viewModel.firebaseUser.value).toSignInUser(
+                            viewModel.idCustom.value
+                        )
+                    )
+                } else {
                     makeShortToast(R.string.id_been_used)
                 }
                 viewModel.resetCustomIdCheck()
             }
         })
 
-        viewModel.firebaseUser.observe(viewLifecycleOwner, Observer{
-            it?.let{user->
+        viewModel.firebaseUser.observe(viewLifecycleOwner, Observer {
+            it?.let { user ->
                 viewModel.getUser(user.uid)
 
                 binding.getInButton.setOnClickListener {
 
-                    if(viewModel.idCustom.value == null) makeShortToast(R.string.no_search_id)
+                    if (viewModel.idCustom.value == null) makeShortToast(R.string.no_search_id)
                     else {
                         viewModel.checkUserCustomId(viewModel.idCustom.value as String)
                     }
@@ -89,11 +91,13 @@ class LoginFragment : Fragment() {
             }
         })
 
-
-        viewModel.user.observe(viewLifecycleOwner, Observer{
-            it?.let{
+        viewModel.user.observe(viewLifecycleOwner, Observer {
+            it?.let {
                 UserManager.user = it
-                findNavController().navigate(LoginFragmentDirections.actionGlobalHomeFragment(null, null))
+                findNavController().navigate(
+                    LoginFragmentDirections
+                        .actionGlobalHomeFragment(null, null)
+                )
                 viewModel.navigateComplete()
             }
         })
@@ -104,22 +108,20 @@ class LoginFragment : Fragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if(requestCode == SIGN_IN){
+        if (requestCode == SIGN_IN) {
             val task = GoogleSignIn.getSignedInAccountFromIntent(data)
-            try{
-                val account =task.getResult(ApiException::class.java)!!
+            try {
+                val account = task.getResult(ApiException::class.java)!!
                 Logger.d("JJ_fireAuth fireAuth with google : ${account.id}")
                 viewModel.signInWithGoogle(account.idToken)
-            }catch (e: ApiException){
+            } catch (e: ApiException) {
                 Logger.w("JJ_fireAuth fireAuth fail with google : $e")
-//                updateUI(null)
+
             }
         }
-
-
     }
 
-    private fun signIn(){
+    private fun signIn() {
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken(getString(R.string.default_web_client_id))
             .requestEmail()
@@ -130,15 +132,7 @@ class LoginFragment : Fragment() {
         startActivityForResult(singInIntent, SIGN_IN)
     }
 
-//    private fun updateUI(user: FirebaseUser?){
-//        if(user != null){
-//            binding.userTest.text = StringBuilder().append("email: ").append(user.email).append("id: ").append(user.uid)
-//        }else{
-//            binding.userTest.text = "not login yet"
-//        }
-//    }
-
-    companion object{
+    companion object {
         const val SIGN_IN = 9001
     }
 

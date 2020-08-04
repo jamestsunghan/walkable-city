@@ -20,9 +20,7 @@ import tw.com.walkablecity.ext.getVMFactory
 
 class RatingFragment : Fragment() {
 
-    val viewModel: RatingViewModel by viewModels{getVMFactory()}
-
-
+    val viewModel: RatingViewModel by viewModels { getVMFactory() }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -32,27 +30,37 @@ class RatingFragment : Fragment() {
             .inflate(inflater, R.layout.fragment_rating, container, false)
         binding.lifecycleOwner = this
 
-        childFragmentManager.setFragmentResultListener("navigation", viewLifecycleOwner){requestKey, bundle ->
+        childFragmentManager.setFragmentResultListener(
+            "navigation",
+            viewLifecycleOwner
+        ) { requestKey, bundle ->
             val result = bundle.getInt("sent")
-            viewModel.navigateToSearch.value = viewModel.navigateToSearch.value?.plus(result) ?:1
+            viewModel.navigateToSearch.value = viewModel.navigateToSearch.value?.plus(result) ?: 1
         }
 
         val selectedRoute = RatingFragmentArgs.fromBundle(requireArguments()).selectedRoute
         val walk = RatingFragmentArgs.fromBundle(requireArguments()).walkKey
 
-        val adapter = RatingAdapter(childFragmentManager, selectedRoute, walk
+        val adapter = RatingAdapter(
+            childFragmentManager, selectedRoute, walk
             , RatingFragmentArgs.fromBundle(requireArguments()).willCreateKey
-            , RatingFragmentArgs.fromBundle(requireArguments()).photoPointsKey?.toList())
+            , RatingFragmentArgs.fromBundle(requireArguments()).photoPointsKey?.toList()
+        )
 
-        binding.viewpagerRating.let{
+        binding.viewpagerRating.let {
             it.adapter = adapter
             it.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(binding.tabsRating))
         }
 
-        viewModel.navigateToSearch.observe(viewLifecycleOwner, Observer{
-            it?.let{
-                if(it > 1){
-                    findNavController().navigate(RatingFragmentDirections.actionGlobalHomeFragment(null, null))
+        viewModel.navigateToSearch.observe(viewLifecycleOwner, Observer {
+            it?.let {
+                if (it > 1) {
+                    findNavController().navigate(
+                        RatingFragmentDirections.actionGlobalHomeFragment(
+                            null,
+                            null
+                        )
+                    )
                     viewModel.sendComplete()
                 }
             }

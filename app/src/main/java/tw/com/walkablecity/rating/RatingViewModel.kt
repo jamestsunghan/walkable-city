@@ -11,7 +11,7 @@ import tw.com.walkablecity.data.source.WalkableRepository
 class RatingViewModel(val repo: WalkableRepository) : ViewModel() {
     val navigateToSearch = MutableLiveData<Int>(0)
 
-    fun sendComplete(){
+    fun sendComplete() {
         navigateToSearch.value = 0
     }
 }

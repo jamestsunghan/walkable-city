@@ -16,23 +16,29 @@ import tw.com.walkablecity.data.source.WalkableRepository
 class ExploreViewModel(val walkableRepository: WalkableRepository) : ViewModel() {
 
     private val _status = MutableLiveData<LoadStatus>()
-    val status: LiveData<LoadStatus> get() = _status
+    val status: LiveData<LoadStatus>
+        get() = _status
 
     private val _error = MutableLiveData<String>()
-    val error: LiveData<String> get() = _error
+    val error: LiveData<String>
+        get() = _error
 
     private val _userWalks = MutableLiveData<List<Walk>>()
-    val userWalks: LiveData<List<Walk>> get() = _userWalks
+    val userWalks: LiveData<List<Walk>>
+        get() = _userWalks
 
     val currentLocation = MutableLiveData<LatLng>()
 
-    private val _permissionDenied =  MutableLiveData<Boolean>(false)
-    val permissionDenied: LiveData<Boolean> get() = _permissionDenied
+    private val _permissionDenied = MutableLiveData<Boolean>(false)
+    val permissionDenied: LiveData<Boolean>
+        get() = _permissionDenied
 
     private val _dontAskAgain = MutableLiveData<Boolean>(false)
-    val dontAskAgain: LiveData<Boolean> get() = _dontAskAgain
+    val dontAskAgain: LiveData<Boolean>
+        get() = _dontAskAgain
 
     private val viewModelJob = Job()
+
     private val coroutineScope = CoroutineScope(Dispatchers.Main + viewModelJob)
 
     override fun onCleared() {
@@ -40,25 +46,25 @@ class ExploreViewModel(val walkableRepository: WalkableRepository) : ViewModel()
         viewModelJob.cancel()
     }
 
-    init{
-        UserManager.user?.id?.let{
+    init {
+        UserManager.user?.id?.let {
             getUserWalks(it)
         }
     }
 
-    fun permissionDeniedForever(){
+    fun permissionDeniedForever() {
         _dontAskAgain.value = true
     }
 
-    fun permissionDenied(){
+    fun permissionDenied() {
         _permissionDenied.value = true
     }
 
-    fun permissionGranted(){
+    fun permissionGranted() {
         _permissionDenied.value = false
     }
 
-    private fun getUserWalks(userId: String){
+    private fun getUserWalks(userId: String) {
 
         coroutineScope.launch {
             _status.value = LoadStatus.LOADING
@@ -70,7 +76,7 @@ class ExploreViewModel(val walkableRepository: WalkableRepository) : ViewModel()
         }
     }
 
-    fun clientCurrentLocation(){
+    fun clientCurrentLocation() {
 
         _status.value = LoadStatus.LOADING
 

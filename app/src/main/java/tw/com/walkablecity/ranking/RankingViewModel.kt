@@ -16,7 +16,6 @@ import tw.com.walkablecity.ext.timeFilter
 
 class RankingViewModel(val walkableRepository: WalkableRepository) : ViewModel() {
 
-
     private val _routeAllList = MutableLiveData<List<Route>>()
     val routeAllList: LiveData<List<Route>>
         get() = _routeAllList
@@ -26,23 +25,29 @@ class RankingViewModel(val walkableRepository: WalkableRepository) : ViewModel()
         get() = _routeList
 
     private val _filter = MutableLiveData<RouteSorting>()
-    val filter : LiveData<RouteSorting> get() = _filter
+    val filter: LiveData<RouteSorting>
+        get() = _filter
 
     private val _status = MutableLiveData<LoadStatus>()
-    val status : LiveData<LoadStatus> get() = _status
+    val status: LiveData<LoadStatus>
+        get() = _status
 
     private val _error = MutableLiveData<String>()
-    val error : LiveData<String> get() = _error
+    val error: LiveData<String>
+        get() = _error
 
     val selectRoute = MutableLiveData<Route>()
 
     private val _routeTime = MutableLiveData<List<Float>>()
-    val routeTime: LiveData<List<Float>> get() = _routeTime
+    val routeTime: LiveData<List<Float>>
+        get() = _routeTime
 
     private val _sliderMax = MutableLiveData<Float>()
-    val sliderMax: LiveData<Float> get() = _sliderMax
+    val sliderMax: LiveData<Float>
+        get() = _sliderMax
 
     private val viewModelJob = Job()
+
     private val coroutineScope = CoroutineScope(Dispatchers.Main + viewModelJob)
 
     override fun onCleared() {
@@ -50,22 +55,20 @@ class RankingViewModel(val walkableRepository: WalkableRepository) : ViewModel()
         viewModelJob.cancel()
     }
 
-    init{
-
+    init {
         getRoutes()
-
     }
 
-    fun navigationComplete(){
+    fun navigationComplete() {
         selectRoute.value = null
         _filter.value = null
     }
 
-    fun filterSort(sorting: RouteSorting){
+    fun filterSort(sorting: RouteSorting) {
         _filter.value = sorting
     }
 
-    private fun getRoutes(){
+    private fun getRoutes() {
         coroutineScope.launch {
 
             _status.value = LoadStatus.LOADING
@@ -78,12 +81,12 @@ class RankingViewModel(val walkableRepository: WalkableRepository) : ViewModel()
         }
     }
 
-    fun setTimeFilter(range: List<Float>,  max: Float){
+    fun setTimeFilter(range: List<Float>, max: Float) {
         _routeTime.value = range
         _sliderMax.value = max
     }
 
-    fun timeFilter(list: List<Float>, max: Float, sorting: RouteSorting?){
+    fun timeFilter(list: List<Float>, max: Float, sorting: RouteSorting?) {
         _routeList.value = routeAllList.value?.timeFilter(list, max, sorting)
     }
 }

@@ -20,7 +20,6 @@ import java.io.FileOutputStream
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.HashMap
 import kotlin.math.roundToInt
 
 fun RouteRating?.toSortList(filter: RouteSorting?): List<String> {
@@ -216,7 +215,7 @@ fun Bitmap.getCroppedBitmap(): Bitmap {
 
 }
 
-fun List<Route>.timeFilter(list: List<Float>, max: Float, sorting: RouteSorting?): List<Route> {
+fun List<Route>.timeFilter(list: List<Float>, max: Float, filter: RouteSorting?): List<Route> {
     return this.filter {
         val range = list.sortedBy { it }
         val topLimit = if (range[1] >= max) {
@@ -226,16 +225,10 @@ fun List<Route>.timeFilter(list: List<Float>, max: Float, sorting: RouteSorting?
         }
         range[0] < it.minutes && it.minutes < topLimit
     }.sortedByDescending {
-        when (sorting) {
-            RouteSorting.TRANQUILITY -> it.ratingAvr?.tranquility
-            RouteSorting.SCENERY -> it.ratingAvr?.scenery
-            RouteSorting.REST -> it.ratingAvr?.rest
-            RouteSorting.SNACK -> it.ratingAvr?.snack
-            RouteSorting.COVERAGE -> it.ratingAvr?.coverage
-            RouteSorting.VIBE -> it.ratingAvr?.vibe
-            null -> {
-                it.ratingAvr?.average()
-            }
+        if(filter == null){
+            it.ratingAvr?.average()
+        }else{
+            it.ratingAvr?.sortingBy(filter)
         }
     }
 }

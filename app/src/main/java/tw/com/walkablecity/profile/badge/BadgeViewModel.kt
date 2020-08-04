@@ -15,23 +15,32 @@ import tw.com.walkablecity.data.source.WalkableRepository
 import tw.com.walkablecity.util.Util.getIntFromSP
 
 class BadgeViewModel(val walkableRepository: WalkableRepository) : ViewModel() {
+
     private val _status = MutableLiveData<LoadStatus>()
-    val status: LiveData<LoadStatus> get() = _status
+    val status: LiveData<LoadStatus>
+        get() = _status
 
     private val _error = MutableLiveData<String>()
-    val error: LiveData<String> get() = _error
+    val error: LiveData<String>
+        get() = _error
 
     private val _friendCount = MutableLiveData<Int>()
-    val friendCount: LiveData<Int> get() = _friendCount
+    val friendCount: LiveData<Int>
+        get() = _friendCount
 
     private val _eventCount = MutableLiveData<Int>()
-    val eventCount: LiveData<Int> get() = _eventCount
+    val eventCount: LiveData<Int>
+        get() = _eventCount
 
-    val accuHour = getAccumulatedFromSharedPreference(BadgeType.ACCU_HOUR.key
-        , UserManager.user?.accumulatedHour?.total ?: 0f)
+    val accuHour = getAccumulatedFromSharedPreference(
+        BadgeType.ACCU_HOUR.key
+        , UserManager.user?.accumulatedHour?.total ?: 0f
+    )
 
-    val accuKm = getAccumulatedFromSharedPreference(BadgeType.ACCU_KM.key
-        , UserManager.user?.accumulatedKm?.total ?: 0f)
+    val accuKm = getAccumulatedFromSharedPreference(
+        BadgeType.ACCU_KM.key
+        , UserManager.user?.accumulatedKm?.total ?: 0f
+    )
 
     val sharedEventCount = getIntFromSP(BadgeType.EVENT_COUNT.key)
 
@@ -40,15 +49,15 @@ class BadgeViewModel(val walkableRepository: WalkableRepository) : ViewModel() {
     private val viewModelJob = Job()
     private val coroutineScope = CoroutineScope(Dispatchers.Main + viewModelJob)
 
-    init{
-        UserManager.user?.id?.let{
+    init {
+        UserManager.user?.id?.let {
             getFriendCount(it)
             getEventCount(it)
         }
 
     }
 
-    private fun getFriendCount(userId: String){
+    private fun getFriendCount(userId: String) {
         coroutineScope.launch {
 
             _status.value = LoadStatus.LOADING
@@ -60,7 +69,7 @@ class BadgeViewModel(val walkableRepository: WalkableRepository) : ViewModel() {
         }
     }
 
-    private fun getEventCount(userId: String){
+    private fun getEventCount(userId: String) {
         coroutineScope.launch {
 
             _status.value = LoadStatus.LOADING
@@ -71,6 +80,4 @@ class BadgeViewModel(val walkableRepository: WalkableRepository) : ViewModel() {
 
         }
     }
-
-
 }

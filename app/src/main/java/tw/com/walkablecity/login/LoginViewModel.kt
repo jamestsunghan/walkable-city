@@ -18,25 +18,29 @@ import tw.com.walkablecity.data.source.WalkableRepository
 class LoginViewModel(private val walkableRepository: WalkableRepository) : ViewModel() {
 
     private val _status = MutableLiveData<LoadStatus>()
-    val status: LiveData<LoadStatus> get() = _status
+    val status: LiveData<LoadStatus>
+        get() = _status
 
     private val _error = MutableLiveData<String>()
-    val error: LiveData<String> get() = _error
+    val error: LiveData<String>
+        get() = _error
 
     val idCustom = MutableLiveData<String>()
 
-
     private val _firebaseUser = MutableLiveData<FirebaseUser>()
-    val firebaseUser: LiveData<FirebaseUser> get() = _firebaseUser
+    val firebaseUser: LiveData<FirebaseUser>
+        get() = _firebaseUser
 
     private val _user = MutableLiveData<User>()
-    val user: LiveData<User> get() = _user
+    val user: LiveData<User>
+        get() = _user
 
     private val _isCustomIdUsable = MutableLiveData<Boolean>()
-    val isCustomIdUsable: LiveData<Boolean> get() = _isCustomIdUsable
-
+    val isCustomIdUsable: LiveData<Boolean>
+        get() = _isCustomIdUsable
 
     private val viewModelJob = Job()
+
     private val coroutineScope = CoroutineScope(Dispatchers.Main + viewModelJob)
 
 
@@ -45,139 +49,60 @@ class LoginViewModel(private val walkableRepository: WalkableRepository) : ViewM
         viewModelJob.cancel()
     }
 
-    init{
-        //check user already login or not
-    }
-
-    fun navigateComplete(){
+    fun navigateComplete() {
         _user.value = null
     }
 
-    fun resetCustomIdCheck(){
+    fun resetCustomIdCheck() {
         _isCustomIdUsable.value = null
     }
 
-    fun getUser(userId: String){
+    fun getUser(userId: String) {
 
         coroutineScope.launch {
             _status.value = LoadStatus.LOADING
 
-            _user.value = when(val result = walkableRepository.getUser(userId)){
-                is Result.Success ->{
-                    _error.value = null
-                    _status.value = LoadStatus.DONE
-                    result.data
-                }
-                is Result.Fail ->{
-                    _error.value = result.error
-                    _status.value = LoadStatus.ERROR
-                    null
-                }
-                is Result.Error ->{
-                    _error.value = result.exception.toString()
-                    _status.value = LoadStatus.ERROR
-                    null
-                }
-                else ->{
-                    _error.value = getString(R.string.not_here)
-                    _status.value = LoadStatus.ERROR
-                    null
-                }
-            }
+            val result = walkableRepository.getUser(userId)
+
+            _user.value = result.handleResultWith(_error, _status)
         }
     }
 
 
-    fun signInWithGoogle(idToken: String?){
+    fun signInWithGoogle(idToken: String?) {
 
         coroutineScope.launch {
 
             _status.value = LoadStatus.LOADING
 
-            _firebaseUser.value = when(val result = walkableRepository.firebaseAuthWithGoogle(idToken)){
-                is Result.Success ->{
-                    _error.value = null
-                    _status.value = LoadStatus.DONE
-                    result.data
-                }
-                is Result.Fail ->{
-                    _error.value = result.error
-                    _status.value = LoadStatus.ERROR
-                    null
-                }
-                is Result.Error ->{
-                    _error.value = result.exception.toString()
-                    _status.value = LoadStatus.ERROR
-                    null
-                }
-                else ->{
-                    _error.value = getString(R.string.not_here)
-                    _status.value = LoadStatus.ERROR
-                    null
-                }
-            }
+            val result = walkableRepository.firebaseAuthWithGoogle(idToken)
+
+            _firebaseUser.value = result.handleResultWith(_error, _status)
 
         }
     }
 
-    fun checkUserCustomId(idCustom: String){
+    fun checkUserCustomId(idCustom: String) {
 
         coroutineScope.launch {
 
             _status.value = LoadStatus.LOADING
 
-            _isCustomIdUsable.value = when(val result = walkableRepository.checkIdCustomBeenUsed(idCustom)){
-                is Result.Success ->{
-                    _error.value = null
-                    _status.value = LoadStatus.DONE
-                    result.data
-                }
-                is Result.Fail ->{
-                    _error.value = result.error
-                    _status.value = LoadStatus.ERROR
-                    null
-                }
-                is Result.Error ->{
-                    _error.value = result.exception.toString()
-                    _status.value = LoadStatus.ERROR
-                    null
-                }
-                else ->{
-                    _error.value = getString(R.string.not_here)
-                    _status.value = LoadStatus.ERROR
-                    null
-                }
-            }
+            val result = walkableRepository.checkIdCustomBeenUsed(idCustom)
+
+            _isCustomIdUsable.value = result.handleResultWith(_error, _status)
 
         }
     }
 
-    fun addUser(user: User){
+    fun addUser(user: User) {
         coroutineScope.launch {
             _status.value = LoadStatus.LOADING
 
-            _user.value = when(val result = walkableRepository.signUpUser(user)){
-                is Result.Success ->{
-                    _error.value = null
-                    _status.value = LoadStatus.DONE
-                    result.data
-                }
-                is Result.Fail ->{
-                    _error.value = result.error
-                    _status.value = LoadStatus.ERROR
-                    null
-                }
-                is Result.Error ->{
-                    _error.value = result.exception.toString()
-                    _status.value = LoadStatus.ERROR
-                    null
-                }
-                else ->{
-                    _error.value = getString(R.string.not_here)
-                    _status.value = LoadStatus.ERROR
-                    null
-                }
-            }
+            val result = walkableRepository.signUpUser(user)
+
+            _user.value = result.handleResultWith(_error, _status)
+
         }
     }
 }

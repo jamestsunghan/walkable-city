@@ -14,32 +14,40 @@ import tw.com.walkablecity.data.Result
 import tw.com.walkablecity.data.source.WalkableRepository
 import tw.com.walkablecity.home.WalkerStatus
 
-class MainViewModel(val walkableRepository: WalkableRepository): ViewModel(){
+class MainViewModel(val walkableRepository: WalkableRepository) : ViewModel() {
 
     val currentFragment = MutableLiveData<CurrentFragmentType>()
 
     private val _walkerStatus = MutableLiveData<WalkerStatus>()
-    val walkerStatus: LiveData<WalkerStatus> get() = _walkerStatus
+    val walkerStatus: LiveData<WalkerStatus>
+        get() = _walkerStatus
 
     private val _invitation = MutableLiveData<Int>()
-    val invitation: LiveData<Int> get() = _invitation
+    val invitation: LiveData<Int>
+        get() = _invitation
 
     private val _friendCount = MutableLiveData<Int>()
-    val friendCount: LiveData<Int> get() = _friendCount
+    val friendCount: LiveData<Int>
+        get() = _friendCount
 
     private val _eventCount = MutableLiveData<Int>()
-    val eventCount: LiveData<Int> get() = _eventCount
+    val eventCount: LiveData<Int>
+        get() = _eventCount
 
     private val _badgeTotal = MutableLiveData<BadgeUpgrade>()
-    val badgeTotal: LiveData<BadgeUpgrade> get() = _badgeTotal
+    val badgeTotal: LiveData<BadgeUpgrade>
+        get() = _badgeTotal
 
     private val _status = MutableLiveData<LoadStatus>()
-    val status: LiveData<LoadStatus> get() = _status
+    val status: LiveData<LoadStatus>
+        get() = _status
 
     private val _error = MutableLiveData<String>()
-    val error: LiveData<String> get() = _error
+    val error: LiveData<String>
+        get() = _error
 
     private val viewModelJob = Job()
+
     private val coroutineScope = CoroutineScope(Dispatchers.Main + viewModelJob)
 
     override fun onCleared() {
@@ -47,9 +55,9 @@ class MainViewModel(val walkableRepository: WalkableRepository): ViewModel(){
         viewModelJob.cancel()
     }
 
-    fun addToBadgeTotal(levelCount: Int, upgradeFrom: Int){
+    fun addToBadgeTotal(levelCount: Int, upgradeFrom: Int) {
         val upgrade = badgeTotal.value ?: BadgeUpgrade()
-        _badgeTotal.value =when(upgradeFrom){
+        _badgeTotal.value = when (upgradeFrom) {
             R.id.homeFragment -> upgrade.apply {
                 home = levelCount
             }
@@ -64,116 +72,47 @@ class MainViewModel(val walkableRepository: WalkableRepository): ViewModel(){
 
     }
 
-    fun resetBadgeTotal(){
+    fun resetBadgeTotal() {
         _badgeTotal.value = BadgeUpgrade()
     }
 
-    fun getInvitation(userId: String){
+    fun getInvitation(userId: String) {
         _status.value = LoadStatus.LOADING
 
         coroutineScope.launch {
 
             val result = walkableRepository.getUserInvitation(userId)
 
-            _invitation.value = when(result){
-
-                is Result.Success ->{
-                    _error.value = null
-                    _status.value = LoadStatus.DONE
-                    result.data.size
-                }
-                is Result.Fail ->{
-                    _error.value = result.error
-                    _status.value = LoadStatus.ERROR
-                    null
-                }
-                is Result.Error ->{
-                    _error.value = result.exception.toString()
-                    _status.value = LoadStatus.ERROR
-                    null
-                }
-                else ->{
-                    _error.value = getString(R.string.not_here)
-                    _status.value = LoadStatus.ERROR
-                    null
-                }
-            }
-
+            _invitation.value = result.handleResultWith(_error, _status)?.size
 
         }
     }
 
-    fun getUserFriendCount(userId: String){
+    fun getUserFriendCount(userId: String) {
         _status.value = LoadStatus.LOADING
 
         coroutineScope.launch {
 
             val result = walkableRepository.getUserFriendSimple(userId)
 
-            _friendCount.value = when(result){
-
-                is Result.Success ->{
-                    _error.value = null
-                    _status.value = LoadStatus.DONE
-                    result.data.size
-                }
-                is Result.Fail ->{
-                    _error.value = result.error
-                    _status.value = LoadStatus.ERROR
-                    null
-                }
-                is Result.Error ->{
-                    _error.value = result.exception.toString()
-                    _status.value = LoadStatus.ERROR
-                    null
-                }
-                else ->{
-                    _error.value = getString(R.string.not_here)
-                    _status.value = LoadStatus.ERROR
-                    null
-                }
-            }
-
+            _friendCount.value = result.handleResultWith(_error, _status)?.size
 
         }
     }
 
-    fun getUserEventCount(userId: String){
+    fun getUserEventCount(userId: String) {
         _status.value = LoadStatus.LOADING
 
         coroutineScope.launch {
 
             val result = walkableRepository.getUserEvents(userId)
 
-            _eventCount.value = when(result){
-
-                is Result.Success ->{
-                    _error.value = null
-                    _status.value = LoadStatus.DONE
-                    result.data.size
-                }
-                is Result.Fail ->{
-                    _error.value = result.error
-                    _status.value = LoadStatus.ERROR
-                    null
-                }
-                is Result.Error ->{
-                    _error.value = result.exception.toString()
-                    _status.value = LoadStatus.ERROR
-                    null
-                }
-                else ->{
-                    _error.value = getString(R.string.not_here)
-                    _status.value = LoadStatus.ERROR
-                    null
-                }
-            }
-
+            _eventCount.value = result.handleResultWith(_error, _status)?.size
 
         }
     }
 
-    fun walkStatusCheck(status: WalkerStatus){
+    fun walkStatusCheck(status: WalkerStatus) {
         _walkerStatus.value = status
     }
 
