@@ -1,6 +1,5 @@
 package tw.com.walkablecity.profile.badge
 
-import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -9,9 +8,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import tw.com.walkablecity.UserManager
-import tw.com.walkablecity.util.Util
 import tw.com.walkablecity.util.Util.getAccumulatedFromSharedPreference
-import tw.com.walkablecity.WalkableApp
 import tw.com.walkablecity.data.BadgeType
 import tw.com.walkablecity.data.LoadStatus
 import tw.com.walkablecity.data.source.WalkableRepository
@@ -58,7 +55,7 @@ class BadgeViewModel(val walkableRepository: WalkableRepository) : ViewModel() {
 
             val result = walkableRepository.getUserFriendSimple(userId)
 
-            _friendCount.value = result.setLiveData(_error, _status)?.size
+            _friendCount.value = result.handleResultWith(_error, _status)?.size
 
         }
     }
@@ -70,7 +67,7 @@ class BadgeViewModel(val walkableRepository: WalkableRepository) : ViewModel() {
 
             val result = walkableRepository.getUserEvents(userId)
 
-            _eventCount.value = result.setLiveData(_error, _status)?.size
+            _eventCount.value = result.handleResultWith(_error, _status)?.size
 
         }
     }

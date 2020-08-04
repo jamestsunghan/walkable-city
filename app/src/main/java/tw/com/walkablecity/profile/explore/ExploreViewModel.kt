@@ -65,7 +65,7 @@ class ExploreViewModel(val walkableRepository: WalkableRepository) : ViewModel()
 
             val result = walkableRepository.getUserWalks(userId)
 
-            _userWalks.value = result.setLiveData(_error, _status)
+            _userWalks.value = result.handleResultWith(_error, _status)
 
         }
     }
@@ -77,7 +77,7 @@ class ExploreViewModel(val walkableRepository: WalkableRepository) : ViewModel()
         coroutineScope.launch {
             val result = walkableRepository.getUserCurrentLocation()
 
-            currentLocation.value = result.setLiveData(_error, _status)
+            currentLocation.value = result.handleResultWith(_error, _status)
 
         }
 

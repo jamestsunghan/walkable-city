@@ -20,10 +20,7 @@ import tw.com.walkablecity.host.HostViewModel
 
 class AddFriend2EventFragment : Fragment() {
 
-
-//    private val viewModel: AddFriend2EventViewModel by viewModels{ getVMFactory( AddFriend2EventFragmentArgs.fromBundle(requireArguments()).friendListKey?.toList()) }
-
-    private val viewModel: HostViewModel by navGraphViewModels(R.id.navigation2){
+    private val viewModel: HostViewModel by navGraphViewModels(R.id.navigation2) {
         getVMFactory()
     }
 
@@ -31,8 +28,10 @@ class AddFriend2EventFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
         val binding: FragmentAddFriend2EventBinding = DataBindingUtil
             .inflate(inflater, R.layout.fragment_add_friend_2_event, container, false)
+
         binding.lifecycleOwner = this
 
         binding.viewModel = viewModel
@@ -42,38 +41,35 @@ class AddFriend2EventFragment : Fragment() {
         val adapterAddList = AddListAdapter()
 
         binding.recyclerFriend.adapter = adapter
+
         binding.recyclerAddList.adapter = adapterAddList
 
-
-
         viewModel.friendList.observe(viewLifecycleOwner, Observer {
-            it?.let{
-                Logger.d( "friendlist $it")
+            it?.let {
+                Logger.d("friendlist $it")
                 adapter.notifyDataSetChanged()
             }
         })
 
-        viewModel.addList.observe(viewLifecycleOwner, Observer{
-            it?.let{
+        viewModel.addList.observe(viewLifecycleOwner, Observer {
+            it?.let {
                 Logger.d("addList $it")
                 adapterAddList.notifyDataSetChanged()
             }
         })
 
 
-        viewModel.navigateToHost.observe(viewLifecycleOwner, Observer{
-            it?.let{
-                findNavController().navigate(AddFriend2EventFragmentDirections
-                    .actionAddFriend2EventFragmentToHostFragment())
+        viewModel.navigateToHost.observe(viewLifecycleOwner, Observer {
+            it?.let {
+                findNavController().navigate(
+                    AddFriend2EventFragmentDirections
+                        .actionAddFriend2EventFragmentToHostFragment()
+                )
                 viewModel.friendSelectedComplete()
 
             }
         })
 
-
         return binding.root
     }
-
-
-
 }

@@ -13,7 +13,6 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import tw.com.walkablecity.R
 import tw.com.walkablecity.UserManager
-import tw.com.walkablecity.util.Util.getString
 import tw.com.walkablecity.util.Util.setDp
 import tw.com.walkablecity.data.*
 import tw.com.walkablecity.data.source.WalkableRepository
@@ -23,38 +22,49 @@ class DetailViewModel(val walkableRepository: WalkableRepository, val route: Rou
     val colorId = R.color.primaryColor
 
     private val _natigateToRanking = MutableLiveData<Boolean>(false)
-    val navigatingToRanking: LiveData<Boolean> get() = _natigateToRanking
+    val navigatingToRanking: LiveData<Boolean>
+        get() = _natigateToRanking
 
     private val _navigateToHome = MutableLiveData<Route>()
-    val navigateToHome: LiveData<Route> get() = _navigateToHome
+    val navigateToHome: LiveData<Route>
+        get() = _navigateToHome
 
     private val _status = MutableLiveData<LoadStatus>()
-    val status: LiveData<LoadStatus> get() = _status
+    val status: LiveData<LoadStatus>
+        get() = _status
 
     private val _favStatus = MutableLiveData<LoadStatus>()
-    val favStatus: LiveData<LoadStatus> get() = _favStatus
+    val favStatus: LiveData<LoadStatus>
+        get() = _favStatus
 
     private val _error = MutableLiveData<String>()
-    val error: LiveData<String> get() = _error
+    val error: LiveData<String>
+        get() = _error
 
     private val _commentList = MutableLiveData<List<Comment>>()
-    val commentList: LiveData<List<Comment>> get() = _commentList
+    val commentList: LiveData<List<Comment>>
+        get() = _commentList
 
     private val _favoriteAdded = MutableLiveData<Boolean>().apply{
         value = route.followers.contains(requireNotNull(UserManager.user?.id))
     }
-    val favoriteAdded: LiveData<Boolean> get() = _favoriteAdded
+    val favoriteAdded: LiveData<Boolean>
+        get() = _favoriteAdded
 
     private val _photoPoints = MutableLiveData<List<PhotoPoint>>()
-    val photoPoints: LiveData<List<PhotoPoint>> get() = _photoPoints
+    val photoPoints: LiveData<List<PhotoPoint>>
+        get() = _photoPoints
 
     private val _displayPhotos = MutableLiveData<List<String>>()
-    val displayPhotos: LiveData<List<String>> get() = _displayPhotos
+    val displayPhotos: LiveData<List<String>>
+        get() = _displayPhotos
 
     private val _snapPosition = MutableLiveData<Int>()
-    val snapPosition: LiveData<Int> get() = _snapPosition
+    val snapPosition: LiveData<Int>
+        get() = _snapPosition
 
     private val viewModelJob = Job()
+
     private val coroutineScope = CoroutineScope(Dispatchers.Main + viewModelJob)
 
     val decoration = object : RecyclerView.ItemDecoration() {
@@ -70,10 +80,8 @@ class DetailViewModel(val walkableRepository: WalkableRepository, val route: Rou
         }
     }
 
-
     init{
         route.id?.let{
-
             getComment(it)
             downloadPhotoPoints(it)
         }
@@ -114,31 +122,31 @@ class DetailViewModel(val walkableRepository: WalkableRepository, val route: Rou
     fun switchState(){
         when(favoriteAdded.value){
             true -> removeUserFromFollowers(requireNotNull(UserManager.user?.id), route)
-            false -> addUserToFollowers(requireNotNull(UserManager.user?.id), route)
             else -> addUserToFollowers(requireNotNull(UserManager.user?.id), route)
         }
     }
 
-    fun addUserToFollowers(userId: String, route: Route){
+    private fun addUserToFollowers(userId: String, route: Route){
 
         coroutineScope.launch {
             _favStatus.value = LoadStatus.LOADING
 
             val result = walkableRepository.addUserToFollowers(userId,route)
 
-            _favoriteAdded.value = result.setLiveData(_error, _status)
+            _favoriteAdded.value = result.handleResultWith(_error, _status)
 
         }
 
     }
 
-    fun removeUserFromFollowers(userId: String, route: Route){
+    private fun removeUserFromFollowers(userId: String, route: Route){
+
         coroutineScope.launch {
             _favStatus.value = LoadStatus.LOADING
 
             val result = walkableRepository.removeUserFromFollowers(userId, route)
 
-            _favoriteAdded.value = result.setLiveData(_error, _status)
+            _favoriteAdded.value = result.handleResultWith(_error, _status)
 
         }
     }
@@ -150,7 +158,7 @@ class DetailViewModel(val walkableRepository: WalkableRepository, val route: Rou
 
             val result = walkableRepository.getRouteComments(routeId)
 
-            _commentList.value = result.setLiveData(_error, _status)
+            _commentList.value = result.handleResultWith(_error, _status)
 
         }
 
@@ -160,7 +168,7 @@ class DetailViewModel(val walkableRepository: WalkableRepository, val route: Rou
         _displayPhotos.value = listOf(requireNotNull(route.mapImage)) + list.map{ requireNotNull(it.photo) }
     }
 
-    fun downloadPhotoPoints(routeId: String){
+    private fun downloadPhotoPoints(routeId: String){
 
         coroutineScope.launch {
 
@@ -168,12 +176,8 @@ class DetailViewModel(val walkableRepository: WalkableRepository, val route: Rou
 
             val result = walkableRepository.downloadPhotoPoints(routeId)
 
-            _photoPoints.value = result.setLiveData(_error, _status)
-
+            _photoPoints.value = result.handleResultWith(_error, _status)
 
         }
-
-
     }
-
 }

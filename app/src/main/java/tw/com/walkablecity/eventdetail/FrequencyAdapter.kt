@@ -9,9 +9,11 @@ import tw.com.walkablecity.data.Friend
 import tw.com.walkablecity.data.FriendListWrapper
 import tw.com.walkablecity.databinding.ItemEventDetailBoardFqBinding
 
-class FrequencyAdapter(val viewModel: EventDetailViewModel): ListAdapter<FriendListWrapper, FrequencyAdapter.FrequencyViewHolder>(DiffCallback) {
+class FrequencyAdapter(val viewModel: EventDetailViewModel)
+    : ListAdapter<FriendListWrapper, FrequencyAdapter.FrequencyViewHolder>(DiffCallback) {
 
-    class FrequencyViewHolder(private val binding: ItemEventDetailBoardFqBinding): RecyclerView.ViewHolder(binding.root){
+    class FrequencyViewHolder(private val binding: ItemEventDetailBoardFqBinding)
+        : RecyclerView.ViewHolder(binding.root){
         fun bind(list: FriendListWrapper, position: Int, viewModel: EventDetailViewModel){
             binding.friendList = list
             binding.position = position + 1

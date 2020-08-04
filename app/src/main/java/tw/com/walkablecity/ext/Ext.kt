@@ -23,23 +23,25 @@ import java.util.*
 import kotlin.collections.HashMap
 import kotlin.math.roundToInt
 
-fun RouteRating?.toSortList(filter: RouteSorting?): List<String>{
-    return if(this == null){
+fun RouteRating?.toSortList(filter: RouteSorting?): List<String> {
+    return if (this == null) {
         listOf()
-    }else{
+    } else {
 
         val originList = mutableListOf(
-            Pair(getString(R.string.filter_coverage),this.coverage),
-            Pair(getString(R.string.filter_tranquility),this.tranquility),
-            Pair(getString(R.string.filter_scenery),this.scenery),
-            Pair(getString(R.string.filter_rest),this.rest),
-            Pair(getString(R.string.filter_snack),this.snack),
-            Pair(getString(R.string.filter_vibe),this.vibe)).sortedBy {
+            Pair(getString(R.string.filter_coverage), this.coverage),
+            Pair(getString(R.string.filter_tranquility), this.tranquility),
+            Pair(getString(R.string.filter_scenery), this.scenery),
+            Pair(getString(R.string.filter_rest), this.rest),
+            Pair(getString(R.string.filter_snack), this.snack),
+            Pair(getString(R.string.filter_vibe), this.vibe)
+        ).sortedBy {
             it.second
         }
-        val headItem: Pair<String,Float> = originList.find{it.first == filter?.title} ?: originList.last()
+        val headItem: Pair<String, Float> =
+            originList.find { it.first == filter?.title } ?: originList.last()
 
-        originList.minus(headItem).plus(headItem).asReversed().map{
+        originList.minus(headItem).plus(headItem).asReversed().map {
             "${it.first} | ${it.second.times(10).roundToInt().toFloat().div(10)}"
         }
 
@@ -47,12 +49,12 @@ fun RouteRating?.toSortList(filter: RouteSorting?): List<String>{
 
 }
 
-fun List<LatLng>.toDistance(): Float{
+fun List<LatLng>.toDistance(): Float {
     var distance = 0F
-    if(this.size > 1){
-        val list = this.subList(1,lastIndex)
-        for(position in 0..list.lastIndex){
-            val unit = Util.calculateDistance(list[position],this[position])
+    if (this.size > 1) {
+        val list = this.subList(1, lastIndex)
+        for (position in 0..list.lastIndex) {
+            val unit = Util.calculateDistance(list[position], this[position])
             distance += unit
         }
     }
@@ -60,36 +62,36 @@ fun List<LatLng>.toDistance(): Float{
     return distance
 }
 
-fun LatLng.toLocation(): Location{
-    return Location("").apply{
+fun LatLng.toLocation(): Location {
+    return Location("").apply {
         latitude = this@toLocation.latitude
         longitude = this@toLocation.longitude
     }
 }
 
-fun LatLng.toGeoPoint():GeoPoint{
-    return GeoPoint(latitude,longitude)
+fun LatLng.toGeoPoint(): GeoPoint {
+    return GeoPoint(latitude, longitude)
 }
 
-fun GeoPoint.toLocation(): Location{
-    return Location("").apply{
+fun GeoPoint.toLocation(): Location {
+    return Location("").apply {
         latitude = this@toLocation.latitude
         longitude = this@toLocation.longitude
     }
 }
 
-fun List<GeoPoint>.toLatLngPoints(): List<LatLng>{
-    return this.map{
+fun List<GeoPoint>.toLatLngPoints(): List<LatLng> {
+    return this.map {
         LatLng(it.latitude, it.longitude)
     }
 }
 
-fun List<LatLng>.toQuery():String{
+fun List<LatLng>.toQuery(): String {
     var query = StringBuilder()
-    if(this.isNotEmpty()){
+    if (this.isNotEmpty()) {
         query = query.append("${this[0].latitude},${this[0].longitude}")
-        if(this.size > 2){
-            for(position in 1 until this.lastIndex){
+        if (this.size > 2) {
+            for (position in 1 until this.lastIndex) {
                 query = query.append("|${this[position].latitude},${this[position].longitude}")
             }
         }
@@ -97,23 +99,23 @@ fun List<LatLng>.toQuery():String{
     return query.toString()
 }
 
-fun LatLngResult.toQuery(): String{
+fun LatLngResult.toQuery(): String {
     return "${this.lat},${this.lng}"
 }
 
-fun LatLng.toQuery(): String{
+fun LatLng.toQuery(): String {
     return "${this.latitude},${this.longitude}"
 }
 
-fun GeoPoint.toQuery(): String{
+fun GeoPoint.toQuery(): String {
     return "${this.latitude},${this.longitude}"
 }
 
-fun Float.toNewAverage(new: Float, route: Route, ratings: Int): Float{
+fun Float.toNewAverage(new: Float, route: Route, ratings: Int): Float {
     return this.times(ratings).plus(new).div(ratings + 1)
 }
 
-fun String.toComment(recommend: Int, userId: String): Comment{
+fun String.toComment(recommend: Int, userId: String): Comment {
     return Comment(
         content = this,
         createTime = now(),
@@ -122,61 +124,62 @@ fun String.toComment(recommend: Int, userId: String): Comment{
     )
 }
 
-fun Timestamp.toDateLong(): Long{
-    return SimpleDateFormat("yyyyMMddHHmmss", Locale.TAIWAN).format(this.seconds.times(1000)).toLong()
+fun Timestamp.toDateLong(): Long {
+    return SimpleDateFormat("yyyyMMddHHmmss", Locale.TAIWAN).format(this.seconds.times(1000))
+        .toLong()
 }
 
-fun Timestamp.toDateString(): String{
+fun Timestamp.toDateString(): String {
     return SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.TAIWAN).format(this.seconds.times(1000))
 }
 
-fun FirebaseUser.toSignInUser(idCustom: String?): User{
+fun FirebaseUser.toSignInUser(idCustom: String?): User {
     return User(
         id = uid,
         idCustom = idCustom,
         name = displayName,
         picture = photoUrl.toString(),
         email = email,
-        accumulatedKm = Accumulation(0f,0f,0f,0f,0f),
-        accumulatedHour = Accumulation(0f,0f,0f,0f,0f),
+        accumulatedKm = Accumulation(0f, 0f, 0f, 0f, 0f),
+        accumulatedHour = Accumulation(0f, 0f, 0f, 0f, 0f),
         friends = listOf(),
         walks = listOf()
     )
 
 }
 
-fun Float.toMissionFQ(): MissionFQ{
+fun Float.toMissionFQ(): MissionFQ {
     return MissionFQ(
-        date = Timestamp(now().seconds - (60*60*12), now().nanoseconds),
+        date = Timestamp(now().seconds - (60 * 60 * 12), now().nanoseconds),
         accomplish = this
     )
 }
 
-fun List<User>.toWalkerItem(): List<WalkerItem>{
-    return when(this.size > 3){
-         true  ->{
-             val top3 = this.slice(0..2)
-             val theRest = this.slice(3..lastIndex)
-             Logger.d("the rest ${theRest.size}")
-             listOf(top3).map{WalkerItem.Tops(it)} + this.map{WalkerItem.Walkers(it)}
-         }
-         false -> {
-             val theRest = this.slice(1..lastIndex)
-             listOf(WalkerItem.Tops(listOf(this[0]))) + theRest.map{WalkerItem.Walkers(it)}
-         }
+fun List<User>.toWalkerItem(): List<WalkerItem> {
+    return when (this.size > 3) {
+        true -> {
+            val top3 = this.slice(0..2)
+            val theRest = this.slice(3..lastIndex)
+            Logger.d("the rest ${theRest.size}")
+            listOf(top3).map { WalkerItem.Tops(it) } + this.map { WalkerItem.Walkers(it) }
+        }
+        false -> {
+            val theRest = this.slice(1..lastIndex)
+            listOf(WalkerItem.Tops(listOf(this[0]))) + theRest.map { WalkerItem.Walkers(it) }
+        }
     }
 }
 
-fun List<Friend>.toMemberItem(): List<MemberItem>{
-    return listOf(MemberItem.Board) + this.map{MemberItem.Member(it)}
+fun List<Friend>.toMemberItem(): List<MemberItem> {
+    return listOf(MemberItem.Board) + this.map { MemberItem.Member(it) }
 }
 
-fun Bitmap.saveToInternalStorage(context: Context){
+fun Bitmap.saveToInternalStorage(context: Context) {
 
 
-    val file = File(context.cacheDir,"images")
+    val file = File(context.cacheDir, "images")
 
-    try{
+    try {
         file.mkdir()
         val stream = FileOutputStream("${file}/image.png")
 
@@ -184,48 +187,55 @@ fun Bitmap.saveToInternalStorage(context: Context){
 
         stream.flush()
         stream.close()
-    }catch (e: IOException){
+    } catch (e: IOException) {
         e.printStackTrace()
     }
 
 }
 
-fun Bitmap.getCroppedBitmap(): Bitmap{
+fun Bitmap.getCroppedBitmap(): Bitmap {
     val output = Bitmap.createBitmap(this.width, this.height, Bitmap.Config.ARGB_8888)
     val canvas = Canvas(output)
 
     val color = 0xff424242
     val paint = Paint()
-    val rect = Rect(0,0,this.width, this.height)
+    val rect = Rect(0, 0, this.width, this.height)
 
     paint.isAntiAlias = true
-    canvas.drawARGB(0,0,0,0)
+    canvas.drawARGB(0, 0, 0, 0)
     paint.color = color.toInt()
-    canvas.drawCircle((this.width / 2).toFloat(), (this.height / 2).toFloat(), (this.height / 2).toFloat(), paint)
+    canvas.drawCircle(
+        (this.width / 2).toFloat(),
+        (this.height / 2).toFloat(),
+        (this.height / 2).toFloat(),
+        paint
+    )
     paint.xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC_IN)
     canvas.drawBitmap(this, rect, rect, paint)
     return output
 
 }
 
-fun List<Route>.timeFilter(list: List<Float>, max: Float, sorting: RouteSorting?): List<Route>{
-    return this.filter{
-        val range = list.sortedBy{it}
-        val topLimit = if(range[1] >= max){
+fun List<Route>.timeFilter(list: List<Float>, max: Float, sorting: RouteSorting?): List<Route> {
+    return this.filter {
+        val range = list.sortedBy { it }
+        val topLimit = if (range[1] >= max) {
             Float.MAX_VALUE
-        }else{
+        } else {
             range[1]
         }
         range[0] < it.minutes && it.minutes < topLimit
     }.sortedByDescending {
-        when(sorting){
+        when (sorting) {
             RouteSorting.TRANQUILITY -> it.ratingAvr?.tranquility
             RouteSorting.SCENERY -> it.ratingAvr?.scenery
             RouteSorting.REST -> it.ratingAvr?.rest
             RouteSorting.SNACK -> it.ratingAvr?.snack
             RouteSorting.COVERAGE -> it.ratingAvr?.coverage
             RouteSorting.VIBE -> it.ratingAvr?.vibe
-            null ->{ it.ratingAvr?.average() }
+            null -> {
+                it.ratingAvr?.average()
+            }
         }
     }
 }

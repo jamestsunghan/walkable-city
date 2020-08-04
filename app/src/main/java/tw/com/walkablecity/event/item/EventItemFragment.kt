@@ -9,10 +9,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
-import com.google.android.material.tabs.TabLayout
 import tw.com.walkablecity.R
 import tw.com.walkablecity.databinding.FragmentEventItemBinding
-import tw.com.walkablecity.event.EventAdapter
 import tw.com.walkablecity.event.EventFragmentDirections
 import tw.com.walkablecity.event.EventPageType
 import tw.com.walkablecity.ext.getVMFactory
@@ -48,10 +46,6 @@ class EventItemFragment(val type: EventPageType): Fragment() {
                 viewModel.getEventListToFilter(it)
             }
         })
-
-
-
-
 
         return binding.root
     }

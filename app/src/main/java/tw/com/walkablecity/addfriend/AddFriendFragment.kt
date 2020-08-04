@@ -21,7 +21,7 @@ import tw.com.walkablecity.ext.getVMFactory
 
 class AddFriendFragment : Fragment() {
 
-    private val viewModel: AddFriendViewModel by viewModels{getVMFactory()}
+    private val viewModel: AddFriendViewModel by viewModels{ getVMFactory() }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -32,14 +32,13 @@ class AddFriendFragment : Fragment() {
 
         val binding: FragmentAddFriendBinding = DataBindingUtil
             .inflate(inflater,R.layout.fragment_add_friend, container, false)
+
         binding.lifecycleOwner = this
 
         binding.viewModel = viewModel
 
         binding.editLoginId.setEndIconOnClickListener {
-
             viewModel.checkFriendAdded(viewModel.idSearch.value)
-
         }
 
         viewModel.alreadyFriend.observe(viewLifecycleOwner, Observer{

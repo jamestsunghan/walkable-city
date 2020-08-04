@@ -49,20 +49,6 @@ class EventDetailFragment : Fragment() {
         val adapter = MemberAdapter(viewModel)
         binding.recyclerMember.adapter = adapter
 
-//        binding.recyclerMember.addOnItemTouchListener(object: RecyclerView.OnItemTouchListener{
-//            override fun onTouchEvent(rv: RecyclerView, e: MotionEvent) {
-//                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-//            }
-//
-//            override fun onInterceptTouchEvent(rv: RecyclerView, e: MotionEvent): Boolean {
-//                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-//            }
-//
-//            override fun onRequestDisallowInterceptTouchEvent(disallowIntercept: Boolean) {
-//                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-//            }
-//        })
-
         binding.maybeLater.setOnClickListener {
             findNavController().navigateUp()
         }
@@ -78,35 +64,9 @@ class EventDetailFragment : Fragment() {
 
                 Logger.d("list size ${list.size}")
                 Logger.d("list $list")
-                viewModel.resultCount += 1
-
+                viewModel.keepGettingWalkResult(list)
                 Logger.d("count ${viewModel.resultCount}")
 
-
-                if (viewModel.resultCount == viewModel.listMemberId.size) {
-
-                    viewModel.eventMember.value?.mapIndexed { index, friend ->
-                        requireNotNull(viewModel.eventMember.value)[index].accomplish = list[index]
-                        friend
-                    }
-                    viewModel.sortByAccomplish()
-                    viewModel.circleList.value = list.sortedByDescending { f -> f }.map { fa ->
-                        fa.div(
-                            viewModel.event.target?.distance
-                                ?: requireNotNull(viewModel.event.target?.hour) * 60 * 60
-                        )
-                    }
-//                    adapter.notifyDataSetChanged()
-                } else if (viewModel.resultCount > viewModel.listMemberId.size) {
-                    viewModel.resultCount = 0
-//                    adapter.notifyDataSetChanged()
-                } else {
-                    viewModel.getMemberWalkResult(
-                        requireNotNull(viewModel.event.startDate)
-                        , requireNotNull(viewModel.event.target), viewModel.listMemberId
-                    )
-
-                }
             }
         })
 
@@ -126,20 +86,6 @@ class EventDetailFragment : Fragment() {
                 adapter.notifyDataSetChanged()
             }
         })
-
-
-//        viewModel.timerText.observe(viewLifecycleOwner, Observer{
-//            it?.let{
-//                Logger.d("JJ_time time $it")
-//                binding.timerText = it
-//            }
-//        })
-//        viewModel.listOfList.observe(viewLifecycleOwner, Observer {
-//            it?.let {
-//                Logger.d("JJ_list list of list ${it.size}")
-//            }
-//        })
-
 
         return binding.root
     }

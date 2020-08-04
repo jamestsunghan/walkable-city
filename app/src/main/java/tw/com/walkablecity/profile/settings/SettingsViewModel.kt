@@ -76,7 +76,7 @@ class SettingsViewModel(val walkableRepository: WalkableRepository) : ViewModel(
 
             val result = walkableRepository.updateWeatherNotification(activate, userId)
 
-            _weatherActivated.value = result.setLiveBoolean(_error, _status)
+            _weatherActivated.value = result.handleBooleanResultWith(_error, _status)
 
 
         }
@@ -89,7 +89,7 @@ class SettingsViewModel(val walkableRepository: WalkableRepository) : ViewModel(
 
             val result = walkableRepository.updateMealNotification(activate, userId)
 
-            _mealActivated.value = result.setLiveBoolean(_error, _status)
+            _mealActivated.value = result.handleBooleanResultWith(_error, _status)
 
         }
     }

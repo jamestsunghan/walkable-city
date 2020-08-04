@@ -306,7 +306,7 @@ class HomeViewModel(val walkableRepository: WalkableRepository, val argument: Ro
         coroutineScope.launch {
             val result = walkableRepository.getUserCurrentLocation()
 
-            currentLocation.value = result.setLiveData(_error, _loadStatus)
+            currentLocation.value = result.handleResultWith(_error, _loadStatus)
 
             if(walkerStatus.value != WalkerStatus.PAUSING && result is Result.Success){
                 startLocation.value = currentLocation.value

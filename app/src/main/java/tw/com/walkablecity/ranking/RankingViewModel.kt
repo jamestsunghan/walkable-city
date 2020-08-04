@@ -8,11 +8,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import tw.com.walkablecity.Logger
-import tw.com.walkablecity.R
-import tw.com.walkablecity.WalkableApp
 import tw.com.walkablecity.data.LoadStatus
-import tw.com.walkablecity.data.Result
 import tw.com.walkablecity.data.Route
 import tw.com.walkablecity.data.RouteSorting
 import tw.com.walkablecity.data.source.WalkableRepository
@@ -76,7 +72,7 @@ class RankingViewModel(val walkableRepository: WalkableRepository) : ViewModel()
 
             val result = walkableRepository.getAllRoute()
 
-            _routeAllList.value = result.setLiveData(_error, _status)
+            _routeAllList.value = result.handleResultWith(_error, _status)
             _routeList.value = routeAllList.value
 
         }

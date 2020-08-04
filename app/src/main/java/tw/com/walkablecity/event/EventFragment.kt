@@ -26,7 +26,7 @@ import tw.com.walkablecity.util.Util
 class EventFragment : Fragment() {
 
 
-    private val viewModel: EventViewModel by viewModels{getVMFactory()}
+    private val viewModel: EventViewModel by viewModels { getVMFactory() }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,12 +34,13 @@ class EventFragment : Fragment() {
     ): View? {
 
         val mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
-        UserManager.user?.id?.let{
+        UserManager.user?.id?.let {
             mainViewModel.getInvitation(it)
         }
 
         val binding: FragmentEventBinding = DataBindingUtil
             .inflate(inflater, R.layout.fragment_event, container, false)
+
         binding.lifecycleOwner = this
 
         binding.viewpagerEvent.adapter = EventAdapter2(requireActivity())
@@ -47,9 +48,9 @@ class EventFragment : Fragment() {
         val mediator = TabLayoutMediator(binding.tabsEvent, binding.viewpagerEvent,
             TabLayoutMediator.TabConfigurationStrategy { tab, position ->
                 tab.text = EventPageType.values()[position].title
-                if(position == 2){
-                    mainViewModel.invitation.observe(viewLifecycleOwner, Observer{
-                        it?.let{
+                if (position == 2) {
+                    mainViewModel.invitation.observe(viewLifecycleOwner, Observer {
+                        it?.let {
                             tab.orCreateBadge.apply {
                                 backgroundColor = getColor(R.color.red_heart_c73e3a)
                                 number = it
@@ -63,8 +64,8 @@ class EventFragment : Fragment() {
             })
         mediator.attach()
 
-        mainViewModel.invitation.observe(viewLifecycleOwner, Observer{
-            it?.let{
+        mainViewModel.invitation.observe(viewLifecycleOwner, Observer {
+            it?.let {
                 binding.tabsEvent.getTabAt(2)?.orCreateBadge?.apply {
                     number = it
                 }
@@ -72,30 +73,37 @@ class EventFragment : Fragment() {
         })
 
         binding.viewModel = viewModel
+
         binding.mainViewModel = mainViewModel
 
-        viewModel.navigateToHost.observe(viewLifecycleOwner, Observer{
-            if(it){
+        viewModel.navigateToHost.observe(viewLifecycleOwner, Observer {
+            if (it) {
                 findNavController().navigate(EventFragmentDirections.actionEventFragmentToHostFragment())
                 viewModel.navigateToHostComplete()
             }
         })
 
-        mainViewModel.eventCount.observe(viewLifecycleOwner, Observer{
-            it?.let{count->
+        mainViewModel.eventCount.observe(viewLifecycleOwner, Observer {
+            it?.let { count ->
                 viewModel.setUpgrade(count, getIntFromSP(BadgeType.EVENT_COUNT.key))
 
             }
         })
+
         var previousUpgrade = 0
-        viewModel.upgrade.observe(viewLifecycleOwner, Observer{
-            it?.let{grade->
+        viewModel.upgrade.observe(viewLifecycleOwner, Observer {
+            it?.let { grade ->
                 Logger.d("let see some grade event $grade")
-                if(grade > previousUpgrade){
+                if (grade > previousUpgrade) {
                     mainViewModel.addToBadgeTotal(grade, R.id.eventFragment)
 
-                    val dialog = Util.showBadgeDialog(grade, requireContext(), findNavController(),
-                        EventFragmentDirections.actionGlobalBadgeFragment(), getString(R.string.badge_dialog_event))
+                    val dialog = Util.showBadgeDialog(
+                        grade,
+                        requireContext(),
+                        findNavController(),
+                        EventFragmentDirections.actionGlobalBadgeFragment(),
+                        getString(R.string.badge_dialog_event)
+                    )
 
                     dialog.show()
                     previousUpgrade = grade
@@ -103,18 +111,18 @@ class EventFragment : Fragment() {
             }
         })
 
-        viewModel.showNoFriendDialog.observe(viewLifecycleOwner, Observer{
-            if(it){
-                val dialog = showNoFriendDialog(requireContext(), findNavController()
-                    , EventFragmentDirections.actionGlobalAddFriendFragment())
+        viewModel.showNoFriendDialog.observe(viewLifecycleOwner, Observer {
+            if (it) {
+                val dialog = showNoFriendDialog(
+                    requireContext(), findNavController()
+                    , EventFragmentDirections.actionGlobalAddFriendFragment()
+                )
                 dialog.show()
             }
         })
 
-
         return binding.root
     }
-
 
 
 }

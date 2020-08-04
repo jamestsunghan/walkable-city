@@ -19,28 +19,29 @@ import tw.com.walkablecity.event.EventPageType
 
 class EventItemViewModel(val walkableRepository: WalkableRepository, val eventPage: EventPageType): ViewModel() {
 
-
     private val _filter = MutableLiveData<EventType>()
-    val filter: LiveData<EventType> get() = _filter
-
-
+    val filter: LiveData<EventType>
+        get() = _filter
 
     private val _status = MutableLiveData<LoadStatus>()
-    val status: LiveData<LoadStatus> get() = _status
+    val status: LiveData<LoadStatus>
+        get() = _status
 
     private val _error = MutableLiveData<String>()
-    val error: LiveData<String> get() = _error
+    val error: LiveData<String>
+        get() = _error
 
     private val _eventAllList = MutableLiveData<List<Event>>()
-    val eventAllList: LiveData<List<Event>> get() = _eventAllList
+    val eventAllList: LiveData<List<Event>>
+        get() = _eventAllList
 
     private val _eventList = MutableLiveData<List<Event>>()
-    val eventList: LiveData<List<Event>> get() = _eventList
+    val eventList: LiveData<List<Event>>
+        get() = _eventList
 
     private val _navigateToEventDetail = MutableLiveData<Event>()
-    val navigateToEventDetail: LiveData<Event> get() = _navigateToEventDetail
-
-
+    val navigateToEventDetail: LiveData<Event>
+        get() = _navigateToEventDetail
 
     private val viewModelJob = Job()
 
@@ -84,40 +85,15 @@ class EventItemViewModel(val walkableRepository: WalkableRepository, val eventPa
         coroutineScope.launch {
 
             _status.value = LoadStatus.LOADING
+
             val result = when(page){
                 EventPageType.POPULAR -> walkableRepository.getPopularEvents()
                 EventPageType.INVITED -> walkableRepository.getUserInvitation(requireNotNull(UserManager.user?.id))
                 EventPageType.CHALLENGING -> walkableRepository.getUserChallenges(requireNotNull(UserManager.user))
             }
 
-            _eventAllList.value = when(result){
-                is Result.Success ->{
-                    _error.value = null
-                    _status.value = LoadStatus.DONE
-                    result.data
-                }
-                is Result.Fail ->{
-                    _error.value = result.error
-                    _status.value = LoadStatus.ERROR
-                    null
-                }
-                is Result.Error ->{
-                    _error.value = result.exception.toString()
-                    _status.value = LoadStatus.ERROR
-                    null
-                }
-                else->{
-                    _error.value = getString(R.string.not_here)
-                    _status.value = LoadStatus.ERROR
-                    null
-                }
-
-            }
+            _eventAllList.value = result.handleResultWith(_error, _status)
 
         }
-
-
     }
-
-
 }

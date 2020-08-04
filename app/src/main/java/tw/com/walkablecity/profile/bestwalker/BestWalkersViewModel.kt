@@ -7,9 +7,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import tw.com.walkablecity.R
 import tw.com.walkablecity.UserManager
-import tw.com.walkablecity.util.Util.getString
 import tw.com.walkablecity.data.*
 import tw.com.walkablecity.data.source.WalkableRepository
 
@@ -73,7 +71,7 @@ class BestWalkersViewModel(private val walkableRepository: WalkableRepository) :
 
             val result = walkableRepository.getUserFriends(userId)
 
-            _userFriendList.value = result.setLiveData(_error, _status)
+            _userFriendList.value = result.handleResultWith(_error, _status)
 
         }
     }

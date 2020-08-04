@@ -16,9 +16,8 @@ class DetailCircleAdapter: RecyclerView.Adapter<DetailCircleAdapter.ImageViewHol
     private var count = 0
     var selectedPosition = MutableLiveData<Int>()
 
-    class ImageViewHolder(private val binding: ItemDetailCircleBinding): RecyclerView.ViewHolder(binding.root){
-
-        var isSelected = MutableLiveData<Boolean>()
+    class ImageViewHolder(private val binding: ItemDetailCircleBinding)
+        : RecyclerView.ViewHolder(binding.root){
 
         fun bind(context: Context, selectedPosition: MutableLiveData<Int>){
             selectedPosition.observe(context as MainActivity, Observer{
@@ -31,7 +30,9 @@ class DetailCircleAdapter: RecyclerView.Adapter<DetailCircleAdapter.ImageViewHol
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ImageViewHolder {
+
         context = parent.context
+
         return ImageViewHolder(ItemDetailCircleBinding
             .inflate(LayoutInflater.from(parent.context), parent , false))
     }

@@ -20,7 +20,7 @@ sealed class Result<out R> {
         }
     }
 
-    fun setLiveData(error: MutableLiveData<String>, status: MutableLiveData<LoadStatus>): R?{
+    fun handleResultWith(error: MutableLiveData<String>, status: MutableLiveData<LoadStatus>): R?{
         return when(this){
             is Success->{
                 error.value = null
@@ -45,7 +45,8 @@ sealed class Result<out R> {
         }
     }
 
-    fun setLiveBoolean(error: MutableLiveData<String>, status: MutableLiveData<LoadStatus>): Boolean{
+    fun handleBooleanResultWith(error: MutableLiveData<String>
+                                , status: MutableLiveData<LoadStatus>): Boolean{
         return when(this){
             is Success->{
                 error.value = null

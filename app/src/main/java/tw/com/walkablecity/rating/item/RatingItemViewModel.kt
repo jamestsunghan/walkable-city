@@ -9,7 +9,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import tw.com.walkablecity.Logger
 import tw.com.walkablecity.R
 import tw.com.walkablecity.UserManager
 import tw.com.walkablecity.util.Util.makeShortToast
@@ -156,7 +155,7 @@ class RatingItemViewModel(val walkableRepository: WalkableRepository, val select
             val result = walkableRepository.updateRouteRating(ratingUpdate, selectedRoute as Route
                 , requireNotNull(UserManager.user?.id), comment)
 
-            _sendRating.value = result.setLiveBoolean(_error, _status)
+            _sendRating.value = result.handleBooleanResultWith(_error, _status)
 
         }
 
@@ -171,7 +170,7 @@ class RatingItemViewModel(val walkableRepository: WalkableRepository, val select
 
             val result = walkableRepository.getRouteMapImageUrl(walk.toRouteId(userIdCustom), bitmap)
 
-            _imageUrl.value = result.setLiveData(_error, _status)
+            _imageUrl.value = result.handleResultWith(_error, _status)
 
         }
 
@@ -187,7 +186,7 @@ class RatingItemViewModel(val walkableRepository: WalkableRepository, val select
 
             val result = walkableRepository.uploadPhotoPoints(walk.toRouteId(userId), list)
 
-            _uploadPointsSuccess.value = result.setLiveData(_error, _status)
+            _uploadPointsSuccess.value = result.handleResultWith(_error, _status)
 
 
         }
@@ -201,7 +200,7 @@ class RatingItemViewModel(val walkableRepository: WalkableRepository, val select
 
             val result = walkableRepository.downloadPhotoPoints(routeId)
 
-            setPhotosValue(result.setLiveData(_error, _status))
+            setPhotosValue(result.handleResultWith(_error, _status))
 
         }
     }
@@ -246,7 +245,7 @@ class RatingItemViewModel(val walkableRepository: WalkableRepository, val select
 
             val result = walkableRepository.createRouteByUser(route)
 
-            _sendRating.value = result.setLiveBoolean(_error, _status)
+            _sendRating.value = result.handleBooleanResultWith(_error, _status)
 
 
         }
