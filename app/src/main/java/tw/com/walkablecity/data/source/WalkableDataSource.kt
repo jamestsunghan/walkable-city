@@ -11,7 +11,6 @@ import tw.com.walkablecity.data.*
 interface WalkableDataSource {
     suspend fun getAllRoute(): Result<List<Route>>
     suspend fun getUserFavoriteRoutes(userId: String): Result<List<Route>>
-    suspend fun getRoutesRanking(sorting: RouteSorting, timeMin: Int, timeMax: Int): Result<List<Route>>
     suspend fun getUserRoutes(userId: String): Result<List<Route>>
     suspend fun getRoutesNearby(userLocation: LatLng): Result<List<Route>>
     suspend fun drawPath(origin: LatLng, destination: LatLng, waypoints: List<LatLng>): Result<DirectionResult>
@@ -56,10 +55,7 @@ interface WalkableDataSource {
     suspend fun getUserWalks(userId: String): Result<List<Walk>>
     suspend fun getUserLatestWalk(userId: String): Result<Walk?>
 
-
-    suspend fun getMemberWalkDistance(eventStartTime: Timestamp, memberId: String): Result<Float>
-    suspend fun getMemberWalkHours(eventStartTime: Timestamp, memberId: String): Result<Float>
-    suspend fun getMemberWalkFrequencyResult(eventStartTime: Timestamp, target: EventTarget, memberId: String): Result<Float>
+    suspend fun getMemberWalks(eventStartTime: Timestamp, memberId: String): Result<List<Walk>>
 
     suspend fun updateEvents(user: User?, eventList: List<Event>, type: FrequencyType): Result<Boolean>
 

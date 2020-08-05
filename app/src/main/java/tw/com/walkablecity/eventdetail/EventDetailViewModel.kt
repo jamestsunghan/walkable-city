@@ -270,9 +270,10 @@ class EventDetailViewModel(private val walkableRepository: WalkableRepository, v
 
             _status.value = LoadStatus.LOADING
 
-            val result = walkableRepository.joinPublicEvent(requireNotNull(UserManager.user), event)
-
-            _joinSuccess.value = result.handleResultWith(_error, _status)
+            walkableRepository.joinPublicEvent(requireNotNull(UserManager.user), event).apply{
+                _joinSuccess.value = handleResultWith(_error, _status)
+            }
+            
         }
     }
 
@@ -287,32 +288,38 @@ class EventDetailViewModel(private val walkableRepository: WalkableRepository, v
         coroutineScope.launch {
             _status.value = LoadStatus.LOADING
 
-            val result = when (event.type) {
-                EventType.FREQUENCY -> walkableRepository.getMemberWalkFrequencyResult(
-                    startTime,
-                    target,
-                    memberId[resultCount]
-                )
-                EventType.DISTANCE_GROUP -> walkableRepository.getMemberWalkDistance(
-                    startTime,
-                    memberId[resultCount]
-                )
-                EventType.DISTANCE_RACE -> walkableRepository.getMemberWalkDistance(
-                    startTime,
-                    memberId[resultCount]
-                )
-                EventType.HOUR_GROUP -> walkableRepository.getMemberWalkHours(
-                    startTime,
-                    memberId[resultCount]
-                )
-                EventType.HOUR_RACE -> walkableRepository.getMemberWalkHours(
-                    startTime,
-                    memberId[resultCount]
-                )
-                else -> null
-            }
+            val result = if (event.type != EventType.FREQUENCY) {
+                walkableRepository.getMemberWalks(startTime, memberId[resultCount])
+                    .handleResultWith(_error, _status)
+            } else null
 
-            _walkResultSingle.value = result?.handleResultWith(_error, _status)
+            val friend = if (event.type == EventType.FREQUENCY) {
+                walkableRepository.getUser(memberId[resultCount]).handleResultWith(_error, _status)
+            } else null
+
+
+            _walkResultSingle.value = when(event.type){
+                EventType.FREQUENCY ->{
+                    val accumulation =
+                        if (target.distance == null) requireNotNull(friend?.accumulatedHour)  // frequency_hour
+                        else requireNotNull(friend?.accumulatedKm)
+                    when (target.frequencyType) {
+                        FrequencyType.DAILY -> accumulation.daily
+                        FrequencyType.WEEKLY -> accumulation.weekly
+                        FrequencyType.MONTHLY -> accumulation.monthly
+                        else -> 20200714f
+                    }
+                }
+                EventType.HOUR_RACE      -> result?.sumBy{it.duration?.toInt() ?: 0}?.toFloat()
+                EventType.HOUR_GROUP     -> result?.sumBy{it.duration?.toInt() ?: 0}?.toFloat()
+
+                EventType.DISTANCE_RACE  -> result?.sumByDouble { it.distance?.toDouble() ?: 0.0 }?.toFloat()
+
+                EventType.DISTANCE_GROUP -> result?.sumByDouble { it.distance?.toDouble() ?: 0.0 }?.toFloat()
+
+                else -> null
+
+            }
 
         }
     }

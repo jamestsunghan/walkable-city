@@ -14,6 +14,7 @@ import androidx.navigation.NavDirections
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.tasks.Task
 import com.google.firebase.Timestamp
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.QuerySnapshot
 import tw.com.walkablecity.R
 import tw.com.walkablecity.WalkableApp
@@ -252,7 +253,7 @@ object Util {
         return dueDate.timeInMillis - currentDate.timeInMillis
     }
 
-    const val BADGE_DATA = "badge_data"
+    private const val BADGE_DATA = "badge_data"
 }
 
 suspend fun <T: Any> T.getResultFrom(source: Task<QuerySnapshot>): Result<T?> = suspendCoroutine{continuation->
@@ -277,16 +278,34 @@ suspend fun <T: Any> T.getResultFrom(source: Task<QuerySnapshot>): Result<T?> = 
     }
 }
 
-suspend fun <T: Any> T.getListResultFrom(source: Task<QuerySnapshot>): Result<List<T>?> = suspendCoroutine{continuation->
+
+suspend fun <T: Any> T.getListResultFrom(source: Task<QuerySnapshot>): Result<List<T>> = suspendCoroutine{continuation->
     source.addOnCompleteListener { task->
         if(task.isSuccessful){
 
-            if(task.result == null || task.result!!.isEmpty) continuation.resume(Result.Success(null))
+            if(task.result == null || task.result!!.isEmpty) continuation.resume(Result.Success(listOf()))
             else {
 
                 continuation.resume(Result.Success(task.result!!.toObjects(this::class.java)))
             }
 
+        }else{
+            when(val exception = task.exception) {
+                null -> continuation.resume(Result.Fail(Util.getString(R.string.not_here)))
+                else -> {
+                    Logger.d("JJ_fire [${this::class.simpleName}] Error getting documents. ${exception.message}")
+                    continuation.resume(Result.Error(exception))
+                }
+            }
+        }
+    }
+}
+
+
+suspend fun Task<*>.missionSuccessReturn(ifSuccess: Boolean) : Result<Boolean> = suspendCoroutine{continuation->
+    addOnCompleteListener { task->
+        if(task.isSuccessful){
+            continuation.resume(Result.Success(ifSuccess))
         }else{
             when(val exception = task.exception) {
                 null -> continuation.resume(Result.Fail(Util.getString(R.string.not_here)))

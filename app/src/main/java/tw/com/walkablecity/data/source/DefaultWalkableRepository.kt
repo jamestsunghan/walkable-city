@@ -13,14 +13,6 @@ class DefaultWalkableRepository(private val remote: WalkableDataSource): Walkabl
         return remote.getAllRoute()
     }
 
-    override suspend fun getRoutesRanking(
-        sorting: RouteSorting,
-        timeMin: Int,
-        timeMax: Int
-    ): Result<List<Route>> {
-        return remote.getRoutesRanking(sorting, timeMin, timeMax)
-    }
-
     override suspend fun getUserFavoriteRoutes(userId: String): Result<List<Route>> {
         return remote.getUserFavoriteRoutes(userId)
     }
@@ -147,21 +139,8 @@ class DefaultWalkableRepository(private val remote: WalkableDataSource): Walkabl
         return remote.getUser(userId)
     }
 
-
-    override suspend fun getMemberWalkDistance(eventStartTime: Timestamp, memberId: String): Result<Float> {
-        return remote.getMemberWalkDistance(eventStartTime, memberId)
-    }
-
-    override suspend fun getMemberWalkHours(eventStartTime: Timestamp, memberId: String): Result<Float> {
-        return remote.getMemberWalkHours(eventStartTime, memberId)
-    }
-
-    override suspend fun getMemberWalkFrequencyResult(
-        eventStartTime: Timestamp,
-        target: EventTarget,
-        memberId: String
-    ): Result<Float> {
-        return remote.getMemberWalkFrequencyResult(eventStartTime, target, memberId)
+    override suspend fun getMemberWalks(eventStartTime: Timestamp, memberId: String): Result<List<Walk>> {
+        return remote.getMemberWalks(eventStartTime, memberId)
     }
 
     override suspend fun getUserFriends(userId: String): Result<List<User>> {
