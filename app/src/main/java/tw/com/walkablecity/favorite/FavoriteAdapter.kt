@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import tw.com.walkablecity.Logger
+import tw.com.walkablecity.util.Logger
 import tw.com.walkablecity.util.Util.displaySliderValue
 import tw.com.walkablecity.data.Route
 import tw.com.walkablecity.databinding.ItemFavoriteRouteFilterBinding

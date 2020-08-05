@@ -5,10 +5,15 @@
 
     <data>
 
-        <variable name="viewModel" type="tw.com.walkablecity.rating.item.RatingItemViewModel" />
+        <variable
+            name="viewModel"
+            type="tw.com.walkablecity.rating.item.RatingItemViewModel" />
+
         <import type="android.view.View" />
+
         <import type="tw.com.walkablecity.rating.RatingType" />
-        <import type="tw.com.walkablecity.data.LoadStatus"/>
+
+        <import type="tw.com.walkablecity.data.LoadStatus" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -49,15 +54,15 @@
                     android:layout_height="250dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"/>
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recycler_photo_point"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:layout_constraintBottom_toBottomOf="@+id/map"
                     android:orientation="horizontal"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_constraintBottom_toBottomOf="@+id/map"
                     app:photopts="@{viewModel.photos}" />
 
                 <View
@@ -184,11 +189,11 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="16dp"
                             android:layout_marginEnd="16dp"
-                            android:text="@={viewModel.routeTitle}"
                             android:background="@color/primaryLightColor"
                             android:fontFamily="@font/noto_sans"
                             android:hint="@string/input_title"
-                            android:letterSpacing="0.15" />
+                            android:letterSpacing="0.15"
+                            android:text="@={viewModel.routeTitle}" />
 
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -232,11 +237,11 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="16dp"
                             android:layout_marginEnd="16dp"
-                            android:text="@={viewModel.routeDescription}"
                             android:background="@color/primaryLightColor"
                             android:fontFamily="@font/noto_sans"
                             android:hint="@string/input_description"
-                            android:letterSpacing="0.15" />
+                            android:letterSpacing="0.15"
+                            android:text="@={viewModel.routeDescription}" />
 
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -498,12 +503,12 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
                         android:layout_marginEnd="16dp"
-                        android:text="@={viewModel.routeCommentContent}"
                         android:background="@color/primaryLightColor"
                         android:fontFamily="@font/noto_sans"
-                        android:maxLines="5"
                         android:hint="@string/input_comment"
-                        android:letterSpacing="0.15" />
+                        android:letterSpacing="0.15"
+                        android:maxLines="5"
+                        android:text="@={viewModel.routeCommentContent}" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 

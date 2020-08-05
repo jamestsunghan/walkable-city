@@ -4,7 +4,6 @@ package tw.com.walkablecity.rating.item
 import android.content.res.Configuration
 import android.content.res.Resources
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -30,6 +29,7 @@ import tw.com.walkablecity.ext.getCroppedBitmap
 import tw.com.walkablecity.ext.getVMFactory
 import tw.com.walkablecity.ext.toLatLngPoints
 import tw.com.walkablecity.rating.RatingType
+import tw.com.walkablecity.util.Logger
 import tw.com.walkablecity.util.WorkaroundMapFragment
 
 class RatingItemFragment(

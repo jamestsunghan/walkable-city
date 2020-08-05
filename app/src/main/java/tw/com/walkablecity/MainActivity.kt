@@ -19,6 +19,7 @@ import tw.com.walkablecity.home.WalkerStatus
 import tw.com.walkablecity.home.createroute.CreateRouteDialogFragmentDirections
 import tw.com.walkablecity.profile.badge.BadgeFragmentDirections
 import tw.com.walkablecity.rating.RatingFragmentDirections
+import tw.com.walkablecity.util.Logger
 import tw.com.walkablecity.util.Util
 import tw.com.walkablecity.util.Util.getCountFromSharedPreference
 
@@ -113,14 +114,15 @@ class MainActivity : AppCompatActivity() {
         viewModel.walkerStatus.observe(this, Observer {
             it?.let { status ->
                 if (status == WalkerStatus.WALKING && previousStatus != WalkerStatus.PAUSING) {
-                    binding.bottomNav
-                        .startAnimation(AnimationUtils.loadAnimation(this, R.anim.anim_slide_down))
+
+                    binding.bottomNav.startAnimation(
+                        AnimationUtils.loadAnimation(this, R.anim.anim_slide_down)
+                    )
 
                 }
                 previousStatus = status
             }
         })
-
     }
 
     private fun addBadge(num: Int, itemId: Int) {
@@ -139,45 +141,45 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupNavController() {
 
-        findNavController(R.id.nav_host_fragment)
-            .addOnDestinationChangedListener { controller, destination, arguments ->
-                viewModel.currentFragment.value = when (controller.currentDestination?.id) {
-                    R.id.homeFragment -> {
-                        binding.bottomNav.menu.getItem(0).isChecked = true
-                        CurrentFragmentType.HOME
-                    }
-                    R.id.rankingFragment -> CurrentFragmentType.RANKING
-                    R.id.favoriteFragment -> CurrentFragmentType.FAVORITE
-                    R.id.eventFragment -> CurrentFragmentType.EVENT
-                    R.id.profileFragment -> {
-                        binding.bottomNav.menu.getItem(4).isChecked = true
-                        CurrentFragmentType.PROFILE
-                    }
+        findNavController(R.id.nav_host_fragment).addOnDestinationChangedListener { controller, _, _ ->
 
-                    R.id.loadRouteFragment -> CurrentFragmentType.LOAD_ROUTE
-                    R.id.ratingFragment -> CurrentFragmentType.RATING
+            viewModel.currentFragment.value = when (controller.currentDestination?.id) {
 
-                    R.id.detailFragment -> CurrentFragmentType.DETAIL
-
-                    R.id.badgeFragment -> CurrentFragmentType.BADGE
-                    R.id.bestWalkersFragment -> CurrentFragmentType.BEST_WALKERS
-                    R.id.exploreFragment -> CurrentFragmentType.EXPLORE
-                    R.id.settingsFragment -> CurrentFragmentType.SETTINGS
-
-                    R.id.eventDetailFragment -> CurrentFragmentType.EVENT_DETAIL
-                    R.id.hostFragment -> CurrentFragmentType.HOST
-                    R.id.loginFragment -> CurrentFragmentType.LOGIN
-
-                    R.id.addFriendFragment -> CurrentFragmentType.ADD_FRIEND
-                    R.id.addFriend2EventFragment -> CurrentFragmentType.ADD_2_EVENT
-                    R.id.createRouteDialogFragment -> CurrentFragmentType.CREATE_ROUTE_DIALOG
-
-                    else -> viewModel.currentFragment.value
+                R.id.homeFragment -> {
+                    binding.bottomNav.menu.getItem(BOTTOM_HOME_POS).isChecked = true
+                    CurrentFragmentType.HOME
                 }
 
+                R.id.rankingFragment -> CurrentFragmentType.RANKING
+                R.id.favoriteFragment -> CurrentFragmentType.FAVORITE
+                R.id.eventFragment -> CurrentFragmentType.EVENT
 
+                R.id.profileFragment -> {
+                    binding.bottomNav.menu.getItem(BOTTOM_PROFILE_POS).isChecked = true
+                    CurrentFragmentType.PROFILE
+                }
+
+                R.id.loadRouteFragment -> CurrentFragmentType.LOAD_ROUTE
+                R.id.ratingFragment -> CurrentFragmentType.RATING
+
+                R.id.detailFragment -> CurrentFragmentType.DETAIL
+
+                R.id.badgeFragment -> CurrentFragmentType.BADGE
+                R.id.bestWalkersFragment -> CurrentFragmentType.BEST_WALKERS
+                R.id.exploreFragment -> CurrentFragmentType.EXPLORE
+                R.id.settingsFragment -> CurrentFragmentType.SETTINGS
+
+                R.id.eventDetailFragment -> CurrentFragmentType.EVENT_DETAIL
+                R.id.hostFragment -> CurrentFragmentType.HOST
+                R.id.loginFragment -> CurrentFragmentType.LOGIN
+
+                R.id.addFriendFragment -> CurrentFragmentType.ADD_FRIEND
+                R.id.addFriend2EventFragment -> CurrentFragmentType.ADD_2_EVENT
+                R.id.createRouteDialogFragment -> CurrentFragmentType.CREATE_ROUTE_DIALOG
+
+                else -> viewModel.currentFragment.value
             }
-
+        }
     }
 
     override fun onBackPressed() {
@@ -225,9 +227,12 @@ class MainActivity : AppCompatActivity() {
                     super.onBackPressed()
                 }
             }
-
-
             else -> super.onBackPressed()
         }
+    }
+
+    companion object {
+        private const val BOTTOM_HOME_POS = 0
+        private const val BOTTOM_PROFILE_POS = 4
     }
 }

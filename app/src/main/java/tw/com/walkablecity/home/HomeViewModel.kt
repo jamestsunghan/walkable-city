@@ -19,11 +19,11 @@ import tw.com.walkablecity.*
 import tw.com.walkablecity.R
 import tw.com.walkablecity.util.Util.getAccumulatedFromSharedPreference
 import tw.com.walkablecity.util.Util.getColor
-import tw.com.walkablecity.util.Util.getString
 import tw.com.walkablecity.data.*
 import tw.com.walkablecity.data.source.WalkableRepository
 import tw.com.walkablecity.ext.toDistance
 import tw.com.walkablecity.ext.toGeoPoint
+import tw.com.walkablecity.util.Logger
 import java.lang.Runnable
 import java.text.SimpleDateFormat
 import java.util.*
@@ -113,6 +113,9 @@ class HomeViewModel(val walkableRepository: WalkableRepository, val argument: Ro
     override fun onCleared() {
         super.onCleared()
         viewModelJob.cancel()
+        if(walkerStatus.value == WalkerStatus.PAUSING || walkerStatus.value == WalkerStatus.WALKING){
+            pauseWalking()
+        }
     }
 
     init{
@@ -120,7 +123,7 @@ class HomeViewModel(val walkableRepository: WalkableRepository, val argument: Ro
         Logger.d("date $date")
 
         _walkerStatus.value = WalkerStatus.PREPARE
-//        clientCurrentLocation()
+
         locationCallback = object: LocationCallback(){
             override fun onLocationResult(p0: LocationResult?) {
                 super.onLocationResult(p0)
@@ -193,16 +196,19 @@ class HomeViewModel(val walkableRepository: WalkableRepository, val argument: Ro
             WalkerStatus.PREPARE -> startWalking()
             WalkerStatus.PAUSING -> stopWalking()
             WalkerStatus.WALKING -> stopWalking()
-            WalkerStatus.FINISH  -> {}
+            WalkerStatus.FINISH  -> {
+            }
         }
     }
 
     fun pauseResumeSwitch(){
         when(walkerStatus.value){
-            WalkerStatus.PREPARE -> {}
+            WalkerStatus.PREPARE -> {
+            }
             WalkerStatus.PAUSING -> resumeWalking()
             WalkerStatus.WALKING -> pauseWalking()
-            WalkerStatus.FINISH  -> {}
+            WalkerStatus.FINISH  -> {
+            }
         }
     }
 
@@ -242,19 +248,21 @@ class HomeViewModel(val walkableRepository: WalkableRepository, val argument: Ro
 
     private fun stopWalking(){
         _walkerStatus.value = WalkerStatus.FINISH
-        stopRecordingDistance()
+
         //timer stop
         handler.removeCallbacks(runnable)
         endTime.value = now()
+
         //GPS stop recording
+        stopRecordingDistance()
 
         //navigate to rating
         val walk = Walk(
-            distance = walkerDistance.value as Float,
-            duration = walkerTimer.value as Long,
+            distance  = walkerDistance.value as Float,
+            duration  = walkerTimer.value as Long,
             startTime = startTime.value as Timestamp,
-            endTime = endTime.value as Timestamp,
-            routeId = route.value?.id,
+            endTime   = endTime.value as Timestamp,
+            routeId   = route.value?.id,
             waypoints = trackPoints.value?.map{it.toGeoPoint()} as List<GeoPoint>)
         updateWalk(walk)
     }
@@ -265,26 +273,9 @@ class HomeViewModel(val walkableRepository: WalkableRepository, val argument: Ro
 
             _loadStatus.value = LoadStatus.LOADING
 
-            when(val result = walkableRepository.updateWalks(walk, requireNotNull(UserManager.user))){
-                is Result.Success->{
-                    _error.value = null
-                    _loadStatus.value = LoadStatus.DONE
-                    navigateToRating(walk)
-                }
-                is Result.Fail ->{
-                    _error.value = result.error
-                    _loadStatus.value = LoadStatus.ERROR
-                    navigateToRating(walk)
-                }
-                is Result.Error ->{
-                    _error.value = result.exception.toString()
-                    _loadStatus.value = LoadStatus.ERROR
-                    navigateToRating(walk)
-                }
-                else ->{
-                    _error.value = getString(R.string.not_here)
-                    _loadStatus.value = LoadStatus.ERROR
-                }
+            walkableRepository.updateWalks(walk, requireNotNull(UserManager.user)).apply{
+                handleResultWith(_error, _loadStatus)
+                if (this is Result.Success || this is Result.Fail ) navigateToRating(walk)
             }
 
         }
@@ -333,30 +324,10 @@ class HomeViewModel(val walkableRepository: WalkableRepository, val argument: Ro
 
             _loadStatus.value = LoadStatus.LOADING
 
-            val result = walkableRepository.drawPath(origin, destination, waypoints)
-
-            _mapRoute.value = when(result){
-                is Result.Success ->{
-                    _error.value = null
-                    _loadStatus.value = LoadStatus.DONE
-                    result.data
-                }
-                is Result.Fail ->{
-                    _error.value = result.error
-                    _loadStatus.value = LoadStatus.ERROR
-                    null
-                }
-                is Result.Error ->{
-                    _error.value = result.exception.toString()
-                    _loadStatus.value = LoadStatus.ERROR
-                    null
-                }
-                else ->{
-                    _error.value = getString(R.string.not_here)
-                    _loadStatus.value = LoadStatus.ERROR
-                    null
-                }
+            walkableRepository.drawPath(origin, destination, waypoints).apply {
+                _mapRoute.value = handleResultWith(_error, _loadStatus)
             }
+
         }
     }
 

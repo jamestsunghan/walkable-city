@@ -12,15 +12,20 @@ import androidx.core.app.ActivityCompat
 import androidx.navigation.NavController
 import androidx.navigation.NavDirections
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.tasks.Task
 import com.google.firebase.Timestamp
+import com.google.firebase.firestore.QuerySnapshot
 import tw.com.walkablecity.R
 import tw.com.walkablecity.WalkableApp
+import tw.com.walkablecity.data.Result
 import tw.com.walkablecity.ext.toLocation
 import tw.com.walkablecity.permission.RationaleDialog
 import java.lang.StringBuilder
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 object Util {
 
@@ -119,16 +124,14 @@ object Util {
 
     fun putDataToSharedPreference(key: String, accumulated: Float? = null, count: Int? = null) {
         if (accumulated != null) {
-            WalkableApp.instance.getSharedPreferences(
-                BADGE_DATA, Context.MODE_PRIVATE
-            ).edit()
+            WalkableApp.instance
+                .getSharedPreferences(BADGE_DATA, Context.MODE_PRIVATE).edit()
                 .putFloat(key, accumulated)
                 .apply()
         }
         if (count != null) {
-            WalkableApp.instance.getSharedPreferences(
-                BADGE_DATA, Context.MODE_PRIVATE
-            ).edit()
+            WalkableApp.instance
+                .getSharedPreferences(BADGE_DATA, Context.MODE_PRIVATE).edit()
                 .putInt(key, count)
                 .apply()
         }
@@ -160,20 +163,20 @@ object Util {
     }
 
     fun getIntFromSP(key: String): Int {
-        return WalkableApp.instance.getSharedPreferences(
-            BADGE_DATA, Context.MODE_PRIVATE
-        ).getInt(key, -1)
+        return WalkableApp.instance
+            .getSharedPreferences(BADGE_DATA, Context.MODE_PRIVATE).getInt(key, -1)
     }
 
     fun getFloatFromSP(key: String): Float {
-        return WalkableApp.instance.getSharedPreferences(
-            BADGE_DATA, Context.MODE_PRIVATE
-        ).getFloat(key, -1f)
+        return WalkableApp.instance
+            .getSharedPreferences(BADGE_DATA, Context.MODE_PRIVATE).getFloat(key, -1f)
     }
 
     fun showWalkDestroyDialog(context: Context): AlertDialog.Builder {
-        val icon = context.getDrawable(R.drawable.ic_footprint_solid)
-        icon?.setTint(getColor(R.color.primaryDarkColor))
+
+        val icon = context.getDrawable(R.drawable.ic_footprint_solid)?.apply {
+            setTint(getColor(R.color.primaryDarkColor))
+        }
 
         return AlertDialog.Builder(context, R.style.AlertDialogStyle)
             .setMessage(getString(R.string.destroy_walk_message))
@@ -188,8 +191,10 @@ object Util {
         grade: Int, context: Context, navController: NavController
         , directions: NavDirections, content: String
     ) : AlertDialog.Builder {
-        val icon = context.getDrawable(R.drawable.ic_badge_solid)
-        icon?.setTint(getColor(R.color.primaryDarkColor))
+
+        val icon = context.getDrawable(R.drawable.ic_badge_solid)?.apply {
+            setTint(getColor(R.color.primaryDarkColor))
+        }
 
         return AlertDialog.Builder(context, R.style.AlertDialogStyle)
             .setIcon(icon)
@@ -206,8 +211,10 @@ object Util {
         navController: NavController,
         directions: NavDirections
     ): AlertDialog.Builder {
-        val icon = context.getDrawable(R.drawable.ic_footprint_solid)
-        icon?.setTint(getColor(R.color.primaryDarkColor))
+
+        val icon = context.getDrawable(R.drawable.ic_footprint_solid)?.apply {
+            setTint(getColor(R.color.primaryDarkColor))
+        }
 
         return AlertDialog.Builder(context, R.style.AlertDialogStyle)
             .setIcon(icon)
@@ -246,4 +253,48 @@ object Util {
     }
 
     const val BADGE_DATA = "badge_data"
+}
+
+suspend fun <T: Any> T.getResultFrom(source: Task<QuerySnapshot>): Result<T?> = suspendCoroutine{continuation->
+    source.addOnCompleteListener { task->
+        if(task.isSuccessful){
+
+            if(task.result == null || task.result!!.isEmpty) continuation.resume(Result.Success(null))
+            else {
+
+                continuation.resume(Result.Success(task.result!!.toObjects(this::class.java)[0]))
+            }
+
+        }else{
+            when(val exception = task.exception) {
+                null -> continuation.resume(Result.Fail(Util.getString(R.string.not_here)))
+                else -> {
+                    Logger.d("JJ_fire [${this::class.simpleName}] Error getting documents. ${exception.message}")
+                    continuation.resume(Result.Error(exception))
+                }
+            }
+        }
+    }
+}
+
+suspend fun <T: Any> T.getListResultFrom(source: Task<QuerySnapshot>): Result<List<T>?> = suspendCoroutine{continuation->
+    source.addOnCompleteListener { task->
+        if(task.isSuccessful){
+
+            if(task.result == null || task.result!!.isEmpty) continuation.resume(Result.Success(null))
+            else {
+
+                continuation.resume(Result.Success(task.result!!.toObjects(this::class.java)))
+            }
+
+        }else{
+            when(val exception = task.exception) {
+                null -> continuation.resume(Result.Fail(Util.getString(R.string.not_here)))
+                else -> {
+                    Logger.d("JJ_fire [${this::class.simpleName}] Error getting documents. ${exception.message}")
+                    continuation.resume(Result.Error(exception))
+                }
+            }
+        }
+    }
 }

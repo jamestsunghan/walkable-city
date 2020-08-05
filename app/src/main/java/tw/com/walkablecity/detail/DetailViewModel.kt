@@ -133,7 +133,7 @@ class DetailViewModel(val walkableRepository: WalkableRepository, val route: Rou
 
             val result = walkableRepository.addUserToFollowers(userId,route)
 
-            _favoriteAdded.value = result.handleResultWith(_error, _status)
+            _favoriteAdded.value = result.handleResultWith(_error, _favStatus)
 
         }
 
@@ -146,7 +146,7 @@ class DetailViewModel(val walkableRepository: WalkableRepository, val route: Rou
 
             val result = walkableRepository.removeUserFromFollowers(userId, route)
 
-            _favoriteAdded.value = result.handleResultWith(_error, _status)
+            _favoriteAdded.value = result.handleResultWith(_error, _favStatus)
 
         }
     }

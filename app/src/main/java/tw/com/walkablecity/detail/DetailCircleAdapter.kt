@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
-import tw.com.walkablecity.Logger
+import tw.com.walkablecity.util.Logger
 import tw.com.walkablecity.MainActivity
 import tw.com.walkablecity.databinding.ItemDetailCircleBinding
 

@@ -36,7 +36,6 @@ interface WalkableDataSource {
     suspend fun getUserEvents(userId: String): Result<List<Event>>
     suspend fun getUserInvitation(userId: String): Result<List<Event>>
     suspend fun getUserChallenges(user: User): Result<List<Event>>
-    suspend fun getUserParticipateEvent(user: User): Result<List<Event>>
 
     suspend fun createEvent(event: Event): Result<Boolean>
     suspend fun joinEvent(user: User, event: Event): Result<Boolean>
@@ -62,9 +61,7 @@ interface WalkableDataSource {
     suspend fun getMemberWalkHours(eventStartTime: Timestamp, memberId: String): Result<Float>
     suspend fun getMemberWalkFrequencyResult(eventStartTime: Timestamp, target: EventTarget, memberId: String): Result<Float>
 
-    suspend fun updateDailyEvents(user: User?, eventList: List<Event>): Result<Boolean>
-    suspend fun updateWeeklyEvents(user: User?, eventList: List<Event>): Result<Boolean>
-    suspend fun updateMonthlyEvents(user: User?, eventList: List<Event>): Result<Boolean>
+    suspend fun updateEvents(user: User?, eventList: List<Event>, type: FrequencyType): Result<Boolean>
 
     suspend fun getWeather(currentLocation: LatLng): Result<WeatherResult>
 

@@ -17,7 +17,7 @@ import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import tw.com.walkablecity.Logger
+import tw.com.walkablecity.util.Logger
 
 import tw.com.walkablecity.R
 import tw.com.walkablecity.UserManager

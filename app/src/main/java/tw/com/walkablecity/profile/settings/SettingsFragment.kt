@@ -18,6 +18,7 @@ import tw.com.walkablecity.util.Util.makeShortToast
 import tw.com.walkablecity.databinding.FragmentSettingsBinding
 import tw.com.walkablecity.ext.getVMFactory
 import tw.com.walkablecity.home.HomeFragment
+import tw.com.walkablecity.util.Logger
 import tw.com.walkablecity.util.Util
 
 class SettingsFragment : Fragment() {

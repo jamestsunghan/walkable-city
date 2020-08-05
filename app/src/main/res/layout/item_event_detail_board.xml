@@ -4,13 +4,28 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <variable name="viewModel" type="tw.com.walkablecity.eventdetail.EventDetailViewModel" />
-        <variable name="total" type="Float" />
-        <variable name="champ" type="tw.com.walkablecity.data.Friend" />
-        <variable name="champAccomplished" type="Float" />
-        <import type="android.view.View"/>
-        <import type="tw.com.walkablecity.data.EventType"/>
-        <import type="androidx.constraintlayout.widget.ConstraintLayout.LayoutParams"/>
+
+        <variable
+            name="viewModel"
+            type="tw.com.walkablecity.eventdetail.EventDetailViewModel" />
+
+        <variable
+            name="total"
+            type="Float" />
+
+        <variable
+            name="champ"
+            type="tw.com.walkablecity.data.Friend" />
+
+        <variable
+            name="champAccomplished"
+            type="Float" />
+
+        <import type="android.view.View" />
+
+        <import type="tw.com.walkablecity.data.EventType" />
+
+        <import type="androidx.constraintlayout.widget.ConstraintLayout.LayoutParams" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -21,11 +36,11 @@
             android:id="@+id/card_group_board"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:cardCornerRadius="8dp"
             android:layout_margin="16dp"
+            app:cardCornerRadius="8dp"
             app:cardElevation="8dp"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@+id/event_detail_ranking">
+            app:layout_constraintBottom_toTopOf="@+id/event_detail_ranking"
+            app:layout_constraintTop_toTopOf="parent">
 
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -36,9 +51,8 @@
                     android:id="@+id/profile_head_zone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:layout_constraintTop_toTopOf="parent"
                     android:visibility="@{viewModel.event.type == EventType.HOUR_RACE || viewModel.event.type == EventType.DISTANCE_RACE ? View.VISIBLE : View.GONE}"
-                    >
+                    app:layout_constraintTop_toTopOf="parent">
 
                     <com.google.android.material.card.MaterialCardView
                         android:id="@+id/card_view_profile_image"
@@ -47,13 +61,13 @@
                         android:layout_marginStart="16dp"
                         android:layout_marginTop="16dp"
                         android:layout_marginBottom="16dp"
-                        app:strokeColor="@color/gold"
-                        app:strokeWidth="5dp"
                         android:contentDescription="Your profile image"
                         app:cardCornerRadius="50dp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent">
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:strokeColor="@color/gold"
+                        app:strokeWidth="5dp">
 
                         <ImageView
                             android:id="@+id/profile_image"
@@ -68,9 +82,9 @@
                         android:id="@+id/card_view_first_badge"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
-                        app:cardCornerRadius="40dp"
                         android:layout_marginTop="2dp"
                         android:layout_marginEnd="2dp"
+                        app:cardCornerRadius="40dp"
                         app:layout_constraintEnd_toEndOf="@+id/card_view_profile_image"
                         app:layout_constraintTop_toTopOf="@+id/card_view_profile_image">
 
@@ -78,13 +92,13 @@
                             android:id="@+id/badge_first"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:textColor="@color/white"
-                            android:gravity="center"
-                            android:fontFamily="@font/noto_sans"
-                            android:textSize="14dp"
-                            android:textStyle="bold"
                             android:background="@color/gold"
-                            android:text="1" />
+                            android:fontFamily="@font/noto_sans"
+                            android:gravity="center"
+                            android:text="1"
+                            android:textColor="@color/white"
+                            android:textSize="14dp"
+                            android:textStyle="bold" />
                     </com.google.android.material.card.MaterialCardView>
 
                     <TextView
@@ -94,18 +108,18 @@
                         android:layout_marginStart="16dp"
                         android:layout_marginTop="21dp"
                         android:layout_marginEnd="16dp"
-                        android:fontFamily="@font/noto_sans"
-                        android:letterSpacing="0.15"
-                        android:text="@{champ.name}"
-                        android:requiresFadingEdge="horizontal"
-                        android:marqueeRepeatLimit="0"
+                        android:ellipsize="marquee"
                         android:fadingEdge="horizontal"
                         android:fadingEdgeLength="40dp"
-                        android:ellipsize="marquee"
+                        android:fontFamily="@font/noto_sans"
+                        android:letterSpacing="0.15"
+                        android:marqueeRepeatLimit="0"
+                        android:requiresFadingEdge="horizontal"
                         android:singleLine="true"
+                        android:text="@{champ.name}"
                         android:textColor="@color/blue_2e5c6e"
-                        android:textStyle="bold"
                         android:textSize="16sp"
+                        android:textStyle="bold"
                         app:layout_constraintBottom_toTopOf="@+id/user_accumulated"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/card_view_profile_image"
@@ -133,16 +147,16 @@
                 <tw.com.walkablecity.util.CircleView
                     android:id="@+id/circle_accomplish"
                     android:layout_width="match_parent"
-                    app:strokeColor="@color/primaryColor"
-                    app:strokeWidth="20dp"
                     android:layout_height="180dp"
                     android:layout_margin="16dp"
                     android:padding="20dp"
-                    app:sweepWithData="@{viewModel.circleList}"
-                    app:type="@{viewModel.event.type}"
-                    app:layout_constraintTop_toTopOf="parent"
+                    android:visibility="@{viewModel.event.type == EventType.HOUR_GROUP || viewModel.event.type == EventType.DISTANCE_GROUP ? View.VISIBLE : View.GONE}"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    android:visibility="@{viewModel.event.type == EventType.HOUR_GROUP || viewModel.event.type == EventType.DISTANCE_GROUP ? View.VISIBLE : View.GONE}" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:strokeColor="@color/primaryColor"
+                    app:strokeWidth="20dp"
+                    app:sweepWithData="@{viewModel.circleList}"
+                    app:type="@{viewModel.event.type}" />
 
                 <TextView
                     android:id="@+id/event_detail_goal"
@@ -155,12 +169,12 @@
                     android:text="@string/accomplishment"
                     android:textColor="@color/secondaryColor"
                     android:textSize="12sp"
+                    android:visibility="@{viewModel.event.type == EventType.HOUR_GROUP || viewModel.event.type == EventType.DISTANCE_GROUP ? View.VISIBLE : View.GONE}"
                     app:layout_constraintBottom_toBottomOf="@+id/circle_accomplish"
                     app:layout_constraintEnd_toEndOf="@+id/circle_accomplish"
                     app:layout_constraintStart_toStartOf="@+id/circle_accomplish"
                     app:layout_constraintTop_toTopOf="@+id/circle_accomplish"
-                    app:layout_constraintVertical_bias="0.40"
-                    android:visibility="@{viewModel.event.type == EventType.HOUR_GROUP || viewModel.event.type == EventType.DISTANCE_GROUP ? View.VISIBLE : View.GONE}" />
+                    app:layout_constraintVertical_bias="0.40" />
 
 
                 <TextView
@@ -170,24 +184,24 @@
                     android:fontFamily="@font/noto_sans"
                     android:gravity="center"
                     android:letterSpacing="0.15"
-                    app:dataTotal="@{viewModel.circleList}"
                     android:textColor="@color/secondaryColor"
                     android:textSize="16sp"
-                    app:layout_constraintStart_toStartOf="@+id/circle_accomplish"
+                    android:visibility="@{viewModel.event.type == EventType.HOUR_GROUP || viewModel.event.type == EventType.DISTANCE_GROUP ? View.VISIBLE : View.GONE}"
+                    app:dataTotal="@{viewModel.circleList}"
                     app:layout_constraintEnd_toEndOf="@+id/circle_accomplish"
-                    app:layout_constraintTop_toBottomOf="@+id/event_detail_goal"
-                    android:visibility="@{viewModel.event.type == EventType.HOUR_GROUP || viewModel.event.type == EventType.DISTANCE_GROUP ? View.VISIBLE : View.GONE}" />
+                    app:layout_constraintStart_toStartOf="@+id/circle_accomplish"
+                    app:layout_constraintTop_toBottomOf="@+id/event_detail_goal" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recycler_fq"
                     android:layout_width="match_parent"
                     android:layout_height="240dp"
                     android:layout_margin="16dp"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    android:visibility="@{viewModel.event.type == EventType.FREQUENCY ? (viewModel.listOfList == null || viewModel.listOfList.size == 0 ? View.GONE : View.VISIBLE ) : View.GONE}"
                     android:orientation="horizontal"
-                    app:fqlist="@{viewModel.listOfList}"/>
+                    android:visibility="@{viewModel.event.type == EventType.FREQUENCY ? (viewModel.listOfList == null || viewModel.listOfList.size == 0 ? View.GONE : View.VISIBLE ) : View.GONE}"
+                    app:fqlist="@{viewModel.listOfList}"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
                     android:id="@+id/no_list_of_list"
@@ -196,15 +210,15 @@
                     android:fontFamily="@font/noto_sans"
                     android:gravity="center"
                     android:letterSpacing="0.15"
-                    android:textColor="@color/primaryColor"
-                    android:textSize="20sp"
                     android:padding="16dp"
                     android:text="@string/no_historic_data"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
+                    android:textColor="@color/primaryColor"
+                    android:textSize="20sp"
+                    android:visibility="@{viewModel.event.type == EventType.FREQUENCY &amp;&amp; (viewModel.listOfList == null || viewModel.listOfList.size == 0 ) ?  View.VISIBLE : View.GONE}"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    android:visibility="@{viewModel.event.type == EventType.FREQUENCY &amp;&amp; (viewModel.listOfList == null || viewModel.listOfList.size == 0 ) ?  View.VISIBLE : View.GONE}"/>
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recycler_circle_fq"
@@ -214,20 +228,17 @@
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
                     android:layout_marginBottom="16dp"
-                    android:visibility="@{viewModel.event.type == EventType.FREQUENCY ? View.VISIBLE : View.GONE}"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     android:orientation="horizontal"
+                    android:visibility="@{viewModel.event.type == EventType.FREQUENCY ? View.VISIBLE : View.GONE}"
                     app:addDecoration="@{viewModel.decoration}"
                     app:counting="@{viewModel.listOfList.size}"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     app:layout_constraintBottom_toBottomOf="@+id/recycler_fq"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"/>
-
-
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>
-
 
 
         </com.google.android.material.card.MaterialCardView>
@@ -237,8 +248,8 @@
             android:id="@+id/event_detail_ranking"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
             android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
             android:fontFamily="@font/noto_sans"
             android:gravity="start"
             android:letterSpacing="0.15"
@@ -247,13 +258,11 @@
             android:textColor="@color/primaryDarkColor"
             android:textSize="16sp"
             android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-
 
 
 </layout>

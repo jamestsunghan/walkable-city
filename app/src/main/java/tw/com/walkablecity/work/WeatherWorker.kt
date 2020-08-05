@@ -15,7 +15,7 @@ import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import com.google.android.gms.maps.model.LatLng
 import retrofit2.HttpException
-import tw.com.walkablecity.Logger
+import tw.com.walkablecity.util.Logger
 import tw.com.walkablecity.R
 import tw.com.walkablecity.util.Util.getString
 import tw.com.walkablecity.util.Util.lessThenTenPadStart

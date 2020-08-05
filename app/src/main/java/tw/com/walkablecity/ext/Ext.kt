@@ -8,7 +8,7 @@ import com.google.firebase.Timestamp
 import com.google.firebase.Timestamp.now
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.GeoPoint
-import tw.com.walkablecity.Logger
+import tw.com.walkablecity.util.Logger
 import tw.com.walkablecity.R
 import tw.com.walkablecity.util.Util
 import tw.com.walkablecity.util.Util.getString
@@ -225,9 +225,9 @@ fun List<Route>.timeFilter(list: List<Float>, max: Float, filter: RouteSorting?)
         }
         range[0] < it.minutes && it.minutes < topLimit
     }.sortedByDescending {
-        if(filter == null){
+        if (filter == null) {
             it.ratingAvr?.average()
-        }else{
+        } else {
             it.ratingAvr?.sortingBy(filter)
         }
     }

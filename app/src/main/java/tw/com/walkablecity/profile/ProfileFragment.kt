@@ -16,6 +16,7 @@ import tw.com.walkablecity.util.Util.showBadgeDialog
 import tw.com.walkablecity.data.BadgeType
 import tw.com.walkablecity.databinding.FragmentProfileBinding
 import tw.com.walkablecity.ext.getVMFactory
+import tw.com.walkablecity.util.Logger
 import tw.com.walkablecity.util.Util
 
 class ProfileFragment : Fragment() {

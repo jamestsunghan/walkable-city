@@ -38,6 +38,7 @@ import tw.com.walkablecity.util.Util.makeShortToast
 import tw.com.walkablecity.util.Util.showBadgeDialog
 import tw.com.walkablecity.databinding.FragmentHomeBinding
 import tw.com.walkablecity.ext.*
+import tw.com.walkablecity.util.Logger
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -288,7 +289,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationClick
                 mapFragment.getMapAsync {map ->
                     Logger.d("direction result $it")
                     if(it.routes.isNotEmpty()){
-                        Logger.d("duration ${it.routes[0].legs.map{leg -> leg.distance}}")
+                        Logger.d("duration ${it.routes[0].legs.map{ leg -> leg.distance}}")
 
                         map.addPolyline(PolylineOptions()
                             .color(getColor(R.color.secondaryLightColor))
@@ -370,11 +371,9 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationClick
 
             val file = File(context?.cacheDir,"images")
             val pathName = "${file}/image${time.seconds}.jpg"
-            val streamFile = File(pathName)
 
-            val imageUri = FileProvider.getUriForFile(WalkableApp.instance, WalkableApp.instance.packageName + ".provider", streamFile)
             viewModel.addPhotoPoint(pathName)
-            viewModel.cameraClicked.value = true
+//            viewModel.cameraClicked.value = true
         }
     }
 
@@ -420,8 +419,5 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationClick
             requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), REQUEST_LOCATION)
         }
     }
-
-
-
 
 }

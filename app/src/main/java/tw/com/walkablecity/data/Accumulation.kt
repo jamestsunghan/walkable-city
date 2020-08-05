@@ -52,6 +52,21 @@ data class Accumulation (
         )
     }
 
+    fun getByFrequency(type: FrequencyType): Float{
+        return when (type) {
+            FrequencyType.DAILY   -> daily
+            FrequencyType.WEEKLY  -> weekly
+            FrequencyType.MONTHLY -> monthly
+        }
+    }
+
+    fun updateByFrequency(type: FrequencyType): Accumulation{
+        return when(type){
+            FrequencyType.DAILY   -> dailyUpdate()
+            FrequencyType.WEEKLY  -> weeklyUpdate()
+            FrequencyType.MONTHLY -> monthlyUpdate()
+        }
+    }
 
 
 }

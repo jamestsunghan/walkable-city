@@ -8,8 +8,10 @@
         <variable
             name="viewModel"
             type="tw.com.walkablecity.login.LoginViewModel" />
-        <import type="tw.com.walkablecity.data.LoadStatus"/>
-        <import type="android.view.View"/>
+
+        <import type="tw.com.walkablecity.data.LoadStatus" />
+
+        <import type="android.view.View" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -34,6 +36,7 @@
             android:id="@+id/walk_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
             android:fontFamily="@font/noto_sans"
             android:gravity="center"
             android:letterSpacing="0.15"
@@ -41,13 +44,12 @@
             android:paddingTop="4dp"
             android:paddingEnd="8dp"
             android:paddingBottom="4dp"
-            android:textColor="@color/primaryDarkColor"
             android:text="@string/walkable_city"
+            android:textColor="@color/primaryDarkColor"
             android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="@+id/walk_icon"
             app:layout_constraintStart_toStartOf="@+id/walk_icon"
-            app:layout_constraintTop_toBottomOf="@+id/walk_icon"
-            android:layout_marginTop="16dp" />
+            app:layout_constraintTop_toBottomOf="@+id/walk_icon" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/edit_login_id"
@@ -55,8 +57,8 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
             android:layout_marginEnd="32dp"
-            android:visibility="@{viewModel.status == LoadStatus.LOADING || viewModel.firebaseUser == null ? View.INVISIBLE : View.VISIBLE}"
             android:background="@color/primaryLightColor"
+            android:visibility="@{viewModel.status == LoadStatus.LOADING || viewModel.firebaseUser == null ? View.INVISIBLE : View.VISIBLE}"
             app:endIconDrawable="@drawable/map_search_24px"
             app:endIconMode="custom"
             app:layout_constraintEnd_toEndOf="parent"
@@ -69,13 +71,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
-                android:inputType="textShortMessage"
-                android:maxLength="15"
-                android:text="@={viewModel.idCustom}"
                 android:background="@color/primaryLightColor"
                 android:fontFamily="@font/noto_sans"
                 android:hint="@string/input_custom_id"
-                android:letterSpacing="0.15" />
+                android:inputType="textShortMessage"
+                android:letterSpacing="0.15"
+                android:maxLength="15"
+                android:text="@={viewModel.idCustom}" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -83,55 +85,54 @@
             android:id="@+id/signInButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
             android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
             android:visibility="@{viewModel.status == LoadStatus.LOADING || viewModel.firebaseUser != null ? View.GONE : View.VISIBLE}"
-            app:layout_constraintTop_toBottomOf="@+id/edit_login_id"
             app:layout_constraintEnd_toEndOf="@+id/edit_login_id"
             app:layout_constraintStart_toStartOf="@+id/edit_login_id"
+            app:layout_constraintTop_toBottomOf="@+id/edit_login_id"
             tools:visibility="gone" />
 
         <TextView
             android:id="@+id/getInButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
             android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
             android:background="@drawable/bg_walker_prepare"
             android:backgroundTint="@color/primaryDarkColor"
-            android:textColor="@color/white"
-            android:text="@string/enter_walkable"
+            android:fontFamily="@font/noto_sans"
             android:gravity="center"
+            android:letterSpacing="0.15"
             android:padding="8dp"
+            android:text="@string/enter_walkable"
+            android:textColor="@color/white"
+            android:textSize="16sp"
             android:visibility="@{viewModel.status == LoadStatus.LOADING || viewModel.firebaseUser == null ? View.GONE : View.VISIBLE}"
-            app:layout_constraintTop_toBottomOf="@+id/edit_login_id"
             app:layout_constraintEnd_toEndOf="@+id/edit_login_id"
             app:layout_constraintStart_toStartOf="@+id/edit_login_id"
-            android:fontFamily="@font/noto_sans"
-            android:textSize="16sp"
-            android:letterSpacing="0.15"
+            app:layout_constraintTop_toBottomOf="@+id/edit_login_id"
             tools:visibility="gone" />
 
         <TextView
             android:id="@+id/credit_freepik"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
-            android:textColor="@color/primaryColor"
-            android:text="@string/freepik"
+            android:layout_marginBottom="8dp"
+            android:fontFamily="@font/noto_sans"
             android:gravity="center"
+            android:letterSpacing="0.15"
             android:padding="8dp"
+            android:text="@string/freepik"
+            android:textColor="@color/primaryColor"
+            android:textSize="12sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            android:fontFamily="@font/noto_sans"
-            android:textSize="12sp"
-            android:letterSpacing="0.15"
-            />
+            app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
             android:id="@+id/credit_icon_geek"
@@ -139,17 +140,16 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
-            android:textColor="@color/primaryColor"
-            android:text="@string/icon_geek_26"
+            android:fontFamily="@font/noto_sans"
             android:gravity="center"
+            android:letterSpacing="0.15"
             android:padding="8dp"
+            android:text="@string/icon_geek_26"
+            android:textColor="@color/primaryColor"
+            android:textSize="12sp"
             app:layout_constraintBottom_toTopOf="@+id/credit_freepik"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            android:fontFamily="@font/noto_sans"
-            android:textSize="12sp"
-            android:letterSpacing="0.15"
-            />
+            app:layout_constraintStart_toStartOf="parent" />
 
         <ProgressBar
             android:id="@+id/progress_login"

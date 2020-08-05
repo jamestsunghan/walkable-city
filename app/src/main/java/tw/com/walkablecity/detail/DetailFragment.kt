@@ -11,7 +11,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearSnapHelper
-import tw.com.walkablecity.Logger
+import tw.com.walkablecity.util.Logger
 
 import tw.com.walkablecity.R
 import tw.com.walkablecity.databinding.FragmentDetailBinding

@@ -4,7 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <variable name="user" type="tw.com.walkablecity.data.User" />
+
+        <variable
+            name="user"
+            type="tw.com.walkablecity.data.User" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -12,93 +15,93 @@
         android:layout_height="wrap_content"
         android:background="@color/real_transparent">
 
-    <com.google.android.material.card.MaterialCardView
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:id="@+id/card_info"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        app:cardCornerRadius="8dp"
-        app:strokeColor="@color/primaryDarkColor"
-        app:strokeWidth="1dp"
-        app:cardElevation="4dp">
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_info"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="4dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:strokeColor="@color/primaryDarkColor"
+            app:strokeWidth="1dp">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/card_view_profile_image"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="16dp"
-                android:contentDescription="Your profile image"
-                app:cardCornerRadius="18dp"
-                app:cardElevation="8dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
-
-                <ImageView
-                    android:id="@+id/profile_image"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/card_view_profile_image"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="16dp"
                     android:contentDescription="Your profile image"
-                    app:srcCompat="@drawable/footprints"
-                    android:tint="@color/primaryDarkColor"
-                    tools:srcCompat="@drawable/placeholder" />
-            </com.google.android.material.card.MaterialCardView>
+                    app:cardCornerRadius="18dp"
+                    app:cardElevation="8dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
 
-            <TextView
-                android:id="@+id/walk_start_time"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="8dp"
-                android:fontFamily="@font/noto_sans"
-                android:letterSpacing="0.15"
-                android:textColor="@color/primaryDarkColor"
-                android:textSize="14sp"
-                app:layout_constraintBottom_toTopOf="@+id/walks_distance"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toEndOf="@+id/card_view_profile_image"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:text="JJ" />
+                    <ImageView
+                        android:id="@+id/profile_image"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:contentDescription="Your profile image"
+                        android:tint="@color/primaryDarkColor"
+                        app:srcCompat="@drawable/footprints"
+                        tools:srcCompat="@drawable/placeholder" />
+                </com.google.android.material.card.MaterialCardView>
 
-            <TextView
-                android:id="@+id/walks_distance"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:layout_marginBottom="8dp"
-                android:fontFamily="@font/noto_sans"
-                android:letterSpacing="0.15"
-                android:textColor="@color/primaryDarkColor"
-                android:textSize="14sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="@+id/walk_start_time"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="@+id/walk_start_time"
-                app:layout_constraintTop_toBottomOf="@+id/walk_start_time"
-                tools:text="累計｜0.12小時｜0.22公里｜" />
+                <TextView
+                    android:id="@+id/walk_start_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="8dp"
+                    android:fontFamily="@font/noto_sans"
+                    android:letterSpacing="0.15"
+                    android:textColor="@color/primaryDarkColor"
+                    android:textSize="14sp"
+                    app:layout_constraintBottom_toTopOf="@+id/walks_distance"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toEndOf="@+id/card_view_profile_image"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="JJ" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                <TextView
+                    android:id="@+id/walks_distance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginBottom="8dp"
+                    android:fontFamily="@font/noto_sans"
+                    android:letterSpacing="0.15"
+                    android:textColor="@color/primaryDarkColor"
+                    android:textSize="14sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="@+id/walk_start_time"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="@+id/walk_start_time"
+                    app:layout_constraintTop_toBottomOf="@+id/walk_start_time"
+                    tools:text="累計｜0.12小時｜0.22公里｜" />
 
-    </com.google.android.material.card.MaterialCardView>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </com.google.android.material.card.MaterialCardView>
 
         <tw.com.walkablecity.util.TriangleView
             android:id="@+id/triangle"
             android:layout_width="30dp"
             android:layout_height="20dp"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/card_info"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/card_info" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

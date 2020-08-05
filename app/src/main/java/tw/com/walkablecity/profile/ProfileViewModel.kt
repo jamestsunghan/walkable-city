@@ -3,7 +3,7 @@ package tw.com.walkablecity.profile
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import tw.com.walkablecity.Logger
+import tw.com.walkablecity.util.Logger
 import tw.com.walkablecity.data.BadgeType
 import tw.com.walkablecity.data.source.WalkableRepository
 

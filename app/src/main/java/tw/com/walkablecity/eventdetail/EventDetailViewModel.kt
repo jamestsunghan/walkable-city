@@ -12,7 +12,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import tw.com.walkablecity.Logger
+import tw.com.walkablecity.util.Logger
 import tw.com.walkablecity.R
 import tw.com.walkablecity.UserManager
 import tw.com.walkablecity.util.Util.getString
@@ -317,7 +317,7 @@ class EventDetailViewModel(private val walkableRepository: WalkableRepository, v
         }
     }
 
-    fun keepGettingWalkResult(list: List<Float>){
+    fun keepGettingWalkResult(list: List<Float>) {
         resultCount += 1
         when {
             resultCount == listMemberId.size -> {
@@ -342,7 +342,8 @@ class EventDetailViewModel(private val walkableRepository: WalkableRepository, v
             else -> {
                 getMemberWalkResult(
                     requireNotNull(event.startDate)
-                    , requireNotNull(event.target), listMemberId)
+                    , requireNotNull(event.target), listMemberId
+                )
 
             }
         }

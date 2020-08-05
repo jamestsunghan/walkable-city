@@ -4,10 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <variable name="viewModel" type="tw.com.walkablecity.MainViewModel" />
-        <import type="android.view.View"/>
-        <import type="tw.com.walkablecity.CurrentFragmentType"/>
-        <import type="tw.com.walkablecity.home.WalkerStatus"/>
+
+        <variable
+            name="viewModel"
+            type="tw.com.walkablecity.MainViewModel" />
+
+        <import type="android.view.View" />
+
+        <import type="tw.com.walkablecity.CurrentFragmentType" />
+
+        <import type="tw.com.walkablecity.home.WalkerStatus" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -21,21 +27,21 @@
             android:layout_height="60dp"
             android:background="@color/white"
             android:visibility="@{viewModel.currentFragment == CurrentFragmentType.HOME || viewModel.currentFragment == CurrentFragmentType.SEARCH || viewModel.currentFragment == CurrentFragmentType.LOGIN || viewModel.currentFragment == CurrentFragmentType.EVENT_DETAIL || viewModel.currentFragment == CurrentFragmentType.CREATE_ROUTE_DIALOG ? View.GONE : View.VISIBLE}"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/noto_sans"
                 android:layout_gravity="center"
+                android:fontFamily="@font/noto_sans"
+                android:letterSpacing="0.15"
                 android:text="@{viewModel.currentFragment.title}"
                 android:textSize="20sp"
-                android:letterSpacing="0.15"
                 android:textStyle="bold"
-                tools:visibility="visible"
-                tools:text="Walkable" />
+                tools:text="Walkable"
+                tools:visibility="visible" />
 
 
         </androidx.appcompat.widget.Toolbar>
@@ -45,11 +51,11 @@
             android:name="androidx.navigation.fragment.NavHostFragment"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/bottom_nav"
-            app:layout_constraintTop_toBottomOf="@+id/toolbar"
             app:defaultNavHost="true"
+            app:layout_constraintBottom_toTopOf="@id/bottom_nav"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar"
             app:navGraph="@navigation/navigation" />
 
 
@@ -58,13 +64,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white"
+            android:visibility="@{viewModel.currentFragment == CurrentFragmentType.LOAD_ROUTE || viewModel.currentFragment == CurrentFragmentType.LOGIN || viewModel.currentFragment == CurrentFragmentType.ADD_2_EVENT || viewModel.currentFragment == CurrentFragmentType.BADGE || viewModel.currentFragment == CurrentFragmentType.DETAIL || viewModel.walkerStatus == WalkerStatus.WALKING || viewModel.walkerStatus == WalkerStatus.PAUSING? View.GONE : View.VISIBLE }"
             app:itemIconSize="36dp"
             app:itemIconTint="@drawable/bottom_nav_icon_selector"
             app:labelVisibilityMode="unlabeled"
-            android:visibility="@{viewModel.currentFragment == CurrentFragmentType.LOAD_ROUTE || viewModel.currentFragment == CurrentFragmentType.LOGIN || viewModel.currentFragment == CurrentFragmentType.ADD_2_EVENT || viewModel.currentFragment == CurrentFragmentType.BADGE || viewModel.currentFragment == CurrentFragmentType.DETAIL || viewModel.walkerStatus == WalkerStatus.WALKING || viewModel.walkerStatus == WalkerStatus.PAUSING? View.GONE : View.VISIBLE }"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:menu="@menu/bottom_nav_menu" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

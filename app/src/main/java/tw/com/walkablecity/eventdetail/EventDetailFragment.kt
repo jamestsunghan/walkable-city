@@ -15,6 +15,7 @@ import tw.com.walkablecity.*
 
 import tw.com.walkablecity.databinding.FragmentEventDetailBinding
 import tw.com.walkablecity.ext.getVMFactory
+import tw.com.walkablecity.util.Logger
 
 class EventDetailFragment : Fragment() {
 

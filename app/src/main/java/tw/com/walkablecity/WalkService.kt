@@ -13,6 +13,7 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.model.LatLng
+import tw.com.walkablecity.util.Logger
 
 class WalkService: Service() {
 

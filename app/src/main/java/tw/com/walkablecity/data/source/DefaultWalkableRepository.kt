@@ -101,10 +101,6 @@ class DefaultWalkableRepository(private val remote: WalkableDataSource): Walkabl
         return remote.getUserChallenges(user)
     }
 
-    override suspend fun getUserParticipateEvent(user: User): Result<List<Event>> {
-        return remote.getUserParticipateEvent(user)
-    }
-
     override suspend fun getUserInvitation(userId: String): Result<List<Event>> {
         return remote.getUserInvitation(userId)
     }
@@ -184,16 +180,8 @@ class DefaultWalkableRepository(private val remote: WalkableDataSource): Walkabl
         return remote.getUserLatestWalk(userId)
     }
 
-    override suspend fun updateDailyEvents(user: User?, eventList: List<Event>): Result<Boolean> {
-        return remote.updateDailyEvents(user, eventList)
-    }
-
-    override suspend fun updateWeeklyEvents(user: User?, eventList: List<Event>): Result<Boolean> {
-        return remote.updateWeeklyEvents(user, eventList)
-    }
-
-    override suspend fun updateMonthlyEvents(user: User?, eventList: List<Event>): Result<Boolean> {
-        return remote.updateMonthlyEvents(user, eventList)
+    override suspend fun updateEvents(user: User?, eventList: List<Event>, type: FrequencyType): Result<Boolean> {
+        return remote.updateEvents(user, eventList, type)
     }
 
     override suspend fun getWeather(currentLocation: LatLng): Result<WeatherResult> {

@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.Marker
-import tw.com.walkablecity.Logger
+import tw.com.walkablecity.util.Logger
 import tw.com.walkablecity.UserManager
 import tw.com.walkablecity.data.Walk
 import tw.com.walkablecity.databinding.InfoWindowExploreBinding

@@ -5,7 +5,7 @@ import androidx.lifecycle.*
 import com.google.firebase.Timestamp
 import com.google.firebase.Timestamp.now
 import kotlinx.coroutines.*
-import tw.com.walkablecity.Logger
+import tw.com.walkablecity.util.Logger
 import tw.com.walkablecity.R
 import tw.com.walkablecity.UserManager
 import tw.com.walkablecity.util.Util.dateToTimeStamp

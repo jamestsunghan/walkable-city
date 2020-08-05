@@ -10,8 +10,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
-import tw.com.walkablecity.Logger
-import tw.com.walkablecity.NavigationDirections
+import tw.com.walkablecity.util.Logger
 
 import tw.com.walkablecity.R
 import tw.com.walkablecity.databinding.FragmentRouteItemBinding

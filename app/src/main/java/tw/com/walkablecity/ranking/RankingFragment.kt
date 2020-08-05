@@ -10,12 +10,11 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
-import tw.com.walkablecity.Logger
+import tw.com.walkablecity.util.Logger
 
 import tw.com.walkablecity.R
 import tw.com.walkablecity.databinding.FragmentRankingBinding
 import tw.com.walkablecity.ext.getVMFactory
-import tw.com.walkablecity.loadroute.LoadRouteFragmentDirections
 
 class RankingFragment : Fragment() {
 

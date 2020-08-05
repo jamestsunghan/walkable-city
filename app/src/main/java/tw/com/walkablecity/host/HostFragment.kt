@@ -24,6 +24,7 @@ import tw.com.walkablecity.databinding.FragmentHostBinding
 import tw.com.walkablecity.ext.getVMFactory
 import tw.com.walkablecity.ext.toDateLong
 import tw.com.walkablecity.host.add2event.AddListAdapter
+import tw.com.walkablecity.util.Logger
 import tw.com.walkablecity.util.Util
 import tw.com.walkablecity.util.Util.lessThenTenPadStart
 import java.text.SimpleDateFormat

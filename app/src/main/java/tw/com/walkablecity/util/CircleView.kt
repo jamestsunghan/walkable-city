@@ -8,7 +8,6 @@ import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.View
-import tw.com.walkablecity.Logger
 import tw.com.walkablecity.R
 import tw.com.walkablecity.util.Util.getColor
 import tw.com.walkablecity.WalkableApp
