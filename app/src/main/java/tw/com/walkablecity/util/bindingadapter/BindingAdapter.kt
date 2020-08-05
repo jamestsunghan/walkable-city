@@ -1,12 +1,10 @@
-package tw.com.walkablecity
+package tw.com.walkablecity.util.bindingadapter
 
 
-import android.graphics.drawable.Drawable
 import android.util.TypedValue
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.FileProvider
 import androidx.core.net.toUri
 import androidx.databinding.BindingAdapter
@@ -18,6 +16,8 @@ import com.google.android.material.slider.Slider
 import com.google.firebase.Timestamp
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
+import tw.com.walkablecity.R
+import tw.com.walkablecity.WalkableApp
 import tw.com.walkablecity.util.Util.getString
 import tw.com.walkablecity.util.Util.lessThenTenPadStart
 import tw.com.walkablecity.data.*
@@ -28,7 +28,6 @@ import tw.com.walkablecity.util.Logger
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
-
 
 /**
  * Deal with different eventType and eventTarget.
@@ -66,15 +65,8 @@ fun bindTargetWithType(textView: TextView, type: EventType, goal: EventTarget) {
 
 @BindingAdapter("target")
 fun bindTextWithEventType(textView: TextView, type: EventType?) {
-    textView.text = when (type) {
-        EventType.DISTANCE_GROUP -> getString(R.string.create_event_distance_title)
-        EventType.DISTANCE_RACE  -> getString(R.string.create_event_distance_title)
-        EventType.HOUR_GROUP     -> getString(R.string.create_event_hour_title)
-        EventType.HOUR_RACE      -> getString(R.string.create_event_hour_title)
-        EventType.FREQUENCY      -> getString(R.string.create_event_frequency_title)
-        null                     -> getString(R.string.not_here)
-    }
 
+    textView.text = type?.eventCreateTitle ?: getString(R.string.not_here)
     textView.visibility = if (type == null) View.GONE else View.VISIBLE
 }
 
@@ -98,7 +90,6 @@ fun bindTextWithEventTypePosition(textView: TextView, position: Int?) {
     else View.VISIBLE
 
 }
-
 
 /**
  * Deal with WalkerStatus and walk recording.

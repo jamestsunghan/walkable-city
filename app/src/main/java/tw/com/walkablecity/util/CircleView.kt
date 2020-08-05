@@ -13,38 +13,35 @@ import tw.com.walkablecity.util.Util.getColor
 import tw.com.walkablecity.WalkableApp
 
 
-class CircleView(context: Context, attrs: AttributeSet): View(context, attrs) {
+class CircleView(context: Context, attrs: AttributeSet) : View(context, attrs) {
 
     companion object {
         private const val DEFAULT_CIRCLE_COLOR = Color.RED
     }
-    private val DEFAULT_STROKE_WIDTH = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 5f,
-        WalkableApp.instance.resources.displayMetrics)
+
+    private val defaultStrokeWidth = TypedValue.applyDimension(
+        TypedValue.COMPLEX_UNIT_DIP, 5f,
+        WalkableApp.instance.resources.displayMetrics
+    )
 
     private val paint = Paint()
-    private var circleColor =
-        DEFAULT_CIRCLE_COLOR
-    private var strokewidth = DEFAULT_STROKE_WIDTH
-    private var rate = listOf<Float>()
-    private var rateColor = listOf<Int>(
-        getColor(R.color.secondaryLightColor), getColor(
-            R.color.secondaryColor
-        ), getColor(R.color.secondaryDarkColor)
-    )
-    private var startAngle = -90f
 
+    private var circleColor = DEFAULT_CIRCLE_COLOR
+
+    private var strokewidth = defaultStrokeWidth
+
+    private var rate = listOf<Float>()
+
+    private var rateColor = listOf(
+        getColor(R.color.secondaryLightColor),
+        getColor(R.color.secondaryColor),
+        getColor(R.color.secondaryDarkColor)
+    )
+
+    private var startAngle = -90f
 
     init {
         paint.isAntiAlias = true
-    }
-
-    override fun onDrawForeground(canvas: Canvas?) {
-        super.onDrawForeground(canvas)
-    }
-
-    override fun setForeground(foreground: Drawable?) {
-
-        super.setForeground(foreground)
     }
 
     override fun onDraw(canvas: Canvas) {
@@ -70,49 +67,52 @@ class CircleView(context: Context, attrs: AttributeSet): View(context, attrs) {
         paint.strokeWidth = strokewidth
         canvas.drawCircle(cx.toFloat(), cy.toFloat(), radius.toFloat(), paint)
 
-        if(rate.isNullOrEmpty()){
-//            canvas.drawCircle(cx.toFloat(), cy.toFloat(), radius.toFloat(), paint)
-        }
-        else {
+        if (rate.isNotEmpty()) {
+
             startAngle = -90f
-            for((listPosition, item) in rate.withIndex()){
+
+            for ((listPosition, item) in rate.withIndex()) {
                 paint.color = rateColor[listPosition % 3]
                 Logger.d("JJ_circle rate item $item")
-                canvas.drawArc(cx.toFloat()- radius.toFloat(), cy.toFloat()-radius.toFloat()
+                canvas.drawArc(
+                    cx.toFloat() - radius.toFloat(), cy.toFloat() - radius.toFloat()
                     , cx.toFloat() + radius.toFloat(), cy.toFloat() + radius.toFloat()
-                    , startAngle, item.times(360f), false, paint )
+                    , startAngle, item.times(360f), false, paint
+                )
                 startAngle += item.times(360f)
             }
-        }
 
+        }
     }
 
 
-    fun setCircleColor(circleColor: Int){
+    fun setCircleColor(circleColor: Int) {
         this.circleColor = circleColor
         invalidate()
     }
 
-    fun getCircleColor(): Int{
+    fun getCircleColor(): Int {
         return this.circleColor
     }
 
-    fun setStrokeWidth(strokeWidth: Float){
-        this.strokewidth = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, strokeWidth,
-            WalkableApp.instance.resources.displayMetrics)
+    fun setStrokeWidth(strokeWidth: Float) {
+        this.strokewidth = TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP, strokeWidth,
+            WalkableApp.instance.resources.displayMetrics
+        )
         invalidate()
     }
 
-    fun getStrokeWidth(): Float{
+    fun getStrokeWidth(): Float {
         return this.strokewidth
 
     }
 
-    fun setRateList(list: List<Float>){
+    fun setRateList(list: List<Float>) {
         this.rate = list
     }
 
-    fun setRateListColor(list: List<Int>){
+    fun setRateListColor(list: List<Int>) {
         this.rateColor = list
     }
 }

@@ -1,4 +1,4 @@
-package tw.com.walkablecity
+package tw.com.walkablecity.util.bindingadapter
 
 import android.graphics.Bitmap
 import android.graphics.Canvas
@@ -11,6 +11,8 @@ import android.view.View
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
 import androidx.fragment.app.FragmentActivity
+import tw.com.walkablecity.R
+import tw.com.walkablecity.WalkableApp
 import tw.com.walkablecity.data.RouteRating
 import tw.com.walkablecity.ext.saveToInternalStorage
 import tw.com.walkablecity.ext.shareCacheDirBitmap

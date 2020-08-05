@@ -1,6 +1,6 @@
 package tw.com.walkablecity.util
 
-import android.R
+
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import com.google.android.gms.maps.SupportMapFragment
+import tw.com.walkablecity.R
 
 class WorkaroundMapFragment : SupportMapFragment() {
     private var onTouchListener: OnTouchListener? = null
@@ -19,7 +20,9 @@ class WorkaroundMapFragment : SupportMapFragment() {
     ): View? {
         val layout = super.onCreateView(layoutInflater, viewGroup, savedInstance)
         val frameLayout = TouchableWrapper(requireActivity())
-        frameLayout.setBackgroundColor(resources.getColor(R.color.transparent, requireContext().theme))
+        frameLayout.setBackgroundColor(
+            resources.getColor(R.color.real_transparent, requireContext().theme)
+        )
         (layout as ViewGroup?)!!.addView(
             frameLayout,
             ViewGroup.LayoutParams(

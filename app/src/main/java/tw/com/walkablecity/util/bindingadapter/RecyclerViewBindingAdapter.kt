@@ -1,4 +1,4 @@
-package tw.com.walkablecity
+package tw.com.walkablecity.util.bindingadapter
 
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
