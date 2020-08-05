@@ -14,7 +14,9 @@ import tw.com.walkablecity.data.Result
 import tw.com.walkablecity.data.Route
 import tw.com.walkablecity.data.RouteSorting
 import tw.com.walkablecity.data.source.WalkableRepository
+import tw.com.walkablecity.ext.getNearBy
 import tw.com.walkablecity.ext.timeFilter
+import tw.com.walkablecity.ext.toLocation
 import tw.com.walkablecity.loadroute.LoadRouteType
 
 class RouteItemViewModel(
@@ -75,23 +77,25 @@ class RouteItemViewModel(
         coroutineScope.launch {
 
             _status.value = LoadStatus.LOADING
-            val result = when (type) {
-                LoadRouteType.FAVORITE -> walkableRepository.getUserFavoriteRoutes(userId)
-                LoadRouteType.MINE -> walkableRepository.getUserRoutes(userId)
+
+            _routeAllList.value = when (type) {
+                LoadRouteType.FAVORITE -> {
+                    walkableRepository.getUserFavoriteRoutes(userId).handleResultWith(_error, _status)
+                }
+                LoadRouteType.MINE -> {
+                    walkableRepository.getUserRoutes(userId).handleResultWith(_error, _status)
+                }
                 LoadRouteType.NEARBY -> {
 
-                    val routesNearby =
-                        when (val result = walkableRepository.getUserCurrentLocation()) {
-                            is Result.Success -> walkableRepository.getRoutesNearby(result.data)
-                            is Result.Fail -> null
-                            is Result.Error -> null
-                            else -> null
-                        }
-                    routesNearby
+                    val location = walkableRepository.getUserCurrentLocation().handleResultWith(_error, _status)
+                    _status.value = LoadStatus.LOADING
+                    val routes = walkableRepository.getAllRoute().handleResultWith(_error, _status)
+
+                    routes?.getNearBy(location)
+
                 }
             }
 
-            _routeAllList.value = result?.handleResultWith(_error, _status)
             _routeList.value = routeAllList.value
         }
     }

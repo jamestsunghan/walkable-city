@@ -232,3 +232,19 @@ fun List<Route>.timeFilter(list: List<Float>, max: Float, filter: RouteSorting?)
         }
     }
 }
+
+fun List<Route>.getNearBy(location: LatLng?): List<Route>{
+    return location?.let{
+        if(this.isNullOrEmpty()){
+            listOf()
+        }else{
+            this.filter{route ->
+
+                route.waypoints.find{point->
+                    location.toLocation().distanceTo(point.toLocation()) < 500
+                }!= null
+
+            }
+        }
+    }?: listOf()
+}

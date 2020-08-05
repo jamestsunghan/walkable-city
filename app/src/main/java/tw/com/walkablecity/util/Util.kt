@@ -317,3 +317,24 @@ suspend fun Task<*>.missionSuccessReturn(ifSuccess: Boolean) : Result<Boolean> =
         }
     }
 }
+
+suspend fun Task<QuerySnapshot>.querySuccessReturn(ifSuccess: Boolean, ifEmpty: Boolean) : Result<Boolean> = suspendCoroutine{continuation->
+    addOnCompleteListener { task->
+        if(task.isSuccessful){
+
+            if(task.result == null || task.result!!.isEmpty){
+                continuation.resume(Result.Success(ifEmpty))
+            }else{
+                continuation.resume(Result.Success(ifSuccess))
+            }
+        }else{
+            when(val exception = task.exception) {
+                null -> continuation.resume(Result.Fail(Util.getString(R.string.not_here)))
+                else -> {
+                    Logger.d("JJ_fire [${this::class.simpleName}] Error getting documents. ${exception.message}")
+                    continuation.resume(Result.Error(exception))
+                }
+            }
+        }
+    }
+}

@@ -19,7 +19,6 @@ import tw.com.walkablecity.data.source.WalkableRepository
 
 class AddFriendViewModel(val walkableRepository: WalkableRepository) : ViewModel() {
 
-
     private val _status = MutableLiveData<LoadStatus>()
     val status: LiveData<LoadStatus>
         get() = _status
@@ -64,37 +63,17 @@ class AddFriendViewModel(val walkableRepository: WalkableRepository) : ViewModel
 
     fun searchFriendWithId(idCustom: String?){
 
-        if (idCustom == null) {
+        if (idCustom == null || idCustom.isEmpty()) {
             makeShortToast(R.string.no_search_id)
         } else {
             coroutineScope.launch {
 
                 _status.value = LoadStatus.LOADING
 
-                val result = walkableRepository.searchFriendWithId(idCustom)
-                _friendToAdd.value = when(result){
-                    is Result.Success ->{
-                        _error.value = null
-                        _status.value = LoadStatus.DONE
-                        _noSuchFriend.value = (result.data == null)
-                        result.data
-                    }
-                    is Result.Fail ->{
-                        _error.value = result.error
-                        _status.value = LoadStatus.ERROR
-                        _noSuchFriend.value = true
-                        null
-                    }
-                    is Result.Error ->{
-                        _error.value = result.exception.toString()
-                        _status.value = LoadStatus.ERROR
-                        null
-                    }
-                    else ->{
-                        _error.value = getString(R.string.not_here)
-                        _status.value = LoadStatus.ERROR
-                        null
-                    }
+                walkableRepository.searchFriendWithId(idCustom)
+                    .handleResultWith(_error, _status).apply {
+                    _friendToAdd.value = this?.toFriend()
+                    _noSuchFriend.value = this == null
                 }
             }
         }
@@ -102,16 +81,17 @@ class AddFriendViewModel(val walkableRepository: WalkableRepository) : ViewModel
 
     fun checkFriendAdded(idCustom: String?){
 
-        if (idCustom == null) {
+        if (idCustom == null || idCustom.isEmpty()) {
             makeShortToast(R.string.no_search_id)
         } else {
             coroutineScope.launch {
 
                 _status.value = LoadStatus.LOADING
+                _noSuchFriend.value = null
 
-                val result = walkableRepository.checkFriendAdded(idCustom, requireNotNull(UserManager.user?.id))
-
-                _alreadyFriend.value = result.handleResultWith(_error, _status)
+                walkableRepository.checkFriendAdded(idCustom, requireNotNull(UserManager.user?.id)).apply{
+                    _alreadyFriend.value = handleResultWith(_error, _status)
+                }
 
             }
         }
@@ -122,9 +102,9 @@ class AddFriendViewModel(val walkableRepository: WalkableRepository) : ViewModel
 
             _status.value = LoadStatus.LOADING
 
-            val result = walkableRepository.addFriend(friend, requireNotNull(UserManager.user))
-
-            _friendAdded.value = result.handleResultWith(_error, _status)
+            walkableRepository.addFriend(friend, requireNotNull(UserManager.user)).apply{
+                _friendAdded.value = handleResultWith(_error, _status)
+            }
         }
     }
 

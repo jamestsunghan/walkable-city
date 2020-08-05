@@ -7,13 +7,10 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import tw.com.walkablecity.R
 import tw.com.walkablecity.UserManager
-import tw.com.walkablecity.util.Util.getString
 import tw.com.walkablecity.data.Event
 import tw.com.walkablecity.data.EventType
 import tw.com.walkablecity.data.LoadStatus
-import tw.com.walkablecity.data.Result
 import tw.com.walkablecity.data.source.WalkableRepository
 import tw.com.walkablecity.event.EventPageType
 
@@ -86,14 +83,25 @@ class EventItemViewModel(val walkableRepository: WalkableRepository, val eventPa
 
             _status.value = LoadStatus.LOADING
 
-            val result = when(page){
-                EventPageType.POPULAR -> walkableRepository.getPopularEvents()
-                EventPageType.INVITED -> walkableRepository.getUserInvitation(requireNotNull(UserManager.user?.id))
-                EventPageType.CHALLENGING -> walkableRepository.getUserChallenges(requireNotNull(UserManager.user))
+            _eventAllList.value = when(page){
+
+                EventPageType.POPULAR -> {
+                    walkableRepository.getPublicEvents()
+                        .handleResultWith(_error, _status)?.sortedByDescending { it.memberCount }
+                }
+
+                EventPageType.INVITED -> {
+                    walkableRepository.getUserInvitation(requireNotNull(UserManager.user?.id))
+                        .handleResultWith(_error, _status)
+                }
+
+                EventPageType.CHALLENGING -> {
+                    walkableRepository.getNowAndFutureEvents()
+                        .handleResultWith(_error, _status)?.filter{event->
+                            event.member.find { it.id == UserManager.user?.id } != null
+                        }
+                }
             }
-
-            _eventAllList.value = result.handleResultWith(_error, _status)
-
         }
     }
 }

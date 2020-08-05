@@ -15,7 +15,6 @@ import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
-import tw.com.walkablecity.util.Logger
 import tw.com.walkablecity.R
 import tw.com.walkablecity.UserManager
 import tw.com.walkablecity.util.Util.getString
@@ -25,9 +24,7 @@ import tw.com.walkablecity.data.*
 import tw.com.walkablecity.ext.*
 import tw.com.walkablecity.network.WalkableApi
 import tw.com.walkablecity.network.WeatherApi
-import tw.com.walkablecity.util.getListResultFrom
-import tw.com.walkablecity.util.getResultFrom
-import tw.com.walkablecity.util.missionSuccessReturn
+import tw.com.walkablecity.util.*
 import java.io.ByteArrayOutputStream
 import java.lang.Exception
 import kotlin.coroutines.resume
@@ -59,7 +56,9 @@ object WalkableRemoteDataSource : WalkableDataSource {
     private val auth = Firebase.auth
 
     override suspend fun getUser(userId: String): Result<User?> {
-        return User().getResultFrom(db.collection(USER).whereEqualTo(ID, userId).get())
+        return User().getResultFrom(
+            db.collection(USER).whereEqualTo(ID, userId).get()
+        )
     }
 
     override suspend fun getUserEvents(userId: String): Result<List<Event>> =
@@ -108,120 +107,72 @@ object WalkableRemoteDataSource : WalkableDataSource {
                         .whereIn("id", task.result!!.toObjects(Friend::class.java).map { it.id })
                         .get()
                 }.addOnCompleteListener { task ->
-                if (task.isSuccessful) {
+                    if (task.isSuccessful) {
 
-                    if (task.result == null || task.result!!.isEmpty) continuation.resume(
-                        Result.Success(
-                            listOf()
+                        if (task.result == null || task.result!!.isEmpty) continuation.resume(
+                            Result.Success(listOf())
                         )
-                    )
-                    else continuation.resume(Result.Success(task.result!!.toObjects(User::class.java)))
+                        else continuation.resume(Result.Success(task.result!!.toObjects(User::class.java)))
 
-                } else {
-                    when (val exception = task.exception) {
-                        null -> continuation.resume(Result.Fail(getString(R.string.not_here)))
-                        else -> {
-                            Logger.d("JJ_fire [${this::class.simpleName}] Error getting documents. ${exception.message}")
-                            continuation.resume(Result.Error(exception))
+                    } else {
+                        when (val exception = task.exception) {
+                            null -> continuation.resume(Result.Fail(getString(R.string.not_here)))
+                            else -> {
+                                Logger.d("JJ_fire [${this::class.simpleName}] Error getting documents. ${exception.message}")
+                                continuation.resume(Result.Error(exception))
+                            }
                         }
                     }
                 }
-            }
         }
 
     override suspend fun getUserFriendSimple(userId: String): Result<List<Friend>> {
-        return Friend().getListResultFrom(db.collection(USER).document(userId).collection(FRIENDS).get())
+        return Friend().getListResultFrom(
+            db.collection(USER).document(userId).collection(FRIENDS).get()
+        )
     }
 
     override suspend fun getUserWalks(userId: String): Result<List<Walk>> {
-        return Walk().getListResultFrom( db.collection(USER).document(userId).collection(WALKS).get())
+        return Walk().getListResultFrom(
+            db.collection(USER).document(userId).collection(WALKS).get()
+        )
     }
 
     override suspend fun getUserLatestWalk(userId: String): Result<Walk?> {
-        return Walk().getResultFrom(db.collection(USER).document(userId).collection(WALKS)
-                .orderBy("startTime", Query.Direction.DESCENDING).limit(1).get())
+        return Walk().getResultFrom(
+            db.collection(USER).document(userId).collection(WALKS)
+                .orderBy("startTime", Query.Direction.DESCENDING).limit(1).get()
+        )
     }
 
-    override suspend fun checkFriendAdded(idCustom: String, userId: String): Result<Boolean> =
-        suspendCoroutine { continuation ->
-            db.collection(USER).document(userId).collection(FRIENDS)
-                .whereEqualTo(ID_CUSTOM, idCustom).get().addOnCompleteListener { task ->
-                if (task.isSuccessful) {
+    override suspend fun checkFriendAdded(idCustom: String, userId: String): Result<Boolean> {
+        return db.collection(USER).document(userId).collection(FRIENDS)
+            .whereEqualTo(ID_CUSTOM, idCustom).get()
+            .querySuccessReturn(ifSuccess = true, ifEmpty = false)
+    }
 
-                    if (task.result == null || task.result!!.isEmpty) continuation.resume(
-                        Result.Success(
-                            false
-                        )
-                    )
-                    else continuation.resume(Result.Success(true))
-
-                } else {
-                    task.exception?.let {
-                        Logger.d("JJ_fire [${this::class.simpleName}] Error getting documents. ${it.message}")
-                        continuation.resume(Result.Error(it))
-                        return@addOnCompleteListener
-                    }
-                    continuation.resume(Result.Fail(WalkableApp.instance.getString(R.string.not_here)))
-                }
-            }
-        }
-
-    override suspend fun searchFriendWithId(idCustom: String): Result<Friend?> =
-        suspendCoroutine { continuation ->
-
+    override suspend fun searchFriendWithId(idCustom: String): Result<User?> {
+        return User().getResultFrom(
             db.collection(USER).whereEqualTo(ID_CUSTOM, idCustom).get()
-                .addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        if (task.result == null || task.result!!.isEmpty) {
-                            continuation.resume(Result.Success(null))
-                        } else {
-                            val friend = task.result!!.toObjects(User::class.java)[0].toFriend()
-                            continuation.resume(Result.Success(friend))
-                        }
-
-                    } else {
-                        task.exception?.let {
-                            Logger.d("JJ_fire [${this::class.simpleName}] Error getting documents. ${it.message}")
-                            continuation.resume(Result.Error(it))
-                            return@addOnCompleteListener
-                        }
-                        continuation.resume(Result.Fail(WalkableApp.instance.getString(R.string.not_here)))
-                    }
-                }
-        }
+        )
+    }
 
     override suspend fun addFriend(friend: Friend, user: User): Result<Boolean> {
 
         val taskMeAddYou = db.collection(USER).document(requireNotNull(user.id))
             .collection(FRIENDS).add(friend).missionSuccessReturn(true)
 
-        val taskYouAddMe =  db.collection(USER).document(requireNotNull(friend.id)).collection(FRIENDS)
+        val taskYouAddMe =
+            db.collection(USER).document(requireNotNull(friend.id)).collection(FRIENDS)
                 .add(user.toFriend()).missionSuccessReturn(true)
 
-        return if(taskMeAddYou is Result.Success) taskYouAddMe else taskMeAddYou
+        return if (taskMeAddYou is Result.Success) taskYouAddMe else taskMeAddYou
     }
 
-    override suspend fun checkIdCustomBeenUsed(idCustom: String): Result<Boolean> =
-        suspendCoroutine { continuation ->
-            db.collection(USER).whereEqualTo(ID_CUSTOM, idCustom).get()
-                .addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        if (task.result == null || task.result!!.isEmpty) continuation.resume(
-                            Result.Success(
-                                true
-                            )
-                        )
-                        else continuation.resume(Result.Success(false))
-                    } else {
-                        task.exception?.let {
-                            Logger.d("JJ_fire [${this::class.simpleName}] Error getting documents. ${it.message}")
-                            continuation.resume(Result.Error(it))
-                            return@addOnCompleteListener
-                        }
-                        continuation.resume(Result.Fail(WalkableApp.instance.getString(R.string.not_here)))
-                    }
-                }
-        }
+    override suspend fun checkIdCustomBeenUsed(idCustom: String): Result<Boolean> {
+        return db.collection(USER).whereEqualTo(ID_CUSTOM, idCustom).get()
+            .querySuccessReturn(ifSuccess = false, ifEmpty = true)
+    }
 
     override suspend fun firebaseAuthWithGoogle(idToken: String?): Result<FirebaseUser> =
         suspendCoroutine { continuation ->
@@ -260,47 +211,22 @@ object WalkableRemoteDataSource : WalkableDataSource {
     }
 
     override suspend fun getAllRoute(): Result<List<Route>> {
-        return Route().getListResultFrom( db.collection(ROUTE).get())
+        return Route().getListResultFrom(
+            db.collection(ROUTE).get()
+        )
     }
 
     override suspend fun getUserFavoriteRoutes(userId: String): Result<List<Route>> {
-        return Route().getListResultFrom(db.collection(ROUTE).whereArrayContains(FOLLOWERS, userId).get())
+        return Route().getListResultFrom(
+            db.collection(ROUTE).whereArrayContains(FOLLOWERS, userId).get()
+        )
     }
 
     override suspend fun getUserRoutes(userId: String): Result<List<Route>> {
-        return Route().getListResultFrom(db.collection(ROUTE).whereArrayContains(WALKERS, userId).get())
+        return Route().getListResultFrom(
+            db.collection(ROUTE).whereArrayContains(WALKERS, userId).get()
+        )
     }
-
-    override suspend fun getRoutesNearby(userLocation: LatLng): Result<List<Route>> =
-        suspendCoroutine { continuation ->
-            db.collection(ROUTE).get().addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    val list = mutableListOf<Route>()
-                    for (document in task.result!!) {
-                        Logger.d("JJ_fire" + document.id + "=>" + document.data)
-                        val route = document.toObject(Route::class.java)
-
-                        for (point in route.waypoints) {
-                            val distance = userLocation.toLocation().distanceTo(point.toLocation())
-                            if (distance < 500) {
-                                list.add(route)
-                                break
-                            }
-                        }
-
-                    }
-                    Logger.d("list $list")
-                    continuation.resume(Result.Success(list))
-                } else {
-                    task.exception?.let {
-                        Logger.d("JJ_fire [${this::class.simpleName}] Error getting documents. ${it.message}")
-                        continuation.resume(Result.Error(it))
-                        return@addOnCompleteListener
-                    }
-                    continuation.resume(Result.Fail(WalkableApp.instance.getString(R.string.not_here)))
-                }
-            }
-        }
 
     override suspend fun getUserCurrentLocation(): Result<LatLng> =
         suspendCoroutine { continuation ->
@@ -334,7 +260,6 @@ object WalkableRemoteDataSource : WalkableDataSource {
             var missionToComplete = 2
 
             db.collection(USER).document(requireNotNull(user.id)).apply {
-
 
                 update(
                     ACCU_HOUR,
@@ -414,22 +339,20 @@ object WalkableRemoteDataSource : WalkableDataSource {
                 Logger.d("JJ_fire ratingAvr new $ratingAvrNew")
 
                 update(RATING_AVR, ratingAvrNew.toHashMap(), WALKERS, walkersNew)
+            }.addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    missionToComplete -= 1
+                    if (missionToComplete == 0) continuation.resume(Result.Success(true))
+                } else {
+                    task.exception?.let {
+                        Logger.d("JJ_fire [${this::class.simpleName}] Error getting documents. ${it.message}")
+                        continuation.resume(Result.Error(it))
+                        return@addOnCompleteListener
+                    }
+                    continuation.resume(Result.Fail(WalkableApp.instance.getString(R.string.not_here)))
+                }
             }
 
-
-                .addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        missionToComplete -= 1
-                        if (missionToComplete == 0) continuation.resume(Result.Success(true))
-                    } else {
-                        task.exception?.let {
-                            Logger.d("JJ_fire [${this::class.simpleName}] Error getting documents. ${it.message}")
-                            continuation.resume(Result.Error(it))
-                            return@addOnCompleteListener
-                        }
-                        continuation.resume(Result.Fail(WalkableApp.instance.getString(R.string.not_here)))
-                    }
-                }
             collection(RATINGS).add(ratingToUpdate).addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     missionToComplete -= 1
@@ -466,13 +389,15 @@ object WalkableRemoteDataSource : WalkableDataSource {
     override suspend fun getRouteMapImageUrl(routeId: String, bitmap: Bitmap): Result<String> =
         suspendCoroutine { continuation ->
             val baos = ByteArrayOutputStream()
+
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+
             val data = baos.toByteArray()
+
             val pathString = "images/$routeId.jpg"
-            val routesRef = storageRef.child("$routeId.jpg")
+
             val routesImageRef = storageRef.child(pathString)
-            routesRef.name == routesImageRef.name // true
-            routesRef.path == routesImageRef.path // false
+
             routesImageRef.putBytes(data).continueWithTask { task ->
                 if (!task.isSuccessful) {
                     task.exception?.let {
@@ -496,67 +421,30 @@ object WalkableRemoteDataSource : WalkableDataSource {
         }
 
     override suspend fun getRouteComments(routeId: String): Result<List<Comment>> {
-        return Comment().getListResultFrom(db.collection(ROUTE).document(routeId).collection(COMMENTS).get())
+        return Comment().getListResultFrom(
+            db.collection(ROUTE).document(routeId).collection(
+                COMMENTS
+            ).get()
+        )
     }
 
-    override suspend fun createRouteByUser(route: Route): Result<Boolean> =
-        suspendCoroutine { continuation ->
-            var missionToComplete = 3
+    override suspend fun createRouteByUser(route: Route): Result<Boolean> {
+        val document = db.collection(ROUTE).document(route.id.toString())
 
-            // While the file names are the same, the references point to different files
+        val taskCreateRoute = document.set(route.toHashMap()).missionSuccessReturn(true)
 
-            db.collection(ROUTE).apply {
+        val taskFirstRating = document.collection(RATINGS)
+            .add(requireNotNull(route.ratingAvr?.toHashMapInt())).missionSuccessReturn(true)
 
-                document(route.id.toString()).set(route.toHashMap()).addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        missionToComplete -= 1
-                        if (missionToComplete == 0) continuation.resume(Result.Success(true))
-                    } else {
-                        task.exception?.let {
-                            Logger.d("JJ_fire [${this::class.simpleName}] Error getting documents. ${it.message}")
-                            continuation.resume(Result.Error(it))
-                            return@addOnCompleteListener
-                        }
-                        continuation.resume(Result.Fail(WalkableApp.instance.getString(R.string.not_here)))
-                    }
-                }
+        val taskFirstComment = document.collection(COMMENTS)
+            .add(requireNotNull(route.comments[0].toHashMap())).missionSuccessReturn(true)
 
-                document(route.id.toString()).collection(RATINGS)
-                    .add(requireNotNull(route.ratingAvr?.toHashMapInt()))
-                    .addOnCompleteListener { task ->
-                        if (task.isSuccessful) {
-                            missionToComplete -= 1
-                            if (missionToComplete == 0) continuation.resume(Result.Success(true))
-                        } else {
-                            task.exception?.let {
-                                Logger.d("JJ_fire [${this::class.simpleName}] Error getting documents. ${it.message}")
-                                continuation.resume(Result.Error(it))
-                                return@addOnCompleteListener
-                            }
-                            continuation.resume(Result.Fail(WalkableApp.instance.getString(R.string.not_here)))
-                        }
-                    }
-
-                document(route.id.toString()).collection(COMMENTS)
-                    .add(requireNotNull(route.comments[0].toHashMap()))
-                    .addOnCompleteListener { task ->
-                        if (task.isSuccessful) {
-                            missionToComplete -= 1
-                            if (missionToComplete == 0) continuation.resume(Result.Success(true))
-                        } else {
-                            task.exception?.let {
-                                Logger.d("JJ_fire [${this::class.simpleName}] Error getting documents. ${it.message}")
-                                continuation.resume(Result.Error(it))
-                                return@addOnCompleteListener
-                            }
-                            continuation.resume(Result.Fail(WalkableApp.instance.getString(R.string.not_here)))
-                        }
-                    }
-
-
-            }
-
+        return if (taskCreateRoute is Result.Success) {
+            if (taskFirstRating is Result.Success) taskFirstComment else taskFirstRating
+        } else {
+            taskCreateRoute
         }
+    }
 
     override suspend fun uploadPhotoPoints(
         routeId: String,
@@ -566,9 +454,13 @@ object WalkableRemoteDataSource : WalkableDataSource {
         var position = 0
         for (item in photoPoints) {
             val baos = ByteArrayOutputStream()
+
             val bitmap = BitmapFactory.decodeFile(item.photo)
+
             bitmap.compress(Bitmap.CompressFormat.JPEG, 50, baos)
+
             val data = baos.toByteArray()
+
             position++
             val pathString = "images/$routeId/photo${position}.jpg"
             val routesImageRef = storageRef.child(pathString)
@@ -601,72 +493,44 @@ object WalkableRemoteDataSource : WalkableDataSource {
     }
 
     override suspend fun downloadPhotoPoints(routeId: String): Result<List<PhotoPoint>> {
-        return PhotoPoint().getListResultFrom(db.collection(ROUTE).document(routeId).collection("photoPoints").get())
+        return PhotoPoint().getListResultFrom(
+            db.collection(ROUTE).document(routeId).collection("photoPoints").get()
+        )
     }
 
     override suspend fun addUserToFollowers(userId: String, route: Route): Result<Boolean> {
         val list = route.followers as MutableList<String>
         list.add(userId)
-        return db.collection(ROUTE).document(route.id.toString()).update(FOLLOWERS, list).missionSuccessReturn(true)
+        return db.collection(ROUTE).document(route.id.toString()).update(FOLLOWERS, list)
+            .missionSuccessReturn(true)
     }
 
     override suspend fun removeUserFromFollowers(userId: String, route: Route): Result<Boolean> {
         val list = route.followers as MutableList<String>
         list.remove(userId)
-        return db.collection(ROUTE).document(route.id.toString()).update(FOLLOWERS, list).missionSuccessReturn(true)
+        return db.collection(ROUTE).document(route.id.toString()).update(FOLLOWERS, list)
+            .missionSuccessReturn(true)
     }
 
-    override suspend fun getPopularEvents(): Result<List<Event>> =
-        suspendCoroutine { continuation ->
+    override suspend fun getPublicEvents(): Result<List<Event>> {
+        return Event().getListResultFrom(
+            db.collection(EVENT)
+                .whereGreaterThanOrEqualTo("endDate", now())
+                .whereEqualTo("public", true).get()
+        )
+    }
 
-            db.collection(EVENT).whereGreaterThanOrEqualTo("endDate", now())
-                .whereEqualTo("public", true).get().addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    val list = mutableListOf<Event>()
-                    for (document in task.result!!) {
-                        Logger.d("JJ_fire" + document.id + "=>" + document.data)
-                        val event = document.toObject(Event::class.java)
-                        list.add(event)
-                    }
-                    list.sortByDescending { it.memberCount }
-                    continuation.resume(Result.Success(list))
-                } else {
-                    task.exception?.let {
-                        Logger.d("JJ_fire [${this::class.simpleName}] Error getting documents. ${it.message}")
-                        continuation.resume(Result.Error(it))
-                        return@addOnCompleteListener
-                    }
-                    continuation.resume(Result.Fail(WalkableApp.instance.getString(R.string.not_here)))
-                }
-            }
-        }
-
-    override suspend fun getUserChallenges(user: User): Result<List<Event>> =
-        suspendCoroutine { continuation ->
+    override suspend fun getNowAndFutureEvents(): Result<List<Event>> {
+        return Event().getListResultFrom(
             db.collection(EVENT).whereGreaterThanOrEqualTo("endDate", now()).get()
-                .addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        val list = mutableListOf<Event>()
-                        for (document in task.result!!) {
-                            Logger.d("JJ_fire" + document.id + "=>" + document.data)
-                            val event = document.toObject(Event::class.java)
-                            if (event.member.find { it.id == user.id } != null) list.add(event)
-                        }
-                        continuation.resume(Result.Success(list))
-                    } else {
-                        task.exception?.let {
-                            Logger.d("JJ_fire [${this::class.simpleName}] Error getting documents. ${it.message}")
-                            continuation.resume(Result.Error(it))
-                            return@addOnCompleteListener
-                        }
-                        continuation.resume(Result.Fail(WalkableApp.instance.getString(R.string.not_here)))
-                    }
-                }
-        }
+        )
+    }
 
     override suspend fun getUserInvitation(userId: String): Result<List<Event>> {
-        return Event().getListResultFrom(db.collection(EVENT).whereArrayContains("invited", userId)
-                .whereGreaterThanOrEqualTo("endDate", now()).get())
+        return Event().getListResultFrom(
+            db.collection(EVENT).whereArrayContains("invited", userId)
+                .whereGreaterThanOrEqualTo("endDate", now()).get()
+        )
     }
 
     override suspend fun createEvent(event: Event): Result<Boolean> {
@@ -676,99 +540,88 @@ object WalkableRemoteDataSource : WalkableDataSource {
 
     override suspend fun joinEvent(user: User, event: Event): Result<Boolean> {
         return db.collection(EVENT).document(requireNotNull(event.id)).update(
-                    INVITED, FieldValue.arrayRemove(user.id)
-                    , MEMBER, FieldValue.arrayUnion(user.toFriend())
-                    , MEMBER_COUNT, event.memberCount?.plus(1)
-                ).missionSuccessReturn(true)
+            INVITED, FieldValue.arrayRemove(user.id)
+            , MEMBER, FieldValue.arrayUnion(user.toFriend())
+            , MEMBER_COUNT, event.memberCount?.plus(1)
+        ).missionSuccessReturn(true)
     }
 
     override suspend fun joinPublicEvent(user: User, event: Event): Result<Boolean> {
         return db.collection(EVENT).document(requireNotNull(event.id)).update(
-                    MEMBER, FieldValue.arrayUnion(user.toFriend())
-                    , MEMBER_COUNT, event.memberCount?.plus(1)
-                ).missionSuccessReturn(true)
+            MEMBER, FieldValue.arrayUnion(user.toFriend())
+            , MEMBER_COUNT, event.memberCount?.plus(1)
+        ).missionSuccessReturn(true)
     }
 
-    override suspend fun getMemberWalks(eventStartTime: Timestamp, memberId: String): Result<List<Walk>> {
-        return Walk().getListResultFrom(db.collection(USER).document(memberId).collection(WALKS)
-            .whereGreaterThanOrEqualTo("endTime", eventStartTime).get())
+    override suspend fun getMemberWalks(
+        eventStartTime: Timestamp,
+        memberId: String
+    ): Result<List<Walk>> {
+        return Walk().getListResultFrom(
+            db.collection(USER).document(memberId).collection(WALKS)
+                .whereGreaterThanOrEqualTo("endTime", eventStartTime).get()
+        )
     }
 
-    override suspend fun updateEvents(user: User?, eventList: List<Event>, type: FrequencyType): Result<Boolean> =
-        suspendCoroutine{continuation ->
-            if (user == null || eventList.isEmpty()) {
-                continuation.resume(Result.Fail(getString(R.string.no_internet)))
-            } else {
-                var missionToComplete = eventList.size + 1
-                Logger.d("${type.text} mission $missionToComplete")
-                db.collection(USER).document(requireNotNull(user.id)).update(
-                    ACCU_KM, user.accumulatedKm?.updateByFrequency(type),
-                    ACCU_HOUR, user.accumulatedHour?.updateByFrequency(type)
-                ).addOnCompleteListener { task ->
-                    if (!task.isSuccessful) {
-                        when (task.exception) {
-                            null -> continuation.resume(Result.Fail(getString(R.string.not_here)))
-                            else -> continuation.resume(Result.Error(task.exception!!))
-                        }
-                    } else {
-                        missionToComplete -= 1
-                        Logger.d("${type.text} user mission $missionToComplete")
-                        if (missionToComplete == 0) {
-                            continuation.resume(Result.Success(true))
-                        }
-                    }
+    override suspend fun updateEvents(
+        user: User?,
+        eventList: List<Event>,
+        type: FrequencyType
+    ): Result<Boolean> {
+        return if (user == null || eventList.isEmpty()) {
+            Result.Fail(getString(R.string.no_internet))
+        } else {
+
+            val taskList = mutableListOf<Result<Boolean>>()
+
+            val updateUser = db.collection(USER).document(requireNotNull(user.id)).update(
+                ACCU_KM, user.accumulatedKm?.updateByFrequency(type),
+                ACCU_HOUR, user.accumulatedHour?.updateByFrequency(type)
+            ).missionSuccessReturn(true)
+
+            taskList.add(updateUser)
+
+            for (event in eventList) {
+
+                val isBasedOnHr: Boolean = event.target?.hour != null
+
+                val friend = event.member.find { it.id == user.id }
+
+                val newList: List<MissionFQ> = if (isBasedOnHr) {
+                    friend?.accomplishFQ?.plus(
+                        (user.accumulatedHour?.getByFrequency(type) ?: 0f).toMissionFQ()
+                    ) ?: listOf()
+                } else {
+                    friend?.accomplishFQ
+                        ?.plus((user.accumulatedKm?.getByFrequency(type) ?: 0f).toMissionFQ())
+                        ?: listOf()
                 }
 
-                for (event in eventList) {
-                    val isBasedOnHr: Boolean = event.target?.hour != null
-                    val friend = event.member.find { it.id == user.id }
-                    val newList: List<MissionFQ> = if (isBasedOnHr) {
-                        friend?.accomplishFQ?.plus(
-                            (user.accumulatedHour?.getByFrequency(type) ?: 0f).toMissionFQ()
-                        ) ?: listOf()
-                    } else {
-                        friend?.accomplishFQ
-                            ?.plus((user.accumulatedKm?.getByFrequency(type) ?: 0f).toMissionFQ())
-                            ?: listOf()
-                    }
-
+                val taskUpdateEvent =
                     db.collection(EVENT).document(requireNotNull(event.id)).update(
-                        MEMBER,
-                        FieldValue.arrayRemove(friend),
-                        MEMBER,
-                        FieldValue.arrayUnion(user.toFriend(newList as MutableList<MissionFQ>))
-                    ).addOnCompleteListener { task ->
-                        if (!task.isSuccessful) {
-                            when (task.exception) {
-                                null -> continuation.resume(Result.Fail(getString(R.string.not_here)))
-                                else -> continuation.resume(Result.Error(task.exception!!))
-                            }
-                        } else {
-                            missionToComplete -= 1
-                            Logger.d("JJ_work ${type.text} mission $missionToComplete")
+                        MEMBER, FieldValue.arrayRemove(friend),
+                        MEMBER, FieldValue.arrayUnion(user.toFriend(newList as MutableList<MissionFQ>))
+                    ).missionSuccessReturn(true)
 
-                            if (missionToComplete == 0) {
-                                continuation.resume(Result.Success(true))
-                            }
-                        }
-                    }
-
-                }
-
+                taskList.add(taskUpdateEvent)
             }
+            taskList.find { it !is Result.Success } ?: updateUser
+        }
     }
 
     override suspend fun updateWeatherNotification(
         activate: Boolean, userId: String
     ): Result<Boolean> {
-       return db.collection(USER).document(userId).update(WEATHER, activate).missionSuccessReturn(activate)
+        return db.collection(USER).document(userId).update(WEATHER, activate)
+            .missionSuccessReturn(activate)
 
     }
 
     override suspend fun updateMealNotification(
         activate: Boolean, userId: String
-    ): Result<Boolean>{
-        return db.collection(USER).document(userId).update(MEAL, activate).missionSuccessReturn(activate)
+    ): Result<Boolean> {
+        return db.collection(USER).document(userId).update(MEAL, activate)
+            .missionSuccessReturn(activate)
     }
 
     //google map Api Zone
@@ -800,33 +653,6 @@ object WalkableRemoteDataSource : WalkableDataSource {
             Result.Error(e)
         }
 
-    }
-
-    override suspend fun getRouteMapImage(
-        center: GeoPoint,
-        zoom: Int,
-        path: List<GeoPoint>
-    ): Result<MapImageResult> {
-        if (!isInternetConnected()) {
-            return Result.Fail(getString(R.string.no_internet))
-        }
-
-        return try {
-            val result = WalkableApi.retrofitService.getImage(
-                center = center.toQuery(),
-                zoom   = zoom.toString(),
-                path   = path.toLatLngPoints().toQuery()
-            )
-
-            result.error?.let {
-                return Result.Fail(it)
-            }
-
-            Result.Success(result)
-        } catch (e: Exception) {
-            Logger.d("[${this::class.simpleName}] exception=${e.message}")
-            Result.Error(e)
-        }
     }
 
     override suspend fun getWeather(currentLocation: LatLng): Result<WeatherResult> {

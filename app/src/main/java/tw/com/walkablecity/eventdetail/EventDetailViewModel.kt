@@ -273,7 +273,7 @@ class EventDetailViewModel(private val walkableRepository: WalkableRepository, v
             walkableRepository.joinPublicEvent(requireNotNull(UserManager.user), event).apply{
                 _joinSuccess.value = handleResultWith(_error, _status)
             }
-            
+
         }
     }
 
@@ -311,6 +311,7 @@ class EventDetailViewModel(private val walkableRepository: WalkableRepository, v
                     }
                 }
                 EventType.HOUR_RACE      -> result?.sumBy{it.duration?.toInt() ?: 0}?.toFloat()
+
                 EventType.HOUR_GROUP     -> result?.sumBy{it.duration?.toInt() ?: 0}?.toFloat()
 
                 EventType.DISTANCE_RACE  -> result?.sumByDouble { it.distance?.toDouble() ?: 0.0 }?.toFloat()
@@ -320,7 +321,6 @@ class EventDetailViewModel(private val walkableRepository: WalkableRepository, v
                 else -> null
 
             }
-
         }
     }
 
@@ -347,8 +347,7 @@ class EventDetailViewModel(private val walkableRepository: WalkableRepository, v
 
             }
             else -> {
-                getMemberWalkResult(
-                    requireNotNull(event.startDate)
+                getMemberWalkResult(requireNotNull(event.startDate)
                     , requireNotNull(event.target), listMemberId
                 )
 

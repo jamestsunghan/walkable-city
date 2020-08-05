@@ -1,14 +1,12 @@
 package tw.com.walkablecity.data.source
 
 import android.graphics.Bitmap
-import android.net.Uri
 import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.firestore.GeoPoint
 import tw.com.walkablecity.data.*
 
-class DefaultWalkableRepository(private val remote: WalkableDataSource): WalkableRepository {
+class DefaultWalkableRepository(private val remote: WalkableDataSource) : WalkableRepository {
     override suspend fun getAllRoute(): Result<List<Route>> {
         return remote.getAllRoute()
     }
@@ -19,10 +17,6 @@ class DefaultWalkableRepository(private val remote: WalkableDataSource): Walkabl
 
     override suspend fun getUserRoutes(userId: String): Result<List<Route>> {
         return remote.getUserRoutes(userId)
-    }
-
-    override suspend fun getRoutesNearby(userLocation: LatLng): Result<List<Route>> {
-        return remote.getRoutesNearby(userLocation)
     }
 
     override suspend fun drawPath(
@@ -41,7 +35,12 @@ class DefaultWalkableRepository(private val remote: WalkableDataSource): Walkabl
         return remote.updateWalks(walk, user)
     }
 
-    override suspend fun updateRouteRating(rating: RouteRating, route: Route, userId: String, comment: Comment?): Result<Boolean> {
+    override suspend fun updateRouteRating(
+        rating: RouteRating,
+        route: Route,
+        userId: String,
+        comment: Comment?
+    ): Result<Boolean> {
         return remote.updateRouteRating(rating, route, userId, comment)
     }
 
@@ -49,7 +48,10 @@ class DefaultWalkableRepository(private val remote: WalkableDataSource): Walkabl
         return remote.createRouteByUser(route)
     }
 
-    override suspend fun uploadPhotoPoints(routeId: String, photoPoints: List<PhotoPoint>): Result<Boolean> {
+    override suspend fun uploadPhotoPoints(
+        routeId: String,
+        photoPoints: List<PhotoPoint>
+    ): Result<Boolean> {
         return remote.uploadPhotoPoints(routeId, photoPoints)
     }
 
@@ -59,14 +61,6 @@ class DefaultWalkableRepository(private val remote: WalkableDataSource): Walkabl
 
     override suspend fun getRouteMapImageUrl(routeId: String, bitmap: Bitmap): Result<String> {
         return remote.getRouteMapImageUrl(routeId, bitmap)
-    }
-
-    override suspend fun getRouteMapImage(
-        center: GeoPoint,
-        zoom: Int,
-        path: List<GeoPoint>
-    ): Result<MapImageResult> {
-        return remote.getRouteMapImage(center,zoom, path)
     }
 
     override suspend fun getRouteComments(routeId: String): Result<List<Comment>> {
@@ -81,16 +75,16 @@ class DefaultWalkableRepository(private val remote: WalkableDataSource): Walkabl
         return remote.removeUserFromFollowers(userId, route)
     }
 
-    override suspend fun getPopularEvents(): Result<List<Event>> {
-        return remote.getPopularEvents()
+    override suspend fun getPublicEvents(): Result<List<Event>> {
+        return remote.getPublicEvents()
     }
 
     override suspend fun getUserEvents(userId: String): Result<List<Event>> {
         return remote.getUserEvents(userId)
     }
 
-    override suspend fun getUserChallenges(user: User): Result<List<Event>> {
-        return remote.getUserChallenges(user)
+    override suspend fun getNowAndFutureEvents(): Result<List<Event>> {
+        return remote.getNowAndFutureEvents()
     }
 
     override suspend fun getUserInvitation(userId: String): Result<List<Event>> {
@@ -123,7 +117,7 @@ class DefaultWalkableRepository(private val remote: WalkableDataSource): Walkabl
 
     }
 
-    override suspend fun searchFriendWithId(idCustom: String): Result<Friend?> {
+    override suspend fun searchFriendWithId(idCustom: String): Result<User?> {
         return remote.searchFriendWithId(idCustom)
     }
 
@@ -139,7 +133,10 @@ class DefaultWalkableRepository(private val remote: WalkableDataSource): Walkabl
         return remote.getUser(userId)
     }
 
-    override suspend fun getMemberWalks(eventStartTime: Timestamp, memberId: String): Result<List<Walk>> {
+    override suspend fun getMemberWalks(
+        eventStartTime: Timestamp,
+        memberId: String
+    ): Result<List<Walk>> {
         return remote.getMemberWalks(eventStartTime, memberId)
     }
 
@@ -159,7 +156,11 @@ class DefaultWalkableRepository(private val remote: WalkableDataSource): Walkabl
         return remote.getUserLatestWalk(userId)
     }
 
-    override suspend fun updateEvents(user: User?, eventList: List<Event>, type: FrequencyType): Result<Boolean> {
+    override suspend fun updateEvents(
+        user: User?,
+        eventList: List<Event>,
+        type: FrequencyType
+    ): Result<Boolean> {
         return remote.updateEvents(user, eventList, type)
     }
 
@@ -167,11 +168,17 @@ class DefaultWalkableRepository(private val remote: WalkableDataSource): Walkabl
         return remote.getWeather(currentLocation)
     }
 
-    override suspend fun updateWeatherNotification(activate: Boolean, userId: String): Result<Boolean> {
+    override suspend fun updateWeatherNotification(
+        activate: Boolean,
+        userId: String
+    ): Result<Boolean> {
         return remote.updateWeatherNotification(activate, userId)
     }
 
-    override suspend fun updateMealNotification(activate: Boolean, userId: String): Result<Boolean> {
+    override suspend fun updateMealNotification(
+        activate: Boolean,
+        userId: String
+    ): Result<Boolean> {
         return remote.updateMealNotification(activate, userId)
     }
 }
