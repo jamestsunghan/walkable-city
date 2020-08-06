@@ -39,10 +39,12 @@ fun RouteRating?.toSortList(filter: RouteSorting?): List<String> {
             it.second
         }
         val headItem: Pair<String, Float> =
-            originList.find { it.first == filter?.title } ?: originList.last()
+            originList.find {pair->
+                pair.first == filter?.title
+            } ?: originList.last()
 
-        originList.minus(headItem).plus(headItem).asReversed().map {
-            "${it.first} | ${it.second.times(10).roundToInt().toFloat().div(10)}"
+        originList.minus(headItem).plus(headItem).asReversed().map {pair->
+            "${pair.first} | ${pair.second.times(10).roundToInt().toFloat().div(10)}"
         }
 
     }
@@ -113,7 +115,7 @@ fun GeoPoint.toQuery(): String {
     return "${this.latitude},${this.longitude}"
 }
 
-fun Float.toNewAverage(new: Float, route: Route, ratings: Int): Float {
+fun Float.toNewAverage(new: Float, ratings: Int): Float {
     return this.times(ratings).plus(new).div(ratings + 1)
 }
 
@@ -165,12 +167,16 @@ fun List<User>.toWalkerItem(): List<WalkerItem> {
             val theRest = this.slice(3..lastIndex)
 
             Logger.d("the rest ${theRest.size}")
-            listOf(top3).map { WalkerItem.Tops(it) } + this.map { WalkerItem.Walkers(it) }
+            listOf(top3).map { list-> WalkerItem.Tops(list) } + this.map { user->
+                WalkerItem.Walkers(user)
+            }
         }
         false -> {
             val theRest = this.slice(1..lastIndex)
 
-            listOf(WalkerItem.Tops(listOf(this[0]))) + theRest.map { WalkerItem.Walkers(it) }
+            listOf(WalkerItem.Tops(listOf(this[0]))) + theRest.map {user->
+                WalkerItem.Walkers(user)
+            }
         }
     }
 }
@@ -223,18 +229,18 @@ fun Bitmap.getCroppedBitmap(): Bitmap {
 }
 
 fun List<Route>.timeFilter(list: List<Float>, max: Float, filter: RouteSorting?): List<Route> {
-    return this.filter {
+    return this.filter {route->
 
-        val range = list.sortedBy { it }
+        val range = list.sortedBy { time -> time }
         val topLimit = if (range[1] >= max) Float.MAX_VALUE else range[1]
 
-        range[0] < it.minutes && it.minutes < topLimit
+        range[0] < route.minutes && route.minutes < topLimit
 
-    }.sortedByDescending {
+    }.sortedByDescending {route->
         if (filter == null) {
-            it.ratingAvr?.average()
+            route.ratingAvr?.average()
         } else {
-            it.ratingAvr?.sortingBy(filter)
+            route.ratingAvr?.sortingBy(filter)
         }
     }
 }

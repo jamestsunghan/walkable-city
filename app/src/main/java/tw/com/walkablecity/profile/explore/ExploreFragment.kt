@@ -73,7 +73,7 @@ class ExploreFragment : Fragment(), OnMapReadyCallback {
         grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (!(requestCode == HomeFragment.REQUEST_LOCATION || requestCode == HomeFragment.REQUEST_CAMERA)) return
+        if (requestCode != HomeFragment.REQUEST_LOCATION) return
         if (Util.isPermissionGranted(
                 permissions,
                 grantResults,

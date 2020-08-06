@@ -19,12 +19,12 @@ import tw.com.walkablecity.ranking.RankingViewModel
 import tw.com.walkablecity.rating.RatingViewModel
 
 @Suppress("UNCHECKED_CAST")
-class ViewModelFactory( private val walkableRepository: WalkableRepository)
-    : ViewModelProvider.Factory{
+class ViewModelFactory(private val walkableRepository: WalkableRepository) :
+    ViewModelProvider.Factory {
 
     override fun <T : ViewModel?> create(modelClass: Class<T>) =
-        with(modelClass){
-            when{
+        with(modelClass) {
+            when {
                 isAssignableFrom(MainViewModel::class.java) ->
                     MainViewModel(walkableRepository)
 

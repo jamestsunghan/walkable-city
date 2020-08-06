@@ -51,13 +51,13 @@ class AddFriendFragment : Fragment() {
             }
         })
 
-        viewModel.friendToAdd.observe(viewLifecycleOwner, Observer{
-            binding.friend = it
+        viewModel.friendToAdd.observe(viewLifecycleOwner, Observer{friend->
+            binding.friend = friend
         })
 
         viewModel.friendAdded.observe(viewLifecycleOwner, Observer{
-            it?.let{
-                if(it){
+            it?.let{added->
+                if(added){
                     makeShortToast(R.string.add_success)
                     UserManager.user?.id?.let{id->
                         mainViewModel.getUserFriendCount(id)
@@ -71,8 +71,8 @@ class AddFriendFragment : Fragment() {
         })
 
         viewModel.error.observe(viewLifecycleOwner, Observer{
-            it?.let{
-                Toast.makeText(this.requireContext(),it,Toast.LENGTH_SHORT).show()
+            it?.let{error->
+                Toast.makeText(this.requireContext(),error,Toast.LENGTH_SHORT).show()
             }
         })
 

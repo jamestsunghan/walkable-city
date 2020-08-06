@@ -14,7 +14,8 @@ import tw.com.walkablecity.data.LoadStatus
 import tw.com.walkablecity.data.source.WalkableRepository
 import tw.com.walkablecity.event.EventPageType
 
-class EventItemViewModel(val walkableRepository: WalkableRepository, val eventPage: EventPageType): ViewModel() {
+class EventItemViewModel(val walkableRepository: WalkableRepository, val eventPage: EventPageType) :
+    ViewModel() {
 
     private val _filter = MutableLiveData<EventType>()
     val filter: LiveData<EventType>
@@ -49,45 +50,47 @@ class EventItemViewModel(val walkableRepository: WalkableRepository, val eventPa
         viewModelJob.cancel()
     }
 
-    init{
+    init {
         getEventList(eventPage)
     }
 
-    fun getEventListToFilter(list: List<Event>){
+    fun getEventListToFilter(list: List<Event>) {
         _eventList.value = list
     }
 
-    fun seeAllEvent(){
+    fun seeAllEvent() {
         _eventList.value = eventAllList.value
         _filter.value = null
     }
 
-    fun filterSwitch(sorting: EventType){
-        _eventList.value = eventAllList.value?.filter{
-            it.type == sorting
+    fun filterSwitch(sorting: EventType) {
+        _eventList.value = eventAllList.value?.filter { event ->
+            event.type == sorting
         }
         _filter.value = sorting
     }
 
-    fun navigateToEventDetail(event: Event){
+    fun navigateToEventDetail(event: Event) {
         _navigateToEventDetail.value = event
     }
 
-    fun navigateToDetailComplete(){
+    fun navigateToDetailComplete() {
         _navigateToEventDetail.value = null
     }
 
-    private fun getEventList(page: EventPageType){
+    private fun getEventList(page: EventPageType) {
 
         coroutineScope.launch {
 
             _status.value = LoadStatus.LOADING
 
-            _eventAllList.value = when(page){
+            _eventAllList.value = when (page) {
 
                 EventPageType.POPULAR -> {
                     walkableRepository.getPublicEvents()
-                        .handleResultWith(_error, _status)?.sortedByDescending { it.memberCount }
+                        .handleResultWith(_error, _status)?.sortedByDescending { event ->
+                            event.memberCount
+                        }
                 }
 
                 EventPageType.INVITED -> {
@@ -97,8 +100,10 @@ class EventItemViewModel(val walkableRepository: WalkableRepository, val eventPa
 
                 EventPageType.CHALLENGING -> {
                     walkableRepository.getNowAndFutureEvents()
-                        .handleResultWith(_error, _status)?.filter{event->
-                            event.member.find { it.id == UserManager.user?.id } != null
+                        .handleResultWith(_error, _status)?.filter { event ->
+                            event.member.find { member ->
+                                member.id == UserManager.user?.id
+                            } != null
                         }
                 }
             }

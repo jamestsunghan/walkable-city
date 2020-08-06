@@ -131,7 +131,7 @@ object WalkableRemoteDataSource : WalkableDataSource {
 
             if (ratings is Result.Success) {
                 val ratingAvrNew = route.ratingAvr?.addToAverage(
-                    rating, route, ratings.data.size
+                    rating, ratings.data.size
                 ) as RouteRating
 
                 document.update(RATING_AVR, ratingAvrNew.toHashMap(), WALKERS, walkersNew)

@@ -10,14 +10,16 @@ import java.lang.IllegalArgumentException
 
 
 @Suppress("UNCHECKED_CAST")
-class HomeViewModelFactory(private val walkableRepository: WalkableRepository,
-                           private val route: Route?,
-                           private val destination: LatLng?): ViewModelProvider.Factory {
+class HomeViewModelFactory(
+    private val walkableRepository: WalkableRepository,
+    private val route: Route?,
+    private val destination: LatLng?
+) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel?> create(modelClass: Class<T>): T =
-        with(modelClass){
-            when{
-                isAssignableFrom(HomeViewModel::class.java)->
+        with(modelClass) {
+            when {
+                isAssignableFrom(HomeViewModel::class.java) ->
                     HomeViewModel(walkableRepository, route, destination)
                 else -> throw IllegalArgumentException("Unknown ViewModel class ${modelClass.name}")
             }

@@ -14,11 +14,6 @@ fun Fragment.getVMFactory(): ViewModelFactory {
     return ViewModelFactory(repo)
 }
 
-fun Fragment.getVMFactory(user: User): UserViewModelFactory {
-    val repo = (requireContext().applicationContext as WalkableApp).repo
-    return UserViewModelFactory(repo, user)
-}
-
 fun Fragment.getVMFactory(route: Route?): RouteViewModelFactory {
     val repo = (requireContext().applicationContext as WalkableApp).repo
     return RouteViewModelFactory(repo, route)

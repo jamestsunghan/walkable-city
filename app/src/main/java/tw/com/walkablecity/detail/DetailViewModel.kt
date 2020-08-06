@@ -81,9 +81,9 @@ class DetailViewModel(val walkableRepository: WalkableRepository, val route: Rou
     }
 
     init{
-        route.id?.let{
-            getComment(it)
-            downloadPhotoPoints(it)
+        route.id?.let{id->
+            getComment(id)
+            downloadPhotoPoints(id)
         }
     }
 
@@ -111,9 +111,9 @@ class DetailViewModel(val walkableRepository: WalkableRepository, val route: Rou
     fun onGalleryScrollChange(layoutManager: RecyclerView.LayoutManager?, linearSnapHelper: LinearSnapHelper){
         val snapView = linearSnapHelper.findSnapView(layoutManager)
         snapView?.let{
-            layoutManager?.getPosition(snapView)?.let{
-                if(it != snapPosition.value){
-                    _snapPosition.value = it
+            layoutManager?.getPosition(snapView)?.let{position->
+                if(position != snapPosition.value){
+                    _snapPosition.value = position
                 }
             }
         }
@@ -165,7 +165,9 @@ class DetailViewModel(val walkableRepository: WalkableRepository, val route: Rou
     }
 
     fun addMaptodisplayPhotos(list: List<PhotoPoint>){
-        _displayPhotos.value = listOf(requireNotNull(route.mapImage)) + list.map{ requireNotNull(it.photo) }
+        _displayPhotos.value = listOf(requireNotNull(route.mapImage)) + list.map{point->
+            requireNotNull(point.photo)
+        }
     }
 
     private fun downloadPhotoPoints(routeId: String){

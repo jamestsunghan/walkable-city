@@ -8,12 +8,14 @@ import tw.com.walkablecity.search.SearchViewModel
 
 
 @Suppress("UNCHECKED_CAST")
-class LatLngViewModelFactory(private val walkableRepository: WalkableRepository,
-                             private val currentLocation: LatLng): ViewModelProvider.Factory {
+class LatLngViewModelFactory(
+    private val walkableRepository: WalkableRepository,
+    private val currentLocation: LatLng
+) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel?> create(modelClass: Class<T>): T =
-        with(modelClass){
-            when{
+        with(modelClass) {
+            when {
                 isAssignableFrom(SearchViewModel::class.java) ->
                     SearchViewModel(walkableRepository, currentLocation)
                 else -> throw IllegalArgumentException("Unknown ViewModel Class ${modelClass.name}")

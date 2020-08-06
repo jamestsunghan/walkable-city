@@ -7,13 +7,15 @@ import tw.com.walkablecity.event.EventPageType
 import tw.com.walkablecity.event.item.EventItemViewModel
 
 
-
 @Suppress("UNCHECKED_CAST")
-class EventPageViewModelFactory(private val walkableRepository: WalkableRepository, private val eventPage: EventPageType) : ViewModelProvider.Factory{
+class EventPageViewModelFactory(
+    private val walkableRepository: WalkableRepository,
+    private val eventPage: EventPageType
+) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel?> create(modelClass: Class<T>) =
-        with(modelClass){
-            when{
+        with(modelClass) {
+            when {
 
                 isAssignableFrom(EventItemViewModel::class.java) ->
                     EventItemViewModel(walkableRepository, eventPage)

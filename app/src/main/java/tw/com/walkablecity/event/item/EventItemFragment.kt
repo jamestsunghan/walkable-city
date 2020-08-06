@@ -35,15 +35,15 @@ class EventItemFragment(val type: EventPageType): Fragment() {
         binding.recyclerEventItem.adapter = EventItemAdapter(viewModel)
 
         viewModel.navigateToEventDetail.observe(viewLifecycleOwner, Observer{
-            it?.let{
-                findNavController().navigate(EventFragmentDirections.actionGlobalEventDetailFragment(it))
+            it?.let{event->
+                findNavController().navigate(EventFragmentDirections.actionGlobalEventDetailFragment(event))
                 viewModel.navigateToDetailComplete()
             }
         })
 
         viewModel.eventAllList.observe(viewLifecycleOwner, Observer{
-            it?.let{
-                viewModel.getEventListToFilter(it)
+            it?.let{eventList->
+                viewModel.getEventListToFilter(eventList)
             }
         })
 

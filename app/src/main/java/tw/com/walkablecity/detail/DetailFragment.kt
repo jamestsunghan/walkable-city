@@ -57,16 +57,16 @@ class DetailFragment : Fragment() {
 
             binding.recyclerDetailUrl.scrollToPosition(0)
 
-            viewModel.snapPosition.observe(viewLifecycleOwner, Observer {
-                (binding.recyclerCircle.adapter as DetailCircleAdapter).selectedPosition.value = it
-                Logger.d("JJ_snap snapPosition $it")
+            viewModel.snapPosition.observe(viewLifecycleOwner, Observer {position->
+                (binding.recyclerCircle.adapter as DetailCircleAdapter).selectedPosition.value = position
+                Logger.d("JJ_snap snapPosition $position")
             })
 
         })
 
         viewModel.favoriteAdded.observe(viewLifecycleOwner, Observer{
-            it?.let{
-                binding.favIcon.isSelected = it
+            it?.let{added->
+                binding.favIcon.isSelected = added
             }
         })
 
@@ -78,16 +78,16 @@ class DetailFragment : Fragment() {
             }
         })
 
-        viewModel.navigatingToRanking.observe(viewLifecycleOwner, Observer {
-            if(it){
+        viewModel.navigatingToRanking.observe(viewLifecycleOwner, Observer {confirmed->
+            if(confirmed){
                 findNavController().navigateUp()
                 viewModel.navigationComplete()
             }
         })
 
         viewModel.photoPoints.observe(viewLifecycleOwner, Observer{
-            it?.let{
-                viewModel.addMaptodisplayPhotos(it)
+            it?.let{points->
+                viewModel.addMaptodisplayPhotos(points)
             }
         })
 

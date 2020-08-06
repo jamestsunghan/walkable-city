@@ -18,8 +18,6 @@ import tw.com.walkablecity.loadroute.route.RouteItem
 class FavoriteAdapter(private val viewModel: FavoriteViewModel)
     : ListAdapter<RouteItem, RecyclerView.ViewHolder>(DiffCallback) {
 
-
-
     class FilterViewHolder(private val binding: ItemFavoriteRouteFilterBinding): RecyclerView.ViewHolder(binding.root){
         fun bind(viewModel: FavoriteViewModel){
 

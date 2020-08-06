@@ -35,17 +35,22 @@ class FavoriteFragment : Fragment() {
         binding.recyclerRouteItem.adapter = adapter
 
         viewModel.filter.observe(viewLifecycleOwner, Observer {
-            it?.let{
-                Logger.d("route sorting ${it.text}")
-                viewModel.timeFilter(viewModel.routeTime.value ?: listOf(Float.MIN_VALUE, Float.MAX_VALUE), viewModel.sliderMax.value ?: Float.MAX_VALUE , it)
+            it?.let{sorting->
+                Logger.d("route sorting ${sorting.text}")
+                viewModel.timeFilter(
+                    viewModel.routeTime.value ?: listOf(Float.MIN_VALUE, Float.MAX_VALUE),
+                    viewModel.sliderMax.value ?: Float.MAX_VALUE
+                    , sorting
+                )
                 adapter.notifyDataSetChanged()
             }
         })
 
         viewModel.selectRoute.observe(viewLifecycleOwner, Observer {
-            it?.let{
+            it?.let{route->
 
-                findNavController().navigate(FavoriteFragmentDirections.actionGlobalDetailFragment(it))
+                findNavController()
+                    .navigate(FavoriteFragmentDirections.actionGlobalDetailFragment(route))
                 viewModel.navigationComplete()
             }
         })

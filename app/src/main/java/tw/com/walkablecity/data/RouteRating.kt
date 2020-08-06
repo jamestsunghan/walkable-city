@@ -39,15 +39,15 @@ data class RouteRating (
         )
     }
 
-    fun addToAverage(rating: RouteRating, route: Route, ratings: Int): RouteRating{
+    fun addToAverage(rating: RouteRating, ratings: Int): RouteRating{
 
         return RouteRating(
-            coverage    = this.coverage.toNewAverage(rating.coverage, route, ratings),
-            rest        = this.rest.toNewAverage(rating.rest, route, ratings),
-            snack       = this.snack.toNewAverage(rating.snack, route, ratings),
-            scenery     = this.scenery.toNewAverage(rating.scenery, route, ratings),
-            tranquility = this.tranquility.toNewAverage(rating.tranquility, route, ratings),
-            vibe        = this.vibe.toNewAverage(rating.vibe, route, ratings)
+            coverage    = this.coverage.toNewAverage(rating.coverage, ratings),
+            rest        = this.rest.toNewAverage(rating.rest, ratings),
+            snack       = this.snack.toNewAverage(rating.snack, ratings),
+            scenery     = this.scenery.toNewAverage(rating.scenery, ratings),
+            tranquility = this.tranquility.toNewAverage(rating.tranquility, ratings),
+            vibe        = this.vibe.toNewAverage(rating.vibe, ratings)
         )
     }
 

@@ -35,8 +35,8 @@ class EventFragment : Fragment() {
     ): View? {
 
         val mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
-        UserManager.user?.id?.let {
-            mainViewModel.getInvitation(it)
+        UserManager.user?.id?.let {id->
+            mainViewModel.getInvitation(id)
         }
 
         val binding: FragmentEventBinding = DataBindingUtil
@@ -51,11 +51,11 @@ class EventFragment : Fragment() {
                 tab.text = EventPageType.values()[position].title
                 if (position == 2) {
                     mainViewModel.invitation.observe(viewLifecycleOwner, Observer {
-                        it?.let {
+                        it?.let {count->
                             tab.orCreateBadge.apply {
                                 backgroundColor = getColor(R.color.red_heart_c73e3a)
-                                number = it
-                                isVisible = it > 0
+                                number = count
+                                isVisible = count > 0
                                 badgeGravity = BadgeDrawable.TOP_END
                             }
                         }
@@ -66,9 +66,9 @@ class EventFragment : Fragment() {
         mediator.attach()
 
         mainViewModel.invitation.observe(viewLifecycleOwner, Observer {
-            it?.let {
+            it?.let {count->
                 binding.tabsEvent.getTabAt(2)?.orCreateBadge?.apply {
-                    number = it
+                    number = count
                 }
             }
         })
@@ -77,8 +77,8 @@ class EventFragment : Fragment() {
 
         binding.mainViewModel = mainViewModel
 
-        viewModel.navigateToHost.observe(viewLifecycleOwner, Observer {
-            if (it) {
+        viewModel.navigateToHost.observe(viewLifecycleOwner, Observer {confirmed->
+            if (confirmed) {
                 findNavController().navigate(EventFragmentDirections.actionEventFragmentToHostFragment())
                 viewModel.navigateToHostComplete()
             }
@@ -112,8 +112,8 @@ class EventFragment : Fragment() {
             }
         })
 
-        viewModel.showNoFriendDialog.observe(viewLifecycleOwner, Observer {
-            if (it) {
+        viewModel.showNoFriendDialog.observe(viewLifecycleOwner, Observer {confirmed->
+            if (confirmed) {
                 val dialog = showNoFriendDialog(
                     requireContext(), findNavController()
                     , EventFragmentDirections.actionGlobalAddFriendFragment()

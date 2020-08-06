@@ -43,8 +43,8 @@ class EventDetailFragment : Fragment() {
 
         binding.friend = UserManager.user?.toFriend()
 
-        binding.isAdded = viewModel.event.member.find {
-            it.id == UserManager.user?.id
+        binding.isAdded = viewModel.event.member.find {member->
+            member.id == UserManager.user?.id
         } != null
 
         val adapter = MemberAdapter(viewModel)
@@ -55,8 +55,8 @@ class EventDetailFragment : Fragment() {
         }
 
         viewModel.walkResultSingle.observe(viewLifecycleOwner, Observer {
-            it?.let {
-                viewModel.addToWalkResult(it)
+            it?.let {result->
+                viewModel.addToWalkResult(result)
             }
         })
 
@@ -72,9 +72,9 @@ class EventDetailFragment : Fragment() {
         })
 
         viewModel.joinSuccess.observe(viewLifecycleOwner, Observer {
-            it?.let {
+            it?.let {joined->
 
-                if (it) {
+                if (joined) {
                     mainViewModel.getUserEventCount(requireNotNull(UserManager.user?.id))
                     Logger.d("badge event dialog from detail")
                     findNavController().navigate(EventDetailFragmentDirections.actionGlobalEventFragment())
