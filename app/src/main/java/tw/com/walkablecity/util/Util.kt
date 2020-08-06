@@ -12,21 +12,15 @@ import androidx.core.app.ActivityCompat
 import androidx.navigation.NavController
 import androidx.navigation.NavDirections
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.tasks.Task
 import com.google.firebase.Timestamp
-import com.google.firebase.firestore.DocumentSnapshot
-import com.google.firebase.firestore.QuerySnapshot
 import tw.com.walkablecity.R
 import tw.com.walkablecity.WalkableApp
-import tw.com.walkablecity.data.Result
 import tw.com.walkablecity.ext.toLocation
 import tw.com.walkablecity.permission.RationaleDialog
 import java.lang.StringBuilder
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
 
 object Util {
 
@@ -254,87 +248,4 @@ object Util {
     }
 
     private const val BADGE_DATA = "badge_data"
-}
-
-suspend fun <T: Any> T.getResultFrom(source: Task<QuerySnapshot>): Result<T?> = suspendCoroutine{continuation->
-    source.addOnCompleteListener { task->
-        if(task.isSuccessful){
-
-            if(task.result == null || task.result!!.isEmpty) continuation.resume(Result.Success(null))
-            else {
-
-                continuation.resume(Result.Success(task.result!!.toObjects(this::class.java)[0]))
-            }
-
-        }else{
-            when(val exception = task.exception) {
-                null -> continuation.resume(Result.Fail(Util.getString(R.string.not_here)))
-                else -> {
-                    Logger.d("JJ_fire [${this::class.simpleName}] Error getting documents. ${exception.message}")
-                    continuation.resume(Result.Error(exception))
-                }
-            }
-        }
-    }
-}
-
-
-suspend fun <T: Any> T.getListResultFrom(source: Task<QuerySnapshot>): Result<List<T>> = suspendCoroutine{continuation->
-    source.addOnCompleteListener { task->
-        if(task.isSuccessful){
-
-            if(task.result == null || task.result!!.isEmpty) continuation.resume(Result.Success(listOf()))
-            else {
-
-                continuation.resume(Result.Success(task.result!!.toObjects(this::class.java)))
-            }
-
-        }else{
-            when(val exception = task.exception) {
-                null -> continuation.resume(Result.Fail(Util.getString(R.string.not_here)))
-                else -> {
-                    Logger.d("JJ_fire [${this::class.simpleName}] Error getting documents. ${exception.message}")
-                    continuation.resume(Result.Error(exception))
-                }
-            }
-        }
-    }
-}
-
-
-suspend fun Task<*>.missionSuccessReturn(ifSuccess: Boolean) : Result<Boolean> = suspendCoroutine{continuation->
-    addOnCompleteListener { task->
-        if(task.isSuccessful){
-            continuation.resume(Result.Success(ifSuccess))
-        }else{
-            when(val exception = task.exception) {
-                null -> continuation.resume(Result.Fail(Util.getString(R.string.not_here)))
-                else -> {
-                    Logger.d("JJ_fire [${this::class.simpleName}] Error getting documents. ${exception.message}")
-                    continuation.resume(Result.Error(exception))
-                }
-            }
-        }
-    }
-}
-
-suspend fun Task<QuerySnapshot>.querySuccessReturn(ifSuccess: Boolean, ifEmpty: Boolean) : Result<Boolean> = suspendCoroutine{continuation->
-    addOnCompleteListener { task->
-        if(task.isSuccessful){
-
-            if(task.result == null || task.result!!.isEmpty){
-                continuation.resume(Result.Success(ifEmpty))
-            }else{
-                continuation.resume(Result.Success(ifSuccess))
-            }
-        }else{
-            when(val exception = task.exception) {
-                null -> continuation.resume(Result.Fail(Util.getString(R.string.not_here)))
-                else -> {
-                    Logger.d("JJ_fire [${this::class.simpleName}] Error getting documents. ${exception.message}")
-                    continuation.resume(Result.Error(exception))
-                }
-            }
-        }
-    }
 }

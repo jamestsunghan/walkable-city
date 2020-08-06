@@ -12,6 +12,7 @@ import tw.com.walkablecity.UserManager
 import tw.com.walkablecity.data.LoadStatus
 import tw.com.walkablecity.data.Walk
 import tw.com.walkablecity.data.source.WalkableRepository
+import tw.com.walkablecity.ext.toLatLng
 
 class ExploreViewModel(val walkableRepository: WalkableRepository) : ViewModel() {
 
@@ -83,7 +84,7 @@ class ExploreViewModel(val walkableRepository: WalkableRepository) : ViewModel()
         coroutineScope.launch {
             val result = walkableRepository.getUserCurrentLocation()
 
-            currentLocation.value = result.handleResultWith(_error, _status)
+            currentLocation.value = result.handleResultWith(_error, _status)?.toLatLng()
 
         }
 

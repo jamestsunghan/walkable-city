@@ -75,10 +75,12 @@ class BestWalkersViewModel(private val walkableRepository: WalkableRepository) :
         coroutineScope.launch {
             _status.value = LoadStatus.LOADING
 
-            val result = walkableRepository.getUserFriends(userId)
+            val friendIds = walkableRepository.getUserFriendSimple(userId)
+                .handleResultWith(_error, _status)?.map { requireNotNull(it.id )} ?: listOf()
 
-            _userFriendList.value = result.handleResultWith(_error, _status)
-
+            walkableRepository.getFriendsById(friendIds).apply{
+                _userFriendList.value = handleResultWith(_error, _status)
+            }
         }
     }
 }

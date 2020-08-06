@@ -48,6 +48,8 @@ fun RouteRating?.toSortList(filter: RouteSorting?): List<String> {
 
 }
 
+fun Location.toLatLng(): LatLng = LatLng(latitude, longitude)
+
 fun List<LatLng>.toDistance(): Float {
     var distance = 0F
     if (this.size > 1) {
@@ -158,12 +160,15 @@ fun List<User>.toWalkerItem(): List<WalkerItem> {
     return when (this.size > 3) {
         true -> {
             val top3 = this.slice(0..2)
+
             val theRest = this.slice(3..lastIndex)
+
             Logger.d("the rest ${theRest.size}")
             listOf(top3).map { WalkerItem.Tops(it) } + this.map { WalkerItem.Walkers(it) }
         }
         false -> {
             val theRest = this.slice(1..lastIndex)
+
             listOf(WalkerItem.Tops(listOf(this[0]))) + theRest.map { WalkerItem.Walkers(it) }
         }
     }
@@ -193,6 +198,7 @@ fun Bitmap.saveToInternalStorage(context: Context) {
 }
 
 fun Bitmap.getCroppedBitmap(): Bitmap {
+
     val output = Bitmap.createBitmap(this.width, this.height, Bitmap.Config.ARGB_8888)
     val canvas = Canvas(output)
 
@@ -217,13 +223,12 @@ fun Bitmap.getCroppedBitmap(): Bitmap {
 
 fun List<Route>.timeFilter(list: List<Float>, max: Float, filter: RouteSorting?): List<Route> {
     return this.filter {
+
         val range = list.sortedBy { it }
-        val topLimit = if (range[1] >= max) {
-            Float.MAX_VALUE
-        } else {
-            range[1]
-        }
+        val topLimit = if (range[1] >= max) Float.MAX_VALUE else range[1]
+
         range[0] < it.minutes && it.minutes < topLimit
+
     }.sortedByDescending {
         if (filter == null) {
             it.ratingAvr?.average()
@@ -233,18 +238,18 @@ fun List<Route>.timeFilter(list: List<Float>, max: Float, filter: RouteSorting?)
     }
 }
 
-fun List<Route>.getNearBy(location: LatLng?): List<Route>{
-    return location?.let{
-        if(this.isNullOrEmpty()){
+fun List<Route>.getNearBy(location: LatLng?): List<Route> {
+    return location?.let {
+        if (this.isNullOrEmpty()) {
             listOf()
-        }else{
-            this.filter{route ->
+        } else {
+            this.filter { route ->
 
-                route.waypoints.find{point->
+                route.waypoints.find { point ->
                     location.toLocation().distanceTo(point.toLocation()) < 500
-                }!= null
+                } != null
 
             }
         }
-    }?: listOf()
+    } ?: listOf()
 }

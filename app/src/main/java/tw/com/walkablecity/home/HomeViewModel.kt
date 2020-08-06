@@ -23,6 +23,7 @@ import tw.com.walkablecity.data.*
 import tw.com.walkablecity.data.source.WalkableRepository
 import tw.com.walkablecity.ext.toDistance
 import tw.com.walkablecity.ext.toGeoPoint
+import tw.com.walkablecity.ext.toLatLng
 import tw.com.walkablecity.util.Logger
 import java.lang.Runnable
 import java.text.SimpleDateFormat
@@ -297,7 +298,7 @@ class HomeViewModel(val walkableRepository: WalkableRepository, val argument: Ro
         coroutineScope.launch {
             val result = walkableRepository.getUserCurrentLocation()
 
-            currentLocation.value = result.handleResultWith(_error, _loadStatus)
+            currentLocation.value = result.handleResultWith(_error, _loadStatus)?.toLatLng()
 
             if(walkerStatus.value != WalkerStatus.PAUSING && result is Result.Success){
                 startLocation.value = currentLocation.value

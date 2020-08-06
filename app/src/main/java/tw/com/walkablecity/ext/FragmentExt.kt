@@ -9,12 +9,12 @@ import tw.com.walkablecity.factory.*
 import tw.com.walkablecity.loadroute.LoadRouteType
 import tw.com.walkablecity.rating.RatingType
 
-fun Fragment.getVMFactory(): ViewModelFactory{
+fun Fragment.getVMFactory(): ViewModelFactory {
     val repo = (requireContext().applicationContext as WalkableApp).repo
     return ViewModelFactory(repo)
 }
 
-fun Fragment.getVMFactory(user: User): UserViewModelFactory{
+fun Fragment.getVMFactory(user: User): UserViewModelFactory {
     val repo = (requireContext().applicationContext as WalkableApp).repo
     return UserViewModelFactory(repo, user)
 }
@@ -24,9 +24,14 @@ fun Fragment.getVMFactory(route: Route?): RouteViewModelFactory {
     return RouteViewModelFactory(repo, route)
 }
 
-fun Fragment.getVMFactory(route: Route?, walk: Walk, type: RatingType?, photoPoints: List<PhotoPoint>?): RatingViewModelFactory {
+fun Fragment.getVMFactory(
+    route: Route?,
+    walk: Walk,
+    type: RatingType?,
+    photoPoints: List<PhotoPoint>?
+): RatingViewModelFactory {
     val repo = (requireContext().applicationContext as WalkableApp).repo
-    return RatingViewModelFactory(repo, route, walk, type,photoPoints)
+    return RatingViewModelFactory(repo, route, walk, type, photoPoints)
 }
 
 fun Fragment.getVMFactory(loadRouteType: LoadRouteType): LoadRouteViewModelFactory {
@@ -39,17 +44,17 @@ fun Fragment.getVMFactory(eventPage: EventPageType): EventPageViewModelFactory {
     return EventPageViewModelFactory(repo, eventPage)
 }
 
-fun Fragment.getVMFactory(event: Event): EventVIewModelFactory{
+fun Fragment.getVMFactory(event: Event): EventVIewModelFactory {
     val repo = (requireContext().applicationContext as WalkableApp).repo
     return EventVIewModelFactory(repo, event)
 }
 
-fun Fragment.getVMFactory(currentLocation: LatLng): LatLngViewModelFactory{
+fun Fragment.getVMFactory(currentLocation: LatLng): LatLngViewModelFactory {
     val repo = (requireContext().applicationContext as WalkableApp).repo
     return LatLngViewModelFactory(repo, currentLocation)
 }
 
-fun Fragment.getVMFactory(route: Route?,destination: LatLng?): HomeViewModelFactory{
+fun Fragment.getVMFactory(route: Route?, destination: LatLng?): HomeViewModelFactory {
     val repo = (requireContext().applicationContext as WalkableApp).repo
     return HomeViewModelFactory(repo, route, destination)
 }

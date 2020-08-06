@@ -99,9 +99,9 @@ class LoginViewModel(private val walkableRepository: WalkableRepository) : ViewM
         coroutineScope.launch {
             _status.value = LoadStatus.LOADING
 
-            val result = walkableRepository.signUpUser(user)
+            val signedIn = walkableRepository.signUpUser(user).handleResultWith(_error, _status)
 
-            _user.value = result.handleResultWith(_error, _status)
+            _user.value = if (signedIn == true) user else null
 
         }
     }

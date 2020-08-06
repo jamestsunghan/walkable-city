@@ -20,6 +20,7 @@ import tw.com.walkablecity.R
 import tw.com.walkablecity.util.Util.getString
 import tw.com.walkablecity.util.Util.lessThenTenPadStart
 import tw.com.walkablecity.WalkableApp
+import tw.com.walkablecity.ext.toLatLng
 import tw.com.walkablecity.util.Util.setDailyTimer
 import java.text.SimpleDateFormat
 import java.util.*
@@ -52,7 +53,7 @@ class WeatherWorker(appContext: Context, params: WorkerParameters) :
 
                 val location: LatLng? = when (val result = repo.getUserCurrentLocation()) {
                     is tw.com.walkablecity.data.Result.Success -> {
-                        result.data
+                        result.data?.toLatLng()
                     }
                     is tw.com.walkablecity.data.Result.Fail -> {
                         null

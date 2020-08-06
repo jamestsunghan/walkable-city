@@ -74,9 +74,13 @@ class BadgeViewModel(val walkableRepository: WalkableRepository) : ViewModel() {
 
             _status.value = LoadStatus.LOADING
 
-            val result = walkableRepository.getUserEvents(userId)
+            val result = walkableRepository.getAllEvents()
 
-            _eventCount.value = result.handleResultWith(_error, _status)?.size
+            _eventCount.value = result.handleResultWith(_error, _status)?.filter{ event ->
+                event.member.any { friend ->
+                    friend.id == userId
+                }
+            }?.size
 
         }
     }

@@ -16,6 +16,7 @@ import tw.com.walkablecity.data.RouteSorting
 import tw.com.walkablecity.data.source.WalkableRepository
 import tw.com.walkablecity.ext.getNearBy
 import tw.com.walkablecity.ext.timeFilter
+import tw.com.walkablecity.ext.toLatLng
 import tw.com.walkablecity.ext.toLocation
 import tw.com.walkablecity.loadroute.LoadRouteType
 
@@ -87,8 +88,11 @@ class RouteItemViewModel(
                 }
                 LoadRouteType.NEARBY -> {
 
-                    val location = walkableRepository.getUserCurrentLocation().handleResultWith(_error, _status)
+                    val location = walkableRepository.getUserCurrentLocation()
+                        .handleResultWith(_error, _status)?.toLatLng()
+
                     _status.value = LoadStatus.LOADING
+
                     val routes = walkableRepository.getAllRoute().handleResultWith(_error, _status)
 
                     routes?.getNearBy(location)
