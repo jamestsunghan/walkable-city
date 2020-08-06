@@ -25,7 +25,7 @@ class RouteItemAdapter(private val viewModel: RouteItemViewModel) :
             binding.minuteText =
                 displaySliderValue(binding.timeSlider.values, binding.timeSlider.valueTo)
 
-            binding.timeSlider.addOnChangeListener { slider, value, fromUser ->
+            binding.timeSlider.addOnChangeListener { slider, _, _ ->
                 viewModel.setTimeFilter(slider.values, slider.valueTo)
                 viewModel.timeFilter(slider.values, slider.valueTo, viewModel.filter.value)
 
@@ -44,7 +44,7 @@ class RouteItemAdapter(private val viewModel: RouteItemViewModel) :
                 CharacterSpinnerAdapter(route.ratingAvr.toSortList(viewModel.filter.value))
             binding.route = route
             binding.root.setOnClickListener {
-                viewModel.selectRoute.value = route
+                viewModel.select(route)
             }
 
             binding.seeDetail.setOnClickListener {
@@ -93,8 +93,7 @@ class RouteItemAdapter(private val viewModel: RouteItemViewModel) :
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
             is RouteViewHolder -> holder.bind(
-                (getItem(position) as RouteItem.LoadRoute).route,
-                viewModel
+                (getItem(position) as RouteItem.LoadRoute).route, viewModel
             )
             is FilterViewHolder -> holder.bind(viewModel)
         }

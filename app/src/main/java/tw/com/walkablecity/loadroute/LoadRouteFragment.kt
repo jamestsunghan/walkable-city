@@ -23,9 +23,9 @@ class LoadRouteFragment : Fragment() {
 
         binding.lifecycleOwner = this
 
-        binding.viewpagerRoute.let {
-            it.adapter = LoadRouteAdapter(childFragmentManager)
-            it.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(binding.tabsLoadRoute))
+        binding.viewpagerRoute.let { pager ->
+            pager.adapter = LoadRouteAdapter(childFragmentManager)
+            pager.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(binding.tabsLoadRoute))
         }
 
         return binding.root

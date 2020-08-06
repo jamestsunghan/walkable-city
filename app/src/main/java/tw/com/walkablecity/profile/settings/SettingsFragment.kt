@@ -81,7 +81,6 @@ class SettingsFragment : Fragment() {
                 WalkableApp.instance.notifyAfterMeal(isActivated)
                 binding.afterMealSwitch.isChecked = isActivated
                 UserManager.user?.meal = isActivated
-
             }
         })
 
@@ -102,13 +101,6 @@ class SettingsFragment : Fragment() {
                 }
             }
         })
-
-        viewModel.currentLocation.observe(viewLifecycleOwner, Observer {
-            it?.let {
-                binding.goodWeatherSwitch.isChecked = true
-            }
-        })
-
         return binding.root
     }
 
@@ -133,8 +125,6 @@ class SettingsFragment : Fragment() {
             }
             viewModel.permissionDenied()
         }
-
-
     }
 
     private fun checkPermission(activate: Boolean) {
@@ -154,7 +144,6 @@ class SettingsFragment : Fragment() {
                 REQUEST_LOCATION
             )
         }
-
     }
 
     companion object {

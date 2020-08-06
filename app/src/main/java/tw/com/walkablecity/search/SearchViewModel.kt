@@ -99,7 +99,9 @@ class SearchViewModel(val walkableRepository: WalkableRepository, val currentLoc
             _shortestTime.value = if (paths.isNullOrEmpty()) {
                 null
             } else {
-                paths[0].legs.map { it.duration?.value }.sumBy { it ?: 0 }
+                paths[0].legs.map { leg ->
+                    leg.duration?.value
+                }.sumBy { duration -> duration ?: 0 }
             }
         }
     }

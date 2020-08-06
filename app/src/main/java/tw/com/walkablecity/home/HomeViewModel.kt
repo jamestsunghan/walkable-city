@@ -8,16 +8,13 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import com.google.android.gms.location.*
-import com.google.android.gms.maps.model.CircleOptions
 import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.Timestamp
 import com.google.firebase.Timestamp.now
 import com.google.firebase.firestore.GeoPoint
 import kotlinx.coroutines.*
 import tw.com.walkablecity.*
-import tw.com.walkablecity.R
 import tw.com.walkablecity.util.Util.getAccumulatedFromSharedPreference
-import tw.com.walkablecity.util.Util.getColor
 import tw.com.walkablecity.data.*
 import tw.com.walkablecity.data.directionresult.DirectionResult
 import tw.com.walkablecity.data.source.WalkableRepository
@@ -83,20 +80,23 @@ class HomeViewModel(
         get() = _error
 
     private val _photoPoints = MutableLiveData<MutableList<PhotoPoint>>(mutableListOf())
-    val photopoints: LiveData<MutableList<PhotoPoint>>
+    val photoPoints: LiveData<MutableList<PhotoPoint>>
         get() = _photoPoints
 
     private val startTime = MutableLiveData<Timestamp>()
     private val endTime = MutableLiveData<Timestamp>()
 
-    val duration = MutableLiveData<Long>()
+    private val _currentLocation = MutableLiveData<LatLng>()
+    val currentLocation: LiveData<LatLng>
+        get() = _currentLocation
 
-    val currentLocation = MutableLiveData<LatLng>()
-
-    val startLocation = MutableLiveData<LatLng>()
+    private val _startLocation = MutableLiveData<LatLng>()
+    val startLocation: LiveData<LatLng>
+        get() = _startLocation
 
     private val _trackPoints = MutableLiveData<MutableList<LatLng>>(mutableListOf())
-    val trackPoints: LiveData<MutableList<LatLng>> get() = _trackPoints
+    val trackPoints: LiveData<MutableList<LatLng>>
+        get() = _trackPoints
 
     val walkerDistance = Transformations.map(trackPoints) { list ->
         if (list == null || list.isEmpty()) {
@@ -105,7 +105,9 @@ class HomeViewModel(
             list.toDistance()
         }
     }
-    val walkerTimer = MutableLiveData<Long>(0L)
+    private val _walkerTimer = MutableLiveData<Long>(0L)
+    val walkerTimer: LiveData<Long>
+        get() = _walkerTimer
 
     private var handler = Handler()
     private lateinit var runnable: Runnable
@@ -203,7 +205,7 @@ class HomeViewModel(
             else trackPoints.value?.last()?.toGeoPoint(),
             photo = url
         )
-        _photoPoints.value = photopoints.value?.plus(photoPoint) as MutableList<PhotoPoint>
+        _photoPoints.value = photoPoints.value?.plus(photoPoint) as MutableList<PhotoPoint>
     }
 
     fun startStopSwitch() {
@@ -302,7 +304,7 @@ class HomeViewModel(
 
     private fun startTimer() {
         runnable = Runnable {
-            walkerTimer.value = walkerTimer.value?.plus(1)
+            _walkerTimer.value = walkerTimer.value?.plus(1)
             Logger.d("timer ${walkerTimer.value}")
             handler.postDelayed(runnable, 1000)
         }
@@ -316,10 +318,10 @@ class HomeViewModel(
         coroutineScope.launch {
             val result = walkableRepository.getUserCurrentLocation()
 
-            currentLocation.value = result.handleResultWith(_error, _loadStatus)?.toLatLng()
+            _currentLocation.value = result.handleResultWith(_error, _loadStatus)?.toLatLng()
 
             if (walkerStatus.value != WalkerStatus.PAUSING && result is Result.Success) {
-                startLocation.value = currentLocation.value
+                _startLocation.value = currentLocation.value
             }
             if (walkerStatus.value == WalkerStatus.WALKING) {
                 startRecordingDistance()

@@ -37,7 +37,7 @@ class SearchFragment : DialogFragment() {
     private lateinit var placesClient: PlacesClient
 
     private val viewModel: SearchViewModel by viewModels {
-        getVMFactory( SearchFragmentArgs.fromBundle(requireArguments()).latLngKey )
+        getVMFactory(SearchFragmentArgs.fromBundle(requireArguments()).latLngKey)
     }
 
     private lateinit var autoCompleteFragment: AutocompleteSupportFragment
@@ -76,8 +76,10 @@ class SearchFragment : DialogFragment() {
                 if (route.waypoints.isEmpty()) {
                     makeShortToast(R.string.no_route_fit_as_shortest)
                 }
-                findNavController().navigate(SearchFragmentDirections
-                    .actionGlobalHomeFragment(route, viewModel.destination.value))
+                findNavController().navigate(
+                    SearchFragmentDirections
+                        .actionGlobalHomeFragment(route, viewModel.destination.value)
+                )
                 viewModel.searchComplete()
             }
         })

@@ -36,7 +36,9 @@ class RankingViewModel(val walkableRepository: WalkableRepository) : ViewModel()
     val error: LiveData<String>
         get() = _error
 
-    val selectRoute = MutableLiveData<Route>()
+    private val _selectRoute = MutableLiveData<Route>()
+    val selectRoute: LiveData<Route>
+        get() = _selectRoute
 
     private val _routeTime = MutableLiveData<List<Float>>()
     val routeTime: LiveData<List<Float>>
@@ -59,8 +61,12 @@ class RankingViewModel(val walkableRepository: WalkableRepository) : ViewModel()
         getRoutes()
     }
 
+    fun select(route: Route) {
+        _selectRoute.value = route
+    }
+
     fun navigationComplete() {
-        selectRoute.value = null
+        _selectRoute.value = null
         _filter.value = null
     }
 
@@ -73,9 +79,7 @@ class RankingViewModel(val walkableRepository: WalkableRepository) : ViewModel()
 
             _status.value = LoadStatus.LOADING
 
-            val result = walkableRepository.getAllRoute()
-
-            _routeAllList.value = result.handleResultWith(_error, _status)
+            _routeAllList.value = walkableRepository.getAllRoute().handleResultWith(_error, _status)
             _routeList.value = routeAllList.value
 
         }

@@ -20,7 +20,7 @@ class AddFriend2EventAdapter(val viewModel: HostViewModel) :
 
             binding.friendCheckbox.isChecked = viewModel.addList.value?.contains(friend) ?: false
 
-            binding.friendCheckbox.setOnCheckedChangeListener { buttonView, isChecked ->
+            binding.friendCheckbox.setOnCheckedChangeListener { _, isChecked ->
                 if (isChecked) {
                     viewModel.addFriendToAddList(friend)
                 } else {

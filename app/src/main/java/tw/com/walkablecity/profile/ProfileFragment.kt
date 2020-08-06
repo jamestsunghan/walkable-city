@@ -41,40 +41,40 @@ class ProfileFragment : Fragment() {
 
         Logger.d(" accumulate hours ${UserManager.user?.accumulatedHour?.total}")
 
-        viewModel.navigateToAddFriend.observe(viewLifecycleOwner, Observer {
-            if (it) {
+        viewModel.navigateToAddFriend.observe(viewLifecycleOwner, Observer {confirmed->
+            if (confirmed) {
                 findNavController()
                     .navigate(ProfileFragmentDirections.actionGlobalAddFriendFragment())
                 viewModel.navigateToAddFriendComplete()
             }
         })
 
-        viewModel.navigateToSetting.observe(viewLifecycleOwner, Observer {
-            if (it) {
+        viewModel.navigateToSetting.observe(viewLifecycleOwner, Observer {confirmed->
+            if (confirmed) {
                 findNavController()
                     .navigate(ProfileFragmentDirections.actionProfileFragmentToSettingsFragment())
                 viewModel.navigateToSettingComplete()
             }
         })
 
-        viewModel.navigateToWalkers.observe(viewLifecycleOwner, Observer {
-            if (it) {
+        viewModel.navigateToWalkers.observe(viewLifecycleOwner, Observer {confirmed->
+            if (confirmed) {
                 findNavController()
                     .navigate(ProfileFragmentDirections.actionProfileFragmentToBestWalkersFragment())
                 viewModel.navigateToWalkersComplete()
             }
         })
 
-        viewModel.navigateToBadge.observe(viewLifecycleOwner, Observer {
-            if (it) {
+        viewModel.navigateToBadge.observe(viewLifecycleOwner, Observer {confirmed->
+            if (confirmed) {
                 findNavController()
                     .navigate(ProfileFragmentDirections.actionProfileFragmentToBadgeFragment())
                 viewModel.navigateToBadgeComplete()
             }
         })
 
-        viewModel.navigateToExplorer.observe(viewLifecycleOwner, Observer {
-            if (it) {
+        viewModel.navigateToExplorer.observe(viewLifecycleOwner, Observer {confirmed->
+            if (confirmed) {
                 findNavController()
                     .navigate(ProfileFragmentDirections.actionProfileFragmentToExploreFragment())
                 viewModel.navigateToExplorerComplete()

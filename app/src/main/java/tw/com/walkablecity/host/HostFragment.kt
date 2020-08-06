@@ -58,18 +58,20 @@ class HostFragment : Fragment() {
                 getString(R.string.select_event_type),
                 getString(R.string.frequency_distance_spinner)
             )
-                .plus(EventType.values().map {
-                    if (it == EventType.FREQUENCY) getString(R.string.frequency_hour_spinner)
-                    else it.title
+                .plus(EventType.values().map {type->
+                    if (type == EventType.FREQUENCY) getString(R.string.frequency_hour_spinner)
+                    else type.title
                 }
                 )
         )
 
         binding.eventTargetSpinner.adapter = EventTypeSpinnerAdapter(
-            mutableListOf(getString(R.string.select_fr_type)).plus(FrequencyType.values().map { it.text })
+            mutableListOf(getString(R.string.select_fr_type)).plus(FrequencyType.values().map {type->
+                type.text
+            })
         )
 
-        binding.publicCheckbox.setOnCheckedChangeListener { buttonView, isChecked ->
+        binding.publicCheckbox.setOnCheckedChangeListener { _ , isChecked ->
             viewModel.isPublic.value = isChecked
         }
 
@@ -82,7 +84,7 @@ class HostFragment : Fragment() {
             val dpd = DatePickerDialog(
                 requireContext(),
 
-                DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
+                DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
                     // Display Selected date in TextView
 
                     viewModel.startDateDisplay.value =
@@ -95,7 +97,7 @@ class HostFragment : Fragment() {
                 month,
                 day
             )
-            dpd.datePicker.minDate = now().seconds.times(1000)
+            dpd.datePicker.minDate = now().seconds.times(ONE_SECOND)
             dpd.show()
         }
 
@@ -105,7 +107,7 @@ class HostFragment : Fragment() {
             val dpd = DatePickerDialog(
                 requireContext(),
 
-                DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
+                DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
                     // Display Selected date in TextView
 
                     viewModel.endDateDisplay.value =
@@ -149,8 +151,8 @@ class HostFragment : Fragment() {
             }
         })
 
-        viewModel.navigateToAddFriends.observe(viewLifecycleOwner, Observer {
-            if (it) {
+        viewModel.navigateToAddFriends.observe(viewLifecycleOwner, Observer {confirmed->
+            if (confirmed) {
                 findNavController().navigate(
                     HostFragmentDirections
                         .actionHostFragmentToAddFriend2EventFragment()
@@ -160,8 +162,8 @@ class HostFragment : Fragment() {
         })
 
 
-        viewModel.navigateToEvents.observe(viewLifecycleOwner, Observer {
-            if (it) {
+        viewModel.navigateToEvents.observe(viewLifecycleOwner, Observer {confirmed->
+            if (confirmed) {
                 UserManager.user?.id?.let { id ->
                     Logger.d("badge event dialog from host")
                     mainViewModel.getUserEventCount(id)
@@ -172,24 +174,24 @@ class HostFragment : Fragment() {
         })
 
         viewModel.type.observe(viewLifecycleOwner, Observer {
-            it?.let {
-                Logger.d("JJ_type eventType selected ${it.title}")
+            it?.let {type->
+                Logger.d("JJ_type eventType selected ${type.title}")
             }
         })
 
         viewModel.frequencyType.observe(viewLifecycleOwner, Observer {
-            it?.let {
-                Logger.d("JJ_type FQType selected ${it.text}")
+            it?.let {type->
+                Logger.d("JJ_type FQType selected ${type.text}")
             }
         })
         viewModel.endDate.observe(viewLifecycleOwner, Observer {
-            it?.let {
-                Logger.d("endDate ${it.toDateLong()}")
+            it?.let {time->
+                Logger.d("endDate ${time.toDateLong()}")
             }
         })
         viewModel.target.observe(viewLifecycleOwner, Observer {
-            it?.let {
-                Logger.d("JJ_target target $it")
+            it?.let {target->
+                Logger.d("JJ_target target $target")
             }
         })
 

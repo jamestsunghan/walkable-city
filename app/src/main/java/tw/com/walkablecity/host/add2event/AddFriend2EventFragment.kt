@@ -44,15 +44,15 @@ class AddFriend2EventFragment : Fragment() {
         binding.recyclerAddList.adapter = adapterAddList
 
         viewModel.friendList.observe(viewLifecycleOwner, Observer {
-            it?.let {
-                Logger.d("friendlist $it")
+            it?.let {list->
+                Logger.d("friendlist $list")
                 adapter.notifyDataSetChanged()
             }
         })
 
         viewModel.addList.observe(viewLifecycleOwner, Observer {
-            it?.let {
-                Logger.d("addList $it")
+            it?.let {list->
+                Logger.d("addList $list")
                 adapterAddList.notifyDataSetChanged()
             }
         })

@@ -29,21 +29,28 @@ class FavoriteViewModel(val walkableRepository: WalkableRepository) : ViewModel(
         get() = _routeList
 
     private val _filter = MutableLiveData<RouteSorting>()
-    val filter : LiveData<RouteSorting> get() = _filter
+    val filter: LiveData<RouteSorting>
+        get() = _filter
 
     private val _status = MutableLiveData<LoadStatus>()
-    val status : LiveData<LoadStatus> get() = _status
+    val status: LiveData<LoadStatus>
+        get() = _status
 
     private val _error = MutableLiveData<String>()
-    val error : LiveData<String> get() = _error
+    val error: LiveData<String>
+        get() = _error
 
-    val selectRoute = MutableLiveData<Route>()
+    private val _selectRoute = MutableLiveData<Route>()
+    val selectRoute: LiveData<Route>
+        get() = _selectRoute
 
     private val _routeTime = MutableLiveData<List<Float>>()
-    val routeTime: LiveData<List<Float>> get() = _routeTime
+    val routeTime: LiveData<List<Float>>
+        get() = _routeTime
 
     private val _sliderMax = MutableLiveData<Float>()
-    val sliderMax: LiveData<Float> get() = _sliderMax
+    val sliderMax: LiveData<Float>
+        get() = _sliderMax
 
     private val viewModelJob = Job()
     private val coroutineScope = CoroutineScope(Dispatchers.Main + viewModelJob)
@@ -53,53 +60,41 @@ class FavoriteViewModel(val walkableRepository: WalkableRepository) : ViewModel(
         viewModelJob.cancel()
     }
 
-    init{
-
+    init {
         getFavoriteRoutes(requireNotNull(UserManager.user?.id))
-
     }
 
-    fun navigationComplete(){
-        selectRoute.value = null
+    fun select(route: Route) {
+        _selectRoute.value = route
+    }
+
+    fun navigationComplete() {
+        _selectRoute.value = null
         _filter.value = null
     }
 
-    fun filterSort(sorting: RouteSorting){
+    fun filterSort(sorting: RouteSorting) {
         _filter.value = sorting
     }
 
-    private fun getFavoriteRoutes(userId: String){
+    private fun getFavoriteRoutes(userId: String) {
         coroutineScope.launch {
 
             _status.value = LoadStatus.LOADING
 
-            when(val result = walkableRepository.getUserFavoriteRoutes(userId)){
-                is Result.Success ->{
-                    _error.value = null
-                    _status.value = LoadStatus.DONE
-
-                    _routeAllList.value = result.data
-                    _routeList.value = routeAllList.value
-                }
-                is Result.Fail ->{
-                    _error.value = result.error
-                    _status.value = LoadStatus.ERROR
-                }
-                is Result.Error ->{
-                    _error.value = WalkableApp.instance.getString(R.string.not_here)
-                    _status.value = LoadStatus.ERROR
-                }
-
+            walkableRepository.getUserFavoriteRoutes(userId).apply{
+                _routeAllList.value = handleResultWith(_error, _status)
+                _routeList.value = routeAllList.value
             }
         }
     }
 
-    fun setTimeFilter(range: List<Float>, max: Float){
+    fun setTimeFilter(range: List<Float>, max: Float) {
         _sliderMax.value = max
         _routeTime.value = range
     }
 
-    fun timeFilter(list: List<Float>, max: Float, sorting: RouteSorting?){
+    fun timeFilter(list: List<Float>, max: Float, sorting: RouteSorting?) {
         _routeList.value = routeAllList.value?.timeFilter(list, max, sorting)
     }
 }

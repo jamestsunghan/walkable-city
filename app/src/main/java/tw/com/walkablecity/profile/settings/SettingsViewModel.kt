@@ -30,10 +30,6 @@ class SettingsViewModel(val walkableRepository: WalkableRepository) : ViewModel(
     val notifyGoodWeather: LiveData<Boolean>
         get() = _notifyGoodWeather
 
-    private val _currentLocation = MutableLiveData<LatLng>()
-    val currentLocation: LiveData<LatLng>
-        get() = _currentLocation
-
     private val _weatherActivated = MutableLiveData<Boolean>()
     val weatherActivated: LiveData<Boolean>
         get() = _weatherActivated

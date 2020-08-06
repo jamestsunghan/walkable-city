@@ -63,8 +63,8 @@ class LoginFragment : Fragment() {
         }
 
         viewModel.isCustomIdUsable.observe(viewLifecycleOwner, Observer {
-            it?.let {
-                if (it) {
+            it?.let {isUsable->
+                if (isUsable) {
                     viewModel.addUser(
                         requireNotNull(viewModel.firebaseUser.value).toSignInUser(
                             viewModel.idCustom.value
@@ -92,8 +92,8 @@ class LoginFragment : Fragment() {
         })
 
         viewModel.user.observe(viewLifecycleOwner, Observer {
-            it?.let {
-                UserManager.user = it
+            it?.let {user->
+                UserManager.user = user
                 findNavController().navigate(
                     LoginFragmentDirections
                         .actionGlobalHomeFragment(null, null)

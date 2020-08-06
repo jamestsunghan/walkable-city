@@ -50,9 +50,9 @@ class BadgeViewModel(val walkableRepository: WalkableRepository) : ViewModel() {
     private val coroutineScope = CoroutineScope(Dispatchers.Main + viewModelJob)
 
     init {
-        UserManager.user?.id?.let {
-            getFriendCount(it)
-            getEventCount(it)
+        UserManager.user?.id?.let { id ->
+            getFriendCount(id)
+            getEventCount(id)
         }
 
     }
@@ -76,7 +76,7 @@ class BadgeViewModel(val walkableRepository: WalkableRepository) : ViewModel() {
 
             val result = walkableRepository.getAllEvents()
 
-            _eventCount.value = result.handleResultWith(_error, _status)?.filter{ event ->
+            _eventCount.value = result.handleResultWith(_error, _status)?.filter { event ->
                 event.member.any { friend ->
                     friend.id == userId
                 }

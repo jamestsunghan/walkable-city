@@ -192,7 +192,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationClick
                 findNavController().navigate(
                     HomeFragmentDirections
                         .actionHomeFragmentToCreateRouteDialogFragment(
-                            viewModel.route.value, walk, viewModel.photopoints.value?.toTypedArray()
+                            viewModel.route.value, walk, viewModel.photoPoints.value?.toTypedArray()
                         )
                 )
                 viewModel.navigateToRatingComplete()
@@ -273,16 +273,16 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationClick
         })
 
         viewModel.mapRoute.observe(viewLifecycleOwner, Observer {
-            it?.let {
+            it?.let {direction->
                 mapFragment.getMapAsync { map ->
-                    Logger.d("direction result $it")
-                    if (it.routes.isNotEmpty()) {
+                    Logger.d("direction result $direction")
+                    if (direction.routes.isNotEmpty()) {
                         Logger.d("duration ${it.routes[0].legs.map { leg -> leg.distance }}")
 
                         map.addPolyline(
                             PolylineOptions()
                                 .color(getColor(R.color.secondaryLightColor))
-                                .addAll(PolyUtil.decode(it.routes[0].overviewPolyline?.points))
+                                .addAll(PolyUtil.decode(direction.routes[0].overviewPolyline?.points))
                         )
                     }
                 }
@@ -300,7 +300,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationClick
             }
         })
 
-        viewModel.photopoints.observe(viewLifecycleOwner, Observer {
+        viewModel.photoPoints.observe(viewLifecycleOwner, Observer {
             it?.let { points ->
 
                 if (points.isNotEmpty()) {

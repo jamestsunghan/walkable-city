@@ -34,24 +34,32 @@ class RouteItemViewModel(
         get() = _routeList
 
     private val _filter = MutableLiveData<RouteSorting>()
-    val filter: LiveData<RouteSorting> get() = _filter
+    val filter: LiveData<RouteSorting>
+        get() = _filter
 
     private val _status = MutableLiveData<LoadStatus>()
-    val status: LiveData<LoadStatus> get() = _status
+    val status: LiveData<LoadStatus>
+        get() = _status
 
     private val _error = MutableLiveData<String>()
-    val error: LiveData<String> get() = _error
+    val error: LiveData<String>
+        get() = _error
 
-    val selectRoute = MutableLiveData<Route>()
+    private val _selectRoute = MutableLiveData<Route>()
+    val selectRoute: LiveData<Route>
+        get() = _selectRoute
 
     private val _routeTime = MutableLiveData<List<Float>>()
-    val routeTime: LiveData<List<Float>> get() = _routeTime
+    val routeTime: LiveData<List<Float>>
+        get() = _routeTime
 
     private val _sliderMax = MutableLiveData<Float>()
-    val sliderMax: LiveData<Float> get() = _sliderMax
+    val sliderMax: LiveData<Float>
+        get() = _sliderMax
 
     private val _navigateToDetail = MutableLiveData<Route>()
-    val navigateToDetail: LiveData<Route> get() = _navigateToDetail
+    val navigateToDetail: LiveData<Route>
+        get() = _navigateToDetail
 
     private val viewModelJob = Job()
     private val coroutineScope = CoroutineScope(Dispatchers.Main + viewModelJob)
@@ -66,7 +74,7 @@ class RouteItemViewModel(
     }
 
     fun navigationComplete() {
-        selectRoute.value = null
+        _selectRoute.value = null
         _filter.value = null
     }
 
@@ -81,7 +89,8 @@ class RouteItemViewModel(
 
             _routeAllList.value = when (type) {
                 LoadRouteType.FAVORITE -> {
-                    walkableRepository.getUserFavoriteRoutes(userId).handleResultWith(_error, _status)
+                    walkableRepository.getUserFavoriteRoutes(userId)
+                        .handleResultWith(_error, _status)
                 }
                 LoadRouteType.MINE -> {
                     walkableRepository.getUserRoutes(userId).handleResultWith(_error, _status)
@@ -111,6 +120,10 @@ class RouteItemViewModel(
 
     fun timeFilter(list: List<Float>, max: Float, sorting: RouteSorting?) {
         _routeList.value = routeAllList.value?.timeFilter(list, max, sorting)
+    }
+
+    fun select(route: Route) {
+        _selectRoute.value = route
     }
 
     fun navigateToDetail(route: Route) {

@@ -75,19 +75,21 @@ class HostViewModel(private val walkableRepository: WalkableRepository) : ViewMo
     val target = MediatorLiveData<EventTarget>().apply {
 
         addSource(frequencyType) {
-            it?.let {
+            it?.let { type ->
                 if (value == null) value = EventTarget()
-                this.value?.frequencyType = it
+                this.value?.frequencyType = type
                 value = this.value
 
             }
         }
         addSource(targetAmount) {
-            it?.let {
+            it?.let { amount ->
                 if (value == null) value = EventTarget()
                 when (selectTypePosition.value) {
-                    in TYPE_POSITION_DISTANCE -> this.value?.distance = if (it == "") null else it.toFloat()
-                    in TYPE_POSITION_HOUR -> this.value?.hour = if (it == "") null else it.toFloat()
+                    in TYPE_POSITION_DISTANCE -> this.value?.distance =
+                        if (amount == "") null else amount.toFloat()
+                    in TYPE_POSITION_HOUR -> this.value?.hour =
+                        if (amount == "") null else amount.toFloat()
                     else -> {
                     }
                 }
@@ -98,47 +100,47 @@ class HostViewModel(private val walkableRepository: WalkableRepository) : ViewMo
     }
 
     val selectTypePosition = MutableLiveData<Int>()
-    val type = Transformations.map(selectTypePosition) {
-        if (it > 0) {
-            if (it == 1 || it == 2) {
+    val type = Transformations.map(selectTypePosition) { position ->
+        if (position > 0) {
+            if (position == 1 || position == 2) {
                 EventType.FREQUENCY
             } else
-                EventType.values()[it - 2]
+                EventType.values()[position - 2]
         } else null
     }
     val startDateDisplay = MutableLiveData<String>()
-    val startDate = Transformations.map(startDateDisplay) {
+    val startDate = Transformations.map(startDateDisplay) { display ->
 
-        when (it) {
+        when (display) {
             null -> {
                 Logger.d("date null")
                 null
             }
             else -> {
-                Logger.d("date $it")
-                dateToTimeStamp(it)
+                Logger.d("date $display")
+                dateToTimeStamp(display)
             }
         }
     }
 
     val endDateDisplay = MutableLiveData<String>()
 
-    val endDate = Transformations.map(endDateDisplay) {
+    val endDate = Transformations.map(endDateDisplay) { display ->
 
-        when (it) {
+        when (display) {
             null -> null
             else -> {
-                val date = dateToTimeStamp(it)
+                val date = dateToTimeStamp(display)
                 Timestamp(date?.seconds?.plus(ONE_DAY)?.minus(1) as Long, 0)
             }
         }
     }
 
-    private val eventStatus = Transformations.map(startDate) {
-        when (it) {
+    private val eventStatus = Transformations.map(startDate) { time ->
+        when (time) {
             null -> null
             else -> {
-                if (it.seconds > now().seconds) {
+                if (time.seconds > now().seconds) {
                     EventStatus.UPCOMING
                 } else {
                     EventStatus.ONGOING
@@ -206,21 +208,21 @@ class HostViewModel(private val walkableRepository: WalkableRepository) : ViewMo
         } else {
             uploadEvent(
                 Event(
-                    id          = requireNotNull(type.value).prefix +
-                                     "${now().toDateLong()}" +
-                                     "${UserManager.user?.idCustom}",
-                    title       = title.value,
+                    id = requireNotNull(type.value).prefix +
+                            "${now().toDateLong()}" +
+                            "${UserManager.user?.idCustom}",
+                    title = title.value,
                     description = description.value,
-                    public      = isPublic.value,
-                    host        = UserManager.user?.idCustom,
-                    status      = eventStatus.value,
-                    invited     = addList.value?.map { requireNotNull(it.id) } ?: listOf(),
-                    startDate   = startDate.value,
-                    endDate     = endDate.value,
+                    public = isPublic.value,
+                    host = UserManager.user?.idCustom,
+                    status = eventStatus.value,
+                    invited = addList.value?.map { requireNotNull(it.id) } ?: listOf(),
+                    startDate = startDate.value,
+                    endDate = endDate.value,
                     memberCount = 1,
-                    member      = listOf(requireNotNull(UserManager.user).toFriend()),
-                    type        = type.value,
-                    target      = target.value
+                    member = listOf(requireNotNull(UserManager.user).toFriend()),
+                    type = type.value,
+                    target = target.value
                 )
             )
         }
@@ -242,10 +244,7 @@ class HostViewModel(private val walkableRepository: WalkableRepository) : ViewMo
         when (addList.value?.contains(friend)) {
             true -> {
             }
-            false -> {
-                _addList.value = (addList.value ?: listOf()).plus(friend)
-            }
-            null -> {
+            else -> {
                 _addList.value = (addList.value ?: listOf()).plus(friend)
             }
         }
@@ -262,7 +261,7 @@ class HostViewModel(private val walkableRepository: WalkableRepository) : ViewMo
     fun friendSelected() {
         if (addList.value == null) {
             makeShortToast(R.string.no_friend_invited)
-        } else{
+        } else {
             _navigateToHost.value = addList.value
         }
     }
@@ -272,7 +271,7 @@ class HostViewModel(private val walkableRepository: WalkableRepository) : ViewMo
         _navigateToHost.value = null
     }
 
-    fun getUserFriends(userId: String) {
+    private fun getUserFriends(userId: String) {
 
         coroutineScope.launch {
 
@@ -287,7 +286,7 @@ class HostViewModel(private val walkableRepository: WalkableRepository) : ViewMo
 
     companion object {
         const val ONE_DAY = 60 * 60 * 24
-        private val TYPE_POSITION_DISTANCE = listOf(1,3,4)
-        private val TYPE_POSITION_HOUR = listOf(2,5,6)
+        private val TYPE_POSITION_DISTANCE = listOf(1, 3, 4)
+        private val TYPE_POSITION_HOUR = listOf(2, 5, 6)
     }
 }

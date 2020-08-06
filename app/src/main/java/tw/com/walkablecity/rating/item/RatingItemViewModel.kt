@@ -34,9 +34,8 @@ class RatingItemViewModel(
 
     val photos = MutableLiveData<List<PhotoPoint>>().apply {
         value = when (type) {
-            RatingType.ROUTE -> null
             RatingType.WALK -> photoPoints
-            null -> null
+            else            -> null
         }
     }
 
@@ -79,12 +78,15 @@ class RatingItemViewModel(
     val routeDescription = MutableLiveData<String>()
 
     private val _status = MutableLiveData<LoadStatus>()
-    val status: LiveData<LoadStatus> get() = _status
+    val status: LiveData<LoadStatus>
+        get() = _status
 
     private val _error = MutableLiveData<String>()
-    val error: LiveData<String> get() = _error
+    val error: LiveData<String>
+        get() = _error
 
     private val viewModelJob = Job()
+
     private val coroutineScope = CoroutineScope(Dispatchers.Main + viewModelJob)
 
     override fun onCleared() {
@@ -208,7 +210,7 @@ class RatingItemViewModel(
             }
     }
 
-    fun downloadPhotoPoints(routeId: String) {
+    private fun downloadPhotoPoints(routeId: String) {
 
         coroutineScope.launch {
 
@@ -221,7 +223,7 @@ class RatingItemViewModel(
         }
     }
 
-    fun setPhotosValue(list: List<PhotoPoint>?) {
+    private fun setPhotosValue(list: List<PhotoPoint>?) {
         photos.value = when (type) {
             RatingType.ROUTE -> list
             RatingType.WALK -> photoPoints
@@ -235,7 +237,7 @@ class RatingItemViewModel(
         , commentContent: String, createPoints: List<LatLng>
     ) {
 
-        val waypoints = createPoints.filterIndexed { index, latLng ->
+        val waypoints = createPoints.filterIndexed { index, _ ->
             when {
                 createPoints.size <= 10 -> index == index
                 createPoints.size <= 18 -> index % 2 == 1
@@ -251,9 +253,8 @@ class RatingItemViewModel(
             mapImage = imageUrl,
             description = description,
             length = requireNotNull(walk.distance),
-            minutes = requireNotNull(walk.duration).toFloat().div(60).times(createPoints.size).div(
-                walk.waypoints.size
-            ),
+            minutes = requireNotNull(walk.duration).toFloat()
+                .div(60).times(createPoints.size).div(walk.waypoints.size),
             ratingAvr = rating,
             waypoints = waypoints.map { it.toGeoPoint() },
             walkers = listOf(userId),

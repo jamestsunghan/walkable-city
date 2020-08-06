@@ -46,14 +46,14 @@ class BadgeFragment : Fragment() {
         binding.activity = requireActivity()
 
         viewModel.eventCount.observe(viewLifecycleOwner, Observer {
-            it?.let {
-                Logger.d("eventCount $it")
+            it?.let {count->
+                Logger.d("eventCount $count")
             }
         })
 
         viewModel.friendCount.observe(viewLifecycleOwner, Observer {
-            it?.let {
-                Logger.d("friendCount $it")
+            it?.let {count->
+                Logger.d("friendCount $count")
             }
         })
 
@@ -72,12 +72,12 @@ class BadgeFragment : Fragment() {
             UserManager.user?.accumulatedKm?.total ?: 0f
         )
 
-        viewModel.friendCount.value?.let {
-            putDataToSharedPreference(BadgeType.FRIEND_COUNT.key, count = it)
+        viewModel.friendCount.value?.let {count->
+            putDataToSharedPreference(BadgeType.FRIEND_COUNT.key, count = count)
         }
 
-        viewModel.eventCount.value?.let {
-            putDataToSharedPreference(BadgeType.EVENT_COUNT.key, count = it)
+        viewModel.eventCount.value?.let {count->
+            putDataToSharedPreference(BadgeType.EVENT_COUNT.key, count = count)
         }
 
         mainViewModel.resetBadgeTotal()

@@ -101,7 +101,7 @@ class RatingItemFragment(
             .inflate(inflater, R.layout.fragment_rating_item, container, false)
 
         binding.createRouteSlider.apply {
-            addOnChangeListener { slider, value, fromUser ->
+            addOnChangeListener { slider, _, _ ->
                 viewModel.setCreateFilter(slider.values)
             }
             values = listOf(0f, walk.waypoints.lastIndex.toFloat())
@@ -120,10 +120,10 @@ class RatingItemFragment(
 
         binding.recyclerPhotoPoint.adapter = RatingItemPhotoAdapter(route, type)
 
-        viewModel.sendRating.observe(viewLifecycleOwner, Observer {
-            if (it) {
+        viewModel.sendRating.observe(viewLifecycleOwner, Observer { sent ->
+            if (sent) {
                 val result = 1
-                this.setFragmentResult("navigation", bundleOf("sent" to result))
+                this.setFragmentResult(REQUEST_KEY, bundleOf(BUNDLE_KEY to result))
             }
         })
 
@@ -166,15 +166,15 @@ class RatingItemFragment(
             }
             RatingType.WALK -> {
 
-                mapFragment.getMapAsync {
+                mapFragment.getMapAsync { map ->
 
-                    it.moveCamera(
+                    map.moveCamera(
                         CameraUpdateFactory.newLatLngZoom(
                             walk.waypoints.toLatLngPoints()[0],
                             15f
                         )
                     )
-                    polylineWalk = it.addPolyline(
+                    polylineWalk = map.addPolyline(
                         PolylineOptions().color(getColor(R.color.grey_transparent))
                             .addAll(walk.waypoints.toLatLngPoints())
                     )
@@ -191,7 +191,7 @@ class RatingItemFragment(
                             val latLng = item.getLatLngPoint()
                             val bitmap = item.drawBitmap(25)
 
-                            it.addMarker(
+                            map.addMarker(
                                 MarkerOptions().position(requireNotNull(latLng)).icon(
                                     BitmapDescriptorFactory.fromBitmap(bitmap.getCroppedBitmap())
                                 )
@@ -241,8 +241,8 @@ class RatingItemFragment(
         })
 
         viewModel.uploadPointsSuccess.observe(viewLifecycleOwner, Observer {
-            it?.let {
-                if (it) {
+            it?.let { uploaded ->
+                if (uploaded) {
                     viewModel.sendRouteRating()
                 }
             }
@@ -280,5 +280,10 @@ class RatingItemFragment(
         mapFragment = WorkaroundMapFragment().apply {
             getMapAsync(this@RatingItemFragment)
         }
+    }
+
+    companion object {
+        const val REQUEST_KEY = "navigation"
+        const val BUNDLE_KEY = "sent"
     }
 }

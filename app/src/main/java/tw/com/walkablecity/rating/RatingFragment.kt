@@ -6,7 +6,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.os.bundleOf
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
@@ -31,11 +30,11 @@ class RatingFragment : Fragment() {
         binding.lifecycleOwner = this
 
         childFragmentManager.setFragmentResultListener(
-            "navigation",
+            REQUEST_KEY,
             viewLifecycleOwner
-        ) { requestKey, bundle ->
-            val result = bundle.getInt("sent")
-            viewModel.navigateToSearch.value = viewModel.navigateToSearch.value?.plus(result) ?: 1
+        ) { _, bundle ->
+            val result = bundle.getInt(BUNDLE_KEY)
+            viewModel.addDonePageCount(result)
         }
 
         val selectedRoute = RatingFragmentArgs.fromBundle(requireArguments()).selectedRoute
@@ -52,9 +51,9 @@ class RatingFragment : Fragment() {
             it.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(binding.tabsRating))
         }
 
-        viewModel.navigateToSearch.observe(viewLifecycleOwner, Observer {
-            it?.let {
-                if (it > 1) {
+        viewModel.navigateToHome.observe(viewLifecycleOwner, Observer {
+            it?.let {count->
+                if (count > 1) {
                     findNavController().navigate(
                         RatingFragmentDirections.actionGlobalHomeFragment(
                             null,
@@ -69,5 +68,8 @@ class RatingFragment : Fragment() {
         return binding.root
     }
 
-
+    companion object{
+        const val REQUEST_KEY = "navigation"
+        const val BUNDLE_KEY = "sent"
+    }
 }

@@ -64,7 +64,6 @@ class ExploreFragment : Fragment(), OnMapReadyCallback {
         } catch (e: Resources.NotFoundException) {
             Logger.e("JJ_map Can't find style. Error: $e")
         }
-
     }
 
     override fun onRequestPermissionsResult(
@@ -88,9 +87,7 @@ class ExploreFragment : Fragment(), OnMapReadyCallback {
             }
             viewModel.permissionDenied()
         }
-
     }
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -121,10 +118,12 @@ class ExploreFragment : Fragment(), OnMapReadyCallback {
             )
         }
 
-        viewModel.userWalks.observe(viewLifecycleOwner, Observer {
-            it?.let { walks ->
-                viewModel.currentLocation.value?.let { latLng ->
+        viewModel.canDrawMap.observe(viewLifecycleOwner, Observer {
+            it?.let { canDrawMap ->
+                if (canDrawMap) {
                     mapFragment.getMapAsync { map ->
+                        val latLng = requireNotNull(viewModel.currentLocation.value)
+                        val walks = requireNotNull(viewModel.userWalks.value)
 
                         map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 13f))
 
@@ -133,20 +132,13 @@ class ExploreFragment : Fragment(), OnMapReadyCallback {
                             map.addPolyline(
                                 PolylineOptions()
                                     .color(WalkableApp.instance.getColor(R.color.walk_path))
-                                    .width(20f)
+                                    .width(POLY_WIDTH)
                                     .addAll(walk.waypoints.toLatLngPoints())
                             )
                             if (walk.waypoints.isNotEmpty()) {
-                                val bitmapRealDimens = TypedValue.applyDimension(
-                                    TypedValue.COMPLEX_UNIT_DIP,
-                                    25f,
-                                    WalkableApp.instance.resources.displayMetrics
-                                ).toInt()
-                                val drawable = WalkableApp.instance.resources.getDrawable(
-                                    R.mipmap.ic_launcher_foot_in_white,
-                                    WalkableApp.instance.theme
-                                )
-                                val bitmap = drawable.toBitmap(bitmapRealDimens, bitmapRealDimens)
+
+                                val bitmap = viewModel.bitmap
+
                                 map.addMarker(
                                     MarkerOptions()
                                         .position(walk.waypoints.toLatLngPoints()[0])
@@ -164,29 +156,14 @@ class ExploreFragment : Fragment(), OnMapReadyCallback {
                         map.setInfoWindowAdapter(ExploreInfoWindowAdapter(walks, container))
                     }
                 }
-
             }
         })
 
+
         viewModel.currentLocation.observe(viewLifecycleOwner, Observer { latLng ->
             latLng?.let {
-                viewModel.userWalks.value?.let { walks ->
-                    mapFragment.getMapAsync { map ->
-
-                        map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10f))
-
-                        for (walk in walks) {
-
-                            map.addPolyline(
-                                PolylineOptions().color(WalkableApp.instance.getColor(R.color.red_heart_c73e3a))
-                                    .addAll(walk.waypoints.toLatLngPoints())
-                            )
-
-                        }
-                    }
-                }
-
-                childFragmentManager.beginTransaction().replace(R.id.explore_map, mapFragment).commit()
+                childFragmentManager.beginTransaction().replace(R.id.explore_map, mapFragment)
+                    .commit()
             }
         })
 
@@ -198,5 +175,9 @@ class ExploreFragment : Fragment(), OnMapReadyCallback {
         mapFragment = SupportMapFragment().apply {
             getMapAsync(this@ExploreFragment)
         }
+    }
+
+    companion object {
+        private const val POLY_WIDTH = 20f
     }
 }

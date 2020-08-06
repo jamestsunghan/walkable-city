@@ -19,7 +19,7 @@ import tw.com.walkablecity.ext.getVMFactory
 class FavoriteFragment : Fragment() {
 
 
-    private val viewModel: FavoriteViewModel by viewModels{getVMFactory()}
+    private val viewModel: FavoriteViewModel by viewModels { getVMFactory() }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,7 +35,7 @@ class FavoriteFragment : Fragment() {
         binding.recyclerRouteItem.adapter = adapter
 
         viewModel.filter.observe(viewLifecycleOwner, Observer {
-            it?.let{sorting->
+            it?.let { sorting ->
                 Logger.d("route sorting ${sorting.text}")
                 viewModel.timeFilter(
                     viewModel.routeTime.value ?: listOf(Float.MIN_VALUE, Float.MAX_VALUE),
@@ -47,7 +47,7 @@ class FavoriteFragment : Fragment() {
         })
 
         viewModel.selectRoute.observe(viewLifecycleOwner, Observer {
-            it?.let{route->
+            it?.let { route ->
 
                 findNavController()
                     .navigate(FavoriteFragmentDirections.actionGlobalDetailFragment(route))
@@ -58,6 +58,6 @@ class FavoriteFragment : Fragment() {
 
         return binding.root
     }
-    
+
 
 }
