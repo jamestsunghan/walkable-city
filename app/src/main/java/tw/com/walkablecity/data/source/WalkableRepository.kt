@@ -2,12 +2,12 @@ package tw.com.walkablecity.data.source
 
 import android.graphics.Bitmap
 import android.location.Location
-import android.net.Uri
 import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.firestore.GeoPoint
 import tw.com.walkablecity.data.*
+import tw.com.walkablecity.data.directionresult.DirectionResult
+import tw.com.walkablecity.data.weatherresult.WeatherResult
 
 interface WalkableRepository {
 

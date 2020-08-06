@@ -21,6 +21,7 @@ import tw.com.walkablecity.WalkableApp
 import tw.com.walkablecity.util.Util.getString
 import tw.com.walkablecity.util.Util.lessThenTenPadStart
 import tw.com.walkablecity.data.*
+import tw.com.walkablecity.data.directionresult.GoogleRoute
 import tw.com.walkablecity.home.WalkerStatus
 import tw.com.walkablecity.rating.RatingType
 import tw.com.walkablecity.util.CircleView

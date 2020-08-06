@@ -22,7 +22,7 @@ data class Accumulation (
         )
     }
 
-    fun dailyUpdate(): Accumulation{
+    private fun dailyUpdate(): Accumulation{
         return Accumulation(
             daily   = 0f,
             weekly  = weekly,
@@ -32,7 +32,7 @@ data class Accumulation (
         )
     }
 
-    fun weeklyUpdate(): Accumulation{
+    private fun weeklyUpdate(): Accumulation{
         return Accumulation(
             daily   = 0f,
             weekly  = 0f,
@@ -42,7 +42,7 @@ data class Accumulation (
         )
     }
 
-    fun monthlyUpdate(): Accumulation{
+    private fun monthlyUpdate(): Accumulation{
         return Accumulation(
             daily   = 0f,
             weekly  = 0f,

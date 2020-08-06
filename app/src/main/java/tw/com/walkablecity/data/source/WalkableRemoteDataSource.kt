@@ -21,6 +21,8 @@ import tw.com.walkablecity.util.Util.getString
 import tw.com.walkablecity.util.Util.isInternetConnected
 import tw.com.walkablecity.WalkableApp
 import tw.com.walkablecity.data.*
+import tw.com.walkablecity.data.directionresult.DirectionResult
+import tw.com.walkablecity.data.weatherresult.WeatherResult
 import tw.com.walkablecity.ext.*
 import tw.com.walkablecity.network.WalkableApi
 import tw.com.walkablecity.network.WeatherApi

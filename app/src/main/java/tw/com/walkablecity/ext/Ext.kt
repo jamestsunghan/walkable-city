@@ -13,6 +13,7 @@ import tw.com.walkablecity.R
 import tw.com.walkablecity.util.Util
 import tw.com.walkablecity.util.Util.getString
 import tw.com.walkablecity.data.*
+import tw.com.walkablecity.data.directionresult.LatLngResult
 import tw.com.walkablecity.eventdetail.MemberItem
 import tw.com.walkablecity.profile.bestwalker.WalkerItem
 import java.io.File

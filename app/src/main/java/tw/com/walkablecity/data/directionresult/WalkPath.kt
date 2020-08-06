@@ -1,4 +1,4 @@
-package tw.com.walkablecity.data
+package tw.com.walkablecity.data.directionresult
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize

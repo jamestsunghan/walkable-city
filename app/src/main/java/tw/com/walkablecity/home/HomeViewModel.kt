@@ -20,6 +20,7 @@ import tw.com.walkablecity.R
 import tw.com.walkablecity.util.Util.getAccumulatedFromSharedPreference
 import tw.com.walkablecity.util.Util.getColor
 import tw.com.walkablecity.data.*
+import tw.com.walkablecity.data.directionresult.DirectionResult
 import tw.com.walkablecity.data.source.WalkableRepository
 import tw.com.walkablecity.ext.toDistance
 import tw.com.walkablecity.ext.toGeoPoint

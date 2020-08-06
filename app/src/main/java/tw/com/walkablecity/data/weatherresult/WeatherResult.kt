@@ -1,4 +1,4 @@
-package tw.com.walkablecity.data
+package tw.com.walkablecity.data.weatherresult
 
 import android.os.Parcelable
 import com.squareup.moshi.Json

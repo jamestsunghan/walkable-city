@@ -6,6 +6,8 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseUser
 import tw.com.walkablecity.data.*
+import tw.com.walkablecity.data.directionresult.DirectionResult
+import tw.com.walkablecity.data.weatherresult.WeatherResult
 
 class DefaultWalkableRepository(private val remote: WalkableDataSource) : WalkableRepository {
 

@@ -11,9 +11,8 @@ import retrofit2.http.Query
 import tw.com.walkablecity.R
 import tw.com.walkablecity.util.Util
 import tw.com.walkablecity.util.Util.getString
-import tw.com.walkablecity.data.DirectionResult
-import tw.com.walkablecity.data.MapImageResult
-import tw.com.walkablecity.data.WeatherResult
+import tw.com.walkablecity.data.directionresult.DirectionResult
+import tw.com.walkablecity.data.weatherresult.WeatherResult
 
 private const val BASE_URL = "https://maps.googleapis.com/maps/api/"
 
@@ -51,15 +50,6 @@ interface GoogleApiServices {
         @Query("waypoints") waypoints: String,
         @Query("key") key: String = Util.getString(R.string.google_api_key)
     ): DirectionResult
-
-    @GET("staticmap")
-    suspend fun getImage(
-        @Query("center") center: String,
-        @Query("zoom") zoom: String,
-        @Query("key") key: String = getString(R.string.google_api_key),
-        @Query("path") path: String,
-        @Query("size") size: String = "400x400"
-    ): MapImageResult
 }
 
 
