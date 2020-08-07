@@ -35,7 +35,7 @@ class RatingItemViewModel(
     val photos = MutableLiveData<List<PhotoPoint>>().apply {
         value = when (type) {
             RatingType.WALK -> photoPoints
-            else            -> null
+            else -> null
         }
     }
 
@@ -239,10 +239,10 @@ class RatingItemViewModel(
 
         val waypoints = createPoints.filterIndexed { index, _ ->
             when {
-                createPoints.size <= 10 -> index == index
-                createPoints.size <= 18 -> index % 2 == 1
+                createPoints.size <= ALL_KEEP -> index == index
+                createPoints.size <= KEEP_HALF -> index % 2 == 1
                 else -> {
-                    val factor = createPoints.size / 9
+                    val factor = createPoints.size / ONE_NINTH
                     index % factor == 1
                 }
             }
@@ -253,8 +253,8 @@ class RatingItemViewModel(
             mapImage = imageUrl,
             description = description,
             length = requireNotNull(walk.distance),
-            minutes = requireNotNull(walk.duration).toFloat()
-                .div(60).times(createPoints.size).div(walk.waypoints.size),
+            minutes = requireNotNull(walk.duration).toFloat().div(MINUTES)
+                .times(createPoints.size).div(walk.waypoints.size),
             ratingAvr = rating,
             waypoints = waypoints.map { it.toGeoPoint() },
             walkers = listOf(userId),
@@ -271,6 +271,13 @@ class RatingItemViewModel(
 
         }
 
+    }
+
+    companion object {
+        private const val ALL_KEEP = 10
+        private const val KEEP_HALF = 18
+        private const val ONE_NINTH = 9
+        private const val MINUTES = 60
     }
 
 }
