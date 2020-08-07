@@ -1,110 +1,114 @@
 package tw.com.walkablecity.eventdetail
 
 import android.content.Context
-import android.content.res.ColorStateList
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.view.marginEnd
 import androidx.lifecycle.Observer
-import androidx.lifecycle.findViewTreeLifecycleOwner
-import androidx.lifecycle.observe
 import androidx.recyclerview.widget.*
 import tw.com.walkablecity.*
 import tw.com.walkablecity.data.EventType
 import tw.com.walkablecity.data.Friend
-import tw.com.walkablecity.data.FriendListWrapper
-import tw.com.walkablecity.data.MissionFQ
 import tw.com.walkablecity.databinding.ItemEventDetailBoardBinding
 import tw.com.walkablecity.databinding.ItemMemberEventDetailBinding
 import tw.com.walkablecity.detail.DetailCircleAdapter
-import tw.com.walkablecity.ext.toFriend
-import java.text.SimpleDateFormat
+import tw.com.walkablecity.util.Util
 
-class MemberAdapter(val viewModel: EventDetailViewModel): ListAdapter<MemberItem, RecyclerView.ViewHolder>(DiffCallback) {
+class MemberAdapter(val viewModel: EventDetailViewModel) :
+    ListAdapter<MemberItem, RecyclerView.ViewHolder>(DiffCallback) {
 
     private lateinit var context: Context
 
-    class BoardViewHolder(private val binding: ItemEventDetailBoardBinding): RecyclerView.ViewHolder(binding.root){
-        fun bind(viewModel: EventDetailViewModel, champ: Friend, context: Context){
-            binding.circleAccomplish.apply{
+    class BoardViewHolder(private val binding: ItemEventDetailBoardBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+
+        fun bind(viewModel: EventDetailViewModel, champ: Friend, context: Context) {
+
+            binding.circleAccomplish.apply {
                 setCircleColor(Util.getColor(R.color.grey_transparent))
                 setStrokeWidth(20f)
             }
+
             binding.viewModel = viewModel
 
-
-
-            viewModel.champ.observe(context as MainActivity, Observer{
-                it?.let{champion->
+            viewModel.champ.observe(context as MainActivity, Observer {
+                it?.let { champion ->
                     binding.champ = champion
-                    binding.champAccomplished = if(viewModel.event.type == EventType.HOUR_RACE){
-                            champion.accomplish?.div(60*60) ?: 0f
-                        } else{
-                            champion.accomplish
-                        }
-
+                    binding.champAccomplished = if (viewModel.event.type == EventType.HOUR_RACE) {
+                        champion.accomplish?.div(60 * 60) ?: 0f
+                    } else {
+                        champion.accomplish
+                    }
                 }
             })
+
             binding.total = viewModel.circleList.value?.sum()?.times(100)
+
             binding.recyclerFq.adapter = FrequencyAdapter(viewModel)
+
             binding.recyclerCircleFq.adapter = DetailCircleAdapter()
+
             binding.recyclerFq.onFlingListener = null
-            val linearSnapHelper = LinearSnapHelper().apply{
+
+            val linearSnapHelper = LinearSnapHelper().apply {
                 attachToRecyclerView(binding.recyclerFq)
             }
 
-            binding.recyclerFq.setOnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
+            binding.recyclerFq.setOnScrollChangeListener { _, _, _, _, _ ->
                 viewModel.onGalleryScrollChange(binding.recyclerFq.layoutManager, linearSnapHelper)
             }
             viewModel.snapPosition.observe(context as MainActivity, Observer {
-                (binding.recyclerCircleFq.adapter as DetailCircleAdapter).selectedPosition.value = it
+                (binding.recyclerCircleFq.adapter as DetailCircleAdapter).selectedPosition.value =
+                    it
             })
 
 
         }
     }
 
-    class MemberViewHolder(private val binding: ItemMemberEventDetailBinding): RecyclerView.ViewHolder(binding.root){
-        fun bind(friend: Friend, viewModel: EventDetailViewModel, position: Int){
+    class MemberViewHolder(private val binding: ItemMemberEventDetailBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        fun bind(friend: Friend, viewModel: EventDetailViewModel, position: Int) {
             binding.friend = friend
             binding.viewModel = viewModel
-            binding.isAccomplished = (friend.accomplish ?: 0f) >= (viewModel.event.target?.hour?.times(60*60) ?: requireNotNull(viewModel.event.target?.distance))
+            binding.isAccomplished =
+                (friend.accomplish ?: 0f) >= (viewModel.event.target?.hour?.times(60 * 60)
+                    ?: requireNotNull(viewModel.event.target?.distance))
             binding.width = binding.friendBar.width
-//            binding.friendSeekBar.apply{
-//                max = viewModel.event.target?.distance?.times(1000)?.toInt() ?: requireNotNull(viewModel.event.target?.hour?.times(60*60)?.toInt())
-//                progress = if(viewModel.event.target?.distance == null){
-//                    friend.accomplish?.toInt() ?: 0
-//                }else{
-//                    friend.accomplish?.times(1000)?.toInt() ?: 0
-//                }
-//                Logger.d("JJ_seekbar max $max progress $progress")
-//                isActivated = false
-//                secondaryProgress = viewModel.typeColor
-//            }
-            val progressWidth = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 180f, WalkableApp.instance.resources.displayMetrics)
+
+            val progressWidth = TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP,
+                180f,
+                WalkableApp.instance.resources.displayMetrics
+            )
             binding.guideline.setGuidelineEnd(progressWidth.toInt())
 
-            binding.friendBarProgress.width =  friend.accomplish?.let{
-                if(viewModel.event.target?.frequencyType == null){
-                    it.times(progressWidth-binding.friendBar.marginEnd)
-                        .div(viewModel.event.target?.distance ?: requireNotNull(viewModel.event.target?.hour)*3600).toInt()
-                }else{
-                    it.times(progressWidth-binding.friendBar.marginEnd)
-                        .div(viewModel.event.target.distance ?: requireNotNull(viewModel.event.target.hour)).toInt()
+            binding.friendBarProgress.width = friend.accomplish?.let {
+                if (viewModel.event.target?.frequencyType == null) {
+                    it.times(progressWidth - binding.friendBar.marginEnd)
+                        .div(
+                            viewModel.event.target?.distance
+                                ?: requireNotNull(viewModel.event.target?.hour) * 3600
+                        ).toInt()
+                } else {
+                    it.times(progressWidth - binding.friendBar.marginEnd)
+                        .div(
+                            viewModel.event.target.distance
+                                ?: requireNotNull(viewModel.event.target.hour)
+                        ).toInt()
                 }
 
             } ?: binding.friendBar.width
 
             binding.user = UserManager.user?.toFriend()
-//            Logger.d(friend bar width ${binding.friendBar.width}")
-//            Logger.d("friend bar progress width ${binding.friendBarProgress.width}")
+
             binding.position = position
             binding.executePendingBindings()
         }
     }
 
-    companion object DiffCallback: DiffUtil.ItemCallback<MemberItem>(){
+    companion object DiffCallback : DiffUtil.ItemCallback<MemberItem>() {
         override fun areItemsTheSame(oldItem: MemberItem, newItem: MemberItem): Boolean {
             return oldItem === newItem
         }
@@ -112,12 +116,13 @@ class MemberAdapter(val viewModel: EventDetailViewModel): ListAdapter<MemberItem
         override fun areContentsTheSame(oldItem: MemberItem, newItem: MemberItem): Boolean {
             return oldItem == newItem
         }
-        private const val ITEM_VIEW_TYPE_BOARD     = 0x00
-        private const val ITEM_VIEW_TYPE_MEMBER    = 0x01
+
+        private const val ITEM_VIEW_TYPE_BOARD = 0x00
+        private const val ITEM_VIEW_TYPE_MEMBER = 0x01
     }
 
     override fun getItemViewType(position: Int): Int {
-        return when(val item = getItem(position)){
+        return when (getItem(position)) {
             is MemberItem.Board -> ITEM_VIEW_TYPE_BOARD
             is MemberItem.Member -> ITEM_VIEW_TYPE_MEMBER
         }
@@ -125,30 +130,44 @@ class MemberAdapter(val viewModel: EventDetailViewModel): ListAdapter<MemberItem
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         context = parent.context
-        return when(viewType){
-            ITEM_VIEW_TYPE_BOARD -> BoardViewHolder(ItemEventDetailBoardBinding
-                .inflate(LayoutInflater.from(parent.context), parent, false))
-            ITEM_VIEW_TYPE_MEMBER -> MemberViewHolder(ItemMemberEventDetailBinding
-                .inflate(LayoutInflater.from(parent.context),parent,false))
+        return when (viewType) {
+            ITEM_VIEW_TYPE_BOARD -> BoardViewHolder(
+                ItemEventDetailBoardBinding
+                    .inflate(LayoutInflater.from(parent.context), parent, false)
+            )
+            ITEM_VIEW_TYPE_MEMBER -> MemberViewHolder(
+                ItemMemberEventDetailBinding
+                    .inflate(LayoutInflater.from(parent.context), parent, false)
+            )
             else -> throw ClassCastException("Unknown viewType $viewType")
         }
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        when(holder){
-            is BoardViewHolder ->holder.bind(viewModel, (getItem(1) as MemberItem.Member).member, context)
-            is MemberViewHolder ->holder.bind((getItem(position) as MemberItem.Member).member, viewModel, position)
+        when (holder) {
+            is BoardViewHolder -> holder.bind(
+                viewModel,
+                (getItem(1) as MemberItem.Member).member,
+                context
+            )
+            is MemberViewHolder -> holder.bind(
+                (getItem(position) as MemberItem.Member).member,
+                viewModel,
+                position
+            )
         }
     }
 }
 
-sealed class MemberItem{
-    abstract val id : String
-    data class Member(val member: Friend): MemberItem(){
+sealed class MemberItem {
+    abstract val id: String
+
+    data class Member(val member: Friend) : MemberItem() {
         override val id: String
             get() = requireNotNull(member.id)
     }
-    object Board: MemberItem(){
+
+    object Board : MemberItem() {
         override val id: String
             get() = "this is a book"
     }

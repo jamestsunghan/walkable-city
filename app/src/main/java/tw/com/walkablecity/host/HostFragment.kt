@@ -11,7 +11,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -24,16 +23,17 @@ import tw.com.walkablecity.data.FrequencyType
 import tw.com.walkablecity.databinding.FragmentHostBinding
 import tw.com.walkablecity.ext.getVMFactory
 import tw.com.walkablecity.ext.toDateLong
-import tw.com.walkablecity.host.add2event.AddFriend2EventAdapter
 import tw.com.walkablecity.host.add2event.AddListAdapter
+import tw.com.walkablecity.util.Logger
+import tw.com.walkablecity.util.Util
+import tw.com.walkablecity.util.Util.lessThenTenPadStart
 import java.text.SimpleDateFormat
 import java.util.*
 
 class HostFragment : Fragment() {
 
 
-
-    private val viewModel: HostViewModel by navGraphViewModels(R.id.navigation2){
+    private val viewModel: HostViewModel by navGraphViewModels(R.id.navigation2) {
         getVMFactory()
     }
 
@@ -55,20 +55,23 @@ class HostFragment : Fragment() {
 
         binding.eventTypeSpinner.adapter = EventTypeSpinnerAdapter(
             mutableListOf(
-                getString(R.string.select_event_type), getString(R.string.frequency_distance_spinner))
-                .plus(EventType.values().map{
-                    if(it == EventType.FREQUENCY) getString(R.string.frequency_hour_spinner)
-                    else it.title
-                }
+                getString(R.string.select_event_type),
+                getString(R.string.frequency_distance_spinner)
             )
+                .plus(EventType.values().map {type->
+                    if (type == EventType.FREQUENCY) getString(R.string.frequency_hour_spinner)
+                    else type.title
+                }
+                )
         )
-
 
         binding.eventTargetSpinner.adapter = EventTypeSpinnerAdapter(
-            mutableListOf(getString(R.string.select_fr_type)).plus(FrequencyType.values().map{it.text})
+            mutableListOf(getString(R.string.select_fr_type)).plus(FrequencyType.values().map {type->
+                type.text
+            })
         )
 
-        binding.publicCheckbox.setOnCheckedChangeListener { buttonView, isChecked ->
+        binding.publicCheckbox.setOnCheckedChangeListener { _ , isChecked ->
             viewModel.isPublic.value = isChecked
         }
 
@@ -81,19 +84,20 @@ class HostFragment : Fragment() {
             val dpd = DatePickerDialog(
                 requireContext(),
 
-                DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
+                DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
                     // Display Selected date in TextView
 
-
                     viewModel.startDateDisplay.value =
-                        "${year}-${Util.lessThenTenPadStart((monthOfYear + 1).toLong())}-${Util.lessThenTenPadStart(dayOfMonth.toLong())}"
+                        "${year}-${lessThenTenPadStart((monthOfYear + 1).toLong())}-${lessThenTenPadStart(
+                            dayOfMonth.toLong()
+                        )}"
 
                 },
                 year,
                 month,
                 day
             )
-            dpd.datePicker.minDate = now().seconds.times(1000)
+            dpd.datePicker.minDate = now().seconds.times(ONE_SECOND)
             dpd.show()
         }
 
@@ -103,58 +107,64 @@ class HostFragment : Fragment() {
             val dpd = DatePickerDialog(
                 requireContext(),
 
-                DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
+                DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
                     // Display Selected date in TextView
 
-
                     viewModel.endDateDisplay.value =
-                        "${year}-${Util.lessThenTenPadStart((monthOfYear + 1).toLong())}-${Util.lessThenTenPadStart(dayOfMonth.toLong())}"
-
+                        "${year}-${lessThenTenPadStart((monthOfYear + 1).toLong())}-${lessThenTenPadStart(
+                            dayOfMonth.toLong()
+                        )}"
                 },
                 year,
                 month,
                 day
             )
 
-            dpd.datePicker.minDate = when(viewModel.frequencyType.value){
+            dpd.datePicker.minDate = when (viewModel.frequencyType.value) {
 
-                FrequencyType.DAILY -> (viewModel.startDate.value ?: now()).seconds.times(1000).plus(ONE_DAY)
-                FrequencyType.WEEKLY -> (viewModel.startDate.value ?: now()).seconds.times(1000).plus(ONE_WEEK)
-                FrequencyType.MONTHLY ->{
+                FrequencyType.DAILY -> (viewModel.startDate.value
+                    ?: now()).seconds.times(ONE_SECOND).plus(ONE_DAY)
+                FrequencyType.WEEKLY -> (viewModel.startDate.value
+                    ?: now()).seconds.times(ONE_SECOND).plus(ONE_WEEK)
+                FrequencyType.MONTHLY -> {
                     val dateString = viewModel.startDateDisplay.value
-                        ?: SimpleDateFormat("yyyy-MM-dd", Locale.TAIWAN).format(now().seconds.times(1000))
+                        ?: SimpleDateFormat("yyyy-MM-dd", Locale.TAIWAN).format(
+                            now().seconds.times(ONE_SECOND)
+                        )
                     Logger.d("JJ_date dateString $dateString")
 
                     val newString = Util.dateAddMonth(dateString) ?: dateString
                     Logger.d("JJ_date newString $newString")
-                    Util.dateToTimeStamp(newString)?.seconds?.times(1000)
-                        ?: now().seconds.times(1000).plus(THIRTY_DAYS)
+                    Util.dateToTimeStamp(newString)?.seconds?.times(ONE_SECOND)
+                        ?: now().seconds.times(ONE_SECOND).plus(THIRTY_DAYS)
                 }
-                null ->(viewModel.startDate.value ?: now()).seconds.times(1000).plus(ONE_DAY)
+                null -> (viewModel.startDate.value ?: now()).seconds.times(ONE_SECOND).plus(ONE_DAY)
             }
 
             dpd.show()
         }
 
 
-        viewModel.startDate.observe(viewLifecycleOwner, Observer{
-            it?.let{
+        viewModel.startDate.observe(viewLifecycleOwner, Observer {
+            it?.let {
                 Logger.d("timestamp ${it.toDateLong()}")
             }
         })
 
-        viewModel.navigateToAddFriends.observe(viewLifecycleOwner, Observer{
-            if(it){
-                findNavController().navigate(HostFragmentDirections
-                    .actionHostFragmentToAddFriend2EventFragment())
+        viewModel.navigateToAddFriends.observe(viewLifecycleOwner, Observer {confirmed->
+            if (confirmed) {
+                findNavController().navigate(
+                    HostFragmentDirections
+                        .actionHostFragmentToAddFriend2EventFragment()
+                )
                 viewModel.addSomeFriendsComplete()
             }
         })
 
 
-        viewModel.navigateToEvents.observe(viewLifecycleOwner, Observer{
-            if(it){
-                UserManager.user?.id?.let{id->
+        viewModel.navigateToEvents.observe(viewLifecycleOwner, Observer {confirmed->
+            if (confirmed) {
+                UserManager.user?.id?.let { id ->
                     Logger.d("badge event dialog from host")
                     mainViewModel.getUserEventCount(id)
                 }
@@ -163,27 +173,25 @@ class HostFragment : Fragment() {
             }
         })
 
-        viewModel.type.observe(viewLifecycleOwner, Observer{
-            it?.let{
-                Logger.d("JJ_type eventType selected ${it.title}")
+        viewModel.type.observe(viewLifecycleOwner, Observer {
+            it?.let {type->
+                Logger.d("JJ_type eventType selected ${type.title}")
             }
         })
 
-        viewModel.frequencyType.observe(viewLifecycleOwner, Observer{
-            it?.let{
-                Logger.d("JJ_type FQType selected ${it.text}")
+        viewModel.frequencyType.observe(viewLifecycleOwner, Observer {
+            it?.let {type->
+                Logger.d("JJ_type FQType selected ${type.text}")
             }
         })
-
-        viewModel.endDate.observe(viewLifecycleOwner, Observer{
-            it?.let{
-                Logger.d( "endDate ${it.toDateLong()}")
+        viewModel.endDate.observe(viewLifecycleOwner, Observer {
+            it?.let {time->
+                Logger.d("endDate ${time.toDateLong()}")
             }
         })
-
         viewModel.target.observe(viewLifecycleOwner, Observer {
-            it?.let{
-                Logger.d("JJ_target target $it")
+            it?.let {target->
+                Logger.d("JJ_target target $target")
             }
         })
 
@@ -191,9 +199,9 @@ class HostFragment : Fragment() {
     }
 
 
-
-    companion object{
-        const val ONE_DAY = 1000 * 60 * 60 * 24L
+    companion object {
+        const val ONE_SECOND = 1000L
+        const val ONE_DAY = ONE_SECOND * 60 * 60 * 24
         const val ONE_WEEK = ONE_DAY * 7
         const val THIRTY_DAYS = ONE_DAY.times(30)
     }

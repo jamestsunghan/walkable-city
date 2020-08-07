@@ -12,17 +12,20 @@ import tw.com.walkablecity.rating.item.RatingItemViewModel
 
 
 @Suppress("UNCHECKED_CAST")
-class RatingViewModelFactory(private val walkableRepository: WalkableRepository, private val route: Route?
-                             , private val walk: Walk, private val type: RatingType?, private val photoPoints: List<PhotoPoint>?)
-    : ViewModelProvider.Factory{
+class RatingViewModelFactory(
+    private val walkableRepository: WalkableRepository,
+    private val route: Route?,
+    private val walk: Walk,
+    private val type: RatingType?,
+    private val photoPoints: List<PhotoPoint>?
+) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel?> create(modelClass: Class<T>) =
-        with(modelClass){
-            when{
+        with(modelClass) {
+            when {
 
                 isAssignableFrom(RatingItemViewModel::class.java) ->
                     RatingItemViewModel(walkableRepository, route, walk, type, photoPoints)
-
 
                 else ->
                     throw IllegalArgumentException("Unknown ViewModel Class ${modelClass.name}")

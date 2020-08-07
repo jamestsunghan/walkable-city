@@ -7,31 +7,34 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import tw.com.walkablecity.R
 import tw.com.walkablecity.UserManager
-import tw.com.walkablecity.Util.getString
 import tw.com.walkablecity.data.*
 import tw.com.walkablecity.data.source.WalkableRepository
 
 class BestWalkersViewModel(private val walkableRepository: WalkableRepository) : ViewModel() {
 
-
     private val _status = MutableLiveData<LoadStatus>()
-    val status: LiveData<LoadStatus> get() = _status
+    val status: LiveData<LoadStatus>
+        get() = _status
 
     private val _error = MutableLiveData<String>()
-    val error: LiveData<String> get() = _error
+    val error: LiveData<String>
+        get() = _error
 
     private val _userFriendList = MutableLiveData<List<User>>()
-    val userFriendList: LiveData<List<User>> get() = _userFriendList
+    val userFriendList: LiveData<List<User>>
+        get() = _userFriendList
 
     private val _sortList = MutableLiveData<List<User>>()
-    val sortList: LiveData<List<User>> get() = _sortList
+    val sortList: LiveData<List<User>>
+        get() = _sortList
 
     private val _accumulationType = MutableLiveData<AccumulationType>(AccumulationType.WEEKLY)
-    val accumulationType: LiveData<AccumulationType> get() = _accumulationType
+    val accumulationType: LiveData<AccumulationType>
+        get() = _accumulationType
 
     private val viewModelJob = Job()
+
     private val coroutineScope = CoroutineScope(Dispatchers.Main + viewModelJob)
 
     override fun onCleared() {
@@ -39,64 +42,45 @@ class BestWalkersViewModel(private val walkableRepository: WalkableRepository) :
         viewModelJob.cancel()
     }
 
-    init{
+    init {
         getUserFriends(requireNotNull(UserManager.user?.id))
     }
 
-    fun sortList(list: List<User>, type: AccumulationType){
-        _sortList.value = (list as MutableList<User>).plus(requireNotNull(UserManager.user)).sortedByDescending { walker->
-            when(type){
-                AccumulationType.WEEKLY -> walker.accumulatedKm?.weekly
-                AccumulationType.MONTHLY -> walker.accumulatedKm?.monthly
-                else-> walker.accumulatedKm?.total
+    fun sortList(list: List<User>, type: AccumulationType) {
+        _sortList.value = (list as MutableList<User>).plus(requireNotNull(UserManager.user))
+            .sortedByDescending { walker ->
+                when (type) {
+                    AccumulationType.WEEKLY  -> walker.accumulatedKm?.weekly
+                    AccumulationType.MONTHLY -> walker.accumulatedKm?.monthly
+                    else                     -> walker.accumulatedKm?.total
+                }
             }
-        }
     }
 
-    fun weekRanking(){
+    fun weekRanking() {
         _accumulationType.value = AccumulationType.WEEKLY
     }
 
-    fun monthRanking(){
+    fun monthRanking() {
         _accumulationType.value = AccumulationType.MONTHLY
     }
 
-    fun totalRanking(){
+    fun totalRanking() {
         _accumulationType.value = AccumulationType.TOTAL
     }
 
 
-    fun getUserFriends(userId: String){
+    private fun getUserFriends(userId: String) {
+
         coroutineScope.launch {
             _status.value = LoadStatus.LOADING
-            val result = walkableRepository.getUserFriends(userId)
-            _userFriendList.value = when(result){
 
-                is Result.Success ->{
-                    _error.value = null
-                    _status.value = LoadStatus.ERROR
-                    result.data
-                }
-                is Result.Fail    ->{
-                    _error.value = result.error
-                    _status.value = LoadStatus.ERROR
-                    null
-                }
-                is Result.Error   ->{
-                    _error.value = result.exception.toString()
-                    _status.value = LoadStatus.ERROR
-                    null
-                }
-                else ->{
-                    _error.value = getString(R.string.not_here)
-                    _status.value = LoadStatus.ERROR
-                    null
-                }
+            val friendIds = walkableRepository.getUserFriendSimple(userId)
+                .handleResultWith(_error, _status)?.map { requireNotNull(it.id )} ?: listOf()
 
+            walkableRepository.getFriendsById(friendIds).apply{
+                _userFriendList.value = handleResultWith(_error, _status)
             }
-
         }
     }
-
-
 }

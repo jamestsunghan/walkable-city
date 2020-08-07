@@ -9,7 +9,8 @@ import tw.com.walkablecity.databinding.ItemDetailImageUrlBinding
 
 class ImageUrlAdapter: ListAdapter<String, ImageUrlAdapter.ImageUrlViewHolder>(DiffCallback) {
 
-    class ImageUrlViewHolder(private val binding: ItemDetailImageUrlBinding): RecyclerView.ViewHolder(binding.root){
+    class ImageUrlViewHolder(private val binding: ItemDetailImageUrlBinding)
+        : RecyclerView.ViewHolder(binding.root){
         fun bind(imageUrl: String){
             binding.imageUrl = imageUrl
             binding.executePendingBindings()

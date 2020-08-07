@@ -15,16 +15,16 @@ import java.io.FileInputStream
 import java.io.FileNotFoundException
 import java.io.FileOutputStream
 
-fun Activity.getVMFactory(): ViewModelFactory{
+fun Activity.getVMFactory(): ViewModelFactory {
     val repo = (applicationContext as WalkableApp).repo
     return ViewModelFactory(repo)
 }
 
-fun FragmentActivity.shareCacheDirBitmap(){
+fun FragmentActivity.shareCacheDirBitmap() {
 
-    try{
+    try {
 
-        val file = File(WalkableApp.instance.cacheDir,"images")
+        val file = File(WalkableApp.instance.cacheDir, "images")
         val stream = File("${file}/image.png")
 
         val contentUri = FileProvider.getUriForFile(this, this.packageName + ".provider", stream)
@@ -37,7 +37,4 @@ fun FragmentActivity.shareCacheDirBitmap(){
     } catch (e: FileNotFoundException) {
         e.printStackTrace()
     }
-
-
-
 }

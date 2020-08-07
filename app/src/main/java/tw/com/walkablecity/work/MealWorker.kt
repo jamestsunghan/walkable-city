@@ -14,18 +14,18 @@ import com.google.firebase.Timestamp.now
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import retrofit2.HttpException
-import tw.com.walkablecity.Logger
+import tw.com.walkablecity.util.Logger
 import tw.com.walkablecity.R
-import tw.com.walkablecity.Util
-import tw.com.walkablecity.Util.getString
+import tw.com.walkablecity.util.Util
+import tw.com.walkablecity.util.Util.getString
 import tw.com.walkablecity.WalkableApp
-import tw.com.walkablecity.data.User
-import java.util.*
+import tw.com.walkablecity.util.Util.setDailyTimer
 import java.util.concurrent.TimeUnit
 
-class MealWorker(appContext: Context, params: WorkerParameters): CoroutineWorker(appContext, params) {
+class MealWorker(appContext: Context, params: WorkerParameters) :
+    CoroutineWorker(appContext, params) {
 
-    companion object{
+    companion object {
         val repo = WalkableApp.instance.repo
         val user = Firebase.auth.currentUser
         const val CHANNEL_ID = "meal"
@@ -33,42 +33,39 @@ class MealWorker(appContext: Context, params: WorkerParameters): CoroutineWorker
         const val ONE_DAY = 60 * 60 * 24
     }
 
-
     override suspend fun doWork(): Result {
-        return try{
-            if(user == null){
+        return try {
+            if (user == null) {
                 Result.retry()
-            }else{
+            } else {
                 createNotificationChannel()
-                val currentDate = Calendar.getInstance()
 
-                val dueDate = Calendar.getInstance().apply{
-                    set(Calendar.HOUR_OF_DAY, 19)
-                    set(Calendar.MINUTE, 30)
-                    set(Calendar.SECOND, 0)
-                }
+                val timeDiff = setDailyTimer(19, 30, 0)
 
-                if(dueDate.before(currentDate)){
-                    dueDate.add(Calendar.HOUR_OF_DAY, 24)
-                }
-
-                val timeDiff = dueDate.timeInMillis - currentDate.timeInMillis
                 val mealRequest = OneTimeWorkRequestBuilder<MealWorker>()
                     .setConstraints(WalkableApp.constraintsMeal)
                     .setInitialDelay(timeDiff, TimeUnit.MILLISECONDS)
                     .build()
 
-                val lastWalk = when(val result = repo.getUserLatestWalk(user.uid)){
-                    is tw.com.walkablecity.data.Result.Success ->{result.data}
-                    is tw.com.walkablecity.data.Result.Fail ->{null}
-                    is tw.com.walkablecity.data.Result.Error ->{null}
+                val lastWalk = when (val result = repo.getUserLatestWalk(user.uid)) {
+                    is tw.com.walkablecity.data.Result.Success -> {
+                        result.data
+                    }
+                    is tw.com.walkablecity.data.Result.Fail -> {
+                        null
+                    }
+                    is tw.com.walkablecity.data.Result.Error -> {
+                        null
+                    }
                     else -> null
                 }
 
-                val contentText = if(lastWalk == null){
+                val contentText = if (lastWalk == null) {
                     getString(R.string.first_walk)
-                }else{
-                    val timeGap = (now().seconds - requireNotNull(lastWalk.endTime?.seconds)).div(ONE_DAY).toInt()
+                } else {
+                    val timeGap =
+                        (now().seconds - requireNotNull(lastWalk.endTime?.seconds)).div(ONE_DAY)
+                            .toInt()
                     String.format(getString(R.string.after_meal_talk), timeGap)
                 }
 
@@ -78,7 +75,7 @@ class MealWorker(appContext: Context, params: WorkerParameters): CoroutineWorker
                     .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                     .setStyle(NotificationCompat.BigTextStyle().bigText(contentText))
 
-                with(NotificationManagerCompat.from(applicationContext)){
+                with(NotificationManagerCompat.from(applicationContext)) {
                     notify(NOTIFY_ID, builder.build())
                 }
 
@@ -86,26 +83,25 @@ class MealWorker(appContext: Context, params: WorkerParameters): CoroutineWorker
 
                 Logger.d("JJ_work I'm here!")
 
-
-
-
                 Result.success()
             }
 
-
-        }catch (e: HttpException){
+        } catch (e: HttpException) {
             Result.retry()
         }
     }
 
-    private fun createNotificationChannel(){
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+    private fun createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 
             val name = Util.getString(R.string.walkable_city)
+
             val importance = NotificationManager.IMPORTANCE_DEFAULT
+
             val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
                 description = Util.getString(R.string.after_meal)
             }
+
             val notificationManager: NotificationManager =
                 applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 

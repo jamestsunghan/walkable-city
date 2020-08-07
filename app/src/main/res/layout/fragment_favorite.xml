@@ -1,13 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <variable name="viewModel" type="tw.com.walkablecity.favorite.FavoriteViewModel" />
-        <import type="tw.com.walkablecity.data.LoadStatus"/>
-        <import type="tw.com.walkablecity.loadroute.LoadRouteType"/>
-        <import type="android.view.View"/>
+
+        <variable
+            name="viewModel"
+            type="tw.com.walkablecity.favorite.FavoriteViewModel" />
+
+        <import type="tw.com.walkablecity.data.LoadStatus" />
+
+        <import type="tw.com.walkablecity.loadroute.LoadRouteType" />
+
+        <import type="android.view.View" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -29,16 +35,15 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/noto_sans"
             android:letterSpacing="0.15"
-            android:visibility="@{viewModel.status == LoadStatus.LOADING || viewModel.routeList == null ? View.GONE : (viewModel.routeList.size() == 0 ? View.VISIBLE : View.GONE)}"
             android:text="@{viewModel.routeAllList.size() == 0 ? @string/no_favorite_route : @string/no_route_fit}"
             android:textColor="@color/primaryColor"
             android:textSize="24sp"
+            android:visibility="@{viewModel.status == LoadStatus.LOADING || viewModel.routeList == null ? View.GONE : (viewModel.routeList.size() == 0 ? View.VISIBLE : View.GONE)}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="@string/no_favorite_route" />
-
 
 
         <ProgressBar

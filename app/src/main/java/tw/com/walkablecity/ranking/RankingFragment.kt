@@ -10,17 +10,16 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
-import tw.com.walkablecity.Logger
+import tw.com.walkablecity.util.Logger
 
 import tw.com.walkablecity.R
 import tw.com.walkablecity.databinding.FragmentRankingBinding
 import tw.com.walkablecity.ext.getVMFactory
-import tw.com.walkablecity.loadroute.LoadRouteFragmentDirections
 
 class RankingFragment : Fragment() {
 
 
-    private val viewModel: RankingViewModel by viewModels{getVMFactory()}
+    private val viewModel: RankingViewModel by viewModels { getVMFactory() }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,25 +36,25 @@ class RankingFragment : Fragment() {
         binding.recyclerRouteItem.adapter = adapter
 
         viewModel.filter.observe(viewLifecycleOwner, Observer {
-            it?.let{
+            it?.let {sorting->
                 Logger.d("route sorting ${it.text}")
-                viewModel.timeFilter(viewModel.routeTime.value ?: listOf(Float.MIN_VALUE, Float.MAX_VALUE), viewModel.sliderMax.value ?: Float.MAX_VALUE, it)
-//                viewModel.routeSorting(it, adapter)
+                viewModel.timeFilter(
+                    viewModel.routeTime.value ?: listOf(
+                        Float.MIN_VALUE,
+                        Float.MAX_VALUE
+                    ), viewModel.sliderMax.value ?: Float.MAX_VALUE, sorting
+                )
+
                 adapter.notifyDataSetChanged()
             }
         })
 
         viewModel.selectRoute.observe(viewLifecycleOwner, Observer {
-            it?.let{
+            it?.let {route->
 
-                findNavController().navigate(RankingFragmentDirections.actionGlobalDetailFragment(it))
+                findNavController()
+                    .navigate(RankingFragmentDirections.actionGlobalDetailFragment(route))
                 viewModel.navigationComplete()
-            }
-        })
-
-        viewModel.routeTime.observe(viewLifecycleOwner, Observer {
-            it?.let{
-//                viewModel.timeFilter(it)
             }
         })
 

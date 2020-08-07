@@ -12,4 +12,20 @@ data class Friend (
     val email: String? = null,
     var accomplish: Float? = null,
     var accomplishFQ: MutableList<MissionFQ> = mutableListOf()
-): Parcelable
+): Parcelable{
+
+    fun toNewInstance(): Friend{
+        return Friend(
+            id = id,
+            idCustom = idCustom,
+            name = name,
+            picture = picture,
+            email = email,
+            accomplish =  accomplish,
+            accomplishFQ =  accomplishFQ
+        )
+    }
+
+
+
+}

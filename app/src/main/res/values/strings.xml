@@ -274,6 +274,9 @@
 
     <!--    <badge page>-->
 
+    <string name="badge">徽章</string>
+    <string name="new_badge">新徽章</string>
+
     <string name="badge_hour_section">散策時間</string>
     <string name="badge_hour_0">開始散策</string>
     <string name="badge_hour_1">半個時辰</string>

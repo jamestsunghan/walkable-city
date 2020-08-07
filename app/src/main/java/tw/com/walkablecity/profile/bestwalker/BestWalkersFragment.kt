@@ -19,7 +19,7 @@ import tw.com.walkablecity.ext.getVMFactory
 
 class BestWalkersFragment : Fragment() {
 
-    val viewModel: BestWalkersViewModel by viewModels{getVMFactory()}
+    val viewModel: BestWalkersViewModel by viewModels { getVMFactory() }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -33,23 +33,21 @@ class BestWalkersFragment : Fragment() {
 
         binding.recyclerWalker.adapter = BestWalkersAdapter(viewModel)
 
-        viewModel.userFriendList.observe(viewLifecycleOwner, Observer{
-            it?.let{list->
+        viewModel.userFriendList.observe(viewLifecycleOwner, Observer {
+            it?.let { list ->
 
                 viewModel.sortList(list, requireNotNull(viewModel.accumulationType.value))
             }
         })
 
-        viewModel.accumulationType.observe(viewLifecycleOwner, Observer{
-            it?.let{type->
-                viewModel.userFriendList.value?.let{friend->
-                    viewModel.sortList(friend,type)
+        viewModel.accumulationType.observe(viewLifecycleOwner, Observer {
+            it?.let { type ->
+                viewModel.userFriendList.value?.let { friend ->
+                    viewModel.sortList(friend, type)
                 }
             }
         })
 
         return binding.root
     }
-
-
 }

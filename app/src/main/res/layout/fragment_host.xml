@@ -4,10 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <variable name="viewModel" type="tw.com.walkablecity.host.HostViewModel" />
+
+        <variable
+            name="viewModel"
+            type="tw.com.walkablecity.host.HostViewModel" />
+
         <import type="tw.com.walkablecity.data.EventType" />
+
         <import type="android.view.View" />
-        <import type="tw.com.walkablecity.data.LoadStatus"/>
+
+        <import type="tw.com.walkablecity.data.LoadStatus" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -53,12 +59,12 @@
                     android:layout_marginEnd="16dp"
                     android:hint="@string/create_title_hint"
                     android:inputType="textShortMessage"
-                    android:singleLine="true"
-                    android:maxLength="6"
-                    android:textColorHint="@color/primaryColor"
                     android:letterSpacing="0.15"
+                    android:maxLength="6"
+                    android:singleLine="true"
                     android:text="@={viewModel.title}"
                     android:textColor="@color/primaryDarkColor"
+                    android:textColorHint="@color/primaryColor"
                     android:textSize="14sp"
                     app:layout_constraintBaseline_toBaselineOf="@+id/create_event_title"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -134,13 +140,13 @@
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
                     android:hint="@string/how_much"
-                    android:textColorHint="@color/primaryColor"
                     android:inputType="number"
-                    android:maxLength="7"
                     android:letterSpacing="0.15"
+                    android:maxLength="7"
                     android:minWidth="70dp"
                     android:text="@={viewModel.targetAmount}"
                     android:textColor="@color/primaryDarkColor"
+                    android:textColorHint="@color/primaryColor"
                     android:textSize="14sp"
                     android:visibility="@{viewModel.type == null ? View.GONE : View.VISIBLE}"
                     app:layout_constraintBaseline_toBaselineOf="@+id/create_event_target_title"
@@ -241,27 +247,25 @@
                     android:id="@+id/create_event_public"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="4dp"
                     android:fontFamily="@font/noto_sans"
                     android:gravity="center"
-                    android:layout_marginEnd="4dp"
                     android:letterSpacing="0.15"
                     android:text="@string/set_public"
                     android:textColor="@color/primaryDarkColor"
                     android:textSize="14sp"
-                    app:layout_constraintEnd_toStartOf="@+id/public_checkbox"
                     app:layout_constraintBaseline_toBaselineOf="@+id/create_event_description"
-                    />
+                    app:layout_constraintEnd_toStartOf="@+id/public_checkbox" />
 
                 <androidx.appcompat.widget.AppCompatCheckBox
                     android:id="@+id/public_checkbox"
                     android:layout_width="wrap_content"
-                    android:buttonTint="@color/primaryDarkColor"
                     android:layout_height="0dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/create_event_public"
-                    app:layout_constraintBottom_toBottomOf="@+id/create_event_public"
                     android:layout_marginEnd="16dp"
-                    />
+                    android:buttonTint="@color/primaryDarkColor"
+                    app:layout_constraintBottom_toBottomOf="@+id/create_event_public"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/create_event_public" />
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/edit_event_description"
@@ -280,14 +284,14 @@
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textAppearance="@style/TextForEditTextLayout"
                         android:layout_marginStart="16dp"
                         android:layout_marginEnd="16dp"
                         android:background="@color/primaryLightColor"
                         android:fontFamily="@font/noto_sans"
                         android:hint="@string/create_description_hint"
                         android:letterSpacing="0.15"
-                        android:text="@={viewModel.description}" />
+                        android:text="@={viewModel.description}"
+                        android:textAppearance="@style/TextForEditTextLayout" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -308,30 +312,30 @@
                 <ImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
-                    app:srcCompat="@drawable/ic_add_black_24dp"
-                    android:tint="@color/primaryDarkColor"
-                    app:layout_constraintTop_toTopOf="@+id/create_invite_friend"
-                    app:layout_constraintBottom_toBottomOf="@+id/create_invite_friend"
+                    android:layout_marginEnd="16dp"
                     android:onClick="@{() -> viewModel.addSomeFriends()}"
+                    android:tint="@color/primaryDarkColor"
+                    app:layout_constraintBottom_toBottomOf="@+id/create_invite_friend"
                     app:layout_constraintEnd_toEndOf="parent"
-                    android:layout_marginEnd="16dp"/>
+                    app:layout_constraintTop_toTopOf="@+id/create_invite_friend"
+                    app:srcCompat="@drawable/ic_add_black_24dp" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recycler_friend_adding"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:layout_constraintTop_toBottomOf="@+id/create_invite_friend"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     android:orientation="horizontal"
-                    app:friendly="@{viewModel.addList}"/>
+                    app:friendly="@{viewModel.addList}"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/create_invite_friend" />
 
                 <TextView
                     android:id="@+id/no_invite_friend"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
                     android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
                     android:fontFamily="@font/noto_sans"
                     android:gravity="center"
                     android:letterSpacing="0.15"
@@ -340,12 +344,10 @@
                     android:textColor="@color/primaryColor"
                     android:textSize="20sp"
                     android:visibility="@{viewModel.addList == null || viewModel.addList.size() == 0 ? View.VISIBLE : View.GONE}"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/create_invite_friend" />
-
-
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -382,8 +384,6 @@
             app:layout_constraintEnd_toEndOf="@+id/create_event"
             app:layout_constraintStart_toStartOf="@+id/create_event"
             app:layout_constraintTop_toTopOf="@+id/create_event" />
-
-
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

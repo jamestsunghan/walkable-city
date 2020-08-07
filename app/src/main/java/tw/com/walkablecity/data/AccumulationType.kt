@@ -1,7 +1,7 @@
 package tw.com.walkablecity.data
 
 import tw.com.walkablecity.R
-import tw.com.walkablecity.Util.getString
+import tw.com.walkablecity.util.Util.getString
 
 enum class AccumulationType(val text: String) {
     DAILY(getString(R.string.accumulate_daily)),

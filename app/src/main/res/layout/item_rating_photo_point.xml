@@ -3,18 +3,27 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-        <variable name="photoPoint" type="tw.com.walkablecity.data.PhotoPoint" />
-        <variable name="reference" type="String" />
-        <variable name="type" type="tw.com.walkablecity.rating.RatingType" />
+
+        <variable
+            name="photoPoint"
+            type="tw.com.walkablecity.data.PhotoPoint" />
+
+        <variable
+            name="reference"
+            type="String" />
+
+        <variable
+            name="type"
+            type="tw.com.walkablecity.rating.RatingType" />
     </data>
 
     <com.google.android.material.card.MaterialCardView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:cardCornerRadius="4dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp">
+        android:layout_marginBottom="16dp"
+        app:cardCornerRadius="4dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="wrap_content"
@@ -26,11 +35,11 @@
                 android:layout_height="45dp"
                 android:adjustViewBounds="true"
                 android:scaleType="centerCrop"
-                app:reference="@{reference}"
-                app:type="@{type}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:reference="@{reference}"
+                app:type="@{type}" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

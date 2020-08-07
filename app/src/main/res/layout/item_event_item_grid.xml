@@ -4,44 +4,51 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <variable name="viewModel" type="tw.com.walkablecity.event.item.EventItemViewModel" />
-        <variable name="event" type="tw.com.walkablecity.data.Event" />
-        <import type="tw.com.walkablecity.data.EventType"/>
+
+        <variable
+            name="viewModel"
+            type="tw.com.walkablecity.event.item.EventItemViewModel" />
+
+        <variable
+            name="event"
+            type="tw.com.walkablecity.data.Event" />
+
+        <import type="tw.com.walkablecity.data.EventType" />
     </data>
 
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:cardElevation="4dp"
         android:layout_margin="8dp"
-        app:strokeColor="@{event.type.colorList[1]}"
-        app:strokeWidth="1dp"
         android:onClick="@{() ->viewModel.navigateToEventDetail(event)}"
-        app:cardCornerRadius="16dp">
+        app:cardCornerRadius="16dp"
+        app:cardElevation="4dp"
+        app:strokeColor="@{event.type.colorList[1]}"
+        app:strokeWidth="1dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/bg_event_grid"
-            app:eventType="@{event.type}">
+            android:backgroundTint="@{event.type.colorList[0]}">
 
             <TextView
                 android:id="@+id/event_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
                 android:layout_marginEnd="8dp"
                 android:fontFamily="@font/noto_sans"
-                android:layout_marginTop="16dp"
-                android:text="@{event.title}"
-                android:maxLines="1"
                 android:gravity="center"
                 android:letterSpacing="0.15"
+                android:maxLines="1"
+                android:text="@{event.title}"
                 android:textColor="@color/primaryDarkColor"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="第一條路" />
 
@@ -51,21 +58,21 @@
                 android:layout_height="0dp"
                 android:layout_marginTop="16dp"
                 android:background="@drawable/bg_bottom_half_rad"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/event_title"
-                app:layout_constraintBottom_toBottomOf="parent"/>
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/event_title" />
 
             <TextView
                 android:id="@+id/event_member_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
                 android:layout_marginEnd="8dp"
                 android:fontFamily="@font/noto_sans"
-                android:layout_marginTop="32dp"
-                android:text="@{String.format( @string/event_member_count , event.memberCount )}"
                 android:gravity="center"
                 android:letterSpacing="0.15"
+                android:text="@{String.format( @string/event_member_count , event.memberCount )}"
                 android:textColor="@color/primaryDarkColor"
                 android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -113,12 +120,7 @@
                 tools:text="第一條路" />
 
 
-
-
-
         </androidx.constraintlayout.widget.ConstraintLayout>
-
-
 
 
     </com.google.android.material.card.MaterialCardView>

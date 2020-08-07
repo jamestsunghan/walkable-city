@@ -3,7 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-        <variable name="viewModel" type="tw.com.walkablecity.home.destroywalk.DestroyWalkDialogViewModel" />
+        <variable
+            name="viewModel"
+            type="tw.com.walkablecity.home.destroywalk.DestroyWalkDialogViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -14,11 +16,11 @@
             android:id="@+id/card_destroy"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="parent"
+            app:cardCornerRadius="16dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:cardCornerRadius="16dp">
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -28,8 +30,8 @@
                     android:id="@+id/will_you_destroy_walk"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
                     android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
                     android:layout_marginEnd="16dp"
                     android:fontFamily="@font/noto_sans"
                     android:gravity="start"
@@ -46,47 +48,47 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
+                    android:background="@color/primaryDarkColor"
                     android:fontFamily="@font/noto_sans"
                     android:gravity="center"
                     android:letterSpacing="0.15"
+                    android:onClick="@{() -> viewModel.willNotDestroyWalk()}"
                     android:padding="8dp"
                     android:text="@string/will_not_create"
-                    android:onClick="@{() -> viewModel.willNotDestroyWalk()}"
-                    android:background="@color/primaryDarkColor"
                     android:textColor="@color/white"
                     android:textSize="14sp"
-                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/destroy_divider"
-                    app:layout_constraintTop_toBottomOf="@+id/will_you_destroy_walk"
-                    app:layout_constraintBottom_toBottomOf="parent" />
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/will_you_destroy_walk" />
 
                 <View
                     android:id="@+id/destroy_divider"
                     android:layout_width="2dp"
                     android:layout_height="0dp"
-                    app:layout_constraintTop_toTopOf="@+id/create_route"
                     app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/destroy_walk"
                     app:layout_constraintStart_toEndOf="@+id/not_destroy_walk"
-                    app:layout_constraintEnd_toStartOf="@+id/destroy_walk" />
+                    app:layout_constraintTop_toTopOf="@+id/create_route" />
 
                 <TextView
                     android:id="@+id/destroy_walk"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
+                    android:background="@color/primaryDarkColor"
                     android:fontFamily="@font/noto_sans"
                     android:gravity="center"
                     android:letterSpacing="0.15"
                     android:onClick="@{() -> viewModel.willDestroyWalk()}"
                     android:padding="8dp"
                     android:text="@string/will_create"
-                    android:background="@color/primaryDarkColor"
                     android:textColor="@color/white"
                     android:textSize="14sp"
-                    app:layout_constraintStart_toEndOf="@+id/destroy_divider"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/will_you_destroy_walk"
-                    app:layout_constraintBottom_toBottomOf="parent" />
+                    app:layout_constraintStart_toEndOf="@+id/destroy_divider"
+                    app:layout_constraintTop_toBottomOf="@+id/will_you_destroy_walk" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
