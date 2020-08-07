@@ -67,8 +67,12 @@ object Util {
 
             val c = Calendar.getInstance()
             c.time = requireNotNull(SimpleDateFormat("yyyy-MM-dd", Locale.TAIWAN).parse(dateString))
-            "${c.get(Calendar.YEAR)}" +
-                    "-${lessThenTenPadStart((c.get(Calendar.MONTH) + 2).toLong())}" +
+            val year = if(c.get(Calendar.MONTH) > 10){
+                c.get(Calendar.YEAR) + 1
+            } else{
+                c.get(Calendar.YEAR)
+            }
+            "$year-${lessThenTenPadStart((c.get(Calendar.MONTH).plus(2) % 12).toLong())}" +
                     "-${lessThenTenPadStart((c.get(Calendar.DAY_OF_MONTH).toLong()))}"
         } catch (e: ParseException) {
             null
