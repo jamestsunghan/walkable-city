@@ -239,7 +239,7 @@ class RatingItemViewModel(
 
         val waypoints = createPoints.filterIndexed { index, _ ->
             when {
-                createPoints.size <= ALL_KEEP -> index == index
+                createPoints.size <= ALL_KEEP  -> index == index
                 createPoints.size <= KEEP_HALF -> index % 2 == 1
                 else -> {
                     val factor = createPoints.size / ONE_NINTH

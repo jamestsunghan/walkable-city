@@ -33,7 +33,7 @@ import java.util.*
 class HostFragment : Fragment() {
 
 
-    private val viewModel: HostViewModel by navGraphViewModels(R.id.navigation2) {
+    private val viewModel: HostViewModel by navGraphViewModels(R.id.navigationHost) {
         getVMFactory()
     }
 

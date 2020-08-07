@@ -51,7 +51,7 @@
         tools:layout="@layout/fragment_event">
         <action
             android:id="@+id/action_eventFragment_to_hostFragment"
-            app:destination="@id/navigation2" />
+            app:destination="@id/navigationHost" />
     </fragment>
 
 
@@ -205,7 +205,7 @@
             app:nullable="true" />
     </dialog>
     <navigation
-        android:id="@+id/navigation2"
+        android:id="@+id/navigationHost"
         app:startDestination="@id/hostFragment" >
         <fragment
             android:id="@+id/hostFragment"

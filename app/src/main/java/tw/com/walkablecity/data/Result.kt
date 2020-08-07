@@ -21,6 +21,7 @@ sealed class Result<out R> {
     }
 
     fun handleResultWith(error: MutableLiveData<String>, status: MutableLiveData<LoadStatus>): R?{
+
         return when(this){
             is Success->{
                 error.value = null

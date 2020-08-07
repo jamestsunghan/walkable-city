@@ -29,12 +29,12 @@ fun RouteRating?.toSortList(filter: RouteSorting?): List<String> {
     } else {
 
         val originList = mutableListOf(
-            Pair(getString(R.string.filter_coverage), this.coverage),
-            Pair(getString(R.string.filter_tranquility), this.tranquility),
-            Pair(getString(R.string.filter_scenery), this.scenery),
-            Pair(getString(R.string.filter_rest), this.rest),
-            Pair(getString(R.string.filter_snack), this.snack),
-            Pair(getString(R.string.filter_vibe), this.vibe)
+            Pair(RouteSorting.COVERAGE.title, this.coverage),
+            Pair(RouteSorting.TRANQUILITY.title, this.tranquility),
+            Pair(RouteSorting.SCENERY.title, this.scenery),
+            Pair(RouteSorting.REST.title, this.rest),
+            Pair(RouteSorting.SNACK.title, this.snack),
+            Pair(RouteSorting.VIBE.title, this.vibe)
         ).sortedBy {
             it.second
         }

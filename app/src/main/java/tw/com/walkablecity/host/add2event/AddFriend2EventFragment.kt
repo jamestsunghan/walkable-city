@@ -19,7 +19,7 @@ import tw.com.walkablecity.host.HostViewModel
 
 class AddFriend2EventFragment : Fragment() {
 
-    private val viewModel: HostViewModel by navGraphViewModels(R.id.navigation2) {
+    private val viewModel: HostViewModel by navGraphViewModels(R.id.navigationHost) {
         getVMFactory()
     }
 
