@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <variable name="viewModel" type="tw.com.walkablecity.profile.explore.ExploreViewModel" />
-        <import type="android.view.View"/>
+
+        <variable
+            name="viewModel"
+            type="tw.com.walkablecity.profile.explore.ExploreViewModel" />
+
+        <import type="android.view.View" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -14,15 +19,25 @@
 
         <FrameLayout
             android:id="@+id/explore_map"
-            android:visibility="@{viewModel.permissionDenied ? View.GONE : View.VISIBLE}"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:visibility="@{viewModel.permissionDenied ? View.GONE : View.VISIBLE}" />
 
-<!--        <TextView-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="match_parent"-->
-<!--            android:gravity="center"-->
-<!--            android:text="Explorer" />-->
+        <TextView
+            android:id="@+id/permission_denied"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/noto_sans"
+            android:letterSpacing="0.15"
+            android:text="@string/no_permission"
+            android:textColor="@color/primaryColor"
+            android:textSize="22sp"
+            android:visibility="@{viewModel.permissionDenied ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

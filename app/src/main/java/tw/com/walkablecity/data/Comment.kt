@@ -10,4 +10,16 @@ data class Comment (
     val recommend: Int? = null,
     val content: String? = null,
     val createTime: Timestamp? = null
-): Parcelable
+): Parcelable{
+
+    fun toHashMap(): HashMap<String, Any?>{
+        return hashMapOf(
+            "content" to this.content,
+            "createTime" to this.createTime,
+            "recommend" to this.recommend,
+            "userId" to this.userId
+        )
+    }
+
+
+}

@@ -1,7 +1,7 @@
 package tw.com.walkablecity
 
 
-import tw.com.walkablecity.Util.getString
+import tw.com.walkablecity.util.Util.getString
 
 enum class CurrentFragmentType(val title: String) {
 

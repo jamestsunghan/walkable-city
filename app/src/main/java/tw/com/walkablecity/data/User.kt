@@ -16,4 +16,30 @@ data class User (
     val walks: List<Walk> = listOf(),
     var weather: Boolean = false,
     var meal: Boolean = false
-): Parcelable
+): Parcelable{
+
+    fun toFriend(): Friend{
+        return Friend(
+            id = id,
+            idCustom = idCustom,
+            name = name,
+            picture = picture,
+            email = email
+        )
+    }
+
+    fun toFriend(accomplished: MutableList<MissionFQ>): Friend{
+        return Friend(
+            id = id,
+            idCustom = idCustom,
+            name = name,
+            picture = picture,
+            email = email,
+            accomplishFQ = accomplished
+        )
+    }
+
+
+
+
+}

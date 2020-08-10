@@ -9,7 +9,9 @@ import tw.com.walkablecity.data.Comment
 import tw.com.walkablecity.databinding.ItemDetailCommentBinding
 
 class CommentAdapter: ListAdapter<Comment, CommentAdapter.CommentViewHolder>(DiffCallback) {
-    class CommentViewHolder(private val binding: ItemDetailCommentBinding):RecyclerView.ViewHolder(binding.root){
+
+    class CommentViewHolder(private val binding: ItemDetailCommentBinding)
+        : RecyclerView.ViewHolder(binding.root) {
         fun bind(comment: Comment){
             binding.comment = comment
             binding.executePendingBindings()
@@ -17,6 +19,7 @@ class CommentAdapter: ListAdapter<Comment, CommentAdapter.CommentViewHolder>(Dif
     }
 
     companion object DiffCallback: DiffUtil.ItemCallback<Comment>(){
+
         override fun areItemsTheSame(oldItem: Comment, newItem: Comment): Boolean {
             return oldItem === newItem
         }

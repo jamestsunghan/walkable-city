@@ -29,6 +29,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/primaryLightColor"
+            android:hint="@string/input_friend_id"
             app:endIconDrawable="@drawable/map_search_24px"
             app:endIconMode="custom"
             app:layout_constraintEnd_toEndOf="parent"
@@ -37,15 +38,19 @@
             app:startIconDrawable="@drawable/ic_footprint">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edit_login_id_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
                 android:background="@color/primaryLightColor"
                 android:fontFamily="@font/noto_sans"
-                android:hint="@string/input_friend_id"
+                android:inputType="textShortMessage"
                 android:letterSpacing="0.15"
-                android:text="@={viewModel.idSearch}" />
+                android:maxLength="15"
+                android:maxLines="1"
+                android:text="@={viewModel.idSearch}"
+                android:textAppearance="@style/TextForEditTextLayout" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -92,8 +97,8 @@
             android:backgroundTint="@color/primaryDarkColor"
             android:fontFamily="@font/noto_sans"
             android:gravity="center"
-            android:onClick="@{() ->viewModel.addFriend(friend)}"
             android:letterSpacing="0.15"
+            android:onClick="@{() ->viewModel.addFriend(friend)}"
             android:paddingStart="8dp"
             android:paddingTop="4dp"
             android:paddingEnd="8dp"

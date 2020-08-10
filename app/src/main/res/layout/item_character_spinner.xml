@@ -3,7 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-        <variable name="title" type="String"/>
+
+        <variable
+            name="title"
+            type="String" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -13,21 +16,21 @@
         <TextView
             android:id="@+id/text_spinner_title"
             android:layout_width="wrap_content"
-            android:minWidth="70dp"
-            android:gravity="center"
             android:layout_height="wrap_content"
             android:fontFamily="@font/noto_sans"
-            android:textSize="14sp"
+            android:gravity="center"
+            android:minWidth="70dp"
             android:paddingStart="4dp"
-            android:paddingEnd="4dp"
             android:paddingTop="4dp"
+            android:paddingEnd="4dp"
             android:paddingBottom="4dp"
-            android:textColor="@color/primaryDarkColor"
             android:text="@{title}"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            android:textColor="@color/primaryDarkColor"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

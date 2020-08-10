@@ -4,7 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <variable name="friend" type="tw.com.walkablecity.data.Friend" />
+
+        <variable
+            name="friend"
+            type="tw.com.walkablecity.data.Friend" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -20,8 +23,8 @@
             android:layout_marginEnd="16dp"
             android:contentDescription="Your profile image"
             app:cardCornerRadius="25dp"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
@@ -38,15 +41,15 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:fontFamily="@font/noto_sans"
-            android:letterSpacing="0.15"
-            android:gravity="center"
-            android:text="@{friend.name}"
+            android:layout_marginBottom="16dp"
             android:ellipsize="end"
+            android:fontFamily="@font/noto_sans"
+            android:gravity="center"
+            android:letterSpacing="0.15"
             android:singleLine="true"
+            android:text="@{friend.name}"
             android:textColor="@color/primaryDarkColor"
             android:textSize="12sp"
-            android:layout_marginBottom="16dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/card_view_profile_image"
             app:layout_constraintStart_toStartOf="@+id/card_view_profile_image"

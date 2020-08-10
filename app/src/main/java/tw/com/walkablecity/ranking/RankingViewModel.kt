@@ -8,21 +8,13 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import tw.com.walkablecity.Logger
-import tw.com.walkablecity.R
-import tw.com.walkablecity.WalkableApp
 import tw.com.walkablecity.data.LoadStatus
-import tw.com.walkablecity.data.Result
 import tw.com.walkablecity.data.Route
 import tw.com.walkablecity.data.RouteSorting
 import tw.com.walkablecity.data.source.WalkableRepository
+import tw.com.walkablecity.ext.timeFilter
 
 class RankingViewModel(val walkableRepository: WalkableRepository) : ViewModel() {
-
-    private val _navigateToDetail = MutableLiveData<Route>()
-    val navigateToDetail: LiveData<Route>
-        get() = _navigateToDetail
-
 
     private val _routeAllList = MutableLiveData<List<Route>>()
     val routeAllList: LiveData<List<Route>>
@@ -33,20 +25,31 @@ class RankingViewModel(val walkableRepository: WalkableRepository) : ViewModel()
         get() = _routeList
 
     private val _filter = MutableLiveData<RouteSorting>()
-    val filter : LiveData<RouteSorting> get() = _filter
+    val filter: LiveData<RouteSorting>
+        get() = _filter
 
     private val _status = MutableLiveData<LoadStatus>()
-    val status : LiveData<LoadStatus> get() = _status
+    val status: LiveData<LoadStatus>
+        get() = _status
 
     private val _error = MutableLiveData<String>()
-    val error : LiveData<String> get() = _error
+    val error: LiveData<String>
+        get() = _error
 
-    val selectRoute = MutableLiveData<Route>()
+    private val _selectRoute = MutableLiveData<Route>()
+    val selectRoute: LiveData<Route>
+        get() = _selectRoute
 
     private val _routeTime = MutableLiveData<List<Float>>()
-    val routeTime: LiveData<List<Float>> get() = _routeTime
+    val routeTime: LiveData<List<Float>>
+        get() = _routeTime
+
+    private val _sliderMax = MutableLiveData<Float>()
+    val sliderMax: LiveData<Float>
+        get() = _sliderMax
 
     private val viewModelJob = Job()
+
     private val coroutineScope = CoroutineScope(Dispatchers.Main + viewModelJob)
 
     override fun onCleared() {
@@ -54,84 +57,40 @@ class RankingViewModel(val walkableRepository: WalkableRepository) : ViewModel()
         viewModelJob.cancel()
     }
 
-    init{
-
+    init {
         getRoutes()
-
     }
 
-    fun navigateToDetail(route: Route){
-        _navigateToDetail.value = route
+    fun select(route: Route) {
+        _selectRoute.value = route
     }
 
-
-    fun navigateToDetailComplete(){
-        _navigateToDetail.value = null
-    }
-
-    fun navigationComplete(){
-        selectRoute.value = null
+    fun navigationComplete() {
+        _selectRoute.value = null
         _filter.value = null
     }
 
-    fun filterSort(sorting: RouteSorting){
+    fun filterSort(sorting: RouteSorting) {
         _filter.value = sorting
     }
 
-    private fun getRoutes(){
+    private fun getRoutes() {
         coroutineScope.launch {
 
             _status.value = LoadStatus.LOADING
-            val result = walkableRepository.getAllRoute()
 
+            _routeAllList.value = walkableRepository.getAllRoute().handleResultWith(_error, _status)
+            _routeList.value = routeAllList.value
 
-            when(result){
-                is Result.Success ->{
-                    _error.value = null
-                    _status.value = LoadStatus.DONE
-
-                    _routeAllList.value = result.data
-                    _routeList.value = routeAllList.value
-                }
-                is Result.Fail ->{
-                    _error.value = result.error
-                    _status.value = LoadStatus.ERROR
-                }
-                is Result.Error ->{
-                    _error.value = WalkableApp.instance.getString(R.string.not_here)
-                    _status.value = LoadStatus.ERROR
-                }
-
-            }
         }
     }
 
-    fun routeSorting(sorting: RouteSorting, adapter: RankingAdapter){
-        _routeList.value = routeAllList.value?.sortedBy{
-
-            when(sorting){
-                RouteSorting.TRANQUILITY -> it.ratingAvr?.tranquility
-                RouteSorting.SCENERY -> it.ratingAvr?.scenery
-                RouteSorting.REST -> it.ratingAvr?.rest
-                RouteSorting.SNACK -> it.ratingAvr?.snack
-                RouteSorting.COVERAGE -> it.ratingAvr?.coverage
-                RouteSorting.VIBE -> it.ratingAvr?.vibe
-
-            }
-        }?.reversed() ?: listOf()
-        adapter.notifyDataSetChanged()
-        Logger.d("sortingList ${routeList.value?.map{it.title} ?: "null"}")
-        Logger.d("sorting tranquility ${routeList.value?.map{it.ratingAvr?.coverage} ?: "null"}")
-    }
-
-    fun setTimeFilter(range: List<Float>){
+    fun setTimeFilter(range: List<Float>, max: Float) {
         _routeTime.value = range
+        _sliderMax.value = max
     }
 
-    fun timeFilter(list: List<Float>){
-        _routeList.value = routeAllList.value?.filter{
-            val range = list.sortedBy{it}
-            range[0] < it.minutes && it.minutes < range[1]
-        }
+    fun timeFilter(list: List<Float>, max: Float, sorting: RouteSorting?) {
+        _routeList.value = routeAllList.value?.timeFilter(list, max, sorting)
     }
 }

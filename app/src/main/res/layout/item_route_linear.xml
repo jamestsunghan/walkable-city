@@ -4,7 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <variable name="route" type="tw.com.walkablecity.data.Route" />
+
+        <variable
+            name="route"
+            type="tw.com.walkablecity.data.Route" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -30,10 +33,10 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:fontFamily="@font/noto_sans"
-            android:text="@{route.title}"
             android:letterSpacing="0.15"
+            android:text="@{route.title}"
             android:textColor="@color/primaryDarkColor"
-            android:textSize="20sp"
+            android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintStart_toEndOf="@+id/map_view"
             app:layout_constraintTop_toTopOf="@+id/map_view"
@@ -45,8 +48,8 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:fontFamily="@font/noto_sans"
-            android:text="@{String.format(@string/approximate_length, route.length)}"
             android:letterSpacing="0.15"
+            android:text="@{String.format(@string/approximate_length, route.length)}"
             android:textColor="@color/primaryDarkColor"
             android:textSize="14sp"
             app:layout_constraintStart_toEndOf="@+id/map_view"
@@ -59,8 +62,8 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:fontFamily="@font/noto_sans"
-            android:text="@{String.format(@string/approximate_time,route.minutes)}"
             android:letterSpacing="0.15"
+            android:text="@{String.format(@string/approximate_time,route.minutes)}"
             android:textColor="@color/primaryDarkColor"
             android:textSize="14sp"
             app:layout_constraintStart_toEndOf="@+id/map_view"
@@ -69,29 +72,34 @@
 
         <Spinner
             android:id="@+id/character_spinner"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:background="@drawable/bg_spinner"
+            android:backgroundTint="@color/primaryDarkColor"
+            android:gravity="center"
+            android:popupBackground="@drawable/bg_walker_prepare"
             android:spinnerMode="dropdown"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/map_view"/>
+            app:layout_constraintBottom_toTopOf="@+id/see_detail"
+            app:layout_constraintEnd_toEndOf="@+id/see_detail"
+            app:layout_constraintStart_toStartOf="@+id/see_detail"
+            app:layout_constraintTop_toTopOf="@+id/map_view" />
 
         <TextView
-            android:id="@+id/select_route"
+            android:id="@+id/see_detail"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:gravity="center"
-            android:minWidth="100dp"
-            android:minHeight="40dp"
             android:layout_marginEnd="16dp"
             android:background="@drawable/bg_walker_ongoing"
             android:fontFamily="@font/noto_sans"
+            android:gravity="center"
             android:letterSpacing="0.15"
-            android:text="@string/select_route"
+            android:minWidth="100dp"
+            android:minHeight="40dp"
+            android:text="@string/see_detail"
             android:textColor="@color/primaryDarkColor"
             android:textSize="14sp"
             app:layout_constraintBottom_toBottomOf="@+id/map_view"
-            app:layout_constraintEnd_toEndOf="parent"
-            />
+            app:layout_constraintEnd_toEndOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

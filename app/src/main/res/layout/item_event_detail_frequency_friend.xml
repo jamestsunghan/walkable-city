@@ -3,10 +3,22 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-        <variable name="friend" type="tw.com.walkablecity.data.Friend" />
-        <variable name="position" type="Integer" />
-        <variable name="display" type="String" />
-        <variable name="isAccomplished" type="Boolean" />
+
+        <variable
+            name="friend"
+            type="tw.com.walkablecity.data.Friend" />
+
+        <variable
+            name="position"
+            type="Integer" />
+
+        <variable
+            name="display"
+            type="String" />
+
+        <variable
+            name="isAccomplished"
+            type="Boolean" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -15,25 +27,25 @@
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/card_view_position"
-            android:layout_marginStart="16dp"
             android:layout_width="40dp"
             android:layout_height="40dp"
+            android:layout_marginStart="16dp"
             app:cardCornerRadius="40dp"
-            app:layout_constraintStart_toStartOf="parent"
+            app:cardElevation="2dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:cardElevation="2dp">
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
             <TextView
                 android:id="@+id/badge_position"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:textColor="@{isAccomplished ? @color/white : @color/primaryDarkColor }"
-                android:gravity="center"
                 android:background="@{isAccomplished ? @color/gold : @color/white}"
                 android:fontFamily="@font/noto_sans"
-                android:textSize="14dp"
-                android:text="@{String.valueOf(position)}" />
+                android:gravity="center"
+                android:text="@{String.valueOf(position)}"
+                android:textColor="@{isAccomplished ? @color/white : @color/primaryDarkColor }"
+                android:textSize="14dp" />
         </com.google.android.material.card.MaterialCardView>
 
         <TextView
@@ -43,11 +55,11 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
+            android:fontFamily="@font/noto_sans"
+            android:letterSpacing="0.15"
             android:padding="8dp"
             android:text="@{friend.name}"
             android:textColor="@color/primaryDarkColor"
-            android:letterSpacing="0.15"
-            android:fontFamily="@font/noto_sans"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
@@ -56,11 +68,11 @@
 
         <TextView
             android:id="@+id/friend_bar_progress_text"
-            android:layout_marginEnd="20dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{display}"
             android:layout_marginStart="16dp"
+            android:layout_marginEnd="20dp"
+            android:text="@{display}"
             android:textColor="@color/secondaryColor"
             app:layout_constraintBaseline_toBaselineOf="@+id/friend_name"
             app:layout_constraintEnd_toEndOf="parent" />

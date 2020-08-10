@@ -10,12 +10,12 @@ import tw.com.walkablecity.home.HomeViewModel
 import tw.com.walkablecity.rating.RatingViewModel
 
 @Suppress("UNCHECKED_CAST")
-class RouteViewModelFactory(private val walkableRepository: WalkableRepository, val route: Route?)
-    : ViewModelProvider.Factory{
+class RouteViewModelFactory(private val walkableRepository: WalkableRepository, val route: Route?) :
+    ViewModelProvider.Factory {
 
     override fun <T : ViewModel?> create(modelClass: Class<T>) =
-        with(modelClass){
-            when{
+        with(modelClass) {
+            when {
 
                 isAssignableFrom(DetailViewModel::class.java) ->
                     DetailViewModel(walkableRepository, requireNotNull(route))

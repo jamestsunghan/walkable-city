@@ -16,6 +16,8 @@
     <string name="add_friend_event_title">邀請好友</string>
 
     <string name="enter_walkable">進入散步城市</string>
+    <string name="load_other_route">載入其他路線</string>
+    <string name="route_loaded">已繪製路線資訊</string>
 
     <string name="start_walking">開始散步</string>
     <string name="end_walking">結束散步</string>
@@ -101,6 +103,7 @@
     <string name="input_comment">輸入評語</string>
 
     <string name="no_route_selected">您這次並未選擇載入路線</string>
+    <string name="not_create_walk">您這次決定不創建路線</string>
     <string name="no_more_to_comment">您已評論完了歐</string>
 
     <string name="no_permission">您並未開啟位置權限</string>
@@ -145,7 +148,7 @@
 
     <string name="create_event">建立活動</string>
     <string name="create_event_title">活動名稱｜</string>
-    <string name="create_title_hint">不超過五個字歐</string>
+    <string name="create_title_hint">不超過六個字歐</string>
     <string name="create_event_type">活動類型｜</string>
 
     <string name="select_event_type">請選擇活動類型</string>
@@ -172,7 +175,7 @@
     <string name="create_event_description">活動敘述｜</string>
     <string name="create_description_hint">請描述活動</string>
     <string name="create_invite_friend">邀請好友｜</string>
-    <string name="inpun_friend_id">請輸入好友ID</string>
+    <string name="input_friend_id">請輸入好友&#032;ID</string>
 
     <string name="event_not_complete">尚未填寫完成歐</string>
 
@@ -190,12 +193,16 @@
     <string name="add_friend">加入</string>
     <string name="add_friend_title">加朋友</string>
 
-    <string name="input_friend_id">請輸入朋友的ID</string>
+    <string name="input_friend_name">請輸入朋友的名字</string>
     <string name="no_such_friend">該朋友不存在</string>
 
     <string name="add_success">加入成功</string>
     <string name="add_failed">加入失敗，請稍後再試</string>
     <string name="already_friend">你們已經是朋友了歐</string>
+
+
+    <string name="no_friend_for_now">您現在還沒有朋友歐</string>
+    <string name="go_add_some_friend">前去加朋友</string>
 
     <string name="walk_update_error">散步更新未完成</string>
 
@@ -266,6 +273,9 @@
     <string name="empty_string"> </string>
 
     <!--    <badge page>-->
+
+    <string name="badge">徽章</string>
+    <string name="new_badge">新徽章</string>
 
     <string name="badge_hour_section">散策時間</string>
     <string name="badge_hour_0">開始散策</string>
@@ -344,6 +354,19 @@
     <string name="day_night_switch">切換日夜模式</string>
 
     <string name="no_historic_data">尚無歷史資料</string>
+
+
+
+    <string name="badge_dialog_content">您有 %d 個新徽章歐！</string>
+    <string name="badge_dialog_walk">解鎖 %d 個旅程徽章囉！</string>
+    <string name="badge_dialog_event">解鎖 %d 個揪團徽章囉！</string>
+    <string name="badge_dialog_friend">解鎖 %d 個朋友徽章囉！</string>
+    <string name="go_to">前往散策徽章看看</string>
+
+    <string name="destroy_walk_message">路線與紀錄都會不見歐</string>
+    <string name="destroy_walk_title">確定要離開嗎?</string>
+    <string name="keep_walking">繼續散步</string>
+    <string name="confirm">確定</string>
 
 
 </resources>

@@ -4,7 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <variable name="viewModel" type="tw.com.walkablecity.host.HostViewModel" />
+
+        <variable
+            name="viewModel"
+            type="tw.com.walkablecity.host.HostViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -32,7 +35,7 @@
                 android:layout_marginEnd="16dp"
                 android:background="@color/primaryLightColor"
                 android:fontFamily="@font/noto_sans"
-                android:hint="@string/input_friend_id"
+                android:hint="@string/input_friend_name"
                 android:letterSpacing="0.15"
                 android:text="@={viewModel.searchId}" />
 

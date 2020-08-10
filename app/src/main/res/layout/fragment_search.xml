@@ -5,10 +5,15 @@
 
     <data>
 
-        <variable name="viewModel" type="tw.com.walkablecity.search.SearchViewModel" />
+        <variable
+            name="viewModel"
+            type="tw.com.walkablecity.search.SearchViewModel" />
+
         <import type="tw.com.walkablecity.data.RouteSorting" />
-        <import type="tw.com.walkablecity.data.LoadStatus"/>
-        <import type="android.view.View"/>
+
+        <import type="tw.com.walkablecity.data.LoadStatus" />
+
+        <import type="android.view.View" />
     </data>
 
     <com.google.android.material.card.MaterialCardView
@@ -37,20 +42,17 @@
             <!--            app:startIconDrawable="@drawable/ic_footprint">-->
 
 
-
             <!--        </com.google.android.material.textfield.TextInputLayout>-->
 
-            <fragment android:id="@+id/autocomplete_fragment"
+            <fragment
+                android:id="@+id/autocomplete_fragment"
+                android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:minWidth="300dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
-                />
-
-
+                app:layout_constraintTop_toTopOf="parent" />
 
 
             <TextView
@@ -180,12 +182,12 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
                 android:fontFamily="@font/noto_sans"
-                android:letterSpacing="0.15"
-                android:textSize="14sp"
                 android:gravity="center"
+                android:letterSpacing="0.15"
                 android:minWidth="24dp"
                 android:minHeight="24dp"
                 android:text="@{viewModel.shortestTimeText}"
+                android:textSize="14sp"
                 android:visibility="@{viewModel.status == LoadStatus.LOADING ? View.INVISIBLE : View.VISIBLE}"
                 app:layout_constraintBottom_toBottomOf="@+id/search_rest"
                 app:layout_constraintEnd_toStartOf="@id/search_rest"
@@ -226,10 +228,10 @@
                 android:background="@drawable/bg_filter_button_clicked"
                 android:fontFamily="@font/noto_sans"
                 android:gravity="center"
-                android:onClick="@{() -> viewModel.searchRoute()}"
                 android:letterSpacing="0.15"
                 android:minWidth="36dp"
                 android:minHeight="36dp"
+                android:onClick="@{() -> viewModel.searchRoute()}"
                 android:text="@string/send_filter"
                 android:textColor="@color/white"
                 app:layout_constraintBottom_toBottomOf="parent"

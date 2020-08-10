@@ -3,8 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-        <variable name="title" type="String" />
-        <variable name="position" type="Integer" />
+
+        <variable
+            name="title"
+            type="String" />
+
+        <variable
+            name="position"
+            type="Integer" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -15,9 +21,9 @@
             android:id="@+id/text_spinner_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
             android:fontFamily="@font/noto_sans"
             android:gravity="start"
-            android:layout_marginStart="16dp"
             android:letterSpacing="0.15"
             android:minWidth="60dp"
             android:paddingStart="4dp"

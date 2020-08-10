@@ -9,16 +9,21 @@ import tw.com.walkablecity.data.Friend
 import tw.com.walkablecity.databinding.ItemAddFriend2EventBinding
 import tw.com.walkablecity.host.HostViewModel
 
-class AddFriend2EventAdapter(val viewModel: HostViewModel): ListAdapter<Friend, AddFriend2EventAdapter.FriendViewHolder>(DiffCallback) {
+class AddFriend2EventAdapter(val viewModel: HostViewModel) :
+    ListAdapter<Friend, AddFriend2EventAdapter.FriendViewHolder>(DiffCallback) {
 
-    class FriendViewHolder(private val binding: ItemAddFriend2EventBinding): RecyclerView.ViewHolder(binding.root){
-        fun bind(friend: Friend, viewModel: HostViewModel){
+    class FriendViewHolder(private val binding: ItemAddFriend2EventBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+
+        fun bind(friend: Friend, viewModel: HostViewModel) {
             binding.friend = friend
+
             binding.friendCheckbox.isChecked = viewModel.addList.value?.contains(friend) ?: false
-            binding.friendCheckbox.setOnCheckedChangeListener { buttonView, isChecked ->
-                if(isChecked){
+
+            binding.friendCheckbox.setOnCheckedChangeListener { _, isChecked ->
+                if (isChecked) {
                     viewModel.addFriendToAddList(friend)
-                }else{
+                } else {
                     viewModel.removeFriendToAddList(friend)
                 }
             }
@@ -26,7 +31,7 @@ class AddFriend2EventAdapter(val viewModel: HostViewModel): ListAdapter<Friend, 
         }
     }
 
-    companion object DiffCallback: DiffUtil.ItemCallback<Friend>(){
+    companion object DiffCallback : DiffUtil.ItemCallback<Friend>() {
         override fun areItemsTheSame(oldItem: Friend, newItem: Friend): Boolean {
             return oldItem === newItem
         }
@@ -37,8 +42,10 @@ class AddFriend2EventAdapter(val viewModel: HostViewModel): ListAdapter<Friend, 
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FriendViewHolder {
-        return FriendViewHolder(ItemAddFriend2EventBinding
-            .inflate(LayoutInflater.from(parent.context), parent, false))
+        return FriendViewHolder(
+            ItemAddFriend2EventBinding
+                .inflate(LayoutInflater.from(parent.context), parent, false)
+        )
     }
 
     override fun onBindViewHolder(holder: FriendViewHolder, position: Int) {

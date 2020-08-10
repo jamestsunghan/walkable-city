@@ -1,13 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <variable name="viewModel" type="tw.com.walkablecity.detail.DetailViewModel" />
-        <variable name="route" type="tw.com.walkablecity.data.Route" />
-        <import type="tw.com.walkablecity.data.LoadStatus"/>
-        <import type="android.view.View"/>
+
+        <variable
+            name="viewModel"
+            type="tw.com.walkablecity.detail.DetailViewModel" />
+
+        <variable
+            name="route"
+            type="tw.com.walkablecity.data.Route" />
+
+        <import type="tw.com.walkablecity.data.LoadStatus" />
+
+        <import type="android.view.View" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -21,7 +29,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginBottom="16dp"
-            app:layout_constraintBottom_toTopOf="@+id/send_rating"
+            app:layout_constraintBottom_toTopOf="@+id/card_send_rating"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
@@ -37,12 +45,12 @@
                     android:id="@+id/recycler_detail_url"
                     android:layout_width="match_parent"
                     android:layout_height="250dp"
+                    android:orientation="horizontal"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    android:orientation="horizontal"
-                    app:routeImage="@{viewModel.displayPhotos}"/>
+                    app:routeImage="@{viewModel.displayPhotos}" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recycler_circle"
@@ -52,13 +60,13 @@
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
                     android:layout_marginBottom="30dp"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     android:orientation="horizontal"
                     app:addDecoration="@{viewModel.decoration}"
                     app:counting="@{viewModel.displayPhotos.size}"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     app:layout_constraintBottom_toBottomOf="@+id/recycler_detail_url"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"/>
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
 
                 <View
                     android:id="@+id/walk_divider"
@@ -113,13 +121,13 @@
                     android:layout_height="36dp"
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="16dp"
-                    android:visibility="@{viewModel.favStatus == LoadStatus.LOADING ? View.INVISIBLE : View.VISIBLE}"
-                    android:tint="@color/red_heart_c73e3a"
-                    app:layout_constraintTop_toBottomOf="@+id/recycler_detail_url"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:switch="@{viewModel.favoriteAdded}"
                     android:onClick="@{() -> viewModel.switchState()}"
-                    tools:srcCompat="@drawable/map_fav_24"/>
+                    android:tint="@color/red_heart_c73e3a"
+                    android:visibility="@{viewModel.favStatus == LoadStatus.LOADING ? View.INVISIBLE : View.VISIBLE}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/recycler_detail_url"
+                    app:switch="@{viewModel.favoriteAdded}"
+                    tools:srcCompat="@drawable/map_fav_24" />
 
                 <ProgressBar
                     android:id="@+id/progress_fav"
@@ -131,7 +139,6 @@
                     app:layout_constraintEnd_toEndOf="@+id/fav_icon"
                     app:layout_constraintStart_toStartOf="@+id/fav_icon"
                     app:layout_constraintTop_toTopOf="@+id/fav_icon" />
-
 
 
                 <TextView
@@ -151,7 +158,7 @@
                     android:textSize="18sp"
                     android:textStyle="bold"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/walk_duration"/>
+                    app:layout_constraintTop_toBottomOf="@+id/walk_duration" />
 
                 <TextView
                     android:id="@+id/edit_route_title"
@@ -159,17 +166,17 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
+                    android:background="@color/primaryLightColor"
+                    android:fontFamily="@font/noto_sans"
+                    android:letterSpacing="0.15"
                     android:paddingStart="8dp"
                     android:paddingTop="4dp"
                     android:paddingEnd="8dp"
                     android:paddingBottom="4dp"
-                    android:background="@color/primaryLightColor"
-                    android:fontFamily="@font/noto_sans"
                     android:text="@{route.title}"
-                    android:letterSpacing="0.15"
+                    app:layout_constraintBottom_toBottomOf="@+id/route_title"
                     app:layout_constraintStart_toEndOf="@+id/route_title"
-                    app:layout_constraintTop_toTopOf="@+id/route_title"
-                    app:layout_constraintBottom_toBottomOf="@+id/route_title"/>
+                    app:layout_constraintTop_toTopOf="@+id/route_title" />
 
                 <TextView
                     android:id="@+id/route_description"
@@ -208,8 +215,6 @@
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/route_description" />
-
-
 
 
                 <TextView
@@ -288,20 +293,20 @@
                     android:layout_width="120dp"
                     android:layout_height="120dp"
                     android:layout_marginTop="16dp"
-                    app:layout_constraintStart_toStartOf="parent"
+                    app:hexagon="@{viewModel.colorId}"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/rating_coverage"
-                    app:hexagon="@{viewModel.colorId}"/>
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/rating_coverage" />
 
                 <View
                     android:id="@+id/hexagon"
                     android:layout_width="120dp"
                     android:layout_height="120dp"
                     android:layout_marginTop="16dp"
-                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/rating_coverage"
-                    app:power="@{route.ratingAvr}"/>
+                    app:power="@{route.ratingAvr}" />
 
                 <TextView
                     android:id="@+id/rating_rest"
@@ -317,8 +322,8 @@
                     android:paddingBottom="4dp"
                     android:text="@{String.format(@string/detail_rest , route.ratingAvr.rest)}"
                     android:textSize="16sp"
-                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/hexagon_bg" />
 
 
@@ -353,10 +358,8 @@
                     android:paddingBottom="4dp"
                     android:text="@{String.format(@string/detail_vibe, route.ratingAvr.vibe)}"
                     android:textSize="16sp"
-                    app:layout_constraintStart_toEndOf="@+id/hexagon_bg"
-                    app:layout_constraintBottom_toBottomOf="@+id/hexagon_bg"/>
-
-
+                    app:layout_constraintBottom_toBottomOf="@+id/hexagon_bg"
+                    app:layout_constraintStart_toEndOf="@+id/hexagon_bg" />
 
 
                 <TextView
@@ -382,43 +385,82 @@
                     android:id="@+id/recycler_comment"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     android:layout_marginTop="16dp"
-                    app:layout_constraintTop_toBottomOf="@+id/route_comment_title"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     android:layout_marginBottom="16dp"
-                    app:comment="@{viewModel.commentList}" />
-
-
-
-
+                    android:orientation="vertical"
+                    app:comment="@{viewModel.commentList}"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/route_comment_title" />
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </ScrollView>
 
-        <TextView
-            android:id="@+id/send_rating"
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_send_rating"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
-            android:background="@drawable/bg_walker_prepare"
-            android:fontFamily="@font/noto_sans"
-            android:gravity="center"
-            android:letterSpacing="0.15"
-            android:paddingStart="8dp"
-            android:paddingTop="4dp"
-            android:paddingEnd="8dp"
-            android:paddingBottom="4dp"
-            android:text="@string/back_to_route_list"
-            android:textColor="@color/primaryDarkColor"
-            android:textSize="18sp"
-            android:onClick="@{() -> viewModel.navigateToRanking()}"
-            android:textStyle="bold"
+            app:cardElevation="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/navigate_back"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:fontFamily="@font/noto_sans"
+                    android:gravity="center"
+                    android:letterSpacing="0.15"
+                    android:onClick="@{() -> viewModel.navigateToRanking()}"
+                    android:paddingStart="8dp"
+                    android:paddingTop="4dp"
+                    android:paddingEnd="8dp"
+                    android:paddingBottom="4dp"
+                    android:text="@string/back_to_route_list"
+                    android:textColor="@color/primaryDarkColor"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/load_route"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/load_route"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:background="@color/primaryDarkColor"
+                    android:fontFamily="@font/noto_sans"
+                    android:gravity="center"
+                    android:letterSpacing="0.15"
+                    android:onClick="@{() -> viewModel.navigateToHome(route)}"
+                    android:paddingStart="8dp"
+                    android:paddingTop="4dp"
+                    android:paddingEnd="8dp"
+                    android:paddingBottom="4dp"
+                    android:text="@string/load_route"
+                    android:textColor="@color/white"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/navigate_back"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        </com.google.android.material.card.MaterialCardView>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

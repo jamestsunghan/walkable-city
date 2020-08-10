@@ -6,7 +6,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.os.bundleOf
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
@@ -20,9 +19,7 @@ import tw.com.walkablecity.ext.getVMFactory
 
 class RatingFragment : Fragment() {
 
-    val viewModel: RatingViewModel by viewModels{getVMFactory()}
-
-
+    val viewModel: RatingViewModel by viewModels { getVMFactory() }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -32,27 +29,37 @@ class RatingFragment : Fragment() {
             .inflate(inflater, R.layout.fragment_rating, container, false)
         binding.lifecycleOwner = this
 
-        childFragmentManager.setFragmentResultListener("navigation", viewLifecycleOwner){requestKey, bundle ->
-            val result = bundle.getInt("sent")
-            viewModel.navigateToSearch.value = viewModel.navigateToSearch.value?.plus(result) ?:1
+        childFragmentManager.setFragmentResultListener(
+            REQUEST_KEY,
+            viewLifecycleOwner
+        ) { _, bundle ->
+            val result = bundle.getInt(BUNDLE_KEY)
+            viewModel.addDonePageCount(result)
         }
 
         val selectedRoute = RatingFragmentArgs.fromBundle(requireArguments()).selectedRoute
         val walk = RatingFragmentArgs.fromBundle(requireArguments()).walkKey
 
-        val adapter = RatingAdapter(childFragmentManager, selectedRoute, walk
+        val adapter = RatingAdapter(
+            childFragmentManager, selectedRoute, walk
             , RatingFragmentArgs.fromBundle(requireArguments()).willCreateKey
-            , RatingFragmentArgs.fromBundle(requireArguments()).photoPointsKey?.toList())
+            , RatingFragmentArgs.fromBundle(requireArguments()).photoPointsKey?.toList()
+        )
 
-        binding.viewpagerRating.let{
+        binding.viewpagerRating.let {
             it.adapter = adapter
             it.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(binding.tabsRating))
         }
 
-        viewModel.navigateToSearch.observe(viewLifecycleOwner, Observer{
-            it?.let{
-                if(it > 1){
-                    findNavController().navigate(RatingFragmentDirections.actionGlobalHomeFragment(null, null))
+        viewModel.navigateToHome.observe(viewLifecycleOwner, Observer {
+            it?.let {count->
+                if (count > 1) {
+                    findNavController().navigate(
+                        RatingFragmentDirections.actionGlobalHomeFragment(
+                            null,
+                            null
+                        )
+                    )
                     viewModel.sendComplete()
                 }
             }
@@ -61,5 +68,8 @@ class RatingFragment : Fragment() {
         return binding.root
     }
 
-
+    companion object{
+        const val REQUEST_KEY = "navigation"
+        const val BUNDLE_KEY = "sent"
+    }
 }

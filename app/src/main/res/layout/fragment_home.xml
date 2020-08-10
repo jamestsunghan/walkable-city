@@ -28,17 +28,6 @@
             android:layout_height="match_parent"
             android:visibility="@{viewModel.permissionDenied ? View.GONE : View.VISIBLE}" />
 
-        <!--        <tw.com.walkablecity.CameraPreview-->
-        <!--            android:id="@+id/photo_booth"-->
-        <!--            android:layout_width="match_parent"-->
-        <!--            android:layout_height="250dp"-->
-        <!--            android:visibility="@{viewModel.cameraClicked ? View.VISIBLE : View.GONE}"-->
-        <!--            android:scaleType="centerCrop"-->
-        <!--            app:layout_constraintEnd_toEndOf="parent"-->
-        <!--            app:layout_constraintStart_toStartOf="parent"-->
-        <!--            app:layout_constraintTop_toTopOf="parent"-->
-        <!--            app:srcCompat="@drawable/placeholder" />-->
-
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/edit_search_route"
             android:layout_width="match_parent"
@@ -61,10 +50,10 @@
                 android:focusable="false"
                 android:fontFamily="@font/noto_sans"
                 android:hint="@string/search_destination"
-                android:textColor="@color/primaryDarkColor"
-                android:textColorHint="@color/primaryColor"
                 android:letterSpacing="0.15"
-                android:onClick="@{() -> viewModel.navigateToSearch()}" />
+                android:onClick="@{() -> viewModel.navigateToSearch()}"
+                android:textColor="@color/primaryDarkColor"
+                android:textColorHint="@color/primaryColor" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -88,10 +77,10 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:visibility="@{viewModel.permissionDenied || viewModel.walkerStatus ==WalkerStatus.WALKING || viewModel.walkerStatus == WalkerStatus.PAUSING ? View.GONE : View.VISIBLE}"
+            app:cardCornerRadius="8dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/edit_search_route"
-            app:cardCornerRadius="8dp"
             app:strokeColor="@color/primaryDarkColor"
             app:strokeWidth="1dp">
 
@@ -102,12 +91,12 @@
                 android:background="@color/white"
                 android:fontFamily="@font/noto_sans"
                 android:letterSpacing="0.15"
-                android:textColor="@color/primaryDarkColor"
                 android:paddingStart="8dp"
                 android:paddingTop="4dp"
                 android:paddingEnd="8dp"
                 android:paddingBottom="4dp"
                 android:text="@string/day_night_switch"
+                android:textColor="@color/primaryDarkColor"
                 android:textSize="16sp" />
 
 
@@ -115,6 +104,7 @@
 
 
         <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_walk_zone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -135,6 +125,67 @@
                 android:visibility="@{viewModel.walkerStatus == WalkerStatus.PREPARE ? View.VISIBLE : View.GONE}">
 
                 <TextView
+                    android:id="@+id/pre_route_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:background="@color/primaryDarkColor"
+                    android:fontFamily="@font/noto_sans"
+                    android:gravity="center"
+                    android:letterSpacing="0.15"
+                    android:paddingStart="8dp"
+                    android:paddingTop="4dp"
+                    android:paddingEnd="8dp"
+                    android:paddingBottom="4dp"
+                    android:text="@string/route_loaded"
+                    android:textColor="@color/white"
+                    android:textSize="14sp"
+                    android:visibility="@{viewModel.mapRoute == null ? View.GONE : View.VISIBLE}"
+                    app:layout_constraintBottom_toTopOf="@+id/pre_walker_timer"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/pre_walker_timer"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:fontFamily="@font/noto_sans"
+                    android:gravity="center"
+                    android:letterSpacing="0.15"
+                    android:paddingStart="8dp"
+                    android:paddingTop="4dp"
+                    android:paddingEnd="8dp"
+                    android:paddingBottom="4dp"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:visibility="@{viewModel.mapRoute == null ? View.GONE : View.VISIBLE}"
+                    app:layout_constraintBottom_toTopOf="@+id/button_load_route"
+                    app:layout_constraintEnd_toEndOf="@+id/pre_walking_divider"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:mapRouteTime="@{ viewModel.mapRoute.routes[0] }" />
+
+                <TextView
+                    android:id="@+id/pre_walker_distance"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/noto_sans"
+                    android:gravity="center"
+                    android:letterSpacing="0.15"
+                    android:paddingStart="8dp"
+                    android:paddingTop="4dp"
+                    android:paddingEnd="8dp"
+                    android:paddingBottom="4dp"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:visibility="@{viewModel.mapRoute == null ? View.GONE : View.VISIBLE}"
+                    app:layout_constraintBaseline_toBaselineOf="@+id/pre_walker_timer"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/pre_walking_divider"
+                    app:mapRouteDistance="@{viewModel.mapRoute.routes[0]}" />
+
+                <TextView
                     android:id="@+id/button_load_route"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -147,7 +198,7 @@
                     android:paddingTop="16dp"
                     android:paddingEnd="8dp"
                     android:paddingBottom="16dp"
-                    android:text="@string/load_route"
+                    android:text="@{viewModel.mapRoute == null ? @string/load_route : @string/load_other_route}"
                     android:textColor="@color/primaryDarkColor"
                     android:textSize="16sp"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -303,13 +354,14 @@
                     android:paddingTop="4dp"
                     android:paddingEnd="8dp"
                     android:paddingBottom="4dp"
+                    android:text="@{viewModel.walkerStatus == WalkerStatus.PAUSING ? @string/resume_walking : @string/pause_walking }"
                     android:textColor="@color/primaryDarkColor"
                     android:textSize="16sp"
+                    android:visibility="@{viewModel.walkerStatus == WalkerStatus.WALKING || viewModel.walkerStatus == WalkerStatus.PAUSING ? View.VISIBLE : View.GONE}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/walking_divider"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:pause="@{viewModel.walkerStatus}"
                     tools:text="@string/pause_walking" />
 
                 <View
@@ -406,7 +458,7 @@
             android:text="@string/permission_again"
             android:textColor="@color/white"
             android:textSize="16sp"
-            android:visibility="@{viewModel.permissionDenied &amp;&amp; !viewModel.dontAskAgain ? View.VISIBLE : View.GONE}"
+            android:visibility="@{viewModel.permissionDenied ? View.VISIBLE : View.GONE}"
             app:layout_constraintEnd_toEndOf="@+id/permission_denied"
             app:layout_constraintStart_toStartOf="@+id/permission_denied"
             app:layout_constraintTop_toBottomOf="@+id/permission_denied"

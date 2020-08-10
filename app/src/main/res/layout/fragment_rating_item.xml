@@ -5,10 +5,15 @@
 
     <data>
 
-        <variable name="viewModel" type="tw.com.walkablecity.rating.item.RatingItemViewModel" />
+        <variable
+            name="viewModel"
+            type="tw.com.walkablecity.rating.item.RatingItemViewModel" />
+
         <import type="android.view.View" />
+
         <import type="tw.com.walkablecity.rating.RatingType" />
-        <import type="tw.com.walkablecity.data.LoadStatus"/>
+
+        <import type="tw.com.walkablecity.data.LoadStatus" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -49,15 +54,15 @@
                     android:layout_height="250dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"/>
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recycler_photo_point"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:layout_constraintBottom_toBottomOf="@+id/map"
                     android:orientation="horizontal"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_constraintBottom_toBottomOf="@+id/map"
                     app:photopts="@{viewModel.photos}" />
 
                 <View
@@ -140,13 +145,11 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="16dp"
-                        android:valueFrom="1"
-                        android:valueTo="100"
+                        android:stepSize="1"
                         app:layout_constraintBottom_toBottomOf="@+id/parse_route_title"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/parse_route_title"
-                        app:layout_constraintTop_toTopOf="@id/parse_route_title"
-                        app:values="@array/initial_creator_slider_values" />
+                        app:layout_constraintTop_toTopOf="@id/parse_route_title" />
 
                     <TextView
                         android:id="@+id/route_title"
@@ -186,11 +189,11 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="16dp"
                             android:layout_marginEnd="16dp"
-                            android:text="@={viewModel.routeTitle}"
                             android:background="@color/primaryLightColor"
                             android:fontFamily="@font/noto_sans"
                             android:hint="@string/input_title"
-                            android:letterSpacing="0.15" />
+                            android:letterSpacing="0.15"
+                            android:text="@={viewModel.routeTitle}" />
 
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -234,11 +237,11 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="16dp"
                             android:layout_marginEnd="16dp"
-                            android:text="@={viewModel.routeDescription}"
                             android:background="@color/primaryLightColor"
                             android:fontFamily="@font/noto_sans"
                             android:hint="@string/input_description"
-                            android:letterSpacing="0.15" />
+                            android:letterSpacing="0.15"
+                            android:text="@={viewModel.routeDescription}" />
 
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -496,16 +499,17 @@
                     app:layout_constraintTop_toBottomOf="@+id/route_comment_title">
 
                     <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edit_route_comment_text"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
                         android:layout_marginEnd="16dp"
-                        android:text="@={viewModel.routeCommentContent}"
                         android:background="@color/primaryLightColor"
                         android:fontFamily="@font/noto_sans"
-                        android:maxLines="5"
                         android:hint="@string/input_comment"
-                        android:letterSpacing="0.15" />
+                        android:letterSpacing="0.15"
+                        android:maxLines="5"
+                        android:text="@={viewModel.routeCommentContent}" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -571,7 +575,7 @@
             android:paddingTop="4dp"
             android:paddingEnd="8dp"
             android:paddingBottom="4dp"
-            android:text="@{viewModel.selectedRoute == null ? @string/no_route_selected : @string/no_more_to_comment}"
+            android:text="@{viewModel.selectedRoute == null ? @string/no_route_selected : viewModel.type.willComment == false ? @string/not_create_walk : @string/no_more_to_comment}"
             android:textSize="16sp"
             android:visibility="@{viewModel.sendRating == true ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="parent"

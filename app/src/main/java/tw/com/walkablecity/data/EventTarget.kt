@@ -8,4 +8,9 @@ data class EventTarget (
     var frequencyType: FrequencyType? = null,
     var distance: Float? = null,
     var hour: Float? = null
-): Parcelable
+): Parcelable{
+
+    fun baseOnHour() = distance == null
+
+
+}

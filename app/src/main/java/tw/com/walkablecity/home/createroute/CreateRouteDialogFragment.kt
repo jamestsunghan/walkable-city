@@ -43,10 +43,15 @@ class CreateRouteDialogFragment : DialogFragment() {
 
         viewModel.navigateToRating.observe(viewLifecycleOwner, Observer {
             if(it){
-                findNavController().navigate(CreateRouteDialogFragmentDirections
-                    .actionCreateRouteDialogFragmentToRatingFragment(
-                        selectRoute, walk, requireNotNull(viewModel.willCreate.value)
-                        , photoPoints))
+                if(selectRoute == null && viewModel.willCreate.value == false){
+                    findNavController().navigate(CreateRouteDialogFragmentDirections.actionGlobalHomeFragment(null,null))
+                }else{
+                    findNavController().navigate(CreateRouteDialogFragmentDirections
+                        .actionCreateRouteDialogFragmentToRatingFragment(
+                            selectRoute, walk, requireNotNull(viewModel.willCreate.value)
+                            , photoPoints))
+                }
+
                 viewModel.navigationComplete()
             }
         })

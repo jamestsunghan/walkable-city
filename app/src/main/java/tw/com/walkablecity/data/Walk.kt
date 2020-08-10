@@ -6,6 +6,7 @@ import com.google.firebase.Timestamp
 import com.google.firebase.firestore.GeoPoint
 import kotlinx.android.parcel.Parcelize
 import kotlinx.android.parcel.RawValue
+import tw.com.walkablecity.ext.toDateLong
 
 @Parcelize
 data class Walk (
@@ -15,4 +16,11 @@ data class Walk (
     val duration: Long? = null,
     val routeId: String? = null,
     val waypoints: @RawValue List<GeoPoint> = listOf()
-): Parcelable
+): Parcelable{
+
+    fun toRouteId(userIdCustom: String): String{
+        return "${userIdCustom}${this.startTime?.toDateLong()?.times(100)}"
+    }
+
+
+}

@@ -44,13 +44,6 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".WalkService"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="tw.com.walkablecity.walk"/>
-            </intent-filter>
-        </service>
-
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="tw.com.walkablecity.provider"

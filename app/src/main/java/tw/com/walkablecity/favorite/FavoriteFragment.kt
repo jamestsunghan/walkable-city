@@ -10,17 +10,16 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
-import tw.com.walkablecity.Logger
+import tw.com.walkablecity.util.Logger
 
 import tw.com.walkablecity.R
 import tw.com.walkablecity.databinding.FragmentFavoriteBinding
 import tw.com.walkablecity.ext.getVMFactory
-import tw.com.walkablecity.ranking.RankingFragmentDirections
 
 class FavoriteFragment : Fragment() {
 
 
-    private val viewModel: FavoriteViewModel by viewModels{getVMFactory()}
+    private val viewModel: FavoriteViewModel by viewModels { getVMFactory() }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -36,29 +35,29 @@ class FavoriteFragment : Fragment() {
         binding.recyclerRouteItem.adapter = adapter
 
         viewModel.filter.observe(viewLifecycleOwner, Observer {
-            it?.let{
-                Logger.d("route sorting ${it.text}")
-                viewModel.routeSorting(it, adapter)
+            it?.let { sorting ->
+                Logger.d("route sorting ${sorting.text}")
+                viewModel.timeFilter(
+                    viewModel.routeTime.value ?: listOf(Float.MIN_VALUE, Float.MAX_VALUE),
+                    viewModel.sliderMax.value ?: Float.MAX_VALUE
+                    , sorting
+                )
+                adapter.notifyDataSetChanged()
             }
         })
 
         viewModel.selectRoute.observe(viewLifecycleOwner, Observer {
-            it?.let{
+            it?.let { route ->
 
-                findNavController().navigate(FavoriteFragmentDirections.actionGlobalDetailFragment(it))
+                findNavController()
+                    .navigate(FavoriteFragmentDirections.actionGlobalDetailFragment(route))
                 viewModel.navigationComplete()
-            }
-        })
-
-        viewModel.routeTime.observe(viewLifecycleOwner, Observer {
-            it?.let{
-                viewModel.timeFilter(it)
             }
         })
 
 
         return binding.root
     }
-    
+
 
 }
