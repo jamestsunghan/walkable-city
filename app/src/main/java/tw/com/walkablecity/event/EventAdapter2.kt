@@ -11,7 +11,7 @@ class EventAdapter2(activity: FragmentActivity): FragmentStateAdapter(activity) 
     }
 
     override fun createFragment(position: Int): Fragment {
-        return EventItemFragment(EventPageType.values()[position])
+        return EventItemFragment.newInstance(EventPageType.values()[position])
     }
 
 

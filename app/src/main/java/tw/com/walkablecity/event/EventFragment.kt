@@ -29,6 +29,8 @@ class EventFragment : Fragment() {
 
     private val viewModel: EventViewModel by viewModels { getVMFactory() }
 
+    private lateinit var mediator: TabLayoutMediator
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -46,7 +48,7 @@ class EventFragment : Fragment() {
 
         binding.viewpagerEvent.adapter = EventAdapter2(requireActivity())
 
-        val mediator = TabLayoutMediator(binding.tabsEvent, binding.viewpagerEvent,
+        mediator = TabLayoutMediator(binding.tabsEvent, binding.viewpagerEvent,
             TabLayoutMediator.TabConfigurationStrategy { tab, position ->
                 tab.text = EventPageType.values()[position].title
                 if (position == 2) {

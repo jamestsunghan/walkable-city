@@ -15,9 +15,17 @@ import tw.com.walkablecity.event.EventFragmentDirections
 import tw.com.walkablecity.event.EventPageType
 import tw.com.walkablecity.ext.getVMFactory
 
-class EventItemFragment(val type: EventPageType): Fragment() {
+class EventItemFragment : Fragment() {
 
-    val viewModel: EventItemViewModel by viewModels{getVMFactory(type)}
+    companion object {
+        fun newInstance(type: EventPageType): EventItemFragment {
+            val arg = Bundle()
+            arg.putParcelable("type", type)
+            val new = EventItemFragment()
+            new.arguments = arg
+            return new
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -28,21 +36,29 @@ class EventItemFragment(val type: EventPageType): Fragment() {
         val binding: FragmentEventItemBinding = DataBindingUtil
             .inflate(inflater, R.layout.fragment_event_item, container, false)
 
+        val type: EventPageType = requireArguments().get("type") as EventPageType
+
+        val viewModel: EventItemViewModel by viewModels { getVMFactory(type) }
+
         binding.lifecycleOwner = this
 
         binding.viewModel = viewModel
 
         binding.recyclerEventItem.adapter = EventItemAdapter(viewModel)
 
-        viewModel.navigateToEventDetail.observe(viewLifecycleOwner, Observer{
-            it?.let{event->
-                findNavController().navigate(EventFragmentDirections.actionGlobalEventDetailFragment(event))
+        viewModel.navigateToEventDetail.observe(viewLifecycleOwner, Observer {
+            it?.let { event ->
+                findNavController().navigate(
+                    EventFragmentDirections.actionGlobalEventDetailFragment(
+                        event
+                    )
+                )
                 viewModel.navigateToDetailComplete()
             }
         })
 
-        viewModel.eventAllList.observe(viewLifecycleOwner, Observer{
-            it?.let{eventList->
+        viewModel.eventAllList.observe(viewLifecycleOwner, Observer {
+            it?.let { eventList ->
                 viewModel.getEventListToFilter(eventList)
             }
         })

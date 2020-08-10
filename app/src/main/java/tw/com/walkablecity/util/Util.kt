@@ -1,5 +1,6 @@
 package tw.com.walkablecity.util
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
 import android.net.ConnectivityManager
@@ -24,6 +25,7 @@ import java.util.*
 
 object Util {
 
+    @SuppressLint("MissingPermission")
     fun isInternetConnected(): Boolean {
         val cm = WalkableApp.instance
             .getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
@@ -33,6 +35,10 @@ object Util {
 
     fun getString(resourceId: Int): String {
         return WalkableApp.instance.getString(resourceId)
+    }
+
+    fun getString(resourceId: Int, context: Context): String {
+        return context.getString(resourceId)
     }
 
     fun getColor(resourceId: Int): Int {
