@@ -79,7 +79,7 @@ fun LatLng.toGeoPoint(): GeoPoint {
 
 fun GeoPoint.toLocation(): Location {
     return Location("").apply {
-        latitude = this@toLocation.latitude
+        latitude  = this@toLocation.latitude
         longitude = this@toLocation.longitude
     }
 }

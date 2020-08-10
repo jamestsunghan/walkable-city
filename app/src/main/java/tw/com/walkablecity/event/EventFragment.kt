@@ -1,6 +1,7 @@
 package tw.com.walkablecity.event
 
 
+import android.graphics.Color
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -26,7 +27,6 @@ import tw.com.walkablecity.util.Util
 
 class EventFragment : Fragment() {
 
-
     private val viewModel: EventViewModel by viewModels { getVMFactory() }
 
     private lateinit var mediator: TabLayoutMediator
@@ -37,7 +37,7 @@ class EventFragment : Fragment() {
     ): View? {
 
         val mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
-        UserManager.user?.id?.let {id->
+        UserManager.user?.id?.let { id ->
             mainViewModel.getInvitation(id)
         }
 
@@ -53,22 +53,23 @@ class EventFragment : Fragment() {
                 tab.text = EventPageType.values()[position].title
                 if (position == 2) {
                     mainViewModel.invitation.observe(viewLifecycleOwner, Observer {
-                        it?.let {count->
+                        it?.let { count ->
                             tab.orCreateBadge.apply {
                                 backgroundColor = getColor(R.color.red_heart_c73e3a)
                                 number = count
+                                badgeTextColor = Color.WHITE
                                 isVisible = count > 0
                                 badgeGravity = BadgeDrawable.TOP_END
                             }
                         }
                     })
-
                 }
             })
+
         mediator.attach()
 
         mainViewModel.invitation.observe(viewLifecycleOwner, Observer {
-            it?.let {count->
+            it?.let { count ->
                 binding.tabsEvent.getTabAt(2)?.orCreateBadge?.apply {
                     number = count
                 }
@@ -79,7 +80,7 @@ class EventFragment : Fragment() {
 
         binding.mainViewModel = mainViewModel
 
-        viewModel.navigateToHost.observe(viewLifecycleOwner, Observer {confirmed->
+        viewModel.navigateToHost.observe(viewLifecycleOwner, Observer { confirmed ->
             if (confirmed) {
                 findNavController().navigate(EventFragmentDirections.actionEventFragmentToHostFragment())
                 viewModel.navigateToHostComplete()
@@ -114,7 +115,7 @@ class EventFragment : Fragment() {
             }
         })
 
-        viewModel.showNoFriendDialog.observe(viewLifecycleOwner, Observer {confirmed->
+        viewModel.showNoFriendDialog.observe(viewLifecycleOwner, Observer { confirmed ->
             if (confirmed) {
                 val dialog = showNoFriendDialog(
                     requireContext(), findNavController()
