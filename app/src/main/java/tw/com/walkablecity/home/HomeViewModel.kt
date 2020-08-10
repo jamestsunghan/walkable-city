@@ -1,121 +1,113 @@
 package tw.com.walkablecity.home
 
 
-import android.annotation.SuppressLint
-import android.content.pm.PackageManager
-import android.content.res.Configuration
-import android.hardware.Camera
-import android.hardware.camera2.CameraDevice
-import android.hardware.camera2.CameraManager
 import android.os.Handler
 import android.os.Looper
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import com.google.android.gms.location.*
-import com.google.android.gms.maps.model.CircleOptions
 import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.Timestamp
 import com.google.firebase.Timestamp.now
 import com.google.firebase.firestore.GeoPoint
 import kotlinx.coroutines.*
 import tw.com.walkablecity.*
-import tw.com.walkablecity.R
-import tw.com.walkablecity.Util.getAccumulatedFromSharedPreference
-import tw.com.walkablecity.Util.getColor
-import tw.com.walkablecity.Util.getCountFromSharedPreference
-import tw.com.walkablecity.Util.getString
-import tw.com.walkablecity.Util.putDataToSharedPreference
+import tw.com.walkablecity.util.Util.getAccumulatedFromSharedPreference
 import tw.com.walkablecity.data.*
+import tw.com.walkablecity.data.directionresult.DirectionResult
 import tw.com.walkablecity.data.source.WalkableRepository
 import tw.com.walkablecity.ext.toDistance
 import tw.com.walkablecity.ext.toGeoPoint
-import java.lang.Exception
+import tw.com.walkablecity.ext.toLatLng
+import tw.com.walkablecity.util.Logger
 import java.lang.Runnable
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.coroutines.resume
 
-class HomeViewModel(val walkableRepository: WalkableRepository, val argument: Route?, val destination: LatLng?): ViewModel(){
+class HomeViewModel(
+    val walkableRepository: WalkableRepository,
+    val argument: Route?,
+    val destination: LatLng?
+) : ViewModel() {
 
-    companion object{
+    companion object {
         const val UPDATE_INTERVAL_IN_MILLISECONDS = 5000L
         const val FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS = UPDATE_INTERVAL_IN_MILLISECONDS / 2
     }
 
     private val _upgrade = MutableLiveData<Int>()
-    val upgrade: LiveData<Int> get() = _upgrade
+    val upgrade: LiveData<Int>
+        get() = _upgrade
 
-    val waypointLatLng = MutableLiveData<List<LatLng>>()
-
-    private val _permissionDenied =  MutableLiveData<Boolean>(false)
-    val permissionDenied: LiveData<Boolean> get() = _permissionDenied
-
-    private val _cameraPermissionDenied =  MutableLiveData<Boolean>(false)
-    val cameraPermissionDenied: LiveData<Boolean> get() = _cameraPermissionDenied
+    private val _permissionDenied = MutableLiveData<Boolean>(false)
+    val permissionDenied: LiveData<Boolean>
+        get() = _permissionDenied
 
     private val fusedLocationClient = FusedLocationProviderClient(WalkableApp.instance)
 
-    private val _checkPermission = MutableLiveData<Boolean>(false)
-    val checkPermission: LiveData<Boolean> get() = _checkPermission
-
     private val _dontAskAgain = MutableLiveData<Boolean>(false)
-    val dontAskAgain: LiveData<Boolean> get() = _dontAskAgain
+    val dontAskAgain: LiveData<Boolean>
+        get() = _dontAskAgain
 
     private val _navigateToLoad = MutableLiveData<Boolean>()
-    val navigateToLoad: LiveData<Boolean> get() = _navigateToLoad
+    val navigateToLoad: LiveData<Boolean>
+        get() = _navigateToLoad
 
     private val _navigateToSearch = MutableLiveData<Boolean>()
-    val navigateToSearch: LiveData<Boolean> get() = _navigateToSearch
+    val navigateToSearch: LiveData<Boolean>
+        get() = _navigateToSearch
 
     private val _navigateToRating = MutableLiveData<Walk>()
-    val navigateToRating: LiveData<Walk> get() = _navigateToRating
+    val navigateToRating: LiveData<Walk>
+        get() = _navigateToRating
 
     private val _walkerStatus = MutableLiveData<WalkerStatus>()
-    val walkerStatus: LiveData<WalkerStatus> get() = _walkerStatus
+    val walkerStatus: LiveData<WalkerStatus>
+        get() = _walkerStatus
 
     private val _loadStatus = MutableLiveData<LoadStatus>()
-    val loadStatus: LiveData<LoadStatus> get() = _loadStatus
+    val loadStatus: LiveData<LoadStatus>
+        get() = _loadStatus
 
     private val _mapRoute = MutableLiveData<DirectionResult>()
-    val mapRoute: LiveData<DirectionResult> get() = _mapRoute
+    val mapRoute: LiveData<DirectionResult>
+        get() = _mapRoute
 
     private val _error = MutableLiveData<String>()
-    val error: LiveData<String> get() = _error
+    val error: LiveData<String>
+        get() = _error
 
     private val _photoPoints = MutableLiveData<MutableList<PhotoPoint>>(mutableListOf())
-    val photopoints: LiveData<MutableList<PhotoPoint>> get() = _photoPoints
+    val photoPoints: LiveData<MutableList<PhotoPoint>>
+        get() = _photoPoints
 
+    private val startTime = MutableLiveData<Timestamp>()
+    private val endTime = MutableLiveData<Timestamp>()
 
+    private val _currentLocation = MutableLiveData<LatLng>()
+    val currentLocation: LiveData<LatLng>
+        get() = _currentLocation
 
-    val startTime = MutableLiveData<Timestamp>()
+    private val _startLocation = MutableLiveData<LatLng>()
+    val startLocation: LiveData<LatLng>
+        get() = _startLocation
 
-    val duration = MutableLiveData<Long>()
+    private val _trackPoints = MutableLiveData<MutableList<LatLng>>(mutableListOf())
+    val trackPoints: LiveData<MutableList<LatLng>>
+        get() = _trackPoints
 
-    val endTime = MutableLiveData<Timestamp>()
-
-    val currentLocation = MutableLiveData<LatLng>()
-    val startLocation = MutableLiveData<LatLng>()
-    val trackPoints = MutableLiveData<MutableList<LatLng>>(mutableListOf())
-
-    val walkerDistance = Transformations.map(trackPoints){
-        if(it == null || it.isEmpty()){
+    val walkerDistance = Transformations.map(trackPoints) { list ->
+        if (list == null || list.isEmpty()) {
             0F
-        }else{
-            it.toDistance()
+        } else {
+            list.toDistance()
         }
     }
-    val walkerTimer = MutableLiveData<Long>(0L)
-    val trackGeoPoints = Transformations.map(trackPoints){list ->
-        list.map{GeoPoint(it.latitude, it.longitude)}
-    }
-    val circle = Transformations.map(currentLocation){
-        it?.let{
-            CircleOptions().center(it).radius(20.0).fillColor(getColor(R.color.blue_2e5c6e))
-        }
-    }
+    private val _walkerTimer = MutableLiveData<Long>(0L)
+    val walkerTimer: LiveData<Long>
+        get() = _walkerTimer
 
     private var handler = Handler()
     private lateinit var runnable: Runnable
@@ -123,137 +115,145 @@ class HomeViewModel(val walkableRepository: WalkableRepository, val argument: Ro
     val route = MutableLiveData<Route>().apply {
         value = argument
     }
+
     private var locationCallback: LocationCallback
 
-    val cameraClicked = MutableLiveData<Boolean>(false)
-
     private val viewModelJob = Job()
+
     private val coroutineScope = CoroutineScope(Dispatchers.Main + viewModelJob)
 
     override fun onCleared() {
         super.onCleared()
         viewModelJob.cancel()
+        if (walkerStatus.value == WalkerStatus.PAUSING || walkerStatus.value == WalkerStatus.WALKING) {
+            pauseWalking()
+        }
     }
 
-    init{
-        val date = SimpleDateFormat("yyyyMMddHHmmss", Locale.TAIWAN).format(now().seconds.times(1000)).toLong()
+    init {
+        val date = SimpleDateFormat("yyyyMMddHHmmss", Locale.TAIWAN)
+            .format(now().seconds.times(1000)).toLong()
+
         Logger.d("date $date")
 
         _walkerStatus.value = WalkerStatus.PREPARE
-//        clientCurrentLocation()
-        locationCallback = object: LocationCallback(){
-            override fun onLocationResult(p0: LocationResult?) {
-                super.onLocationResult(p0)
-                if(p0 != null && p0.lastLocation != null){
-                    trackPoints.value = trackPoints.value?.plus(LatLng(p0.lastLocation.latitude, p0.lastLocation.longitude)) as MutableList<LatLng>
 
+        locationCallback = object : LocationCallback() {
+            override fun onLocationResult(result: LocationResult?) {
+
+                super.onLocationResult(result)
+
+                if (result != null && result.lastLocation != null) {
+
+                    _trackPoints.value = trackPoints.value?.plus(
+                        result.lastLocation.toLatLng()
+                    ) as MutableList<LatLng>
                 }
             }
-
-            override fun onLocationAvailability(p0: LocationAvailability?) {
-                super.onLocationAvailability(p0)
-            }
         }
-        UserManager.user?.let{user->
+        UserManager.user?.let { user ->
             newAccuBadgeCheck(user)
         }
     }
 
-    fun addStartTrackPoint(latLng: LatLng){
-        trackPoints.value = trackPoints.value?.plus(latLng) as MutableList<LatLng>
+    fun addStartTrackPoint(latLng: LatLng) {
+        _trackPoints.value = trackPoints.value?.plus(latLng) as MutableList<LatLng>
     }
 
-    fun permissionDeniedForever(){
+    fun permissionDeniedForever() {
         _dontAskAgain.value = true
     }
 
-    fun permissionDenied(){
+    fun permissionDenied() {
         _permissionDenied.value = true
     }
 
-    fun permissionGranted(){
+    fun permissionGranted() {
         _permissionDenied.value = false
     }
 
-    fun cameraPermissionDenied(){
-        _cameraPermissionDenied.value = true
-    }
-
-    fun cameraPermissionGranted(){
-        _cameraPermissionDenied.value = false
-    }
-
-    fun navigateToLoad(){
+    fun navigateToLoad() {
         _navigateToLoad.value = true
     }
-    fun navigateToLoadComplete(){
+
+    fun navigateToLoadComplete() {
         _navigateToLoad.value = false
     }
 
-    fun navigateToSearch(){
+    fun navigateToSearch() {
         _navigateToSearch.value = true
     }
 
-    fun navigateToSearchComplete(){
+    fun navigateToSearchComplete() {
         _navigateToSearch.value = false
     }
 
-    fun navigateToRating(walk: Walk?){
+    private fun navigateToRating(walk: Walk?) {
         _navigateToRating.value = walk
     }
 
-    fun navigateToRatingComplete(){
+    fun navigateToRatingComplete() {
         _navigateToRating.value = null
         _walkerStatus.value = WalkerStatus.PREPARE
 
     }
 
-    fun addPhotoPoint(url: String){
+    fun addPhotoPoint(url: String) {
         val photoPoint = PhotoPoint(
-            point = trackPoints.value?.last()?.toGeoPoint() ?: requireNotNull(currentLocation.value).toGeoPoint(),
+            point =
+            if (trackPoints.value.isNullOrEmpty()) requireNotNull(currentLocation.value).toGeoPoint()
+            else trackPoints.value?.last()?.toGeoPoint(),
             photo = url
         )
-        _photoPoints.value = photopoints.value?.plus(photoPoint) as MutableList<PhotoPoint>
+        _photoPoints.value = photoPoints.value?.plus(photoPoint) as MutableList<PhotoPoint>
     }
 
-    fun startStopSwitch(){
-        when(walkerStatus.value){
+    fun startStopSwitch() {
+        when (walkerStatus.value) {
             WalkerStatus.PREPARE -> startWalking()
             WalkerStatus.PAUSING -> stopWalking()
             WalkerStatus.WALKING -> stopWalking()
-            WalkerStatus.FINISH  -> {}
+            WalkerStatus.FINISH -> {
+            }
         }
     }
 
-    fun pauseResumeSwitch(){
-        when(walkerStatus.value){
-            WalkerStatus.PREPARE -> {}
+    fun pauseResumeSwitch() {
+        when (walkerStatus.value) {
+            WalkerStatus.PREPARE -> {
+            }
             WalkerStatus.PAUSING -> resumeWalking()
             WalkerStatus.WALKING -> pauseWalking()
-            WalkerStatus.FINISH  -> {}
+            WalkerStatus.FINISH -> {
+            }
         }
     }
 
-    private fun startRecordingDistance(){
+    private fun startRecordingDistance() {
 
-        fusedLocationClient.requestLocationUpdates(createLocationRequest(),locationCallback, Looper.getMainLooper())
+        fusedLocationClient.requestLocationUpdates(
+            createLocationRequest(),
+            locationCallback,
+            Looper.getMainLooper()
+        )
     }
 
     private fun stopRecordingDistance() {
         fusedLocationClient.removeLocationUpdates(locationCallback)
     }
 
-    fun startWalking(){
+    private fun startWalking() {
         _walkerStatus.value = WalkerStatus.WALKING
+
         //GPS recording
         clientCurrentLocation()
         startTime.value = now()
+
         //timer start
         startTimer()
-
     }
 
-    private fun pauseWalking(){
+    private fun pauseWalking() {
         _walkerStatus.value = WalkerStatus.PAUSING
         //timer pause
         handler.removeCallbacks(runnable)
@@ -261,20 +261,22 @@ class HomeViewModel(val walkableRepository: WalkableRepository, val argument: Ro
 
     }
 
-    private fun resumeWalking(){
+    private fun resumeWalking() {
         //timer resume
         startTimer()
         clientCurrentLocation()
         _walkerStatus.value = WalkerStatus.WALKING
     }
 
-    private fun stopWalking(){
+    private fun stopWalking() {
         _walkerStatus.value = WalkerStatus.FINISH
-        stopRecordingDistance()
+
         //timer stop
         handler.removeCallbacks(runnable)
         endTime.value = now()
+
         //GPS stop recording
+        stopRecordingDistance()
 
         //navigate to rating
         val walk = Walk(
@@ -283,138 +285,74 @@ class HomeViewModel(val walkableRepository: WalkableRepository, val argument: Ro
             startTime = startTime.value as Timestamp,
             endTime = endTime.value as Timestamp,
             routeId = route.value?.id,
-            waypoints = trackPoints.value?.map{it.toGeoPoint()} as List<GeoPoint>)
+            waypoints = trackPoints.value?.map { it.toGeoPoint() } as List<GeoPoint>)
         updateWalk(walk)
     }
 
-    private fun updateWalk(walk: Walk){
+    private fun updateWalk(walk: Walk) {
 
         coroutineScope.launch {
 
             _loadStatus.value = LoadStatus.LOADING
 
-            val result = walkableRepository.updateWalks(walk, requireNotNull(UserManager.user))
-
-            when(result){
-                is Result.Success->{
-                    _error.value = null
-                    _loadStatus.value = LoadStatus.DONE
-                    navigateToRating(walk)
-                }
-                is Result.Fail ->{
-                    _error.value = result.error
-                    _loadStatus.value = LoadStatus.ERROR
-                    navigateToRating(walk)
-                }
-                is Result.Error ->{
-                    _error.value = result.exception.toString()
-                    _loadStatus.value = LoadStatus.ERROR
-                    navigateToRating(walk)
-                }
-                else ->{
-                    _error.value = getString(R.string.not_here)
-                    _loadStatus.value = LoadStatus.ERROR
-                }
+            walkableRepository.updateWalks(walk, requireNotNull(UserManager.user)).apply {
+                handleResultWith(_error, _loadStatus)
+                if (this is Result.Success || this is Result.Fail) navigateToRating(walk)
             }
-
         }
     }
 
-    private fun startTimer(){
-        runnable = Runnable{
-            walkerTimer.value = walkerTimer.value?.plus(1)
+    private fun startTimer() {
+        runnable = Runnable {
+            _walkerTimer.value = walkerTimer.value?.plus(1)
             Logger.d("timer ${walkerTimer.value}")
             handler.postDelayed(runnable, 1000)
         }
         handler.postDelayed(runnable, 1000)
     }
 
-    fun clientCurrentLocation(){
+    fun clientCurrentLocation() {
 
         _loadStatus.value = LoadStatus.LOADING
 
         coroutineScope.launch {
             val result = walkableRepository.getUserCurrentLocation()
 
-            currentLocation.value = when(result){
-                is Result.Success->{
-                    _error.value = null
-                    _loadStatus.value = LoadStatus.DONE
-                    result.data
-                }
-                is Result.Fail ->{
-                    _error.value = result.error
-                    _loadStatus.value = LoadStatus.ERROR
-                    null
-                }
-                is Result.Error ->{
-                    _error.value = result.exception.toString()
-                    _loadStatus.value = LoadStatus.ERROR
-                    null
-                }
-                else ->{
-                    _error.value = getString(R.string.not_here)
-                    _loadStatus.value = LoadStatus.ERROR
-                    null
-                }
+            _currentLocation.value = result.handleResultWith(_error, _loadStatus)?.toLatLng()
+
+            if (walkerStatus.value != WalkerStatus.PAUSING && result is Result.Success) {
+                _startLocation.value = currentLocation.value
             }
-            if(walkerStatus.value != WalkerStatus.PAUSING && result is Result.Success){
-                startLocation.value = currentLocation.value
-            }
-            if(walkerStatus.value == WalkerStatus.WALKING){
+            if (walkerStatus.value == WalkerStatus.WALKING) {
                 startRecordingDistance()
             }
         }
-
     }
 
-    private fun createLocationRequest(): LocationRequest{
+    private fun createLocationRequest(): LocationRequest {
         return LocationRequest().apply {
+
             interval = UPDATE_INTERVAL_IN_MILLISECONDS
+
             fastestInterval = FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS
+
             priority = LocationRequest.PRIORITY_HIGH_ACCURACY
         }
     }
 
 
-
-    fun drawPath(origin: LatLng, destination: LatLng, waypoints: List<LatLng>){
+    fun drawPath(origin: LatLng, destination: LatLng, waypoints: List<LatLng>) {
         coroutineScope.launch {
 
             _loadStatus.value = LoadStatus.LOADING
 
-            val result = walkableRepository.drawPath(origin, destination, waypoints)
-
-            _mapRoute.value = when(result){
-                is Result.Success ->{
-                    _error.value = null
-                    _loadStatus.value = LoadStatus.DONE
-                    result.data
-                }
-                is Result.Fail ->{
-                    _error.value = result.error
-                    _loadStatus.value = LoadStatus.ERROR
-                    null
-                }
-                is Result.Error ->{
-                    _error.value = result.exception.toString()
-                    _loadStatus.value = LoadStatus.ERROR
-                    null
-                }
-                else ->{
-                    _error.value = getString(R.string.not_here)
-                    _loadStatus.value = LoadStatus.ERROR
-                    null
-                }
+            walkableRepository.drawPath(origin, destination, waypoints).apply {
+                _mapRoute.value = handleResultWith(_error, _loadStatus)
             }
         }
     }
 
-    private fun checkCameraHardWare(): Boolean{
-        return WalkableApp.instance.packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)
-    }
-
-    fun newAccuBadgeCheck(user: User){
+    private fun newAccuBadgeCheck(user: User) {
         val userKm = user.accumulatedKm?.total ?: 0f
         val accuKm = getAccumulatedFromSharedPreference(BadgeType.ACCU_KM.key, userKm)
         val upgradeKm = BadgeType.ACCU_KM.newAccuBadgeCheck(userKm, accuKm)
@@ -425,9 +363,8 @@ class HomeViewModel(val walkableRepository: WalkableRepository, val argument: Ro
 
         val upgradeHour = BadgeType.ACCU_HOUR.newAccuBadgeCheck(userHour, accuHour)
         Logger.d("userHour $userHour accuHour $accuHour upgradeHour $upgradeHour")
+
         _upgrade.value = upgradeKm + upgradeHour
 
     }
-
-
 }

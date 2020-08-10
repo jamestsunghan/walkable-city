@@ -10,11 +10,12 @@ import tw.com.walkablecity.data.Route
 import tw.com.walkablecity.databinding.ItemRatingPhotoPointBinding
 import tw.com.walkablecity.rating.RatingType
 
-class RatingItemPhotoAdapter(val route: Route?, val type: RatingType): ListAdapter<PhotoPoint, RatingItemPhotoAdapter.PhotoViewHolder>(DiffCallback) {
+class RatingItemPhotoAdapter(val route: Route?, val type: RatingType) :
+    ListAdapter<PhotoPoint, RatingItemPhotoAdapter.PhotoViewHolder>(DiffCallback) {
 
-    class PhotoViewHolder(private val binding: ItemRatingPhotoPointBinding): RecyclerView.ViewHolder(binding.root){
-        fun bind(photoPoint: PhotoPoint, type: RatingType){
-
+    class PhotoViewHolder(private val binding: ItemRatingPhotoPointBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        fun bind(photoPoint: PhotoPoint, type: RatingType) {
 
             binding.photoPoint = photoPoint
             binding.reference = photoPoint.photo
@@ -24,7 +25,7 @@ class RatingItemPhotoAdapter(val route: Route?, val type: RatingType): ListAdapt
         }
     }
 
-    companion object DiffCallback: DiffUtil.ItemCallback<PhotoPoint>(){
+    companion object DiffCallback : DiffUtil.ItemCallback<PhotoPoint>() {
         override fun areItemsTheSame(oldItem: PhotoPoint, newItem: PhotoPoint): Boolean {
             return oldItem === newItem
         }
@@ -35,8 +36,10 @@ class RatingItemPhotoAdapter(val route: Route?, val type: RatingType): ListAdapt
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PhotoViewHolder {
-        return PhotoViewHolder(ItemRatingPhotoPointBinding
-            .inflate(LayoutInflater.from(parent.context), parent, false))
+        return PhotoViewHolder(
+            ItemRatingPhotoPointBinding
+                .inflate(LayoutInflater.from(parent.context), parent, false)
+        )
     }
 
     override fun onBindViewHolder(holder: PhotoViewHolder, position: Int) {

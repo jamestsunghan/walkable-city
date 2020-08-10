@@ -10,8 +10,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
-import tw.com.walkablecity.Logger
-import tw.com.walkablecity.NavigationDirections
+import tw.com.walkablecity.util.Logger
 
 import tw.com.walkablecity.R
 import tw.com.walkablecity.databinding.FragmentRouteItemBinding
@@ -22,7 +21,7 @@ import tw.com.walkablecity.loadroute.LoadRouteType
 class RouteItemFragment(private val loadRouteType: LoadRouteType) : Fragment() {
 
 
-    private val viewModel: RouteItemViewModel by viewModels{getVMFactory(loadRouteType)}
+    private val viewModel: RouteItemViewModel by viewModels { getVMFactory(loadRouteType) }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -38,25 +37,31 @@ class RouteItemFragment(private val loadRouteType: LoadRouteType) : Fragment() {
         binding.recyclerRouteItem.adapter = adapter
 
         viewModel.filter.observe(viewLifecycleOwner, Observer {
-            it?.let{
+            it?.let {
                 Logger.d("route sorting ${it.text}")
-                viewModel.timeFilter(viewModel.routeTime.value ?: listOf(Float.MIN_VALUE, Float.MAX_VALUE)
-                    , viewModel.sliderMax.value ?: Float.MAX_VALUE, it)
+                viewModel.timeFilter(
+                    viewModel.routeTime.value ?: listOf(Float.MIN_VALUE, Float.MAX_VALUE)
+                    , viewModel.sliderMax.value ?: Float.MAX_VALUE, it
+                )
                 adapter.notifyDataSetChanged()
             }
         })
 
         viewModel.selectRoute.observe(viewLifecycleOwner, Observer {
-            it?.let{
+            it?.let {
 
-                findNavController().navigate(LoadRouteFragmentDirections.actionGlobalHomeFragment(it, null))
+                findNavController().navigate(
+                    LoadRouteFragmentDirections.actionGlobalHomeFragment(it, null)
+                )
                 viewModel.navigationComplete()
             }
         })
 
-        viewModel.navigateToDetail.observe(viewLifecycleOwner, Observer{
-            it?.let{
-                findNavController().navigate(LoadRouteFragmentDirections.actionGlobalDetailFragment(it))
+        viewModel.navigateToDetail.observe(viewLifecycleOwner, Observer {
+            it?.let {
+                findNavController().navigate(
+                    LoadRouteFragmentDirections.actionGlobalDetailFragment(it)
+                )
                 viewModel.navigateToDetailComplete()
             }
         })

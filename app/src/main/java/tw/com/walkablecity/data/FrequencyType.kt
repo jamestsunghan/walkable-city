@@ -2,7 +2,7 @@ package tw.com.walkablecity.data
 
 
 import tw.com.walkablecity.R
-import tw.com.walkablecity.Util.getString
+import tw.com.walkablecity.util.Util.getString
 
 enum class FrequencyType(val text: String, val ranking: String) {
     DAILY(getString(R.string.frequency_day), getString(R.string.daily_ranking)),

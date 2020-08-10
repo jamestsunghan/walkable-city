@@ -24,4 +24,23 @@ data class Route(
     var waypoints:@RawValue List< @RawValue GeoPoint> = listOf(),
     var waypointsLatLng: List<LatLng> = listOf()
 
-    ): Parcelable
+    ): Parcelable{
+
+
+    fun toHashMap(): HashMap<String,Any?>{
+        return hashMapOf(
+            "description" to this.description,
+            "followers" to this.followers,
+            "id" to this.id,
+            "length" to this.length,
+            "mapImage" to this.mapImage,
+            "minutes" to this.minutes,
+            "ratingAvr" to this.ratingAvr?.toHashMap(),
+            "title" to this.title,
+            "walkers" to this.walkers,
+            "waypoints" to this.waypoints
+        )
+    }
+
+
+}

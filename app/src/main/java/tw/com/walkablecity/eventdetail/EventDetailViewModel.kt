@@ -12,24 +12,25 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import tw.com.walkablecity.Logger
+import tw.com.walkablecity.util.Logger
 import tw.com.walkablecity.R
 import tw.com.walkablecity.UserManager
-import tw.com.walkablecity.Util.getString
-import tw.com.walkablecity.Util.lessThenTenPadStart
-import tw.com.walkablecity.Util.setDp
-import tw.com.walkablecity.WalkableApp
+import tw.com.walkablecity.util.Util.getString
+import tw.com.walkablecity.util.Util.lessThenTenPadStart
+import tw.com.walkablecity.util.Util.setDp
 import tw.com.walkablecity.data.*
 import tw.com.walkablecity.data.source.WalkableRepository
-import tw.com.walkablecity.ext.toNewInstance
 import java.text.SimpleDateFormat
 import java.util.*
 
-class EventDetailViewModel(private val walkableRepository: WalkableRepository, val event: Event) : ViewModel() {
+class EventDetailViewModel(private val walkableRepository: WalkableRepository, val event: Event) :
+    ViewModel() {
 
     private lateinit var timer: CountDownTimer
 
-    val hostName = event.member.first { it.idCustom == event.host }.name
+    val hostName = event.member.first { member ->
+        member.idCustom == event.host
+    }.name
 
     val circleList = MutableLiveData<List<Float>>()
 
@@ -48,28 +49,23 @@ class EventDetailViewModel(private val walkableRepository: WalkableRepository, v
     private val _snapPosition = MutableLiveData<Int>()
     val snapPosition: LiveData<Int> get() = _snapPosition
 
-
-
     val currentCountDown = MutableLiveData<String>()
 
     var eventIsStarted = requireNotNull(event.startDate?.seconds) < now().seconds
 
     var countDownTime =
-        if(eventIsStarted){
+        if (eventIsStarted) {
             (requireNotNull(event.endDate?.seconds) - now().seconds).times(ONE_SECOND)
-        }else{
+        } else {
             (requireNotNull(event.startDate?.seconds) - now().seconds).times(ONE_SECOND)
         }
 
-
-
-
-    val eventMember = MutableLiveData<List<Friend>>().apply{
+    val eventMember = MutableLiveData<List<Friend>>().apply {
         value = event.member
     }
 
-    val champ = Transformations.map(eventMember){
-        if(it.isNotEmpty()) it[0]
+    val champ = Transformations.map(eventMember) { list ->
+        if (list.isNotEmpty()) list[0]
         else null
     }
     var resultCount = 0
@@ -77,19 +73,17 @@ class EventDetailViewModel(private val walkableRepository: WalkableRepository, v
     private val _walkResultSingle = MutableLiveData<Float>()
     val walkResultSingle: LiveData<Float> get() = _walkResultSingle
 
-    val typeColor = when(event.type){
-        EventType.FREQUENCY -> WalkableApp.instance.resources.getColor(R.color.event_frequency, WalkableApp.instance.theme)
-        EventType.DISTANCE_GROUP -> WalkableApp.instance.resources.getColor(R.color.event_distance_group, WalkableApp.instance.theme)
-        EventType.DISTANCE_RACE -> WalkableApp.instance.resources.getColor(R.color.event_distance_race, WalkableApp.instance.theme)
-        EventType.HOUR_GROUP -> WalkableApp.instance.resources.getColor(R.color.event_hour_group, WalkableApp.instance.theme)
-        EventType.HOUR_RACE -> WalkableApp.instance.resources.getColor(R.color.event_hour_race, WalkableApp.instance.theme)
-        null -> WalkableApp.instance.resources.getColor(R.color.primaryColor, WalkableApp.instance.theme)
+    private val listMemberId = event.member.map { member ->
+        requireNotNull(member.id)
     }
 
-    val listMemberId = event.member.map{ requireNotNull(it.id)}
-
     val decoration = object : RecyclerView.ItemDecoration() {
-        override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
+        override fun getItemOffsets(
+            outRect: Rect,
+            view: View,
+            parent: RecyclerView,
+            state: RecyclerView.State
+        ) {
             super.getItemOffsets(outRect, view, parent, state)
 
             // Add top margin only for the first item to avoid double space between items
@@ -113,203 +107,182 @@ class EventDetailViewModel(private val walkableRepository: WalkableRepository, v
 
     }
 
-    init{
+    init {
         Logger.d("member list ${event.member}")
-        getMemberWalkResult(requireNotNull(event.startDate), requireNotNull(event.target) ,listMemberId)
+        getMemberWalkResult(
+            requireNotNull(event.startDate),
+            requireNotNull(event.target),
+            listMemberId
+        )
 
         getTimerStart(countDownTime)
 
-//        checkEventStarted(eventIsStarted)
+        val hostMember = event.member.find { it.idCustom == event.host }
 
-        val hostMember = event.member.find{ it.idCustom == event.host}
+        for (item in requireNotNull(hostMember).accomplishFQ) {
+            val time =
+                SimpleDateFormat("yyyyMMdd", Locale.TAIWAN)
+                    .format(item.date?.seconds?.times(1000))
 
+            val frequencyMember = event.member.filter { friend ->
+                friend.accomplishFQ.find { mission ->
+                    val friendTime = SimpleDateFormat("yyyyMMdd", Locale.TAIWAN)
+                        .format(mission.date?.seconds?.times(1000))
 
-        for(item in requireNotNull(hostMember).accomplishFQ){
-            val time = SimpleDateFormat("yyyyMMdd", Locale.TAIWAN).format(item.date?.seconds?.times(1000))
-            val frequencyMember = event.member.filter{friend->
-                friend.accomplishFQ.find{mission->
-                    val friendTime = SimpleDateFormat("yyyyMMdd", Locale.TAIWAN).format(mission.date?.seconds?.times(1000))
                     friendTime == time
                 } != null
             }
 
-            val friendList = frequencyMember.map{
-                it.toNewInstance()
+            val friendList = frequencyMember.map { friend ->
+                friend.toNewInstance()
             }
 
-            val listToAdd: List<Friend> =  friendList.onEach {
-                it.accomplish = it.accomplishFQ.find{mission->
-                    val friendTime = SimpleDateFormat("yyyyMMdd", Locale.TAIWAN).format(mission.date?.seconds?.times(1000))
-                    friendTime == time}?.accomplish
+            val listToAdd: List<Friend> = friendList.onEach { friend ->
+                friend.accomplish = friend.accomplishFQ.find { mission ->
+
+                    val friendTime =
+                        SimpleDateFormat("yyyyMMdd", Locale.TAIWAN)
+                            .format(mission.date?.seconds?.times(1000))
+
+                    friendTime == time
+                }?.accomplish
             }
 
             Logger.d("JJ_listToAdd list to add $listToAdd")
-            val wrapper = FriendListWrapper(listToAdd.sortedByDescending { it.accomplish })
-            listOfList.value = (listOfList.value ?: mutableListOf()).plus(wrapper) as MutableList<FriendListWrapper>
 
+            val wrapper = FriendListWrapper(listToAdd.sortedByDescending { friend ->
+                friend.accomplish
+            })
+
+            listOfList.value = (listOfList.value ?: mutableListOf())
+                .plus(wrapper) as MutableList<FriendListWrapper>
 
         }
-
     }
 
-    fun addToWalkResult(result: Float){
-        _walkResult.value = if(walkResult.value.isNullOrEmpty()) listOf(result)
-        else requireNotNull(walkResult.value).plus(result)
-
+    fun addToWalkResult(result: Float) {
+        _walkResult.value = if (walkResult.value.isNullOrEmpty()) {
+            listOf(result)
+        } else {
+            requireNotNull(walkResult.value).plus(result)
+        }
     }
 
-    fun sortByAccomplish(){
-        eventMember.value?.sortedBy { it.accomplish }?.reversed().apply{
+    private fun sortByAccomplish() {
+        eventMember.value?.sortedBy { it.accomplish }?.reversed().apply {
             eventMember.value = this
-
         }
     }
 
-    fun onGalleryScrollChange(layoutManager: RecyclerView.LayoutManager?, linearSnapHelper: LinearSnapHelper){
+    fun onGalleryScrollChange(
+        layoutManager: RecyclerView.LayoutManager?,
+        linearSnapHelper: LinearSnapHelper
+    ) {
         val snapView = linearSnapHelper.findSnapView(layoutManager)
-        snapView?.let{
-            layoutManager?.getPosition(snapView)?.let{
-                if(it != snapPosition.value){
-                    _snapPosition.value = it
+        snapView?.let {
+            layoutManager?.getPosition(snapView)?.let { position ->
+                if (position != snapPosition.value) {
+                    _snapPosition.value = position
                 }
             }
         }
     }
 
-    fun getTimerStart(time: Long){
+    fun getTimerStart(time: Long) {
 
         val lessThanADay = (time < ONE_DAY)
         Logger.d("less than a day: $lessThanADay")
-        val timeUnit = if(lessThanADay) ONE_SECOND else ONE_DAY
-        timer = object : CountDownTimer(time, timeUnit){
+        val timeUnit = if (lessThanADay) ONE_SECOND else ONE_DAY
+        timer = object : CountDownTimer(time, timeUnit) {
             override fun onFinish() {
-                currentCountDown.value = if(lessThanADay){
+                currentCountDown.value = if (lessThanADay) {
                     DONE.toString()
-                }else{
-                    eventIsStarted =
-                        (requireNotNull(event.startDate?.seconds) < now().seconds)
-                    countDownTime =
-                        if(eventIsStarted){
-                            (requireNotNull(event.endDate?.seconds) - now().seconds).times(ONE_SECOND)
-                        }else{
-                            (requireNotNull(event.startDate?.seconds) - now().seconds).times(ONE_SECOND)
-                        }
+                } else {
+                    eventIsStarted = (requireNotNull(event.startDate?.seconds) < now().seconds)
+                    countDownTime = if (eventIsStarted) {
+                        (requireNotNull(event.endDate?.seconds) - now().seconds).times(ONE_SECOND)
+                    } else {
+                        (requireNotNull(event.startDate?.seconds) - now().seconds).times(ONE_SECOND)
+                    }
+
                     getTimerStart(countDownTime)
+
                     DONE.toString()
                 }
             }
 
             override fun onTick(millisUntilFinished: Long) {
-                val sec = millisUntilFinished / ONE_SECOND % 60
-                val min = millisUntilFinished / ONE_SECOND / 60 % 60
-                val hr = millisUntilFinished / ONE_SECOND / 60 / 60 % 24
+                val sec = millisUntilFinished / ONE_SECOND % SECONDS
+                val min = millisUntilFinished / ONE_SECOND / SECONDS % MINUTES
+                val hr = millisUntilFinished / ONE_SECOND / SECONDS / MINUTES % HOURS
                 val day = millisUntilFinished / ONE_DAY
-                currentCountDown.value =
-                    when{
-                        eventIsStarted && lessThanADay ->{
-                            StringBuilder().append(getString(R.string.event_detail_timer))
-                                .append(lessThenTenPadStart(hr)).append(":")
-                                .append(lessThenTenPadStart(min)).append(":")
-                                .append(lessThenTenPadStart(sec)).toString()
 
-                        }
-                        eventIsStarted && !lessThanADay ->{
-                            StringBuilder().append(getString(R.string.event_detail_timer))
-                                .append(String.format(getString(R.string.days_left), day)).toString()
-                        }
-                        !eventIsStarted && lessThanADay ->{
-                            StringBuilder().append(getString(R.string.event_detail_pre_timer))
-                                .append(lessThenTenPadStart(hr)).append(":")
-                                .append(lessThenTenPadStart(min)).append(":")
-                                .append(lessThenTenPadStart(sec)).toString()
-                        }
-                        !eventIsStarted && !lessThanADay ->{
-                            StringBuilder().append(getString(R.string.event_detail_pre_timer))
-                                .append(String.format(getString(R.string.days_left), day+1)).toString()
-                        }
-                        else -> ""
-                    }
-
+                currentCountDown.value = buildTimeString(
+                    getTimePrefix(eventIsStarted), lessThanADay, day, hr, min, sec
+                )
             }
         }
         timer.start()
-
-
     }
 
-    fun joinEvent(){
+    private fun getTimePrefix(eventIsStarted: Boolean): String {
+        return if (eventIsStarted) {
+            getString(R.string.event_detail_timer)
+        } else {
+            getString(R.string.event_detail_pre_timer)
+        }
+    }
+
+    private fun buildTimeString(
+        prefix: String,
+        lessThanADay: Boolean,
+        day: Long,
+        hr: Long,
+        min: Long,
+        sec: Long
+    ): String {
+        return if (lessThanADay) {
+            StringBuilder().append(prefix)
+                .append(lessThenTenPadStart(hr)).append(":")
+                .append(lessThenTenPadStart(min)).append(":")
+                .append(lessThenTenPadStart(sec)).toString()
+        } else {
+            StringBuilder().append(prefix)
+                .append(String.format(getString(R.string.days_left), day))
+                .toString()
+        }
+    }
+
+    fun joinEvent() {
 
         coroutineScope.launch {
 
             _status.value = LoadStatus.LOADING
 
-            val result  = walkableRepository.joinEvent(requireNotNull(UserManager.user), event)
+            val result = walkableRepository.joinEvent(requireNotNull(UserManager.user), event)
 
-            _joinSuccess.value = when(result){
-                is Result.Success ->{
-                    _error.value = null
-                    _status.value = LoadStatus.DONE
-                    result.data
-                }
-                is Result.Fail ->{
-                    _error.value = result.error
-                    _status.value = LoadStatus.ERROR
-                    null
-                }
-                is Result.Error ->{
-                    _error.value = result.exception.toString()
-                    _status.value = LoadStatus.ERROR
-                    null
-                }
-                else ->{
-                    _error.value = getString(R.string.not_here)
-                    _status.value = LoadStatus.ERROR
-                    null
-                }
-            }
+            _joinSuccess.value = result.handleResultWith(_error, _status)
+
         }
     }
 
-    fun joinPublicEvent(){
+    fun joinPublicEvent() {
 
         coroutineScope.launch {
 
             _status.value = LoadStatus.LOADING
 
-            val result  = walkableRepository.joinPublicEvent(requireNotNull(UserManager.user), event)
-
-            _joinSuccess.value = when(result){
-                is Result.Success ->{
-                    _error.value = null
-                    _status.value = LoadStatus.DONE
-                    result.data
-                }
-                is Result.Fail ->{
-                    _error.value = result.error
-                    _status.value = LoadStatus.ERROR
-                    null
-                }
-                is Result.Error ->{
-                    _error.value = result.exception.toString()
-                    _status.value = LoadStatus.ERROR
-                    null
-                }
-                else ->{
-                    _error.value = getString(R.string.not_here)
-                    _status.value = LoadStatus.ERROR
-                    null
-                }
+            walkableRepository.joinPublicEvent(requireNotNull(UserManager.user), event).apply {
+                _joinSuccess.value = handleResultWith(_error, _status)
             }
+
         }
     }
 
 
+    fun getMemberWalkResult(startTime: Timestamp, target: EventTarget, memberId: List<String>) {
 
-
-
-    fun getMemberWalkResult(startTime: Timestamp, target: EventTarget, memberId: List<String>){
-
-        if(resultCount == memberId.size){
+        if (resultCount == memberId.size) {
             resultCount = 0
             return
         }
@@ -317,44 +290,86 @@ class EventDetailViewModel(private val walkableRepository: WalkableRepository, v
         coroutineScope.launch {
             _status.value = LoadStatus.LOADING
 
-            val result = when(event.type){
-                EventType.FREQUENCY      -> walkableRepository.getMemberWalkFrequencyResult(startTime, target, memberId[resultCount])
-                EventType.DISTANCE_GROUP -> walkableRepository.getMemberWalkDistance(startTime, memberId[resultCount])
-                EventType.DISTANCE_RACE  -> walkableRepository.getMemberWalkDistance(startTime, memberId[resultCount])
-                EventType.HOUR_GROUP     -> walkableRepository.getMemberWalkHours(startTime, memberId[resultCount])
-                EventType.HOUR_RACE      -> walkableRepository.getMemberWalkHours(startTime, memberId[resultCount])
-                else ->null
-            }
+            val result = if (event.type != EventType.FREQUENCY) {
+                walkableRepository.getMemberWalks(startTime, memberId[resultCount])
+                    .handleResultWith(_error, _status)
+            } else null
 
-            _walkResultSingle.value = when(result){
-                is Result.Success ->{
-                    _error.value = null
-                    _status.value = LoadStatus.DONE
-                    result.data
-                }
-                is Result.Fail ->{
-                    _error.value = result.error
-                    _status.value = LoadStatus.ERROR
-                    null
-                }
-                is Result.Error ->{
-                    _error.value = result.exception.toString()
-                    _status.value = LoadStatus.ERROR
-                    null
-                }
-                else ->{
-                    _error.value = getString(R.string.not_here)
-                    _status.value = LoadStatus.ERROR
-                    null
-                }
-            }
+            val friend = if (event.type == EventType.FREQUENCY) {
+                walkableRepository.getUser(memberId[resultCount]).handleResultWith(_error, _status)
+            } else null
 
+
+            _walkResultSingle.value = when (event.type) {
+                EventType.FREQUENCY -> {
+                    val accumulation =
+                        if (target.distance == null) friend?.accumulatedHour   // frequency_hour
+                        else friend?.accumulatedKm
+                    when (target.frequencyType) {
+                        FrequencyType.DAILY -> accumulation?.daily
+                        FrequencyType.WEEKLY -> accumulation?.weekly
+                        FrequencyType.MONTHLY -> accumulation?.monthly
+                        else -> 20200714f
+                    }
+                }
+                EventType.HOUR_RACE -> {
+                    result?.sumBy { walk -> walk.duration?.toInt() ?: 0 }?.toFloat()
+                }
+
+                EventType.HOUR_GROUP -> {
+                    result?.sumBy { walk -> walk.duration?.toInt() ?: 0 }?.toFloat()
+                }
+
+                EventType.DISTANCE_RACE -> {
+                    result?.sumByDouble { walk -> walk.distance?.toDouble() ?: 0.0 }?.toFloat()
+                }
+
+                EventType.DISTANCE_GROUP -> {
+                    result?.sumByDouble { walk -> walk.distance?.toDouble() ?: 0.0 }?.toFloat()
+                }
+
+                else -> null
+
+            }
         }
     }
 
-    companion object{
+    fun keepGettingWalkResult(list: List<Float>) {
+        resultCount += 1
+        when {
+            resultCount == listMemberId.size -> {
+
+                eventMember.value?.mapIndexed { index, friend ->
+                    requireNotNull(eventMember.value)[index].accomplish = list[index]
+                    friend
+                }
+                sortByAccomplish()
+                circleList.value = list.sortedByDescending { f -> f }.map { fa ->
+                    fa.div(
+                        event.target?.distance
+                            ?: requireNotNull(event.target?.hour) * 60 * 60
+                    )
+                }
+            }
+
+            resultCount > listMemberId.size -> resultCount = 0
+
+            else -> {
+                getMemberWalkResult(
+                    requireNotNull(event.startDate)
+                    , requireNotNull(event.target), listMemberId
+                )
+
+            }
+        }
+    }
+
+    companion object {
         private const val DONE = 0L
         private const val ONE_SECOND = 1000L
+        private const val SECONDS = 60
+        private const val MINUTES = 60
+        private const val HOURS = 24
         private const val ONE_DAY = 24 * 60 * 60 * ONE_SECOND
     }
 

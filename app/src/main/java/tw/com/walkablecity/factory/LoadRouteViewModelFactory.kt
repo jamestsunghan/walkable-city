@@ -8,12 +8,14 @@ import tw.com.walkablecity.loadroute.LoadRouteType
 import tw.com.walkablecity.loadroute.route.RouteItemViewModel
 
 @Suppress("UNCHECKED_CAST")
-class LoadRouteViewModelFactory(private val walkableRepository: DefaultWalkableRepository,
-                                private val loadRouteType: LoadRouteType): ViewModelProvider.Factory {
+class LoadRouteViewModelFactory(
+    private val walkableRepository: DefaultWalkableRepository,
+    private val loadRouteType: LoadRouteType
+) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel?> create(modelClass: Class<T>): T =
-        with(modelClass){
-            when{
+        with(modelClass) {
+            when {
                 isAssignableFrom(RouteItemViewModel::class.java) ->
                     RouteItemViewModel(walkableRepository, loadRouteType)
 

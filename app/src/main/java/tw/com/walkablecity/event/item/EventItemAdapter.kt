@@ -11,8 +11,8 @@ import tw.com.walkablecity.databinding.ItemEventItemGridBinding
 class EventItemAdapter(private val viewModel: EventItemViewModel)
     : ListAdapter<Event, EventItemAdapter.EventItemViewHolder>(DiffCallback) {
 
-
-    class EventItemViewHolder(private val binding: ItemEventItemGridBinding): RecyclerView.ViewHolder(binding.root){
+    class EventItemViewHolder(private val binding: ItemEventItemGridBinding)
+        : RecyclerView.ViewHolder(binding.root){
         fun bind(event: Event, viewModel: EventItemViewModel){
             binding.event = event
             binding.viewModel = viewModel

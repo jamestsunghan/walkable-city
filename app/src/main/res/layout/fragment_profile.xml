@@ -100,13 +100,13 @@
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/setting_zone"
-                    android:onClick="@{() -> viewModel.navigateToSetting()}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
                     android:layout_marginStart="16dp"
+                    android:layout_marginTop="8dp"
                     android:layout_marginEnd="16dp"
                     android:background="@drawable/bg_profile_item"
+                    android:onClick="@{() -> viewModel.navigateToSetting()}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
@@ -130,8 +130,8 @@
                             android:layout_width="36dp"
                             android:layout_height="36dp"
                             android:layout_gravity="center"
-                            android:tint="@color/primaryDarkColor"
                             android:contentDescription="Your profile image"
+                            android:tint="@color/primaryDarkColor"
                             app:srcCompat="@drawable/settings_48"
                             tools:srcCompat="@drawable/placeholder" />
                     </androidx.cardview.widget.CardView>
@@ -173,13 +173,13 @@
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/friend_zone"
-                    android:onClick="@{() -> viewModel.navigateToWalkers()}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
                     android:layout_marginStart="16dp"
+                    android:layout_marginTop="8dp"
                     android:layout_marginEnd="16dp"
                     android:background="@drawable/bg_profile_item"
+                    android:onClick="@{() -> viewModel.navigateToWalkers()}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
@@ -203,8 +203,8 @@
                             android:layout_width="36dp"
                             android:layout_height="36dp"
                             android:layout_gravity="center"
-                            android:tint="@color/primaryDarkColor"
                             android:contentDescription="Your profile image"
+                            android:tint="@color/primaryDarkColor"
                             app:srcCompat="@drawable/friend_list_48"
                             tools:srcCompat="@drawable/placeholder" />
                     </androidx.cardview.widget.CardView>
@@ -245,13 +245,13 @@
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/badge_zone"
-                    android:onClick="@{() -> viewModel.navigateToBadge()}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
                     android:layout_marginStart="16dp"
+                    android:layout_marginTop="8dp"
                     android:layout_marginEnd="16dp"
                     android:background="@drawable/bg_profile_item"
+                    android:onClick="@{() -> viewModel.navigateToBadge()}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
@@ -275,8 +275,8 @@
                             android:layout_width="36dp"
                             android:layout_height="36dp"
                             android:layout_gravity="center"
-                            android:tint="@color/primaryDarkColor"
                             android:contentDescription="Your profile image"
+                            android:tint="@color/primaryDarkColor"
                             app:srcCompat="@drawable/badge_48"
                             tools:srcCompat="@drawable/placeholder" />
                     </androidx.cardview.widget.CardView>
@@ -317,19 +317,19 @@
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/explorer_zone"
-                    android:onClick="@{() -> viewModel.navigateToExplorer()}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
                     android:layout_marginStart="16dp"
+                    android:layout_marginTop="8dp"
                     android:layout_marginEnd="16dp"
                     android:layout_marginBottom="16dp"
                     android:background="@drawable/bg_profile_item"
+                    android:onClick="@{() -> viewModel.navigateToExplorer()}"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/badge_zone"
-                    app:layout_constraintBottom_toBottomOf="parent">
+                    app:layout_constraintTop_toBottomOf="@+id/badge_zone">
 
                     <androidx.cardview.widget.CardView
                         android:id="@+id/explorer_icon_card"
@@ -349,8 +349,8 @@
                             android:layout_width="36dp"
                             android:layout_height="36dp"
                             android:layout_gravity="center"
-                            android:tint="@color/primaryDarkColor"
                             android:contentDescription="Your explorer icon"
+                            android:tint="@color/primaryDarkColor"
                             app:srcCompat="@drawable/fosty_map_icon_48" />
                     </androidx.cardview.widget.CardView>
 

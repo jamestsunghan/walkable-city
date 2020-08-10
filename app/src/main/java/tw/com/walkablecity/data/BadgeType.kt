@@ -8,27 +8,27 @@ enum class BadgeType(val key: String, val born: Int, val kid: Int, val elementar
     EVENT_COUNT("event_count",0,3,10,25,50,100),
     FRIEND_COUNT("friend_count",0,3,10,50,100,300);
 
-    fun countBadgeLevelCheck(count: Int): Int{
+    private fun countBadgeLevelCheck(count: Int): Int{
         return when{
-            count >= this.master     -> 6
-            count >= this.senior     -> 5
-            count >= this.junior     -> 4
-            count >= this.elementary -> 3
-            count >= this.kid        -> 2
-            count >  this.born       -> 1
-            else                     -> 0
+            count >= this.master     -> MASTER
+            count >= this.senior     -> SENIOR
+            count >= this.junior     -> JUNIOR
+            count >= this.elementary -> ELEMENTARY
+            count >= this.kid        -> KID
+            count >  this.born       -> BORN
+            else                     -> DOT
         }
     }
 
-    fun accuBadgeLevelCheck(accu: Float): Int{
+    private fun accuBadgeLevelCheck(accu: Float): Int{
         return when{
-            accu >= this.master     -> 6
-            accu >= this.senior     -> 5
-            accu >= this.junior     -> 4
-            accu >= this.elementary -> 3
-            accu >= this.kid        -> 2
-            accu >  this.born       -> 1
-            else                    -> 0
+            accu >= this.master     -> MASTER
+            accu >= this.senior     -> SENIOR
+            accu >= this.junior     -> JUNIOR
+            accu >= this.elementary -> ELEMENTARY
+            accu >= this.kid        -> KID
+            accu >  this.born       -> BORN
+            else                    -> DOT
         }
     }
 
@@ -40,5 +40,15 @@ enum class BadgeType(val key: String, val born: Int, val kid: Int, val elementar
     }
     fun countBadgeDisplay(new: Int, old: Int, badgeLevel: Int): Boolean{
         return badgeLevel <= countBadgeLevelCheck(new) && badgeLevel > countBadgeLevelCheck(old)
+    }
+
+    companion object{
+        private const val MASTER     = 0x06
+        private const val SENIOR     = 0x05
+        private const val JUNIOR     = 0x04
+        private const val ELEMENTARY = 0x03
+        private const val KID        = 0x02
+        private const val BORN       = 0x01
+        private const val DOT        = 0x00
     }
 }

@@ -8,12 +8,14 @@ import tw.com.walkablecity.eventdetail.EventDetailViewModel
 
 
 @Suppress("UNCHECKED_CAST")
-class EventVIewModelFactory(private val walkableRepository: WalkableRepository
-                            , private val event: Event): ViewModelProvider.Factory {
+class EventVIewModelFactory(
+    private val walkableRepository: WalkableRepository,
+    private val event: Event
+) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel?> create(modelClass: Class<T>): T =
-        with(modelClass){
-            when{
+        with(modelClass) {
+            when {
                 isAssignableFrom(EventDetailViewModel::class.java) ->
                     EventDetailViewModel(walkableRepository, event)
                 else ->

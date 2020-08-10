@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -16,14 +15,13 @@ import tw.com.walkablecity.MainViewModel
 
 import tw.com.walkablecity.R
 import tw.com.walkablecity.UserManager
-import tw.com.walkablecity.Util.makeShortToast
+import tw.com.walkablecity.util.Util.makeShortToast
 import tw.com.walkablecity.databinding.FragmentAddFriendBinding
 import tw.com.walkablecity.ext.getVMFactory
-import java.util.*
 
 class AddFriendFragment : Fragment() {
 
-    private val viewModel: AddFriendViewModel by viewModels{getVMFactory()}
+    private val viewModel: AddFriendViewModel by viewModels{ getVMFactory() }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,14 +32,13 @@ class AddFriendFragment : Fragment() {
 
         val binding: FragmentAddFriendBinding = DataBindingUtil
             .inflate(inflater,R.layout.fragment_add_friend, container, false)
+
         binding.lifecycleOwner = this
 
         binding.viewModel = viewModel
 
         binding.editLoginId.setEndIconOnClickListener {
-
             viewModel.checkFriendAdded(viewModel.idSearch.value)
-
         }
 
         viewModel.alreadyFriend.observe(viewLifecycleOwner, Observer{
@@ -54,13 +51,13 @@ class AddFriendFragment : Fragment() {
             }
         })
 
-        viewModel.friendToAdd.observe(viewLifecycleOwner, Observer{
-            binding.friend = it
+        viewModel.friendToAdd.observe(viewLifecycleOwner, Observer{friend->
+            binding.friend = friend
         })
 
         viewModel.friendAdded.observe(viewLifecycleOwner, Observer{
-            it?.let{
-                if(it){
+            it?.let{added->
+                if(added){
                     makeShortToast(R.string.add_success)
                     UserManager.user?.id?.let{id->
                         mainViewModel.getUserFriendCount(id)
@@ -74,8 +71,8 @@ class AddFriendFragment : Fragment() {
         })
 
         viewModel.error.observe(viewLifecycleOwner, Observer{
-            it?.let{
-                Toast.makeText(this.requireContext(),it,Toast.LENGTH_SHORT).show()
+            it?.let{error->
+                Toast.makeText(this.requireContext(),error,Toast.LENGTH_SHORT).show()
             }
         })
 

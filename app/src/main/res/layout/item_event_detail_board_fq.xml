@@ -3,10 +3,20 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-        <variable name="friendList" type="tw.com.walkablecity.data.FriendListWrapper" />
-        <variable name="position" type="Integer" />
-        <variable name="viewModel" type="tw.com.walkablecity.eventdetail.EventDetailViewModel" />
-        <import type="tw.com.walkablecity.data.FrequencyType"/>
+
+        <variable
+            name="friendList"
+            type="tw.com.walkablecity.data.FriendListWrapper" />
+
+        <variable
+            name="position"
+            type="Integer" />
+
+        <variable
+            name="viewModel"
+            type="tw.com.walkablecity.eventdetail.EventDetailViewModel" />
+
+        <import type="tw.com.walkablecity.data.FrequencyType" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -25,20 +35,20 @@
             android:textColor="@color/primaryDarkColor"
             android:textSize="16sp"
             android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_fq"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_margin="16dp"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             android:orientation="vertical"
-            app:layout_constraintTop_toBottomOf="@+id/event_detail_fq_title"
+            app:friendly="@{friendList.data}"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:friendly="@{friendList.data}"/>
+            app:layout_constraintTop_toBottomOf="@+id/event_detail_fq_title" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

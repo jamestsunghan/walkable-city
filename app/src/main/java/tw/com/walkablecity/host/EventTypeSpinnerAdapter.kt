@@ -10,10 +10,14 @@ class EventTypeSpinnerAdapter(private val strings:List<String>): BaseAdapter() {
 
     @Suppress("ViewHolder")
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
+
         val binding = ItemEventTypeSpinnerBinding
             .inflate(LayoutInflater.from(parent?.context), parent, false)
+
         binding.title = strings[position]
+
         binding.position = position
+
         return binding.root
     }
 

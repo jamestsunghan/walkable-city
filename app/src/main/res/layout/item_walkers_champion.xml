@@ -4,9 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <variable name="champ" type="tw.com.walkablecity.data.User" />
-        <variable name="viewModel" type="tw.com.walkablecity.profile.bestwalker.BestWalkersViewModel" />
-        <import type="tw.com.walkablecity.data.AccumulationType"/>
+
+        <variable
+            name="champ"
+            type="tw.com.walkablecity.data.User" />
+
+        <variable
+            name="viewModel"
+            type="tw.com.walkablecity.profile.bestwalker.BestWalkersViewModel" />
+
+        <import type="tw.com.walkablecity.data.AccumulationType" />
     </data>
 
     <com.google.android.material.card.MaterialCardView
@@ -15,10 +22,10 @@
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         app:cardCornerRadius="8dp"
-        app:strokeWidth="1dp"
         app:cardElevation="8dp"
         app:cardUseCompatPadding="true"
-        app:strokeColor="@color/white">
+        app:strokeColor="@color/white"
+        app:strokeWidth="1dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/profile_head_zone"
@@ -32,13 +39,13 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="16dp"
-                app:strokeColor="@color/gold"
-                app:strokeWidth="5dp"
                 android:contentDescription="Your profile image"
                 app:cardCornerRadius="50dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintTop_toTopOf="parent"
+                app:strokeColor="@color/gold"
+                app:strokeWidth="5dp">
 
                 <ImageView
                     android:id="@+id/profile_image"
@@ -53,9 +60,9 @@
                 android:id="@+id/card_view_first_badge"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                app:cardCornerRadius="40dp"
                 android:layout_marginTop="2dp"
                 android:layout_marginEnd="2dp"
+                app:cardCornerRadius="40dp"
                 app:layout_constraintEnd_toEndOf="@+id/card_view_profile_image"
                 app:layout_constraintTop_toTopOf="@+id/card_view_profile_image">
 
@@ -63,13 +70,13 @@
                     android:id="@+id/badge_first"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:textColor="@color/white"
-                    android:gravity="center"
-                    android:fontFamily="@font/noto_sans"
-                    android:textSize="14dp"
-                    android:textStyle="bold"
                     android:background="@color/gold"
-                    android:text="1" />
+                    android:fontFamily="@font/noto_sans"
+                    android:gravity="center"
+                    android:text="1"
+                    android:textColor="@color/white"
+                    android:textSize="14dp"
+                    android:textStyle="bold" />
             </com.google.android.material.card.MaterialCardView>
 
             <TextView
@@ -79,18 +86,18 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="21dp"
                 android:layout_marginEnd="16dp"
-                android:fontFamily="@font/noto_sans"
-                android:letterSpacing="0.15"
-                android:text="@{champ.name}"
-                android:requiresFadingEdge="horizontal"
-                android:marqueeRepeatLimit="0"
+                android:ellipsize="marquee"
                 android:fadingEdge="horizontal"
                 android:fadingEdgeLength="40dp"
-                android:ellipsize="marquee"
+                android:fontFamily="@font/noto_sans"
+                android:letterSpacing="0.15"
+                android:marqueeRepeatLimit="0"
+                android:requiresFadingEdge="horizontal"
                 android:singleLine="true"
+                android:text="@{champ.name}"
                 android:textColor="@color/blue_2e5c6e"
-                android:textStyle="bold"
                 android:textSize="16sp"
+                android:textStyle="bold"
                 app:layout_constraintBottom_toTopOf="@+id/user_accumulated"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/card_view_profile_image"
