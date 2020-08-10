@@ -18,6 +18,10 @@ class MainViewModel(val walkableRepository: WalkableRepository) : ViewModel() {
 
     val currentFragment = MutableLiveData<CurrentFragmentType>()
 
+    private val _startService = MutableLiveData<Boolean>()
+    val startService: LiveData<Boolean>
+        get() = _startService
+
     private val _walkerStatus = MutableLiveData<WalkerStatus>()
     val walkerStatus: LiveData<WalkerStatus>
         get() = _walkerStatus
@@ -53,6 +57,14 @@ class MainViewModel(val walkableRepository: WalkableRepository) : ViewModel() {
     override fun onCleared() {
         super.onCleared()
         viewModelJob.cancel()
+    }
+
+    fun startService(){
+        _startService.value = true
+    }
+
+    fun stopService(){
+        _startService.value = false
     }
 
     fun addToBadgeTotal(levelCount: Int, upgradeFrom: Int) {

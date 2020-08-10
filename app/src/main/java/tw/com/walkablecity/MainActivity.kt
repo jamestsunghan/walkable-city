@@ -1,6 +1,7 @@
 package tw.com.walkablecity
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.content.pm.ActivityInfo
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -113,12 +114,17 @@ class MainActivity : AppCompatActivity() {
         var previousStatus: WalkerStatus? = null
         viewModel.walkerStatus.observe(this, Observer {
             it?.let { status ->
+                val serviceIntent = Intent(this, WalkService::class.java)
                 if (status == WalkerStatus.WALKING && previousStatus != WalkerStatus.PAUSING) {
 
                     binding.bottomNav.startAnimation(
                         AnimationUtils.loadAnimation(this, R.anim.anim_slide_down)
                     )
 
+                    startService(serviceIntent)
+                }
+                if(status == WalkerStatus.FINISH){
+                    stopService(serviceIntent)
                 }
                 previousStatus = status
             }
