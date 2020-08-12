@@ -112,7 +112,7 @@ class WalkService: LifecycleService() {
                 .setContentTitle(Util.getString(R.string.walkable_city))
                 .setSmallIcon(R.drawable.footprints)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                .setVibrate(null)
+                .setOnlyAlertOnce(true)
                 .setStyle(NotificationCompat.BigTextStyle().bigText(contentText))
 
 
