@@ -1,14 +1,10 @@
 package tw.com.walkablecity
 
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.app.Service
+import android.app.*
 import android.content.Context
 import android.content.Intent
-import android.os.Build
-import android.os.Handler
-import android.os.IBinder
-import android.os.Looper
+import android.graphics.BitmapFactory
+import android.os.*
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
@@ -20,17 +16,23 @@ import com.google.android.gms.maps.model.LatLng
 import tw.com.walkablecity.util.Util
 import tw.com.walkablecity.work.MealWorker
 
-class WalkService: LifecycleService() {
+class WalkService: Service() {
 
     private var handler = Handler()
     private lateinit var runnable: Runnable
-    private var secondCount = 0
+    var secondCount = 0
     private var trackPoints = mutableListOf<LatLng>()
     private val fusedLocationClient = FusedLocationProviderClient(WalkableApp.instance)
     private lateinit var locationCallback: LocationCallback
     var contentText = ""
 
+    private val binder = WalkerBinder()
+
 //    val viewModel = ServiceViewModel()
+
+    inner class WalkerBinder: Binder(){
+        fun getService(): WalkService = this@WalkService
+    }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
 
@@ -67,12 +69,15 @@ class WalkService: LifecycleService() {
 
     }
 
-    override fun onBind(intent: Intent): IBinder? {
-        return super.onBind(intent)
+    override fun onBind(intent: Intent): IBinder {
+        startTimer()
+        startRecordingDistance()
+        return binder
     }
 
     override fun stopService(name: Intent?): Boolean {
         stopTimer()
+        stopRecordingDistance()
 //        viewModel.pauseWalking()
         stopForeground(true)
         return super.stopService(name)
@@ -81,6 +86,7 @@ class WalkService: LifecycleService() {
 
     override fun onDestroy() {
         stopTimer()
+        stopRecordingDistance()
         super.onDestroy()
     }
 
@@ -99,7 +105,15 @@ class WalkService: LifecycleService() {
         }
     }
 
-    private fun startTimer(){
+
+
+    fun startTimer(){
+
+        val intent = Intent(applicationContext, MainActivity::class.java)
+        val pendingIntent = TaskStackBuilder.create(this).run{
+            addNextIntentWithParentStack(intent)
+            getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT)
+        }
 
         runnable = Runnable{
 
@@ -111,11 +125,11 @@ class WalkService: LifecycleService() {
             val builder = NotificationCompat.Builder(applicationContext, CHANNEL_ID)
                 .setContentTitle(Util.getString(R.string.walkable_city))
                 .setSmallIcon(R.drawable.footprints)
+                .setLargeIcon(BitmapFactory.decodeResource(applicationContext.resources, R.mipmap.ic_launcher_foot_in_white_round))
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setOnlyAlertOnce(true)
                 .setStyle(NotificationCompat.BigTextStyle().bigText(contentText))
-
-
+                .setContentIntent(pendingIntent)
 
             secondCount++
             Log.d("Counting","Timer ticking at : $secondCount")
@@ -128,16 +142,16 @@ class WalkService: LifecycleService() {
         handler.postDelayed(runnable,1000)
     }
 
-    private fun stopTimer(){
+    fun stopTimer(){
         handler.removeCallbacks(runnable)
     }
 
-    private fun startRecordingDistance(){
+    fun startRecordingDistance(){
 
         fusedLocationClient.requestLocationUpdates(createLocationRequest(),locationCallback, Looper.getMainLooper())
     }
 
-    private fun stopRecordingDistance() {
+    fun stopRecordingDistance() {
         fusedLocationClient.removeLocationUpdates(locationCallback)
     }
 

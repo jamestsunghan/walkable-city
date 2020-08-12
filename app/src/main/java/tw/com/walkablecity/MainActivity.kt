@@ -1,10 +1,14 @@
 package tw.com.walkablecity
 
 import android.annotation.SuppressLint
+import android.content.ComponentName
+import android.content.Context
 import android.content.Intent
+import android.content.ServiceConnection
 import android.content.pm.ActivityInfo
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.IBinder
 import android.view.animation.AnimationUtils
 import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
@@ -62,6 +66,19 @@ class MainActivity : AppCompatActivity() {
             false
         }
 
+    private var bound = false
+    private lateinit var walkService: WalkService
+    private val connection = object: ServiceConnection{
+        override fun onServiceConnected(name: ComponentName, service: IBinder) {
+            val binder = service as WalkService.WalkerBinder
+            walkService = binder.getService()
+            bound = true
+        }
+
+        override fun onServiceDisconnected(name: ComponentName?) {
+            bound = false
+        }
+    }
 
     @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -115,20 +132,42 @@ class MainActivity : AppCompatActivity() {
         viewModel.walkerStatus.observe(this, Observer {
             it?.let { status ->
                 val serviceIntent = Intent(this, WalkService::class.java)
-                if (status == WalkerStatus.WALKING && previousStatus != WalkerStatus.PAUSING) {
 
-                    binding.bottomNav.startAnimation(
-                        AnimationUtils.loadAnimation(this, R.anim.anim_slide_down)
-                    )
+                when(status){
+                    WalkerStatus.PREPARE ->{
 
-                    startService(serviceIntent)
+                    }
+                    WalkerStatus.WALKING -> {
+                        if(previousStatus != WalkerStatus.PAUSING){
+                            bindService(serviceIntent, connection, Context.BIND_AUTO_CREATE)
+                            binding.bottomNav.startAnimation(
+                                AnimationUtils.loadAnimation(this, R.anim.anim_slide_down)
+                            )
+                        } else {
+                            walkService.startTimer()
+                            walkService.startRecordingDistance()
+                        }
+                    }
+                    WalkerStatus.PAUSING -> {
+                        walkService.stopTimer()
+                        walkService.stopRecordingDistance()
+                    }
+                    WalkerStatus.FINISH -> unbindService(connection)
                 }
-                if(status == WalkerStatus.FINISH){
-                    stopService(serviceIntent)
-                }
+
                 previousStatus = status
             }
         })
+    }
+
+    override fun onStart() {
+//        if(viewModel.walkerStatus.value == WalkerStatus.WALKING){
+//            if(walkService.secondCount > viewModel.timer.value){
+//
+//            }
+//        }
+
+        super.onStart()
     }
 
     private fun addBadge(num: Int, itemId: Int) {

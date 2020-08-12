@@ -341,6 +341,17 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationClick
                         AnimationUtils.loadAnimation(requireContext(), R.anim.anim_silde_up)
                     )
                 }
+
+
+
+
+
+
+
+
+
+
+
                 previousStatus = status
             }
         })
