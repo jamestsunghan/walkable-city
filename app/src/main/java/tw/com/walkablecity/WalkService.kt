@@ -3,6 +3,7 @@ package tw.com.walkablecity
 import android.app.*
 import android.content.Context
 import android.content.Intent
+import android.content.ServiceConnection
 import android.graphics.BitmapFactory
 import android.os.*
 import android.util.Log
@@ -84,6 +85,14 @@ class WalkService: Service() {
 
     }
 
+    override fun unbindService(conn: ServiceConnection) {
+        stopTimer()
+        stopRecordingDistance()
+//        viewModel.pauseWalking()
+        stopForeground(true)
+        super.unbindService(conn)
+    }
+
     override fun onDestroy() {
         stopTimer()
         stopRecordingDistance()
@@ -109,11 +118,13 @@ class WalkService: Service() {
 
     fun startTimer(){
 
-        val intent = Intent(applicationContext, MainActivity::class.java)
-        val pendingIntent = TaskStackBuilder.create(this).run{
-            addNextIntentWithParentStack(intent)
-            getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT)
+        val intent = Intent(applicationContext, MainActivity::class.java).apply{
+            action = Intent.ACTION_MAIN
+            addCategory(Intent.CATEGORY_LAUNCHER)
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         }
+
+        val pendingIntent = PendingIntent.getActivity(applicationContext, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
 
         runnable = Runnable{
 
@@ -126,7 +137,7 @@ class WalkService: Service() {
                 .setContentTitle(Util.getString(R.string.walkable_city))
                 .setSmallIcon(R.drawable.footprints)
                 .setLargeIcon(BitmapFactory.decodeResource(applicationContext.resources, R.mipmap.ic_launcher_foot_in_white_round))
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setOnlyAlertOnce(true)
                 .setStyle(NotificationCompat.BigTextStyle().bigText(contentText))
                 .setContentIntent(pendingIntent)
@@ -137,6 +148,7 @@ class WalkService: Service() {
 
 
             startForeground(NOTIFICATION_ID, builder.build())
+
         }
 
         handler.postDelayed(runnable,1000)

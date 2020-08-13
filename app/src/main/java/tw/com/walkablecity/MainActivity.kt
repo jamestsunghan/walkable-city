@@ -68,7 +68,7 @@ class MainActivity : AppCompatActivity() {
 
     private var bound = false
     private lateinit var walkService: WalkService
-    private val connection = object: ServiceConnection{
+    private val connection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName, service: IBinder) {
             val binder = service as WalkService.WalkerBinder
             walkService = binder.getService()
@@ -133,12 +133,12 @@ class MainActivity : AppCompatActivity() {
             it?.let { status ->
                 val serviceIntent = Intent(this, WalkService::class.java)
 
-                when(status){
-                    WalkerStatus.PREPARE ->{
-
+                when (status) {
+                    WalkerStatus.PREPARE -> {
                     }
+
                     WalkerStatus.WALKING -> {
-                        if(previousStatus != WalkerStatus.PAUSING){
+                        if (previousStatus != WalkerStatus.PAUSING) {
                             bindService(serviceIntent, connection, Context.BIND_AUTO_CREATE)
                             binding.bottomNav.startAnimation(
                                 AnimationUtils.loadAnimation(this, R.anim.anim_slide_down)
@@ -148,26 +148,19 @@ class MainActivity : AppCompatActivity() {
                             walkService.startRecordingDistance()
                         }
                     }
+
                     WalkerStatus.PAUSING -> {
                         walkService.stopTimer()
                         walkService.stopRecordingDistance()
                     }
-                    WalkerStatus.FINISH -> unbindService(connection)
+                    WalkerStatus.FINISH -> {
+                        unbindService(connection)
+                    }
                 }
 
                 previousStatus = status
             }
         })
-    }
-
-    override fun onStart() {
-//        if(viewModel.walkerStatus.value == WalkerStatus.WALKING){
-//            if(walkService.secondCount > viewModel.timer.value){
-//
-//            }
-//        }
-
-        super.onStart()
     }
 
     private fun addBadge(num: Int, itemId: Int) {
