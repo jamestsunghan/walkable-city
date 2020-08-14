@@ -25,15 +25,14 @@ class WalkService : Service() {
 
     private var handler = Handler()
     private lateinit var runnable: Runnable
-    var secondCount = 0
-    private var trackPoints = mutableListOf<LatLng>()
+
     private val fusedLocationClient = FusedLocationProviderClient(WalkableApp.instance)
+
     private lateinit var locationCallback: LocationCallback
+    
     var contentText = ""
 
     private val binder = WalkerBinder()
-
-//    val viewModel = ServiceViewModel()
 
     inner class WalkerBinder : Binder() {
         fun getService(): WalkService = this@WalkService
@@ -68,16 +67,7 @@ class WalkService : Service() {
                 super.onLocationAvailability(p0)
             }
         }
-
-//        viewModel.startTimer()
         super.onCreate()
-
-//        viewModel.walkerTimerText.observe(this, Observer{
-//            it?.let{
-//                contentText = it
-//            }
-//        })
-
     }
 
     override fun onBind(intent: Intent): IBinder {
@@ -90,7 +80,6 @@ class WalkService : Service() {
         stopTimer()
         trackTimer.value = 0L
         stopRecordingDistance()
-//        viewModel.pauseWalking()
         stopForeground(true)
         return super.stopService(name)
 
