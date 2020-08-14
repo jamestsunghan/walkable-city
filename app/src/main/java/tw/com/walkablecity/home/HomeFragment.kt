@@ -39,6 +39,8 @@ import tw.com.walkablecity.util.Util.showBadgeDialog
 import tw.com.walkablecity.databinding.FragmentHomeBinding
 import tw.com.walkablecity.ext.*
 import tw.com.walkablecity.util.Logger
+import tw.com.walkablecity.util.Util.trackTimer
+import tw.com.walkablecity.util.Util.trackerPoints
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -326,6 +328,18 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationClick
             }
         })
 
+        trackTimer.observe(viewLifecycleOwner, Observer{
+            it?.let{time->
+                viewModel.setTrackerTimer(time)
+            }
+        })
+
+        trackerPoints.observe(viewLifecycleOwner, Observer{list->
+            if(list.isNotEmpty()){
+                viewModel.setTrackerPoints(list)
+            }
+        })
+
         var previousStatus: WalkerStatus? = null
         viewModel.walkerStatus.observe(viewLifecycleOwner, Observer {
             it?.let { status ->
@@ -341,17 +355,6 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationClick
                         AnimationUtils.loadAnimation(requireContext(), R.anim.anim_silde_up)
                     )
                 }
-
-
-
-
-
-
-
-
-
-
-
                 previousStatus = status
             }
         })

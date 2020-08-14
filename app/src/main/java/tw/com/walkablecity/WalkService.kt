@@ -17,6 +17,8 @@ import com.google.android.gms.location.*
 import com.google.android.gms.maps.model.LatLng
 import tw.com.walkablecity.ext.toDistance
 import tw.com.walkablecity.util.Util
+import tw.com.walkablecity.util.Util.trackTimer
+import tw.com.walkablecity.util.Util.trackerPoints
 import tw.com.walkablecity.work.MealWorker
 
 class WalkService : Service() {
@@ -47,11 +49,12 @@ class WalkService : Service() {
 
     override fun onCreate() {
         createNotificationChannel()
+        trackTimer.value = 0L
         locationCallback = object : LocationCallback() {
             override fun onLocationResult(p0: LocationResult?) {
                 super.onLocationResult(p0)
                 if (p0 != null && p0.lastLocation != null) {
-                    trackPoints = trackPoints.plus(
+                    trackerPoints.value = (trackerPoints.value ?: mutableListOf()).plus(
                         LatLng(
                             p0.lastLocation.latitude,
                             p0.lastLocation.longitude
@@ -85,6 +88,7 @@ class WalkService : Service() {
 
     override fun stopService(name: Intent?): Boolean {
         stopTimer()
+        trackTimer.value = 0L
         stopRecordingDistance()
 //        viewModel.pauseWalking()
         stopForeground(true)
@@ -100,6 +104,8 @@ class WalkService : Service() {
     }
 
     override fun onDestroy() {
+        trackTimer.value = 0L
+        trackerPoints.value = mutableListOf()
         stopTimer()
         stopRecordingDistance()
         super.onDestroy()
@@ -109,7 +115,7 @@ class WalkService : Service() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val name = getString(R.string.walkable_city)
             val descriptionText = getString(R.string.recording)
-            val importance = NotificationManager.IMPORTANCE_DEFAULT
+            val importance = NotificationManager.IMPORTANCE_HIGH
             val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
                 description = descriptionText
                 enableVibration(false)
@@ -137,15 +143,15 @@ class WalkService : Service() {
         )
 
         runnable = Runnable {
-
-            val minutes = secondCount / 60
-            val seconds = secondCount % 60
+            val points = trackerPoints.value
+            val minutes = (trackTimer.value ?: 0L) / 60
+            val seconds = (trackTimer.value ?: 0L) % 60
             contentText = StringBuilder().append(getString(R.string.walker_timer)).append("｜")
-                .append(Util.lessThenTenPadStart(minutes.toLong()))
-                .append(":").append(Util.lessThenTenPadStart(seconds.toLong())).append("\n")
+                .append(Util.lessThenTenPadStart(minutes))
+                .append(":").append(Util.lessThenTenPadStart(seconds)).append("\n")
                 .append(getString(R.string.walker_distance)).append("｜")
                 .append(
-                    String.format(getString(R.string.recording_length), trackPoints.toDistance())
+                    String.format(getString(R.string.recording_length), points?.toDistance() ?: 0f)
                 ).toString()
 
             val bitmap = applicationContext.resources
@@ -159,8 +165,8 @@ class WalkService : Service() {
                 .setStyle(NotificationCompat.BigTextStyle().bigText(contentText))
                 .setContentIntent(pendingIntent)
 
-            secondCount++
-            Log.d("Counting", "Timer ticking at : $secondCount")
+            trackTimer.value = trackTimer.value?.plus(1)
+            Log.d("Counting", "Timer ticking at : ${trackTimer.value}")
             handler.postDelayed(runnable, 1000)
 
 

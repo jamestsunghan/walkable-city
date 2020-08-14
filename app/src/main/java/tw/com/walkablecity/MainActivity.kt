@@ -135,6 +135,7 @@ class MainActivity : AppCompatActivity() {
 
                 when (status) {
                     WalkerStatus.PREPARE -> {
+//                        unbindService(connection)
                     }
 
                     WalkerStatus.WALKING -> {
@@ -226,10 +227,15 @@ class MainActivity : AppCompatActivity() {
 
         when (viewModel.currentFragment.value) {
             CurrentFragmentType.RATING -> {
-                navController.navigate(
-                    RatingFragmentDirections
-                        .actionGlobalHomeFragment(null, null)
-                )
+                val dialog = Util.showWalkDestroyDialog(this, R.string.keep_rating)
+                    .setPositiveButton(getString(R.string.confirm)) { _, _ ->
+                        navController.navigate(
+                            RatingFragmentDirections
+                                .actionGlobalHomeFragment(null, null)
+                        )
+                    }.create()
+
+                dialog.show()
             }
 
             CurrentFragmentType.CREATE_ROUTE_DIALOG -> {
@@ -252,8 +258,9 @@ class MainActivity : AppCompatActivity() {
                     || viewModel.walkerStatus.value == WalkerStatus.PAUSING
                 ) {
 
-                    val dialog = Util.showWalkDestroyDialog(this)
+                    val dialog = Util.showWalkDestroyDialog(this, R.string.keep_walking)
                         .setPositiveButton(getString(R.string.confirm)) { _, _ ->
+                            unbindService(connection)
                             navController.navigate(
                                 HomeFragmentDirections
                                     .actionGlobalHomeFragment(null, null)
