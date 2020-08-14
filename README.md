@@ -16,41 +16,39 @@ Walker flow is designed base on walking behaviors from start to end, which inclu
 - Prepare for a Walk: <br/>
 User can decide whether he/she wants to load a route and have a walk, choose a destination to walk to, or simply start a walk directly.
 
-![prepare_for_walk](screenshot/prepare_for_walk.jpg)
+  <img src="screenshot/prepare_for_walk.jpg" width="200"><br/>
 
 - Load a Route: <br/>
 User can load a route for walk reference from route collections of users favorites, routes nearby and user's walk history by filtering with minutes requested, destination, or sorting with 6 different street characteristics or features, including Tranquility, Scenery, Rest, Snacks, Coverage and Vibe.
 
   From Destination
 
-![destination](screenshot/search_by_destination.gif)
+  <img src="screenshot/search_by_destination.gif" width="200"><br/>
 
   Load A route
-search_by_load_route
 
-![search_by_load_route](screenshot/search_by_load_route.gif)
-
+  <img src="screenshot/search_by_load_route.gif" width="200"><br/>
 
 - Walk recordings: <br/>
 While walking, walkable city would record each walk's duration and distance, and user can pause and resume whenever he/she wants, even leave the app and come back later with a single click. Along the walk, user can also take photos, which would be shown on the map in a split second.
 
   Distance and duration
 
-![walk_recording](screenshot/walk_recording.gif)
+  <img src="screenshot/walk_recording.gif" width="200"><br/>
 
   Photo taking
 
-![take_photo](screenshot/take_photo.gif)
+  <img src="screenshot/take_photo.gif" width="200"><br/>
 
 - Rating and Comments: <br/>
 When user finished a walk, he/she can share his walk by create a new route on the platform. User can also add rating and comments for the route reference.
 
-![rating_create](screenshot/rating_create.gif)
+  <img src="screenshot/rating_create.gif" width="200"> <br/>
 
 - Dark Mode: <br/>
 Designed for user to walk at night.
 
-![dark_mode](screenshot/dark_mode.png)
+  <img src="screenshot/dark_mode.png" width="200">
 
 ### Route Flow
 
@@ -63,25 +61,24 @@ User can browse through all routes by time filter and feature sorting, and add t
 - Route details: <br/>
 Displaying photo gallery, basic informations, average rating, and comments for a route. User can load to map from this page directly.
 
-![detail_gallery](screenshot/detail_gallery.png) &nbsp;&nbsp;  ![detail_rating](screenshot/detail_rating.png)
+  <img src="screenshot/detail_gallery.png" width="200">&nbsp;&nbsp; <img src="screenshot/detail_rating.png" width="200">
 
 ### Event Flow
 
 - Overview: <br/>
 Event Flow is designed for users to interact with each other, and encourages each other to walk more frequently as a community.
 
-![event_type](screenshot/event_type.png)
+  <img src="screenshot/event_type.png" width="200">
 
 - Event details: <br/>
 Displaying members' accomplishment indicated by event type, including collaboration, competition or habit cultivation
 
-![event_collaborative](screenshot/event_collaborative.png) &nbsp;&nbsp; ![event_competition](screenshot/event_competition.png) &nbsp;&nbsp; ![event_habit](screenshot/event_habit.png) &nbsp;&nbsp;
+  <img src="screenshot/event_collaborative.png" width="200"> &nbsp;&nbsp;<img src="screenshot/event_competition.png" width="200"> &nbsp;&nbsp;<img src="screenshot/event_habit.png" width="200">
 
 - Create an event: <br/>
 User can create an event by his/her own, invites friends and sets event to be public.
 
-![create_event](screenshot/create_event.gif)
-
+  <img src="screenshot/create_event.gif" width="200">
 
 ### Recording Flow
 
@@ -91,17 +88,17 @@ As each walk is recorded, recording flow is designed to encourages user to walk 
 - Explorer map: <br/>
 User can see each walk path on a map clearly
 
-![explorer_map](screenshot/explorer_map.png)
+  <img src="screenshot/explorer_map.png" width="200">
 
 - Badges: <br/>
 User would get a shareable image when he/she accomplished certain amount of walk total distance, walk total hours, events joined, or friends.
 
-![badges](screenshot/badges.png) &nbsp;&nbsp; ![badge_dialog](screenshot/badge_dialog.png)
+  <img src="screenshot/badges.png" width="200"> &nbsp;&nbsp; <img src="screenshot/badge_dialog.png" width="200">
 
 - Ranking between friends: <br/>
 Once users are friends, they can keep track of friends' weekly, monthly or total walk distance.
 
-![friend_competition](screenshot/friend_competition.png)
+  <img src="screenshot/friend_competition.png" width="200">
 
 ## Framework & Tools
 
