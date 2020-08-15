@@ -329,54 +329,6 @@ object WalkableRemoteDataSource : WalkableDataSource {
         ).missionSuccessReturn(true)
     }
 
-    override suspend fun updateEvents(
-        user: User?,
-        eventList: List<Event>,
-        type: FrequencyType
-    ): Result<Boolean> {
-        return if (user == null || eventList.isEmpty()) {
-            Result.Fail(getString(R.string.no_internet))
-        } else {
-
-            val taskList = mutableListOf<Result<Boolean>>()
-
-            val updateUser = db.collection(USER).document(requireNotNull(user.id)).update(
-                ACCU_KM, user.accumulatedKm?.updateByFrequency(type),
-                ACCU_HOUR, user.accumulatedHour?.updateByFrequency(type)
-            ).missionSuccessReturn(true)
-
-            taskList.add(updateUser)
-
-            for (event in eventList) {
-
-                val isBasedOnHr: Boolean = event.target?.hour != null
-
-                val friend = event.member.find { it.id == user.id }
-
-                val newList: List<MissionFQ> = if (isBasedOnHr) {
-                    friend?.accomplishFQ?.plus(
-                        (user.accumulatedHour?.getByFrequency(type) ?: 0f).toMissionFQ()
-                    ) ?: listOf()
-                } else {
-                    friend?.accomplishFQ
-                        ?.plus((user.accumulatedKm?.getByFrequency(type) ?: 0f).toMissionFQ())
-                        ?: listOf()
-                }
-
-                val taskUpdateEvent =
-                    db.collection(EVENT).document(requireNotNull(event.id)).update(
-                        MEMBER,
-                        FieldValue.arrayRemove(friend),
-                        MEMBER,
-                        FieldValue.arrayUnion(user.toFriend(newList as MutableList<MissionFQ>))
-                    ).missionSuccessReturn(true)
-
-                taskList.add(taskUpdateEvent)
-            }
-            taskList.find { it !is Result.Success } ?: updateUser
-        }
-    }
-
 
     /**
      * query for user authentication.
@@ -499,6 +451,18 @@ object WalkableRemoteDataSource : WalkableDataSource {
     ): Result<Boolean> {
         return db.collection(USER).document(userId).update(MEAL, activate)
             .missionSuccessReturn(activate)
+    }
+
+    override suspend fun updateUserAccumulated(user: User?, type: FrequencyType): Result<Boolean> {
+        return if (user == null) {
+            Result.Fail(getString(R.string.no_internet))
+        } else {
+
+            db.collection(USER).document(requireNotNull(user.id)).update(
+                ACCU_KM, user.accumulatedKm?.updateByFrequency(type),
+                ACCU_HOUR, user.accumulatedHour?.updateByFrequency(type)
+            ).missionSuccessReturn(true)
+        }
     }
 
     /**

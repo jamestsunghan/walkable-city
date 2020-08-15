@@ -87,6 +87,15 @@ class EventDetailFragment : Fragment() {
                 adapter.notifyDataSetChanged()
             }
         })
+        
+        viewModel.listOfList.observe(viewLifecycleOwner, Observer{yeah->
+            yeah?.let{list->
+                Logger.d("size ${list.size} list $list")
+                for(item in 0 until list.size){
+                    Logger.d("list of list ${list[item].data.map{it.accomplish}}")
+                }
+            }
+        })
 
         return binding.root
     }

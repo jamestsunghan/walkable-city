@@ -1,18 +1,13 @@
 package tw.com.walkablecity.work
 
 import android.content.Context
-import androidx.work.CoroutineWorker
-import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.WorkManager
-import androidx.work.WorkerParameters
+import androidx.work.*
 import com.google.firebase.Timestamp.now
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import retrofit2.HttpException
-import tw.com.walkablecity.UserManager
 import tw.com.walkablecity.util.Logger
 import tw.com.walkablecity.WalkableApp
-import tw.com.walkablecity.data.EventType
 import tw.com.walkablecity.data.FrequencyType
 import tw.com.walkablecity.data.User
 import java.util.*
@@ -22,7 +17,6 @@ class DailyWorker(appContext: Context, params: WorkerParameters) :
     CoroutineWorker(appContext, params) {
 
     companion object {
-        const val WORK_NAME = "dailyWorker"
         val repo = WalkableApp.instance.repo
         val user = Firebase.auth.currentUser
     }
@@ -38,64 +32,22 @@ class DailyWorker(appContext: Context, params: WorkerParameters) :
                     is tw.com.walkablecity.data.Result.Success -> {
                         result.data
                     }
-                    is tw.com.walkablecity.data.Result.Fail -> {
-                        null
-                    }
-                    is tw.com.walkablecity.data.Result.Error -> {
-                        null
-                    }
                     else -> null
                 }
-                val eventList = when (val result = repo.getNowAndFutureEvents()) {
-                    is tw.com.walkablecity.data.Result.Success -> {
-                        result.data
-                            .filter { event ->
-                                requireNotNull(event.startDate) < now()
-                                        && (event.type == EventType.FREQUENCY)
-                                        && event.member.find { it.id == UserManager.user?.id } != null
-                            }
-                    }
-                    is tw.com.walkablecity.data.Result.Fail -> {
-                        listOf()
-                    }
-                    is tw.com.walkablecity.data.Result.Error -> {
-                        listOf()
-                    }
-                    else -> listOf()
-                }
-
-                val eventDaily =
-                    eventList.filter { it.target?.frequencyType == FrequencyType.DAILY }
-                val eventWeekly =
-                    eventList.filter { it.target?.frequencyType == FrequencyType.WEEKLY }
-                val eventMonthly =
-                    eventList.filter { it.target?.frequencyType == FrequencyType.MONTHLY }
 
                 val daily =
-                    when (val result = repo.updateEvents(user, eventDaily, FrequencyType.DAILY)) {
+                    when (val result = repo.updateUserAccumulated(user, FrequencyType.DAILY)) {
                         is tw.com.walkablecity.data.Result.Success -> {
                             result.data
-                        }
-                        is tw.com.walkablecity.data.Result.Fail -> {
-                            false
-                        }
-                        is tw.com.walkablecity.data.Result.Error -> {
-                            false
                         }
                         else -> false
                     }
 
                 if (currentDate.get(Calendar.DAY_OF_WEEK) == Calendar.MONDAY) {
                     val weekly = when (val result =
-                        repo.updateEvents(user, eventWeekly, FrequencyType.WEEKLY)) {
+                        repo.updateUserAccumulated(user, FrequencyType.WEEKLY)) {
                         is tw.com.walkablecity.data.Result.Success -> {
                             result.data
-                        }
-                        is tw.com.walkablecity.data.Result.Fail -> {
-                            false
-                        }
-                        is tw.com.walkablecity.data.Result.Error -> {
-                            false
                         }
                         else -> false
                     }
@@ -103,15 +55,9 @@ class DailyWorker(appContext: Context, params: WorkerParameters) :
 
                 if (currentDate.get(Calendar.DAY_OF_MONTH) == 1) {
                     val monthly = when (val result =
-                        repo.updateEvents(user, eventMonthly, FrequencyType.MONTHLY)) {
+                        repo.updateUserAccumulated(user, FrequencyType.MONTHLY)) {
                         is tw.com.walkablecity.data.Result.Success -> {
                             result.data
-                        }
-                        is tw.com.walkablecity.data.Result.Fail -> {
-                            false
-                        }
-                        is tw.com.walkablecity.data.Result.Error -> {
-                            false
                         }
                         else -> false
                     }
@@ -143,4 +89,6 @@ class DailyWorker(appContext: Context, params: WorkerParameters) :
             Result.retry()
         }
     }
+
+
 }
