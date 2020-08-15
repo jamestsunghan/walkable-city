@@ -2,7 +2,6 @@ package tw.com.walkablecity.work
 
 import android.content.Context
 import androidx.work.*
-import com.google.firebase.Timestamp.now
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import retrofit2.HttpException
@@ -74,6 +73,7 @@ class DailyWorker(appContext: Context, params: WorkerParameters) :
                 }
 
                 val timeDiff = dueDate.timeInMillis - currentDate.timeInMillis
+
                 val dailyRequest = OneTimeWorkRequestBuilder<DailyWorker>()
                     .setConstraints(WalkableApp.constraints)
                     .setInitialDelay(timeDiff, TimeUnit.MILLISECONDS)

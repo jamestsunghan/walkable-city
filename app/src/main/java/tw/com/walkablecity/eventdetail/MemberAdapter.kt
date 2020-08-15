@@ -45,11 +45,30 @@ class MemberAdapter(val viewModel: EventDetailViewModel) :
 
             binding.total = viewModel.circleList.value?.sum()?.times(100)
 
+
             binding.recyclerFq.adapter = FrequencyAdapter(viewModel)
 
             binding.recyclerCircleFq.adapter = DetailCircleAdapter()
 
             binding.recyclerFq.onFlingListener = null
+
+            val params = binding.recyclerCircleFq.layoutParams
+
+            viewModel.listOfList.observe(context as MainActivity, Observer{
+                it?.let{list->
+                    if (list.size < 5){
+                        params.width = RecyclerView.LayoutParams.WRAP_CONTENT
+                    } else {
+                        params.width = 0
+                    }
+                    binding.recyclerCircleFq.layoutParams = params
+                }
+            })
+
+
+            binding.startNotShown = !(binding.recyclerCircleFq.layoutManager?.findViewByPosition(0)?.isShown ?: false)
+            binding.endNotShown = !(binding.recyclerCircleFq.layoutManager
+                ?.findViewByPosition(binding.recyclerCircleFq.adapter?.itemCount ?: 0)?.isShown ?: false)
 
             val linearSnapHelper = LinearSnapHelper().apply {
                 attachToRecyclerView(binding.recyclerFq)
@@ -57,13 +76,17 @@ class MemberAdapter(val viewModel: EventDetailViewModel) :
 
             binding.recyclerFq.setOnScrollChangeListener { _, _, _, _, _ ->
                 viewModel.onGalleryScrollChange(binding.recyclerFq.layoutManager, linearSnapHelper)
+                binding.startNotShown = !(binding.recyclerCircleFq.layoutManager?.findViewByPosition(0)?.isShown ?: false)
+                binding.endNotShown = !(binding.recyclerCircleFq.layoutManager
+                    ?.findViewByPosition(binding.recyclerCircleFq.adapter?.itemCount?.minus(1) ?: 0)?.isShown ?: false)
             }
             viewModel.snapPosition.observe(context as MainActivity, Observer {
                 (binding.recyclerCircleFq.adapter as DetailCircleAdapter).selectedPosition.value =
                     it
+                binding.recyclerCircleFq.smoothScrollToPosition(it)
+
+
             })
-
-
         }
     }
 

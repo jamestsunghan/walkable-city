@@ -1,5 +1,6 @@
 package tw.com.walkablecity.eventdetail
 
+import android.app.ActionBar
 import android.graphics.Rect
 import android.os.CountDownTimer
 import android.view.View
@@ -20,6 +21,7 @@ import tw.com.walkablecity.util.Util.lessThenTenPadStart
 import tw.com.walkablecity.util.Util.setDp
 import tw.com.walkablecity.data.*
 import tw.com.walkablecity.data.source.WalkableRepository
+import tw.com.walkablecity.ext.toCalendar
 import tw.com.walkablecity.ext.toDateLong
 import tw.com.walkablecity.ext.toDateString
 import tw.com.walkablecity.ext.toMissionFQ
@@ -69,9 +71,9 @@ class EventDetailViewModel(private val walkableRepository: WalkableRepository, v
     }
 
     val champ = Transformations.map(eventMember) { list ->
-        if (list.isNotEmpty()) list[0]
-        else null
+        if (list.isNotEmpty()) list[0] else null
     }
+
     var resultCount = 0
 
     private val _walkResultSingle = MutableLiveData<Float>()
@@ -98,6 +100,8 @@ class EventDetailViewModel(private val walkableRepository: WalkableRepository, v
             }
         }
     }
+
+    val circleWidth = RecyclerView.LayoutParams.WRAP_CONTENT
 
     private val viewModelJob = Job()
     private val coroutineScope = CoroutineScope(Dispatchers.Main + viewModelJob)
@@ -242,12 +246,16 @@ class EventDetailViewModel(private val walkableRepository: WalkableRepository, v
         }
     }
 
-    val listToAdd = event.member.map { friend ->
+    private val listToAdd = event.member.map { friend ->
         friend.toNewInstance()
     }
 
 
-    fun getMemberWalkResult(startTime: Timestamp, target: EventTarget, memberId: List<String>) {
+    private fun getMemberWalkResult(
+        startTime: Timestamp,
+        target: EventTarget,
+        memberId: List<String>
+    ) {
 
         if (resultCount == memberId.size) {
             resultCount = 0
@@ -261,80 +269,52 @@ class EventDetailViewModel(private val walkableRepository: WalkableRepository, v
                 walkableRepository.getMemberWalks(startTime, memberId[resultCount])
                     .handleResultWith(_error, _status)
 
-            _walkResultSingle.value = when (event.type) {
-                EventType.FREQUENCY -> {
-                    when (target.frequencyType) {
-                        FrequencyType.DAILY -> {
-                            addMemberFQ(
-                                memberId[resultCount], result,
-                                ONE_DAY.div(ONE_SECOND), target.distance == null
-                            )
-                        }
-                        FrequencyType.WEEKLY -> {
-                            addMemberFQ(
-                                memberId[resultCount], result,
-                                ONE_DAY.div(ONE_SECOND).times(7), target.distance == null
-                            )
-                        }
-                        FrequencyType.MONTHLY -> {
-                            addMemberFQ(
-                                memberId[resultCount], result,
-                                baseOnHour =  target.distance == null
-                            )
-                        }
-                    }
-                    val resultFQ =
-                        event.member.find { it.id == memberId[resultCount] }?.accomplishFQ?.last()?.accomplish
-                            ?: 0f
-                    if (target.distance == null) {
-                        resultFQ.div(3600)
-                    } else {
-                        resultFQ
-                    }
+            _walkResultSingle.value = when {
+                event.type == EventType.FREQUENCY -> {
+
+                    addMemberFQ(
+                        memberId[resultCount], result,
+                        target.frequencyType?.timeUnit ?: Calendar.MONTH,
+                        target.distance == null
+                    )
+
+                    val resultFQ = event.member.find { member ->
+                        member.id == memberId[resultCount]
+                    }?.accomplishFQ?.last()?.accomplish ?: 0f
+
+                    if (target.distance == null) resultFQ.div(SECONDS * MINUTES)
+                    else resultFQ
                 }
-                EventType.HOUR_RACE -> {
+
+                event.type == EventType.HOUR_RACE || event.type == EventType.HOUR_GROUP -> {
                     result?.sumBy { walk -> walk.duration?.toInt() ?: 0 }?.toFloat()
                 }
 
-                EventType.HOUR_GROUP -> {
-                    result?.sumBy { walk -> walk.duration?.toInt() ?: 0 }?.toFloat()
-                }
-
-                EventType.DISTANCE_RACE -> {
+                event.type == EventType.DISTANCE_RACE || event.type == EventType.DISTANCE_GROUP -> {
                     result?.sumByDouble { walk -> walk.distance?.toDouble() ?: 0.0 }?.toFloat()
                 }
-
-                EventType.DISTANCE_GROUP -> {
-                    result?.sumByDouble { walk -> walk.distance?.toDouble() ?: 0.0 }?.toFloat()
-                }
-
                 else -> null
-
             }
         }
     }
 
-    fun addMemberFQ(memberId: String, result: List<Walk>?, timeUnit: Long = 0L, baseOnHour: Boolean) {
+    private fun addMemberFQ(
+        memberId: String,
+        result: List<Walk>?,
+        timeUnit: Int,
+        baseOnHour: Boolean
+    ) {
         var dateRangePoint = event.startDate?.seconds as Long
-        val start = event.startDate.toDateLong().div(1000000)
 
-        val startMonth = start.toInt().div(100) % 100
-        val startYear = start.div(10000)
+        val today = Calendar.getInstance()
 
-        val todayMonth = Calendar.getInstance().get(Calendar.MONTH)
-        val todayYear = Calendar.getInstance().get(Calendar.YEAR)
+        val startDate = event.startDate.toCalendar()
 
-        val startDateOfCalendar = Calendar.getInstance().apply{
-            set(Calendar.YEAR, startYear.toInt())
-            set(Calendar.MONTH, startMonth)
-            set(Calendar.DAY_OF_MONTH, start.toInt() % 100)
-        }
-
-        val listSize = if (timeUnit ==0L){
-            (todayYear - startYear).times(12) + todayMonth - startMonth
+        val listSize = if (timeUnit == Calendar.MONTH) {
+            (today.get(Calendar.YEAR) - startDate.get(Calendar.YEAR)).times(12)
+            +today.get(Calendar.MONTH) - startDate.get(Calendar.MONTH).toLong()
         } else {
-            (now().seconds - (event.startDate as Timestamp).seconds)
-                .div(timeUnit)
+            (now().seconds - event.startDate.seconds).div(timeUnit)
         } + 1
 
         val targetMember = listToAdd.find { it.id == memberId }
@@ -343,27 +323,26 @@ class EventDetailViewModel(private val walkableRepository: WalkableRepository, v
             val walkResult = result?.filter { walk ->
                 (walk.endTime as Timestamp).seconds > dateRangePoint &&
                         (walk.endTime).seconds <= dateRangePoint + timeUnit
-            }?.run {
-                if (baseOnHour) {
-                    sumByDouble {
-                        it.duration?.toDouble() ?: 0.0
-                    }
-                } else {
-                    sumByDouble {
-                        it.distance?.toDouble() ?: 0.0
-                    }
-                }
+            }?.sumByDouble { walkSum ->
+                if (baseOnHour) walkSum.duration?.toDouble() ?: 0.0
+                else walkSum.distance?.toDouble() ?: 0.0
+
             }?.toFloat() ?: 0f
 
             listToAdd.apply {
-                targetMember?.accomplishFQ?.add(MissionFQ(Timestamp(dateRangePoint, 0), walkResult))
+                targetMember?.accomplishFQ?.add(
+                    MissionFQ(
+                        Timestamp(dateRangePoint, 0), walkResult
+                    )
+                )
             }
             Logger.d("list to add ${listToAdd.size} $listToAdd")
 
-            dateRangePoint = if (timeUnit == 0L) {
-                startDateOfCalendar.add(Calendar.MONTH, 1)
+            dateRangePoint = if (timeUnit == Calendar.MONTH) {
 
-                dateRangePoint + startDateOfCalendar.timeInMillis.div(ONE_SECOND)
+                startDate.add(Calendar.MONTH, 1)
+
+                dateRangePoint + startDate.timeInMillis.div(ONE_SECOND)
             } else {
                 dateRangePoint + timeUnit
             }
@@ -390,14 +369,11 @@ class EventDetailViewModel(private val walkableRepository: WalkableRepository, v
 
                 if (event.type == EventType.FREQUENCY) {
 
-                    val listSize = listToAdd.first().accomplishFQ.size
-                    for (item in 0 until listSize) {
-                        val wrapper = FriendListWrapper(listToAdd.map {
-                            it.toNewInstance()
-                        }.apply {
-                            this.onEach {
-                                it.accomplish = it.accomplishFQ[item].accomplish
-                            }
+                    for (item in 0 until listToAdd.first().accomplishFQ.size) {
+                        val wrapper = FriendListWrapper(listToAdd.map { friend ->
+                            friend.toNewInstance()
+                        }.onEach { friend ->
+                            friend.accomplish = friend.accomplishFQ[item].accomplish
                         }.sortedByDescending {
                             it.accomplish
                         })
@@ -415,7 +391,6 @@ class EventDetailViewModel(private val walkableRepository: WalkableRepository, v
                     requireNotNull(event.startDate)
                     , requireNotNull(event.target), listMemberId
                 )
-
             }
         }
     }
@@ -428,5 +403,4 @@ class EventDetailViewModel(private val walkableRepository: WalkableRepository, v
         private const val HOURS = 24
         private const val ONE_DAY = 24 * 60 * 60 * ONE_SECOND
     }
-
 }
