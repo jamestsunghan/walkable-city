@@ -65,10 +65,13 @@ class MemberAdapter(val viewModel: EventDetailViewModel) :
                 }
             })
 
+            val circleManager = binding.recyclerCircleFq.layoutManager
 
-            binding.startNotShown = !(binding.recyclerCircleFq.layoutManager?.findViewByPosition(0)?.isShown ?: false)
-            binding.endNotShown = !(binding.recyclerCircleFq.layoutManager
-                ?.findViewByPosition(binding.recyclerCircleFq.adapter?.itemCount ?: 0)?.isShown ?: false)
+            binding.startShown = circleManager?.findViewByPosition(0)?.isShown ?: false
+
+            binding.endShown = circleManager?.findViewByPosition(
+                binding.recyclerCircleFq.adapter?.itemCount ?: 0
+            )?.isShown ?: false
 
             val linearSnapHelper = LinearSnapHelper().apply {
                 attachToRecyclerView(binding.recyclerFq)
@@ -76,9 +79,12 @@ class MemberAdapter(val viewModel: EventDetailViewModel) :
 
             binding.recyclerFq.setOnScrollChangeListener { _, _, _, _, _ ->
                 viewModel.onGalleryScrollChange(binding.recyclerFq.layoutManager, linearSnapHelper)
-                binding.startNotShown = !(binding.recyclerCircleFq.layoutManager?.findViewByPosition(0)?.isShown ?: false)
-                binding.endNotShown = !(binding.recyclerCircleFq.layoutManager
-                    ?.findViewByPosition(binding.recyclerCircleFq.adapter?.itemCount?.minus(1) ?: 0)?.isShown ?: false)
+
+                binding.startShown = circleManager?.findViewByPosition(0)?.isShown ?: false
+
+                binding.endShown = circleManager?.findViewByPosition(
+                    binding.recyclerCircleFq.adapter?.itemCount?.minus(1) ?: 0
+                )?.isShown ?: false
             }
             viewModel.snapPosition.observe(context as MainActivity, Observer {
                 (binding.recyclerCircleFq.adapter as DetailCircleAdapter).selectedPosition.value =
