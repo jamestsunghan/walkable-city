@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import tw.com.walkablecity.data.Friend
 import tw.com.walkablecity.data.FriendListWrapper
 import tw.com.walkablecity.databinding.ItemEventDetailBoardFqBinding
+import tw.com.walkablecity.util.Logger
 
 class FrequencyAdapter(val viewModel: EventDetailViewModel)
     : ListAdapter<FriendListWrapper, FrequencyAdapter.FrequencyViewHolder>(DiffCallback) {
@@ -16,6 +17,7 @@ class FrequencyAdapter(val viewModel: EventDetailViewModel)
         : RecyclerView.ViewHolder(binding.root){
         fun bind(list: FriendListWrapper, position: Int, viewModel: EventDetailViewModel){
             binding.friendList = list
+            Logger.d("wrapper in FQ position $position ${list.data.map{ it.accomplish}}")
             binding.position = position + 1
             binding.viewModel = viewModel
             binding.recyclerFq.adapter = FrequencyFriendAdapter(viewModel)

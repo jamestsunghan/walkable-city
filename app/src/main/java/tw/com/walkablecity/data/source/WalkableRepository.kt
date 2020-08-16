@@ -64,11 +64,6 @@ interface WalkableRepository {
     suspend fun createEvent(event: Event): Result<Boolean>
     suspend fun joinEvent(user: User, event: Event): Result<Boolean>
     suspend fun joinPublicEvent(user: User, event: Event): Result<Boolean>
-    suspend fun updateEvents(
-        user: User?,
-        eventList: List<Event>,
-        type: FrequencyType
-    ): Result<Boolean>
 
     /**
      * query for user authentication.
@@ -97,6 +92,8 @@ interface WalkableRepository {
 
     suspend fun updateWeatherNotification(activate: Boolean, userId: String): Result<Boolean>
     suspend fun updateMealNotification(activate: Boolean, userId: String): Result<Boolean>
+
+    suspend fun updateUserAccumulated(user: User?, type: FrequencyType): Result<Boolean>
 
     /**
      * Get sub-collection, field in User from data source.

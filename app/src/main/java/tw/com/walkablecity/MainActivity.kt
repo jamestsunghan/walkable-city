@@ -18,6 +18,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import tw.com.walkablecity.addfriend.AddFriendFragmentDirections
 import tw.com.walkablecity.data.BadgeType
 import tw.com.walkablecity.databinding.ActivityMainBinding
+import tw.com.walkablecity.eventdetail.EventDetailFragmentDirections
 import tw.com.walkablecity.ext.getVMFactory
 import tw.com.walkablecity.home.HomeFragmentDirections
 import tw.com.walkablecity.home.WalkerStatus
@@ -251,6 +252,10 @@ class MainActivity : AppCompatActivity() {
 
             CurrentFragmentType.BADGE -> {
                 navController.navigate(BadgeFragmentDirections.actionGlobalProfileFragment())
+            }
+
+            CurrentFragmentType.EVENT_DETAIL ->{
+                navController.navigate(EventDetailFragmentDirections.actionGlobalEventFragment())
             }
 
             CurrentFragmentType.HOME -> {

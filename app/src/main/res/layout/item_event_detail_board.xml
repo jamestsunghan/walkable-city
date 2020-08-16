@@ -21,9 +21,19 @@
             name="champAccomplished"
             type="Float" />
 
+        <variable
+            name="startShown"
+            type="Boolean" />
+
+        <variable
+            name="endShown"
+            type="Boolean" />
+
         <import type="android.view.View" />
 
         <import type="tw.com.walkablecity.data.EventType" />
+
+        <import type="tw.com.walkablecity.data.LoadStatus"/>
 
         <import type="androidx.constraintlayout.widget.ConstraintLayout.LayoutParams" />
     </data>
@@ -51,7 +61,7 @@
                     android:id="@+id/profile_head_zone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:visibility="@{viewModel.event.type == EventType.HOUR_RACE || viewModel.event.type == EventType.DISTANCE_RACE ? View.VISIBLE : View.GONE}"
+                    android:visibility="@{viewModel.event.type == EventType.HOUR_RACE || viewModel.event.type == EventType.DISTANCE_RACE ? (viewModel.status == LoadStatus.LOADING ? View.GONE : View.VISIBLE) : View.GONE}"
                     app:layout_constraintTop_toTopOf="parent">
 
                     <com.google.android.material.card.MaterialCardView
@@ -211,7 +221,7 @@
                     android:gravity="center"
                     android:letterSpacing="0.15"
                     android:padding="16dp"
-                    android:text="@string/no_historic_data"
+                    android:text="@{viewModel.eventIsStarted? @string/no_historic_data : @string/event_not_started}"
                     android:textColor="@color/primaryColor"
                     android:textSize="20sp"
                     android:visibility="@{viewModel.event.type == EventType.FREQUENCY &amp;&amp; (viewModel.listOfList == null || viewModel.listOfList.size == 0 ) ?  View.VISIBLE : View.GONE}"
@@ -222,11 +232,11 @@
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recycler_circle_fq"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="8dp"
                     android:layout_gravity="center"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="16dp"
+                    android:layout_marginStart="100dp"
+                    android:layout_marginEnd="100dp"
                     android:layout_marginBottom="16dp"
                     android:orientation="horizontal"
                     android:visibility="@{viewModel.event.type == EventType.FREQUENCY ? View.VISIBLE : View.GONE}"
@@ -236,6 +246,30 @@
                     app:layout_constraintBottom_toBottomOf="@+id/recycler_fq"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent" />
+
+                <TextView
+                    android:id="@+id/start_arrow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:text="←"
+                    android:textColor="@color/red_heart_c73e3a"
+                    android:visibility="@{viewModel.event.type == EventType.FREQUENCY ? (viewModel.listOfList == null || viewModel.listOfList.size == 0 || startShown ? View.GONE : View.VISIBLE ) : View.GONE}"
+                    app:layout_constraintTop_toTopOf="@+id/recycler_circle_fq"
+                    app:layout_constraintBottom_toBottomOf="@+id/recycler_circle_fq"
+                    app:layout_constraintEnd_toStartOf="@+id/recycler_circle_fq"/>
+
+                <TextView
+                    android:id="@+id/end_arrow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="→"
+                    android:textColor="@color/red_heart_c73e3a"
+                    android:visibility="@{viewModel.event.type == EventType.FREQUENCY ? (viewModel.listOfList == null || viewModel.listOfList.size == 0 || endShown ? View.GONE : View.VISIBLE ) : View.GONE}"
+                    app:layout_constraintTop_toTopOf="@+id/recycler_circle_fq"
+                    app:layout_constraintBottom_toBottomOf="@+id/recycler_circle_fq"
+                    app:layout_constraintStart_toEndOf="@+id/recycler_circle_fq"/>
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -254,7 +288,7 @@
             android:gravity="start"
             android:letterSpacing="0.15"
             android:padding="8dp"
-            android:text="@{viewModel.event.type == EventType.FREQUENCY ? viewModel.event.target.frequencyType.ranking : @string/total_ranking}"
+            android:text="@{viewModel.eventIsStarted ? (viewModel.event.type == EventType.FREQUENCY ? viewModel.event.target.frequencyType.ranking : @string/total_ranking) : @string/event_member}"
             android:textColor="@color/primaryDarkColor"
             android:textSize="16sp"
             android:textStyle="bold"

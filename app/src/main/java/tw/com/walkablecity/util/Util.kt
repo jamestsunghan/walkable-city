@@ -261,5 +261,14 @@ object Util {
         return dueDate.timeInMillis - currentDate.timeInMillis
     }
 
+    fun findMonthDiff(dueDate: Calendar, startDate: Calendar): Int{
+        var resultTime = ((dueDate.get(Calendar.YEAR) - startDate.get(Calendar.YEAR)).times(12)
+                +dueDate.get(Calendar.MONTH) - startDate.get(Calendar.MONTH))
+        if ( dueDate.get(Calendar.DAY_OF_MONTH) <= startDate.get(Calendar.DAY_OF_MONTH) ){
+            resultTime -= 1
+        }
+        return resultTime
+    }
+
     private const val BADGE_DATA = "badge_data"
 }
