@@ -113,14 +113,6 @@ class DefaultWalkableRepository(private val remote: WalkableDataSource) : Walkab
         return remote.joinPublicEvent(user, event)
     }
 
-    override suspend fun updateEvents(
-        user: User?,
-        eventList: List<Event>,
-        type: FrequencyType
-    ): Result<Boolean> {
-        return remote.updateEvents(user, eventList, type)
-    }
-
     /**
      * Get user authentication.
      */
@@ -184,6 +176,10 @@ class DefaultWalkableRepository(private val remote: WalkableDataSource) : Walkab
         userId: String
     ): Result<Boolean> {
         return remote.updateMealNotification(activate, userId)
+    }
+
+    override suspend fun updateUserAccumulated(user: User?, type: FrequencyType): Result<Boolean> {
+        return remote.updateUserAccumulated(user, type)
     }
 
     /**

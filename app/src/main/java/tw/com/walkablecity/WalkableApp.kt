@@ -25,16 +25,18 @@ class WalkableApp : Application() {
 
     companion object {
 
+        const val UPDATE_WORK = "dailyUpdate"
+
         var instance: WalkableApp by Delegates.notNull()
 
         val constraintsWeather = Constraints.Builder()
-            .setRequiredNetworkType(NetworkType.UNMETERED).build()
+            .setRequiredNetworkType(NetworkType.CONNECTED).build()
 
         val constraintsMeal = Constraints.Builder()
-            .setRequiredNetworkType(NetworkType.UNMETERED).build()
+            .setRequiredNetworkType(NetworkType.CONNECTED).build()
 
         val constraints = Constraints.Builder()
-            .setRequiredNetworkType(NetworkType.UNMETERED)
+            .setRequiredNetworkType(NetworkType.CONNECTED)
             .setRequiresCharging(true)
             .setRequiresBatteryNotLow(true)
             .build()
@@ -63,7 +65,8 @@ class WalkableApp : Application() {
             .setInitialDelay(timeDiff, TimeUnit.MILLISECONDS)
             .build()
 
-        WorkManager.getInstance(this).enqueue(dailyRequest)
+        WorkManager.getInstance(this)
+            .enqueueUniqueWork(UPDATE_WORK, ExistingWorkPolicy.KEEP, dailyRequest)
 
     }
 

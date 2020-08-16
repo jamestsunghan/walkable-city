@@ -1,9 +1,14 @@
 package tw.com.walkablecity
 
 import android.annotation.SuppressLint
+import android.content.ComponentName
+import android.content.Context
+import android.content.Intent
+import android.content.ServiceConnection
 import android.content.pm.ActivityInfo
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.IBinder
 import android.view.animation.AnimationUtils
 import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
@@ -13,6 +18,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import tw.com.walkablecity.addfriend.AddFriendFragmentDirections
 import tw.com.walkablecity.data.BadgeType
 import tw.com.walkablecity.databinding.ActivityMainBinding
+import tw.com.walkablecity.eventdetail.EventDetailFragmentDirections
 import tw.com.walkablecity.ext.getVMFactory
 import tw.com.walkablecity.home.HomeFragmentDirections
 import tw.com.walkablecity.home.WalkerStatus
@@ -61,6 +67,19 @@ class MainActivity : AppCompatActivity() {
             false
         }
 
+    private var bound = false
+    private lateinit var walkService: WalkService
+    private val connection = object : ServiceConnection {
+        override fun onServiceConnected(name: ComponentName, service: IBinder) {
+            val binder = service as WalkService.WalkerBinder
+            walkService = binder.getService()
+            bound = true
+        }
+
+        override fun onServiceDisconnected(name: ComponentName?) {
+            bound = false
+        }
+    }
 
     @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -113,13 +132,34 @@ class MainActivity : AppCompatActivity() {
         var previousStatus: WalkerStatus? = null
         viewModel.walkerStatus.observe(this, Observer {
             it?.let { status ->
-                if (status == WalkerStatus.WALKING && previousStatus != WalkerStatus.PAUSING) {
+                val serviceIntent = Intent(this, WalkService::class.java)
 
-                    binding.bottomNav.startAnimation(
-                        AnimationUtils.loadAnimation(this, R.anim.anim_slide_down)
-                    )
+                when (status) {
+                    WalkerStatus.PREPARE -> {
+//                        unbindService(connection)
+                    }
 
+                    WalkerStatus.WALKING -> {
+                        if (previousStatus != WalkerStatus.PAUSING) {
+                            bindService(serviceIntent, connection, Context.BIND_AUTO_CREATE)
+                            binding.bottomNav.startAnimation(
+                                AnimationUtils.loadAnimation(this, R.anim.anim_slide_down)
+                            )
+                        } else {
+                            walkService.startTimer()
+                            walkService.startRecordingDistance()
+                        }
+                    }
+
+                    WalkerStatus.PAUSING -> {
+                        walkService.stopTimer()
+                        walkService.stopRecordingDistance()
+                    }
+                    WalkerStatus.FINISH -> {
+                        unbindService(connection)
+                    }
                 }
+
                 previousStatus = status
             }
         })
@@ -188,10 +228,15 @@ class MainActivity : AppCompatActivity() {
 
         when (viewModel.currentFragment.value) {
             CurrentFragmentType.RATING -> {
-                navController.navigate(
-                    RatingFragmentDirections
-                        .actionGlobalHomeFragment(null, null)
-                )
+                val dialog = Util.showWalkDestroyDialog(this, R.string.keep_rating)
+                    .setPositiveButton(getString(R.string.confirm)) { _, _ ->
+                        navController.navigate(
+                            RatingFragmentDirections
+                                .actionGlobalHomeFragment(null, null)
+                        )
+                    }.create()
+
+                dialog.show()
             }
 
             CurrentFragmentType.CREATE_ROUTE_DIALOG -> {
@@ -209,13 +254,18 @@ class MainActivity : AppCompatActivity() {
                 navController.navigate(BadgeFragmentDirections.actionGlobalProfileFragment())
             }
 
+            CurrentFragmentType.EVENT_DETAIL ->{
+                navController.navigate(EventDetailFragmentDirections.actionGlobalEventFragment())
+            }
+
             CurrentFragmentType.HOME -> {
                 if (viewModel.walkerStatus.value == WalkerStatus.WALKING
                     || viewModel.walkerStatus.value == WalkerStatus.PAUSING
                 ) {
 
-                    val dialog = Util.showWalkDestroyDialog(this)
+                    val dialog = Util.showWalkDestroyDialog(this, R.string.keep_walking)
                         .setPositiveButton(getString(R.string.confirm)) { _, _ ->
+                            unbindService(connection)
                             navController.navigate(
                                 HomeFragmentDirections
                                     .actionGlobalHomeFragment(null, null)

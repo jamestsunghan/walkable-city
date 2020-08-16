@@ -47,7 +47,7 @@ class EventDetailFragment : Fragment() {
             member.id == UserManager.user?.id
         } != null
 
-        val adapter = MemberAdapter(viewModel)
+        val adapter = MemberAdapter(viewModel, viewLifecycleOwner)
         binding.recyclerMember.adapter = adapter
 
         binding.maybeLater.setOnClickListener {
@@ -85,6 +85,15 @@ class EventDetailFragment : Fragment() {
         viewModel.circleList.observe(viewLifecycleOwner, Observer {
             it?.let {
                 adapter.notifyDataSetChanged()
+            }
+        })
+        
+        viewModel.listOfList.observe(viewLifecycleOwner, Observer{yeah->
+            yeah?.let{list->
+                Logger.d("size ${list.size} list $list")
+                for(item in 0 until list.size){
+                    Logger.d("list of list ${list[item].data.map{it.accomplish}}")
+                }
             }
         })
 
