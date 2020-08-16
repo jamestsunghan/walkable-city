@@ -25,6 +25,7 @@ import tw.com.walkablecity.ext.toCalendar
 import tw.com.walkablecity.ext.toDateLong
 import tw.com.walkablecity.ext.toDateString
 import tw.com.walkablecity.ext.toMissionFQ
+import tw.com.walkablecity.util.Util.findMonthDiff
 import java.sql.Time
 import java.text.SimpleDateFormat
 import java.util.*
@@ -121,16 +122,18 @@ class EventDetailViewModel(private val walkableRepository: WalkableRepository, v
 
     }
 
+
     init {
         Logger.d("member list ${event.member}")
-        getMemberWalkResult(
-            requireNotNull(event.startDate),
-            requireNotNull(event.target),
-            listMemberId
-        )
 
+        if(eventIsStarted){
+            getMemberWalkResult(
+                requireNotNull(event.startDate),
+                requireNotNull(event.target),
+                listMemberId
+            )
+        }
         getTimerStart(countDownTime)
-
     }
 
     fun addToWalkResult(result: Float) {
@@ -247,14 +250,12 @@ class EventDetailViewModel(private val walkableRepository: WalkableRepository, v
             walkableRepository.joinPublicEvent(requireNotNull(UserManager.user), event).apply {
                 _joinSuccess.value = handleResultWith(_error, _status)
             }
-
         }
     }
 
     private val listToAdd = event.member.map { friend ->
         friend.toNewInstance()
     }
-
 
     private fun getMemberWalkResult(
         startTime: Timestamp,
@@ -316,12 +317,7 @@ class EventDetailViewModel(private val walkableRepository: WalkableRepository, v
         val startDate = event.startDate.toCalendar()
 
         val listSize = if (timeUnit == Calendar.MONTH) {
-            var resultTime = ((today.get(Calendar.YEAR) - startDate.get(Calendar.YEAR)).times(12)
-            +today.get(Calendar.MONTH) - startDate.get(Calendar.MONTH))
-            if ( today.get(Calendar.DAY_OF_MONTH) <= startDate.get(Calendar.DAY_OF_MONTH) ){
-                resultTime -= 1
-            }
-            resultTime
+            findMonthDiff(today, startDate)
         } else {
             (now().seconds - event.startDate.seconds).div(timeUnit).toInt()
         } + 1
@@ -345,7 +341,6 @@ class EventDetailViewModel(private val walkableRepository: WalkableRepository, v
             }?.sumByDouble { walkSum ->
                 if (baseOnHour) walkSum.duration?.toDouble() ?: 0.0
                 else walkSum.distance?.toDouble() ?: 0.0
-
             }?.toFloat() ?: 0f
 
             listToAdd.apply {
@@ -360,16 +355,12 @@ class EventDetailViewModel(private val walkableRepository: WalkableRepository, v
             dateRangePoint = if (timeUnit == Calendar.MONTH) {
 
                 startDate.add(Calendar.MONTH, 1)
-
                 startDate.timeInMillis.div(ONE_SECOND)
             } else {
                 dateRangePoint + timeUnit
             }
-
         }
     }
-
-
 
     fun keepGettingWalkResult(list: List<Float>) {
         resultCount += 1

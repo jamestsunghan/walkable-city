@@ -354,6 +354,8 @@
     <string name="day_night_switch">切換日夜模式</string>
 
     <string name="no_historic_data">尚無歷史資料</string>
+    <string name="event_not_started">活動尚未開始</string>
+    <string name="event_member">成員</string>
 
 
 
