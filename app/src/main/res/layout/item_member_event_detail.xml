@@ -18,10 +18,6 @@
             type="Integer" />
 
         <variable
-            name="width"
-            type="Integer" />
-
-        <variable
             name="isAccomplished"
             type="Boolean" />
 

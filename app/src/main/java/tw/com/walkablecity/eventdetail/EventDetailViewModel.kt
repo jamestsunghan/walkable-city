@@ -34,37 +34,50 @@ class EventDetailViewModel(private val walkableRepository: WalkableRepository, v
 
     private lateinit var timer: CountDownTimer
 
-    val hostName = event.member.first { member ->
-        member.idCustom == event.host
-    }.name
+    val hostName = event.member.first { member -> member.idCustom == event.host }.name
 
     val circleList = MutableLiveData<List<Float>>()
 
     private val _status = MutableLiveData<LoadStatus>()
-    val status: LiveData<LoadStatus> get() = _status
+    val status: LiveData<LoadStatus>
+        get() = _status
 
     private val _error = MutableLiveData<String>()
-    val error: LiveData<String> get() = _error
+    val error: LiveData<String>
+        get() = _error
+
+    private val _walkResultSingle = MutableLiveData<Float>()
+    val walkResultSingle: LiveData<Float>
+        get() = _walkResultSingle
 
     private val _walkResult = MutableLiveData<List<Float>>()
-    val walkResult: LiveData<List<Float>> get() = _walkResult
+    val walkResult: LiveData<List<Float>>
+        get() = _walkResult
 
     private val _joinSuccess = MutableLiveData<Boolean>()
-    val joinSuccess: LiveData<Boolean> get() = _joinSuccess
+    val joinSuccess: LiveData<Boolean>
+        get() = _joinSuccess
 
     private val _snapPosition = MutableLiveData<Int>()
-    val snapPosition: LiveData<Int> get() = _snapPosition
+    val snapPosition: LiveData<Int>
+        get() = _snapPosition
 
-    val currentCountDown = MutableLiveData<String>()
+    private val _listOfList = MutableLiveData<MutableList<FriendListWrapper>>()
+    val listOfList: LiveData<MutableList<FriendListWrapper>>
+        get() = _listOfList
+
+    private val _currentCountDown = MutableLiveData<String>()
+    val currentCountDown: LiveData<String>
+        get() = _currentCountDown
 
     var eventIsStarted = requireNotNull(event.startDate?.seconds) < now().seconds
 
     var countDownTime =
         if (eventIsStarted) {
-            (requireNotNull(event.endDate?.seconds) - now().seconds).times(ONE_SECOND)
+            (requireNotNull(event.endDate?.seconds) - now().seconds)
         } else {
-            (requireNotNull(event.startDate?.seconds) - now().seconds).times(ONE_SECOND)
-        }
+            (requireNotNull(event.startDate?.seconds) - now().seconds)
+        }.times(ONE_SECOND)
 
     val eventMember = MutableLiveData<List<Friend>>().apply {
         value = event.member
@@ -75,9 +88,6 @@ class EventDetailViewModel(private val walkableRepository: WalkableRepository, v
     }
 
     var resultCount = 0
-
-    private val _walkResultSingle = MutableLiveData<Float>()
-    val walkResultSingle: LiveData<Float> get() = _walkResultSingle
 
     private val listMemberId = event.member.map { member ->
         requireNotNull(member.id)
@@ -101,12 +111,8 @@ class EventDetailViewModel(private val walkableRepository: WalkableRepository, v
         }
     }
 
-    val circleWidth = RecyclerView.LayoutParams.WRAP_CONTENT
-
     private val viewModelJob = Job()
     private val coroutineScope = CoroutineScope(Dispatchers.Main + viewModelJob)
-
-    val listOfList = MutableLiveData<MutableList<FriendListWrapper>>()
 
     override fun onCleared() {
         super.onCleared()
@@ -162,15 +168,15 @@ class EventDetailViewModel(private val walkableRepository: WalkableRepository, v
         val timeUnit = if (lessThanADay) ONE_SECOND else ONE_DAY
         timer = object : CountDownTimer(time, timeUnit) {
             override fun onFinish() {
-                currentCountDown.value = if (lessThanADay) {
+                _currentCountDown.value = if (lessThanADay) {
                     DONE.toString()
                 } else {
                     eventIsStarted = (requireNotNull(event.startDate?.seconds) < now().seconds)
                     countDownTime = if (eventIsStarted) {
-                        (requireNotNull(event.endDate?.seconds) - now().seconds).times(ONE_SECOND)
+                        (requireNotNull(event.endDate?.seconds) - now().seconds)
                     } else {
-                        (requireNotNull(event.startDate?.seconds) - now().seconds).times(ONE_SECOND)
-                    }
+                        (requireNotNull(event.startDate?.seconds) - now().seconds)
+                    }.times(ONE_SECOND)
 
                     getTimerStart(countDownTime)
 
@@ -184,7 +190,7 @@ class EventDetailViewModel(private val walkableRepository: WalkableRepository, v
                 val hr = millisUntilFinished / ONE_SECOND / SECONDS / MINUTES % HOURS
                 val day = millisUntilFinished / ONE_DAY
 
-                currentCountDown.value = buildTimeString(
+                _currentCountDown.value = buildTimeString(
                     getTimePrefix(eventIsStarted), lessThanADay, day, hr, min, sec
                 )
             }
@@ -226,10 +232,9 @@ class EventDetailViewModel(private val walkableRepository: WalkableRepository, v
 
             _status.value = LoadStatus.LOADING
 
-            val result = walkableRepository.joinEvent(requireNotNull(UserManager.user), event)
-
-            _joinSuccess.value = result.handleResultWith(_error, _status)
-
+            walkableRepository.joinEvent(requireNotNull(UserManager.user), event).apply{
+                _joinSuccess.value = handleResultWith(_error, _status)
+            }
         }
     }
 
@@ -311,18 +316,32 @@ class EventDetailViewModel(private val walkableRepository: WalkableRepository, v
         val startDate = event.startDate.toCalendar()
 
         val listSize = if (timeUnit == Calendar.MONTH) {
-            (today.get(Calendar.YEAR) - startDate.get(Calendar.YEAR)).times(12)
-            +today.get(Calendar.MONTH) - startDate.get(Calendar.MONTH).toLong()
+            var resultTime = ((today.get(Calendar.YEAR) - startDate.get(Calendar.YEAR)).times(12)
+            +today.get(Calendar.MONTH) - startDate.get(Calendar.MONTH))
+            if ( today.get(Calendar.DAY_OF_MONTH) <= startDate.get(Calendar.DAY_OF_MONTH) ){
+                resultTime -= 1
+            }
+            resultTime
         } else {
-            (now().seconds - event.startDate.seconds).div(timeUnit)
+            (now().seconds - event.startDate.seconds).div(timeUnit).toInt()
         } + 1
 
         val targetMember = listToAdd.find { it.id == memberId }
+
         for (time in 1..listSize) {
+
+            val timeGap = if (timeUnit == Calendar.MONTH) {
+                val dueDate = event.startDate.toCalendar()
+                dueDate.add(Calendar.MONTH, time)
+                Logger.d("due date start date ${(dueDate.timeInMillis - startDate.timeInMillis).div(ONE_SECOND*60*60*24).toInt()}")
+                (dueDate.timeInMillis - startDate.timeInMillis).div(ONE_SECOND).toInt()
+            } else {
+                timeUnit
+            }
 
             val walkResult = result?.filter { walk ->
                 (walk.endTime as Timestamp).seconds > dateRangePoint &&
-                        (walk.endTime).seconds <= dateRangePoint + timeUnit
+                        (walk.endTime).seconds <= dateRangePoint + timeGap
             }?.sumByDouble { walkSum ->
                 if (baseOnHour) walkSum.duration?.toDouble() ?: 0.0
                 else walkSum.distance?.toDouble() ?: 0.0
@@ -342,13 +361,15 @@ class EventDetailViewModel(private val walkableRepository: WalkableRepository, v
 
                 startDate.add(Calendar.MONTH, 1)
 
-                dateRangePoint + startDate.timeInMillis.div(ONE_SECOND)
+                startDate.timeInMillis.div(ONE_SECOND)
             } else {
                 dateRangePoint + timeUnit
             }
 
         }
     }
+
+
 
     fun keepGettingWalkResult(list: List<Float>) {
         resultCount += 1
@@ -378,7 +399,7 @@ class EventDetailViewModel(private val walkableRepository: WalkableRepository, v
                             it.accomplish
                         })
                         Logger.d("wrapper first ${wrapper.data.map { it.accomplish }}")
-                        listOfList.value = (listOfList.value
+                        _listOfList.value = (listOfList.value
                             ?: mutableListOf()).plus(wrapper) as MutableList<FriendListWrapper>
                     }
                 }

@@ -1,10 +1,9 @@
 package tw.com.walkablecity.eventdetail
 
-import android.content.Context
-import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.view.marginEnd
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.*
 import tw.com.walkablecity.*
@@ -15,15 +14,13 @@ import tw.com.walkablecity.databinding.ItemMemberEventDetailBinding
 import tw.com.walkablecity.detail.DetailCircleAdapter
 import tw.com.walkablecity.util.Util
 
-class MemberAdapter(val viewModel: EventDetailViewModel) :
+class MemberAdapter(val viewModel: EventDetailViewModel, private val owner: LifecycleOwner) :
     ListAdapter<MemberItem, RecyclerView.ViewHolder>(DiffCallback) {
-
-    private lateinit var context: Context
 
     class BoardViewHolder(private val binding: ItemEventDetailBoardBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(viewModel: EventDetailViewModel, champ: Friend, context: Context) {
+        fun bind(viewModel: EventDetailViewModel, owner: LifecycleOwner) {
 
             binding.circleAccomplish.apply {
                 setCircleColor(Util.getColor(R.color.grey_transparent))
@@ -32,19 +29,18 @@ class MemberAdapter(val viewModel: EventDetailViewModel) :
 
             binding.viewModel = viewModel
 
-            viewModel.champ.observe(context as MainActivity, Observer {
+            viewModel.champ.observe(owner, Observer {
                 it?.let { champion ->
                     binding.champ = champion
                     binding.champAccomplished = if (viewModel.event.type == EventType.HOUR_RACE) {
-                        champion.accomplish?.div(60 * 60) ?: 0f
+                        champion.accomplish?.div(SECONDS_IN_HOUR) ?: 0f
                     } else {
                         champion.accomplish
                     }
                 }
             })
 
-            binding.total = viewModel.circleList.value?.sum()?.times(100)
-
+            binding.total = viewModel.circleList.value?.sum()?.times(PERCENTAGE)
 
             binding.recyclerFq.adapter = FrequencyAdapter(viewModel)
 
@@ -54,9 +50,9 @@ class MemberAdapter(val viewModel: EventDetailViewModel) :
 
             val params = binding.recyclerCircleFq.layoutParams
 
-            viewModel.listOfList.observe(context as MainActivity, Observer{
-                it?.let{list->
-                    if (list.size < 5){
+            viewModel.listOfList.observe(owner, Observer {
+                it?.let { list ->
+                    if (list.size < 5) {
                         params.width = RecyclerView.LayoutParams.WRAP_CONTENT
                     } else {
                         params.width = 0
@@ -86,47 +82,43 @@ class MemberAdapter(val viewModel: EventDetailViewModel) :
                     binding.recyclerCircleFq.adapter?.itemCount?.minus(1) ?: 0
                 )?.isShown ?: false
             }
-            viewModel.snapPosition.observe(context as MainActivity, Observer {
+            viewModel.snapPosition.observe(owner, Observer { snap ->
                 (binding.recyclerCircleFq.adapter as DetailCircleAdapter).selectedPosition.value =
-                    it
-                binding.recyclerCircleFq.smoothScrollToPosition(it)
+                    snap
 
-
+                binding.recyclerCircleFq.smoothScrollToPosition(snap)
             })
         }
     }
 
     class MemberViewHolder(private val binding: ItemMemberEventDetailBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(friend: Friend, viewModel: EventDetailViewModel, position: Int) {
-            binding.friend = friend
-            binding.viewModel = viewModel
-            binding.isAccomplished =
-                (friend.accomplish ?: 0f) >= (viewModel.event.target?.hour?.times(60 * 60)
-                    ?: requireNotNull(viewModel.event.target?.distance))
-            binding.width = binding.friendBar.width
 
-            val progressWidth = TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_DIP,
-                180f,
-                WalkableApp.instance.resources.displayMetrics
-            )
+        fun bind(friend: Friend, viewModel: EventDetailViewModel, position: Int) {
+
+            binding.friend = friend
+
+            binding.viewModel = viewModel
+
+            binding.isAccomplished =
+                (friend.accomplish ?: 0f) >= (viewModel.event.target?.hour?.times(SECONDS_IN_HOUR)
+                    ?: requireNotNull(viewModel.event.target?.distance))
+
+            val progressWidth = Util.setDp(PROGRESS_WIDTH)
+
             binding.guideline.setGuidelineEnd(progressWidth.toInt())
 
-            binding.friendBarProgress.width = friend.accomplish?.let {
-                if (viewModel.event.target?.frequencyType == null) {
-                    it.times(progressWidth - binding.friendBar.marginEnd)
-                        .div(
-                            viewModel.event.target?.distance
-                                ?: requireNotNull(viewModel.event.target?.hour) * 3600
-                        ).toInt()
-                } else {
-                    it.times(progressWidth - binding.friendBar.marginEnd)
-                        .div(
-                            viewModel.event.target.distance
-                                ?: requireNotNull(viewModel.event.target.hour)
-                        ).toInt()
-                }
+            binding.friendBarProgress.width = friend.accomplish?.let { accomplish ->
+
+                accomplish.times(progressWidth - binding.friendBar.marginEnd).div(
+                    viewModel.event.target?.distance
+                        ?: if (viewModel.event.target?.frequencyType == null) {
+                            requireNotNull(viewModel.event.target?.hour) * SECONDS_IN_HOUR
+                        } else {
+                            requireNotNull(viewModel.event.target.hour)
+                        }
+
+                ).toInt()
 
             } ?: binding.friendBar.width
 
@@ -148,6 +140,9 @@ class MemberAdapter(val viewModel: EventDetailViewModel) :
 
         private const val ITEM_VIEW_TYPE_BOARD = 0x00
         private const val ITEM_VIEW_TYPE_MEMBER = 0x01
+        private const val SECONDS_IN_HOUR = 3600
+        private const val PERCENTAGE = 100
+        private const val PROGRESS_WIDTH = 180f
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -158,7 +153,6 @@ class MemberAdapter(val viewModel: EventDetailViewModel) :
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        context = parent.context
         return when (viewType) {
             ITEM_VIEW_TYPE_BOARD -> BoardViewHolder(
                 ItemEventDetailBoardBinding
@@ -174,10 +168,8 @@ class MemberAdapter(val viewModel: EventDetailViewModel) :
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
-            is BoardViewHolder -> holder.bind(
-                viewModel,
-                (getItem(1) as MemberItem.Member).member,
-                context
+            is BoardViewHolder  -> holder.bind(
+                viewModel, owner
             )
             is MemberViewHolder -> holder.bind(
                 (getItem(position) as MemberItem.Member).member,

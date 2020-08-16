@@ -47,7 +47,7 @@ class EventDetailFragment : Fragment() {
             member.id == UserManager.user?.id
         } != null
 
-        val adapter = MemberAdapter(viewModel)
+        val adapter = MemberAdapter(viewModel, viewLifecycleOwner)
         binding.recyclerMember.adapter = adapter
 
         binding.maybeLater.setOnClickListener {
