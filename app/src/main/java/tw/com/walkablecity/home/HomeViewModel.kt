@@ -1,13 +1,11 @@
 package tw.com.walkablecity.home
 
 
-import android.os.Handler
-import android.os.Looper
+
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
-import com.google.android.gms.location.*
 import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.Timestamp
 import com.google.firebase.Timestamp.now
@@ -22,7 +20,7 @@ import tw.com.walkablecity.ext.toDistance
 import tw.com.walkablecity.ext.toGeoPoint
 import tw.com.walkablecity.ext.toLatLng
 import tw.com.walkablecity.util.Logger
-import java.lang.Runnable
+import tw.com.walkablecity.util.Util.trackerPoints
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -32,11 +30,6 @@ class HomeViewModel(
     val destination: LatLng?
 ) : ViewModel() {
 
-    companion object {
-        const val UPDATE_INTERVAL_IN_MILLISECONDS = 5000L
-        const val FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS = UPDATE_INTERVAL_IN_MILLISECONDS / 2
-    }
-
     private val _upgrade = MutableLiveData<Int>()
     val upgrade: LiveData<Int>
         get() = _upgrade
@@ -44,8 +37,6 @@ class HomeViewModel(
     private val _permissionDenied = MutableLiveData<Boolean>(false)
     val permissionDenied: LiveData<Boolean>
         get() = _permissionDenied
-
-    private val fusedLocationClient = FusedLocationProviderClient(WalkableApp.instance)
 
     private val _dontAskAgain = MutableLiveData<Boolean>(false)
     val dontAskAgain: LiveData<Boolean>
@@ -94,8 +85,8 @@ class HomeViewModel(
     val startLocation: LiveData<LatLng>
         get() = _startLocation
 
-    private val _trackPoints = MutableLiveData<MutableList<LatLng>>(mutableListOf())
-    val trackPoints: LiveData<MutableList<LatLng>>
+    private val _trackPoints = MutableLiveData<List<LatLng>>(mutableListOf())
+    val trackPoints: LiveData<List<LatLng>>
         get() = _trackPoints
 
     val walkerDistance = Transformations.map(trackPoints) { list ->
@@ -105,18 +96,14 @@ class HomeViewModel(
             list.toDistance()
         }
     }
+
     private val _walkerTimer = MutableLiveData<Long>(0L)
     val walkerTimer: LiveData<Long>
         get() = _walkerTimer
 
-    private var handler = Handler()
-    private lateinit var runnable: Runnable
-
     val route = MutableLiveData<Route>().apply {
         value = argument
     }
-
-    private var locationCallback: LocationCallback
 
     private val viewModelJob = Job()
 
@@ -126,6 +113,7 @@ class HomeViewModel(
         super.onCleared()
         viewModelJob.cancel()
         if (walkerStatus.value == WalkerStatus.PAUSING || walkerStatus.value == WalkerStatus.WALKING) {
+            _walkerStatus.value = WalkerStatus.FINISH
             pauseWalking()
         }
     }
@@ -138,26 +126,13 @@ class HomeViewModel(
 
         _walkerStatus.value = WalkerStatus.PREPARE
 
-        locationCallback = object : LocationCallback() {
-            override fun onLocationResult(result: LocationResult?) {
-
-                super.onLocationResult(result)
-
-                if (result != null && result.lastLocation != null) {
-
-                    _trackPoints.value = trackPoints.value?.plus(
-                        result.lastLocation.toLatLng()
-                    ) as MutableList<LatLng>
-                }
-            }
-        }
         UserManager.user?.let { user ->
             newAccuBadgeCheck(user)
         }
     }
 
     fun addStartTrackPoint(latLng: LatLng) {
-        _trackPoints.value = trackPoints.value?.plus(latLng) as MutableList<LatLng>
+        trackerPoints.value = trackerPoints.value?.plus(latLng) as MutableList<LatLng>
     }
 
     fun permissionDeniedForever() {
@@ -229,17 +204,12 @@ class HomeViewModel(
         }
     }
 
-    private fun startRecordingDistance() {
-
-        fusedLocationClient.requestLocationUpdates(
-            createLocationRequest(),
-            locationCallback,
-            Looper.getMainLooper()
-        )
+    fun setTrackerTimer(time: Long){
+        _walkerTimer.value = time
     }
 
-    private fun stopRecordingDistance() {
-        fusedLocationClient.removeLocationUpdates(locationCallback)
+    fun setTrackerPoints(list: List<LatLng>){
+        _trackPoints.value = list
     }
 
     private fun startWalking() {
@@ -249,21 +219,14 @@ class HomeViewModel(
         clientCurrentLocation()
         startTime.value = now()
 
-        //timer start
-        startTimer()
     }
 
     private fun pauseWalking() {
         _walkerStatus.value = WalkerStatus.PAUSING
-        //timer pause
-        handler.removeCallbacks(runnable)
-        stopRecordingDistance()
-
     }
 
     private fun resumeWalking() {
-        //timer resume
-        startTimer()
+
         clientCurrentLocation()
         _walkerStatus.value = WalkerStatus.WALKING
     }
@@ -271,12 +234,7 @@ class HomeViewModel(
     private fun stopWalking() {
         _walkerStatus.value = WalkerStatus.FINISH
 
-        //timer stop
-        handler.removeCallbacks(runnable)
         endTime.value = now()
-
-        //GPS stop recording
-        stopRecordingDistance()
 
         //navigate to rating
         val walk = Walk(
@@ -302,15 +260,6 @@ class HomeViewModel(
         }
     }
 
-    private fun startTimer() {
-        runnable = Runnable {
-            _walkerTimer.value = walkerTimer.value?.plus(1)
-            Logger.d("timer ${walkerTimer.value}")
-            handler.postDelayed(runnable, 1000)
-        }
-        handler.postDelayed(runnable, 1000)
-    }
-
     fun clientCurrentLocation() {
 
         _loadStatus.value = LoadStatus.LOADING
@@ -323,23 +272,8 @@ class HomeViewModel(
             if (walkerStatus.value != WalkerStatus.PAUSING && result is Result.Success) {
                 _startLocation.value = currentLocation.value
             }
-            if (walkerStatus.value == WalkerStatus.WALKING) {
-                startRecordingDistance()
-            }
         }
     }
-
-    private fun createLocationRequest(): LocationRequest {
-        return LocationRequest().apply {
-
-            interval = UPDATE_INTERVAL_IN_MILLISECONDS
-
-            fastestInterval = FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS
-
-            priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-        }
-    }
-
 
     fun drawPath(origin: LatLng, destination: LatLng, waypoints: List<LatLng>) {
         coroutineScope.launch {

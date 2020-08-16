@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavController
 import androidx.navigation.NavDirections
 import com.google.android.gms.maps.model.LatLng
@@ -24,6 +25,9 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 object Util {
+
+    val trackerPoints = MutableLiveData<List<LatLng>>(listOf())
+    val trackTimer = MutableLiveData<Long>()
 
     @SuppressLint("MissingPermission")
     fun isInternetConnected(): Boolean {
@@ -177,7 +181,7 @@ object Util {
             .getSharedPreferences(BADGE_DATA, Context.MODE_PRIVATE).getFloat(key, -1f)
     }
 
-    fun showWalkDestroyDialog(context: Context): AlertDialog.Builder {
+    fun showWalkDestroyDialog(context: Context, negativeStringId: Int): AlertDialog.Builder {
 
         val icon = context.getDrawable(R.drawable.ic_footprint_solid)?.apply {
             setTint(getColor(R.color.primaryDarkColor))
@@ -187,7 +191,7 @@ object Util {
             .setMessage(getString(R.string.destroy_walk_message))
             .setIcon(icon)
             .setTitle(getString(R.string.destroy_walk_title))
-            .setNegativeButton(getString(R.string.keep_walking)) { dialogC, _ ->
+            .setNegativeButton(getString(negativeStringId)) { dialogC, _ ->
                 dialogC.cancel()
             }
     }
@@ -255,6 +259,15 @@ object Util {
         }
 
         return dueDate.timeInMillis - currentDate.timeInMillis
+    }
+
+    fun findMonthDiff(dueDate: Calendar, startDate: Calendar): Int{
+        var resultTime = ((dueDate.get(Calendar.YEAR) - startDate.get(Calendar.YEAR)).times(12)
+                +dueDate.get(Calendar.MONTH) - startDate.get(Calendar.MONTH))
+        if ( dueDate.get(Calendar.DAY_OF_MONTH) <= startDate.get(Calendar.DAY_OF_MONTH) ){
+            resultTime -= 1
+        }
+        return resultTime
     }
 
     private const val BADGE_DATA = "badge_data"

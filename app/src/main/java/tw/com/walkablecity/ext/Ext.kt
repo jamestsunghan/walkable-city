@@ -9,9 +9,7 @@ import com.google.firebase.Timestamp.now
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.GeoPoint
 import tw.com.walkablecity.util.Logger
-import tw.com.walkablecity.R
 import tw.com.walkablecity.util.Util
-import tw.com.walkablecity.util.Util.getString
 import tw.com.walkablecity.data.*
 import tw.com.walkablecity.data.directionresult.LatLngResult
 import tw.com.walkablecity.eventdetail.MemberItem
@@ -135,6 +133,12 @@ fun Timestamp.toDateLong(): Long {
 
 fun Timestamp.toDateString(): String {
     return SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.TAIWAN).format(this.seconds.times(1000))
+}
+
+fun Timestamp.toCalendar(): Calendar{
+    return Calendar.getInstance().apply {
+        time = toDate()
+    }
 }
 
 fun FirebaseUser.toSignInUser(idCustom: String?): User {

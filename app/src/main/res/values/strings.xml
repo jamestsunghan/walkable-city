@@ -354,6 +354,8 @@
     <string name="day_night_switch">切換日夜模式</string>
 
     <string name="no_historic_data">尚無歷史資料</string>
+    <string name="event_not_started">活動尚未開始</string>
+    <string name="event_member">成員</string>
 
 
 
@@ -366,6 +368,7 @@
     <string name="destroy_walk_message">路線與紀錄都會不見歐</string>
     <string name="destroy_walk_title">確定要離開嗎?</string>
     <string name="keep_walking">繼續散步</string>
+    <string name="keep_rating">留在此頁</string>
     <string name="confirm">確定</string>
 
 

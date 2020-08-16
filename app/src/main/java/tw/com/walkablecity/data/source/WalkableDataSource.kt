@@ -63,11 +63,6 @@ interface WalkableDataSource {
     suspend fun createEvent(event: Event): Result<Boolean>
     suspend fun joinEvent(user: User, event: Event): Result<Boolean>
     suspend fun joinPublicEvent(user: User, event: Event): Result<Boolean>
-    suspend fun updateEvents(
-        user: User?,
-        eventList: List<Event>,
-        type: FrequencyType
-    ): Result<Boolean>
 
     /**
      * query for user authentication.
@@ -98,6 +93,8 @@ interface WalkableDataSource {
 
     suspend fun updateWeatherNotification(activate: Boolean, userId: String): Result<Boolean>
     suspend fun updateMealNotification(activate: Boolean, userId: String): Result<Boolean>
+
+    suspend fun updateUserAccumulated(user: User?, type: FrequencyType): Result<Boolean>
 
     /**
      * query for sub-collection, field in User in firestore.
