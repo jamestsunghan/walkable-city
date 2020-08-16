@@ -119,9 +119,7 @@ class EventDetailViewModel(private val walkableRepository: WalkableRepository, v
         super.onCleared()
         viewModelJob.cancel()
         timer.cancel()
-
     }
-
 
     init {
         Logger.d("member list ${event.member}")
@@ -275,8 +273,8 @@ class EventDetailViewModel(private val walkableRepository: WalkableRepository, v
                 walkableRepository.getMemberWalks(startTime, memberId[resultCount])
                     .handleResultWith(_error, _status)
 
-            _walkResultSingle.value = when {
-                event.type == EventType.FREQUENCY -> {
+            _walkResultSingle.value = when (event.type) {
+                EventType.FREQUENCY -> {
 
                     addMemberFQ(
                         memberId[resultCount], result,
@@ -291,12 +289,10 @@ class EventDetailViewModel(private val walkableRepository: WalkableRepository, v
                     if (target.distance == null) resultFQ.div(SECONDS * MINUTES)
                     else resultFQ
                 }
-
-                event.type == EventType.HOUR_RACE || event.type == EventType.HOUR_GROUP -> {
+                EventType.HOUR_RACE, EventType.HOUR_GROUP -> {
                     result?.sumBy { walk -> walk.duration?.toInt() ?: 0 }?.toFloat()
                 }
-
-                event.type == EventType.DISTANCE_RACE || event.type == EventType.DISTANCE_GROUP -> {
+                EventType.DISTANCE_RACE, EventType.DISTANCE_GROUP -> {
                     result?.sumByDouble { walk -> walk.distance?.toDouble() ?: 0.0 }?.toFloat()
                 }
                 else -> null
@@ -375,7 +371,7 @@ class EventDetailViewModel(private val walkableRepository: WalkableRepository, v
                 circleList.value = list.sortedByDescending { f -> f }.map { fa ->
                     fa.div(
                         event.target?.distance
-                            ?: requireNotNull(event.target?.hour) * 60 * 60
+                            ?: requireNotNull(event.target?.hour) * MINUTES * SECONDS
                     )
                 }
 
