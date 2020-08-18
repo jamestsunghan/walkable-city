@@ -22,15 +22,14 @@
 
         <ImageView
             android:id="@+id/walk_icon"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:tint="@color/primaryDarkColor"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.45"
-            app:srcCompat="@drawable/ic_footprint" />
+            app:layout_constraintVertical_bias="0.4"
+            app:srcCompat="@mipmap/ic_launcher_foot_in_white" />
 
         <TextView
             android:id="@+id/walk_title"
@@ -83,15 +82,16 @@
 
         <com.google.android.gms.common.SignInButton
             android:id="@+id/signInButton"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:textAlignment="center"
             android:visibility="@{viewModel.status == LoadStatus.LOADING || viewModel.firebaseUser != null ? View.GONE : View.VISIBLE}"
-            app:layout_constraintEnd_toEndOf="@+id/edit_login_id"
-            app:layout_constraintStart_toStartOf="@+id/edit_login_id"
-            app:layout_constraintTop_toBottomOf="@+id/edit_login_id"
+            app:layout_constraintEnd_toEndOf="@+id/walk_title"
+            app:layout_constraintStart_toStartOf="@+id/walk_title"
+            app:layout_constraintTop_toBottomOf="@+id/walk_title"
             tools:visibility="gone" />
 
         <TextView
