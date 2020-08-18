@@ -142,4 +142,4 @@ Once users are friends, they can keep track of friends' weekly, monthly or total
 
 ## Contact
 
-James walkablecity@gmail.com
+James der.walkable.city@gmail.com
