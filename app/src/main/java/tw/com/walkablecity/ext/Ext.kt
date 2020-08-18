@@ -3,6 +3,7 @@ package tw.com.walkablecity.ext
 import android.content.Context
 import android.graphics.*
 import android.location.Location
+import androidx.fragment.app.FragmentActivity
 import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.Timestamp
 import com.google.firebase.Timestamp.now
@@ -189,7 +190,7 @@ fun List<Friend>.toMemberItem(): List<MemberItem> {
     return listOf(MemberItem.Board) + this.map { MemberItem.Member(it) }
 }
 
-fun Bitmap.saveToInternalStorage(context: Context) {
+fun Bitmap.saveToInternalStorage(context: Context, activity: FragmentActivity) {
 
 
     val file = File(context.cacheDir, "images")
@@ -199,9 +200,11 @@ fun Bitmap.saveToInternalStorage(context: Context) {
         val stream = FileOutputStream("${file}/image.png")
 
         this.compress(Bitmap.CompressFormat.PNG, 100, stream)
-
+        Logger.d("prepare to share badges")
+        activity.shareCacheDirBitmap()
         stream.flush()
         stream.close()
+
     } catch (e: IOException) {
         e.printStackTrace()
     }
