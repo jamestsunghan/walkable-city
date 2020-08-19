@@ -164,9 +164,9 @@ fun setDrawableAndSendImageView(
     imageView.setOnClickListener {
         if (shareable) {
 
-            val bitmapScale = drawable.toBitmap(drawable.intrinsicWidth,drawable.intrinsicHeight)
-
-            bitmapScale.saveToInternalStorage(WalkableApp.instance, activity)
+            drawable.toBitmap(drawable.intrinsicWidth,drawable.intrinsicHeight).apply{
+                saveToInternalStorage(WalkableApp.instance, activity)
+            }
         }
     }
 }
