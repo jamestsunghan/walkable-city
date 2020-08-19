@@ -1,14 +1,12 @@
 package tw.com.walkablecity.util.bindingadapter
 
-import android.graphics.Bitmap
-import android.graphics.Canvas
-import android.graphics.Paint
-import android.graphics.Path
+import android.graphics.*
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.ShapeDrawable
 import android.graphics.drawable.shapes.Shape
 import android.view.View
 import android.widget.ImageView
+import androidx.core.graphics.drawable.toBitmap
 import androidx.databinding.BindingAdapter
 import androidx.fragment.app.FragmentActivity
 import tw.com.walkablecity.R
@@ -163,21 +161,12 @@ fun setDrawableAndSendImageView(
 ) {
     imageView.setImageDrawable(drawable)
 
-    imageView.setOnClickListener { _ ->
+    imageView.setOnClickListener {
         if (shareable) {
-            val bitmap = Bitmap.createBitmap(
-                drawable.intrinsicWidth,
-                drawable.intrinsicHeight,
-                Bitmap.Config.ARGB_8888
-            )
-            val bitmapScale = Bitmap.createScaledBitmap(bitmap, 120, 120, false)
-            val canvas = Canvas(bitmap)
-            drawable.setBounds(0, 0, canvas.width, canvas.height)
-            drawable.draw(canvas)
 
-            bitmapScale.saveToInternalStorage(WalkableApp.instance)
-
-            activity.shareCacheDirBitmap()
+            drawable.toBitmap(drawable.intrinsicWidth,drawable.intrinsicHeight).apply{
+                saveToInternalStorage(WalkableApp.instance, activity)
+            }
         }
     }
 }
