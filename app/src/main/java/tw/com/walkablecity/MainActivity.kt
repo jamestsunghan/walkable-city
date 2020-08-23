@@ -129,6 +129,19 @@ class MainActivity : AppCompatActivity() {
                 )
             }
         })
+
+        viewModel.cacheDeleted.observe(this, Observer {
+            it?.let { deleted ->
+                if (deleted) {
+                    findNavController(R.id.nav_host_fragment).navigate(
+                        HomeFragmentDirections
+                            .actionGlobalHomeFragment(null, null)
+                    )
+                    viewModel.deletionReset()
+                }
+            }
+        })
+
         var previousStatus: WalkerStatus? = null
         viewModel.walkerStatus.observe(this, Observer {
             it?.let { status ->
@@ -231,7 +244,7 @@ class MainActivity : AppCompatActivity() {
                 val dialog = Util.showWalkDestroyDialog(this, R.string.keep_rating)
                     .setPositiveButton(getString(R.string.confirm)) { _, _ ->
                         navController.navigate(
-                            RatingFragmentDirections
+                            HomeFragmentDirections
                                 .actionGlobalHomeFragment(null, null)
                         )
                     }.create()
@@ -254,7 +267,7 @@ class MainActivity : AppCompatActivity() {
                 navController.navigate(BadgeFragmentDirections.actionGlobalProfileFragment())
             }
 
-            CurrentFragmentType.EVENT_DETAIL ->{
+            CurrentFragmentType.EVENT_DETAIL -> {
                 navController.navigate(EventDetailFragmentDirections.actionGlobalEventFragment())
             }
 
@@ -266,10 +279,8 @@ class MainActivity : AppCompatActivity() {
                     val dialog = Util.showWalkDestroyDialog(this, R.string.keep_walking)
                         .setPositiveButton(getString(R.string.confirm)) { _, _ ->
                             unbindService(connection)
-                            navController.navigate(
-                                HomeFragmentDirections
-                                    .actionGlobalHomeFragment(null, null)
-                            )
+                            viewModel.deletionCache(false)
+
                         }.create()
 
                     dialog.show()

@@ -16,6 +16,8 @@ import com.google.android.material.tabs.TabLayout
 import tw.com.walkablecity.R
 import tw.com.walkablecity.databinding.FragmentRatingBinding
 import tw.com.walkablecity.ext.getVMFactory
+import tw.com.walkablecity.util.Logger
+import java.io.File
 
 class RatingFragment : Fragment() {
 
@@ -38,12 +40,15 @@ class RatingFragment : Fragment() {
         }
 
         val selectedRoute = RatingFragmentArgs.fromBundle(requireArguments()).selectedRoute
+
         val walk = RatingFragmentArgs.fromBundle(requireArguments()).walkKey
+
+        val photoPoints = RatingFragmentArgs.fromBundle(requireArguments()).photoPointsKey?.toList()
 
         val adapter = RatingAdapter(
             childFragmentManager, selectedRoute, walk
             , RatingFragmentArgs.fromBundle(requireArguments()).willCreateKey
-            , RatingFragmentArgs.fromBundle(requireArguments()).photoPointsKey?.toList()
+            , photoPoints
         )
 
         binding.viewpagerRating.let {
@@ -52,8 +57,14 @@ class RatingFragment : Fragment() {
         }
 
         viewModel.navigateToHome.observe(viewLifecycleOwner, Observer {
-            it?.let {count->
+            it?.let { count ->
                 if (count > 1) {
+                    photoPoints?.let { list ->
+                        for (item in list) {
+                            val deletion = File(item.photo).delete()
+                            Logger.d("is delete succeeded? $deletion")
+                        }
+                    }
                     findNavController().navigate(
                         RatingFragmentDirections.actionGlobalHomeFragment(
                             null,
@@ -68,7 +79,7 @@ class RatingFragment : Fragment() {
         return binding.root
     }
 
-    companion object{
+    companion object {
         const val REQUEST_KEY = "navigation"
         const val BUNDLE_KEY = "sent"
     }

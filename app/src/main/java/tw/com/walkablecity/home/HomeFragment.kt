@@ -359,6 +359,21 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationClick
             }
         })
 
+        mainViewModel.cacheDeleted.observe(viewLifecycleOwner, Observer{
+            it?.let{deleted->
+                if(!deleted){
+                    val deletion = viewModel.photoPoints.value?.let { list ->
+                        for (item in list) {
+                            val deletion = File(item.photo).delete()
+                            Logger.d("is delete succeeded? $deletion")
+                        }
+                        true
+                    } ?: true
+                    mainViewModel.deletionCache(deletion)
+                }
+            }
+        })
+
         return binding.root
     }
 

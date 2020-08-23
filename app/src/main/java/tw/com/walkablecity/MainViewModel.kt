@@ -18,9 +18,9 @@ class MainViewModel(val walkableRepository: WalkableRepository) : ViewModel() {
 
     val currentFragment = MutableLiveData<CurrentFragmentType>()
 
-    private val _startService = MutableLiveData<Boolean>()
-    val startService: LiveData<Boolean>
-        get() = _startService
+    private val _cacheDeleted = MutableLiveData<Boolean>()
+    val cacheDeleted: LiveData<Boolean>
+        get() = _cacheDeleted
 
     private val _walkerStatus = MutableLiveData<WalkerStatus>()
     val walkerStatus: LiveData<WalkerStatus>
@@ -59,12 +59,12 @@ class MainViewModel(val walkableRepository: WalkableRepository) : ViewModel() {
         viewModelJob.cancel()
     }
 
-    fun startService(){
-        _startService.value = true
+    fun deletionCache(deletion: Boolean) {
+        _cacheDeleted.value = deletion
     }
 
-    fun stopService(){
-        _startService.value = false
+    fun deletionReset() {
+        _cacheDeleted.value = null
     }
 
     fun addToBadgeTotal(levelCount: Int, upgradeFrom: Int) {
@@ -81,7 +81,6 @@ class MainViewModel(val walkableRepository: WalkableRepository) : ViewModel() {
             }
             else -> upgrade
         }
-
     }
 
     fun resetBadgeTotal() {
@@ -119,7 +118,7 @@ class MainViewModel(val walkableRepository: WalkableRepository) : ViewModel() {
 
             val result = walkableRepository.getAllEvents()
 
-            _eventCount.value = result.handleResultWith(_error, _status)?.filter{ event ->
+            _eventCount.value = result.handleResultWith(_error, _status)?.filter { event ->
                 event.member.any { friend ->
                     friend.id == userId
                 }
