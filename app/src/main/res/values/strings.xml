@@ -23,6 +23,7 @@
     <string name="end_walking">結束散步</string>
     <string name="pause_walking">暫停散步</string>
     <string name="resume_walking">繼續散步</string>
+    <string name="walker_walking">散步囉！</string>
 
     <string name="search_destination">搜尋目的地</string>
 

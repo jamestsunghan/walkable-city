@@ -47,12 +47,12 @@ class BestWalkersViewModel(private val walkableRepository: WalkableRepository) :
     }
 
     fun sortList(list: List<User>, type: AccumulationType) {
-        _sortList.value = (list as MutableList<User>).plus(requireNotNull(UserManager.user))
+        _sortList.value = list.plus(requireNotNull(UserManager.user))
             .sortedByDescending { walker ->
                 when (type) {
-                    AccumulationType.WEEKLY  -> walker.accumulatedKm?.weekly
+                    AccumulationType.WEEKLY -> walker.accumulatedKm?.weekly
                     AccumulationType.MONTHLY -> walker.accumulatedKm?.monthly
-                    else                     -> walker.accumulatedKm?.total
+                    else -> walker.accumulatedKm?.total
                 }
             }
     }
@@ -76,10 +76,14 @@ class BestWalkersViewModel(private val walkableRepository: WalkableRepository) :
             _status.value = LoadStatus.LOADING
 
             val friendIds = walkableRepository.getUserFriendSimple(userId)
-                .handleResultWith(_error, _status)?.map { requireNotNull(it.id )} ?: listOf()
+                .handleResultWith(_error, _status)?.map { requireNotNull(it.id) } ?: listOf()
 
-            walkableRepository.getFriendsById(friendIds).apply{
-                _userFriendList.value = handleResultWith(_error, _status)
+            if (friendIds.isNotEmpty()) {
+                walkableRepository.getFriendsById(friendIds).apply {
+                    _userFriendList.value = handleResultWith(_error, _status)
+                }
+            } else {
+                _userFriendList.value = listOf()
             }
         }
     }

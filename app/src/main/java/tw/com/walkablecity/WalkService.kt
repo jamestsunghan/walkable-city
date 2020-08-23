@@ -16,6 +16,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.model.LatLng
 import tw.com.walkablecity.ext.toDistance
+import tw.com.walkablecity.util.Logger
 import tw.com.walkablecity.util.Util
 import tw.com.walkablecity.util.Util.trackTimer
 import tw.com.walkablecity.util.Util.trackerPoints
@@ -151,11 +152,12 @@ class WalkService : Service() {
                 .setLargeIcon(bitmap)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setOnlyAlertOnce(true)
+                .setContentText(getString(R.string.walker_walking))
                 .setStyle(NotificationCompat.BigTextStyle().bigText(contentText))
                 .setContentIntent(pendingIntent)
 
             trackTimer.value = trackTimer.value?.plus(1)
-            Log.d("Counting", "Timer ticking at : ${trackTimer.value}")
+            Logger.d( "Timer ticking at : ${trackTimer.value}")
             handler.postDelayed(runnable, 1000)
 
 
