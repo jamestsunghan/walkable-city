@@ -210,11 +210,15 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationClick
 
         viewModel.navigateToSearch.observe(viewLifecycleOwner, Observer { confirmed ->
             if (confirmed) {
-                findNavController().navigate(
-                    HomeFragmentDirections.actionHomeFragmentToSearchFragment(
-                        requireNotNull(viewModel.currentLocation.value)
+                if(viewModel.currentLocation.value == null){
+                    makeShortToast(R.string.map_drawing)
+                }else{
+                    findNavController().navigate(
+                        HomeFragmentDirections.actionHomeFragmentToSearchFragment(
+                            requireNotNull(viewModel.currentLocation.value)
+                        )
                     )
-                )
+                }
                 viewModel.navigateToSearchComplete()
             }
         })
