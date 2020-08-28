@@ -132,7 +132,7 @@ class HomeViewModel(
     }
 
     fun addStartTrackPoint(latLng: LatLng) {
-        trackerPoints.value = trackerPoints.value?.plus(latLng) as MutableList<LatLng>
+        trackerPoints.value = mutableListOf(latLng)
     }
 
     fun permissionDeniedForever() {
