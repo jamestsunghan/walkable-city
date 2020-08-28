@@ -111,22 +111,22 @@ class SearchViewModel(val walkableRepository: WalkableRepository, val currentLoc
         coroutineScope.launch {
             _status.value = LoadStatus.LOADING
 
-            val result = walkableRepository.getAllRoute()
+            val result = walkableRepository.getAllRoute().handleResultWith(_error, _status)
 
-            val theOne = result.handleResultWith(_error, _status)
+            val theOne = result?.filter {
+                it.waypoints.find { point ->
+                    point.toLocation().distanceTo(destination.toLocation()) < NEARBY_DISTANCE ||
+                            point.toLocation().distanceTo(currentLocation.toLocation()) < NEARBY_DISTANCE
+                } != null
+
+            }?.sortedByDescending {
+                it.ratingAvr?.sortingBy(filter)
+            }
 
             _selectedRoute.value = if (theOne.isNullOrEmpty()) {
                 Route()
             } else {
-                theOne.filter {
-                    it.waypoints.find { point ->
-                        point.toLocation().distanceTo(destination.toLocation()) < NEARBY_DISTANCE ||
-                                point.toLocation().distanceTo(currentLocation.toLocation()) < NEARBY_DISTANCE
-                    } != null
-
-                }.sortedByDescending {
-                    it.ratingAvr?.sortingBy(filter)
-                }[0]
+                theOne[0]
             }
         }
 
