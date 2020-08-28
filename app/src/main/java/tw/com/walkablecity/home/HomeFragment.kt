@@ -210,9 +210,9 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationClick
 
         viewModel.navigateToSearch.observe(viewLifecycleOwner, Observer { confirmed ->
             if (confirmed) {
-                if(viewModel.currentLocation.value == null){
+                if (viewModel.currentLocation.value == null) {
                     makeShortToast(R.string.map_drawing)
-                }else{
+                } else {
                     findNavController().navigate(
                         HomeFragmentDirections.actionHomeFragmentToSearchFragment(
                             requireNotNull(viewModel.currentLocation.value)
@@ -235,13 +235,15 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationClick
                 Logger.d("let see some grade $grade")
                 if (grade > previousUpgrade) {
                     mainViewModel.addToBadgeTotal(grade, R.id.homeFragment)
-                    val dialog = showBadgeDialog(
-                        grade, requireContext(), findNavController(),
-                        HomeFragmentDirections.actionGlobalBadgeFragment()
-                        , getString(R.string.badge_dialog_walk)
-                    )
+                    if (viewModel.argument == null) {
+                        val dialog = showBadgeDialog(
+                            grade, requireContext(), findNavController(),
+                            HomeFragmentDirections.actionGlobalBadgeFragment()
+                            , getString(R.string.badge_dialog_walk)
+                        )
 
-                    dialog.show()
+                        dialog.show()
+                    }
                     previousUpgrade = grade
                 }
             }
@@ -279,7 +281,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationClick
         })
 
         viewModel.mapRoute.observe(viewLifecycleOwner, Observer {
-            it?.let {direction->
+            it?.let { direction ->
                 mapFragment.getMapAsync { map ->
                     Logger.d("direction result $direction")
                     if (direction.routes.isNotEmpty()) {
@@ -315,12 +317,17 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationClick
                         val lastPoint = points.last()
 
                         val latLng =
-                            LatLng(requireNotNull(lastPoint.point).latitude, lastPoint.point.longitude)
+                            LatLng(
+                                requireNotNull(lastPoint.point).latitude,
+                                lastPoint.point.longitude
+                            )
 
                         val bitmap =
-                            BitmapFactory.decodeFile(lastPoint.photo, BitmapFactory.Options().apply {
-                                inSampleSize = 25
-                            })
+                            BitmapFactory.decodeFile(
+                                lastPoint.photo,
+                                BitmapFactory.Options().apply {
+                                    inSampleSize = 25
+                                })
 
                         markerMap.addMarker(
                             MarkerOptions().position(latLng).icon(
@@ -332,14 +339,14 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationClick
             }
         })
 
-        trackTimer.observe(viewLifecycleOwner, Observer{
-            it?.let{time->
+        trackTimer.observe(viewLifecycleOwner, Observer {
+            it?.let { time ->
                 viewModel.setTrackerTimer(time)
             }
         })
 
-        trackerPoints.observe(viewLifecycleOwner, Observer{list->
-            if(list.isNotEmpty()){
+        trackerPoints.observe(viewLifecycleOwner, Observer { list ->
+            if (list.isNotEmpty()) {
                 viewModel.setTrackerPoints(list)
             }
         })
@@ -363,9 +370,9 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationClick
             }
         })
 
-        mainViewModel.cacheDeleted.observe(viewLifecycleOwner, Observer{
-            it?.let{deleted->
-                if(!deleted){
+        mainViewModel.cacheDeleted.observe(viewLifecycleOwner, Observer {
+            it?.let { deleted ->
+                if (!deleted) {
                     val deletion = viewModel.photoPoints.value?.let { list ->
                         for (item in list) {
                             val deletion = File(item.photo).delete()
